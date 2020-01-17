@@ -2,17 +2,17 @@ module.exports = (db, regions, mailer) => {
 
     const templateName = 'avisNotificationEmail';
 
-    let render = (organisme, comment) => {
+    let render = (organisme, avis) => {
         return mailer.render(__dirname, templateName, {
             organisme,
-            comment,
+            avis,
         });
     };
 
     return {
         templateName,
         render,
-        send: async (organisme, comment, nbUnreadComments) => {
+        send: async (organisme, avis, nbUnreadComments) => {
 
             let onSuccess = () => {
                 return db.collection('accounts').updateOne({ _id: organisme._id }, {
@@ -28,7 +28,7 @@ module.exports = (db, regions, mailer) => {
                 organisme.courriel,
                 {
                     subject: `Pôle Emploi - Vous avez ${nbUnreadComments || 'des'} nouveaux avis stagiaires`,
-                    body: await render(organisme, comment),
+                    body: await render(organisme, avis),
                 },
             )
             .then(onSuccess);

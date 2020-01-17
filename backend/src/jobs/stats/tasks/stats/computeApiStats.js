@@ -4,7 +4,7 @@ module.exports = (db, regions) => {
 
     let getAvisReconciliesStats = async (label, codeRegions) => {
 
-        let avis = db.collection('comment');
+        let avis = db.collection('avis');
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
         let [

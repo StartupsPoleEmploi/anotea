@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment } = require('../../../../../helpers/data/dataset');
+const { newAvis } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur }) => {
 
@@ -10,7 +10,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: `${33333333333333}`,

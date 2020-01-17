@@ -1,7 +1,7 @@
 const assert = require('assert');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newStagiaire, newComment } = require('../../../helpers/data/dataset');
+const { newStagiaire, newAvis } = require('../../../helpers/data/dataset');
 const patchCertifInfos = require('../../../../src/jobs/patch/certifInfos/tasks/refreshCertifInfos');
 const logger = require('../../../helpers/components/fake-logger');
 
@@ -47,7 +47,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
                 invalid: 0,
                 total: 1,
             },
-            comment: {
+            avis: {
                 updated: 0,
                 invalid: 0,
                 total: 0,
@@ -59,7 +59,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
 
         let db = await getTestDatabase();
         let certifinfosFile = getTestFile('certifinfos.csv');
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('avis', newAvis({
             _id: '1234',
             training: {
                 certifInfos: ['10013'],
@@ -71,7 +71,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
 
         let stats = await patchCertifInfos(db, logger, certifinfosFile);
 
-        let avis = await db.collection('comment').findOne({ _id: '1234' });
+        let avis = await db.collection('avis').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfos, ['10013', '74037']);
 
         //History
@@ -92,7 +92,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
                 invalid: 0,
                 total: 0,
             },
-            comment: {
+            avis: {
                 updated: 1,
                 invalid: 0,
                 total: 1,

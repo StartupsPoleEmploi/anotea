@@ -3,7 +3,7 @@ const assert = require('assert');
 const moment = require('moment');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
-const { newOrganismeAccount, newComment, randomize } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount, newAvis, randomize } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -325,7 +325,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({ siret: '11111111111111' })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '11111111111111',
@@ -401,7 +401,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: commentId,
                 pseudo,
                 training: {
@@ -475,7 +475,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let sansCommentaire = newComment({
+        let sansCommentaire = newAvis({
             pseudo: 'pseudo',
             training: {
                 organisation: {
@@ -488,8 +488,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', sansCommentaire),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', sansCommentaire),
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -508,7 +508,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let avisAvecReponse = newComment({
+        let avisAvecReponse = newAvis({
             pseudo: 'pseudo',
             training: {
                 organisation: {
@@ -526,8 +526,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', avisAvecReponse),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', avisAvecReponse),
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -550,14 +550,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
                     },
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -583,7 +583,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '5minutesAgo',
                 training: {
                     organisation: {
@@ -591,7 +591,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 },
             }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '6minutesAgo',
                 training: {
                     organisation: {
@@ -599,7 +599,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 },
             }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '7minutesAgo',
                 training: {
                     organisation: {
@@ -624,7 +624,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '5minutesAgo',
                 training: {
                     organisation: {
@@ -632,7 +632,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 }
             }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '6minutesAgo',
                 training: {
                     organisation: {
@@ -640,7 +640,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 }
             }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '7minutesAgo',
                 training: {
                     organisation: {
@@ -665,7 +665,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '1', rates: { global: 1 },
                 training: {
                     organisation: {
@@ -673,7 +673,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '3', rates: { global: 3 },
                 training: {
                     organisation: {
@@ -681,7 +681,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: '2', rates: { global: 2 },
                 training: {
                     organisation: {
@@ -706,7 +706,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: 'C', training: {
                     title: 'C',
                     organisation: {
@@ -714,7 +714,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: 'A', training: {
                     title: 'A',
                     organisation: {
@@ -722,7 +722,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo: 'B', training: {
                     title: 'B',
                     organisation: {

@@ -36,7 +36,7 @@ module.exports = async (db, query) => {
         };
     };
 
-    let results = await db.collection('comment').aggregate([
+    let results = await db.collection('avis').aggregate([
         {
             $match: query
         },

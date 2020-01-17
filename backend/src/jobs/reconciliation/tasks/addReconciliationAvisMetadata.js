@@ -5,17 +5,17 @@ module.exports = async db => {
 
     let updated = 0;
 
-    let cursor = db.collection('comment').find();
+    let cursor = db.collection('avis').find();
     await batchCursor(cursor, async next => {
-        let comment = await next();
+        let avis = await next();
 
-        let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.id': comment._id });
+        let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.id': avis._id });
 
-        let reconciliations = _.get(comment, 'meta.reconciliations');
+        let reconciliations = _.get(avis, 'meta.reconciliations');
         let isReconciliable = count > 0;
 
         if (!reconciliations || (reconciliations[0].reconciliable !== isReconciliable)) {
-            await db.collection('comment').updateOne({ _id: comment._id }, {
+            await db.collection('avis').updateOne({ _id: avis._id }, {
                 $push: {
                     'meta.reconciliations': {
                         $each: [{

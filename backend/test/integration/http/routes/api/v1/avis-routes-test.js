@@ -3,7 +3,7 @@ const moment = require('moment/moment');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment, randomize, randomSIRET } = require('../../../../../helpers/data/dataset');
+const { newAvis, randomize, randomSIRET } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -15,8 +15,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let oid = new ObjectID();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis({
                 _id: oid,
                 pseudo: pseudo
             }, date))
@@ -96,7 +96,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let date = new Date();
         let oid = new ObjectID();
 
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('avis', newAvis({
             _id: oid,
             pseudo: pseudo,
             comment: {
@@ -203,8 +203,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let siret = randomSIRET();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis({
                 pseudo: pseudo,
                 training: {
                     organisation: {
@@ -228,8 +228,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let codePostal = '75000';
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis({
                 pseudo,
                 training: {
                     place: {
@@ -253,8 +253,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let certifInfo = '12345';
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis({
                 pseudo,
                 training: {
                     certifInfos: [certifInfo],
@@ -275,8 +275,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let formacode = '11111';
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis({
                 pseudo,
                 training: {
                     formacodes: [formacode],
@@ -300,8 +300,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let formacode = '224123';
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis({
                 pseudo,
                 training: {
                     formacodes: [formacode],
@@ -322,9 +322,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis()),
+            insertIntoDatabase('avis', newAvis()),
         ]);
 
         let response = await request(app).get('/api/v1/avis?page=0&items_par_page=2');
@@ -345,9 +345,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can get score with notes décimales', async () => {
 
         let app = await startServer();
-        let comment = newComment();
+        let avis = newAvis();
 
-        await insertIntoDatabase('comment', comment);
+        await insertIntoDatabase('avis', avis);
 
         let response = await request(app).get('/api/v1/avis?notes_decimales=true');
         assert.deepStrictEqual(response.body.avis[0].notes, {
@@ -359,7 +359,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             global: 2.4,
         });
 
-        response = await request(app).get(`/api/v1/avis/${comment._id}?notes_decimales=true`);
+        response = await request(app).get(`/api/v1/avis/${avis._id}?notes_decimales=true`);
         assert.deepStrictEqual(response.body.notes, {
             accueil: 3,
             contenu_formation: 2,
@@ -375,9 +375,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date');
@@ -392,9 +392,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
@@ -409,9 +409,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '1', rates: { global: 1 } })),
-            insertIntoDatabase('comment', newComment({ pseudo: '3', rates: { global: 3 } })),
-            insertIntoDatabase('comment', newComment({ pseudo: '2', rates: { global: 2 } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: '1', rates: { global: 1 } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: '3', rates: { global: 3 } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: '2', rates: { global: 2 } })),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=notes');
@@ -426,9 +426,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: 'C', training: { title: 'C' } })),
-            insertIntoDatabase('comment', newComment({ pseudo: 'A', training: { title: 'A' } })),
-            insertIntoDatabase('comment', newComment({ pseudo: 'B', training: { title: 'B' } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: 'C', training: { title: 'C' } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: 'A', training: { title: 'A' } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: 'B', training: { title: 'B' } })),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=formation&ordre=asc');
@@ -460,11 +460,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
-        let comment = newComment({
+        let avis = newAvis({
             pseudo: pseudo,
         });
-        delete comment.comment;
-        await insertIntoDatabase('comment', comment);
+        delete avis.comment;
+        await insertIntoDatabase('avis', avis);
 
         let response = await request(app).get(`/api/v1/avis`);
 
@@ -476,7 +476,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('avis', newAvis({
             pseudo: pseudo,
             comment: null,
         }));
@@ -492,7 +492,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         let pseudo = randomize('pseudo');
 
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('avis', newAvis({
             pseudo: pseudo,
             status: 'none',
         }));
@@ -508,7 +508,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         let pseudo = randomize('pseudo');
 
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('avis', newAvis({
             _id: '12345',
             pseudo: pseudo,
             status: 'rejected',
@@ -571,7 +571,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let siret = '12345678901234';
         let codePostal = '75000';
 
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('avis', newAvis({
             pseudo: 'test-user-intitule',
             training: {
                 title: 'Développeur fullstack',
@@ -599,8 +599,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ _id: '123', status: 'validated' })),
-            insertIntoDatabase('comment', newComment({ status: 'archived' }))
+            insertIntoDatabase('avis', newAvis({ _id: '123', status: 'validated' })),
+            insertIntoDatabase('avis', newAvis({ status: 'archived' }))
         ]);
 
         let response = await request(app)

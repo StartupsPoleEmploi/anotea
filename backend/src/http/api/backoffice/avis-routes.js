@@ -22,7 +22,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         }, { abortEarly: false });
 
         let query = await queries.buildAvisQuery(parameters);
-        let cursor = db.collection('comment')
+        let cursor = db.collection('avis')
         .find(query)
         .sort({ [parameters.sortBy || 'date']: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
@@ -58,7 +58,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
             token: Joi.string(),
         }, { abortEarly: false });
 
-        let stream = db.collection('comment')
+        let stream = db.collection('avis')
         .find({
             ...await queries.buildAvisQuery(parameters),
         })

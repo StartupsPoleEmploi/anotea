@@ -3,7 +3,7 @@ const logger = require('../../../helpers/components/fake-logger');
 const _ = require('lodash');
 const ObjectID = require('mongodb').ObjectID;
 const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newComment, randomize } = require('../../../helpers/data/dataset');
+const { newAvis, randomize } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
@@ -16,7 +16,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let commentId = new ObjectID();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: commentId,
                 pseudo,
                 training: {
@@ -169,7 +169,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: 'ABCD',
                 training: {
                     formacodes: ['22403'],
@@ -182,7 +182,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['11111'], //other certification than 80735
@@ -206,7 +206,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile sessions with avis (same formacodes)', async () => {
 
         let db = await getTestDatabase();
-        let noCertification = newComment({
+        let noCertification = newAvis({
             training: {
                 formacodes: ['22403'],
                 certifInfos: [],
@@ -222,8 +222,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', noCertification),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', noCertification),
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['22222'], //other certification than 80735
@@ -248,7 +248,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: '1234',
                 training: {
                     formacodes: ['22403'],
@@ -275,7 +275,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: '1234',
                 status: 'archived',
                 training: {
@@ -302,7 +302,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -314,7 +314,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['XXXXX'],
                     certifInfos: [{
@@ -328,7 +328,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -353,7 +353,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -395,7 +395,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -415,7 +415,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 5,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -435,7 +435,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 5,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -479,7 +479,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-    it('should create session with empty avis list when no comment can be found', async () => {
+    it('should create session with empty avis list when no avis can be found', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -498,7 +498,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let pseudo = randomize('pseudo');
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo,
                 training: {
                     formacodes: ['22403'],
@@ -526,7 +526,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let pseudo = randomize('pseudo');
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 pseudo,
                 training: {
                     formacodes: [],
@@ -550,7 +550,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile avis (notes)', async () => {
 
         let db = await getTestDatabase();
-        let comment = newComment({
+        let avis = newAvis({
             training: {
                 certifInfos: ['80735'],
                 organisation: {
@@ -562,11 +562,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             },
             status: 'validated',
         });
-        delete comment.comment;
+        delete avis.comment;
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('avis', avis),
         ]);
 
         await reconcile(db, logger);
@@ -576,12 +576,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(session.avis[0].commentaire, undefined);
     });
 
-    it('should ignore not yet validated comment', async () => {
+    it('should ignore not yet validated avis', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 status: 'none',
                 training: {
                     formacodes: ['22403'],
@@ -602,12 +602,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepStrictEqual(session.avis, []);
     });
 
-    it('should reconcile rejected comment', async () => {
+    it('should reconcile rejected avis', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 status: 'rejected',
                 comment: {
                     title: 'WTF',

@@ -14,7 +14,7 @@ module.exports = async (db, logger) => {
         const organisme = await next();
         stats.total++;
         try {
-            let avis = await db.collection('comment').find({
+            let avis = await db.collection('avis').find({
                 'training.organisation.siret': organisme.siret,
                 'status': { $in: ['validated', 'rejected'] },
             }).toArray();

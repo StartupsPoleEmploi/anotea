@@ -56,8 +56,8 @@ module.exports = {
 
         return dto;
     },
-    createAvisDTO: (comment, options = {}) => {
-        let dto = convertCommentToAvis(comment);
+    createAvisDTO: (data, options = {}) => {
+        let dto = convertCommentToAvis(data);
 
         if (!options.notes_decimales) {
             dto.notes = roundNotes(dto.notes);

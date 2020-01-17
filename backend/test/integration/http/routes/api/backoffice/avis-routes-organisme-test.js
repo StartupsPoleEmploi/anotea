@@ -2,12 +2,12 @@ const request = require('supertest');
 const _ = require('lodash');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment } = require('../../../../../helpers/data/dataset');
+const { newAvis } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme }) => {
 
-    let buildComment = (custom = {}) => {
-        return newComment(_.merge({}, {
+    let buildAvis = (custom = {}) => {
+        return newAvis(_.merge({}, {
             codeRegion: '11',
             training: {
                 organisation: { siret: '11111111111111' },
@@ -21,10 +21,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
-            insertIntoDatabase('comment', buildComment({ status: 'validated' })),
-            insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
-            insertIntoDatabase('comment', buildComment({ status: 'reported' })),
-            insertIntoDatabase('comment', buildComment({ status: 'none' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'validated' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'rejected' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'reported' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'none' })),
         ]);
 
         let response = await request(app)
@@ -68,7 +68,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
-            insertIntoDatabase('comment', buildComment({
+            insertIntoDatabase('avis', buildAvis({
                 codeRegion: '6',
                 training: { organisation: { siret: '11111111111111' } },
             })),
@@ -87,8 +87,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111111111' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111111111' } } })),
         ]);
 
         let response = await request(app)
@@ -105,8 +105,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
@@ -123,8 +123,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
@@ -140,8 +140,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111111111' } } })),
-            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111111111' } } })),
+            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
@@ -156,10 +156,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can create a reponse', async () => {
 
         let app = await startServer();
-        let comment = buildComment();
+        let comment = buildAvis();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
-            insertIntoDatabase('comment', comment)
+            insertIntoDatabase('avis', comment)
         ]);
 
         let response = await request(app)
@@ -181,14 +181,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can not create a reponse with more than 300 characters', async () => {
 
         let app = await startServer();
-        let comment = buildComment();
+        let avis = buildAvis();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
-            insertIntoDatabase('comment', comment)
+            insertIntoDatabase('avis', avis)
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
+        .put(`/api/backoffice/avis/${avis._id}/addReponse`)
         .set('authorization', `Bearer ${token}`)
         .send({ text: 'Accusantium molestiae quasi enim facilis. Non deserunt autem ut sit est. Earum laudantium est amet soluta sed. Inventore eos nemo sunt sapiente atque ea repudiandae nam. Nihil nihil et consequatur nemo aut deserunt pariatur dolores. Accusantium molestiae quasi enim facilis. Accusantium molestiae quasi enim facilis.' });
 
@@ -218,18 +218,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can create a reponse with same siren', async () => {
 
         let app = await startServer();
-        let comment = buildComment({
+        let avis = buildAvis({
             training: {
                 organisation: { siret: '11111111111111' },
             },
         });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111122222'),
-            insertIntoDatabase('comment', comment)
+            insertIntoDatabase('avis', avis)
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
+        .put(`/api/backoffice/avis/${avis._id}/addReponse`)
         .set('authorization', `Bearer ${token}`)
         .send({ text: 'Voici notre réponse' });
 
@@ -239,21 +239,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can not create a reponse for another organisme', async () => {
 
         let app = await startServer();
-        let comment = buildComment();
+        let avis = buildAvis();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
-            insertIntoDatabase('comment', comment)
+            insertIntoDatabase('avis', avis)
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
+        .put(`/api/backoffice/avis/${avis._id}/addReponse`)
         .set('authorization', `Bearer ${token}`)
         .send({ text: 'Voici notre réponse' });
 
         assert.strictEqual(response.statusCode, 404);
     });
 
-    it('can not create reponse with invalid comment id', async () => {
+    it('can not create reponse with invalid avis id', async () => {
 
         let app = await startServer();
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
@@ -290,7 +290,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can remove a reponse', async () => {
 
         let app = await startServer();
-        let comment = buildComment({
+        let avis = buildAvis({
             reponse: {
                 text: 'Voici notre réponse',
                 status: 'validated',
@@ -298,11 +298,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
-            insertIntoDatabase('comment', comment)
+            insertIntoDatabase('avis', avis)
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/removeReponse`)
+        .put(`/api/backoffice/avis/${avis._id}/removeReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -312,7 +312,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can not remove a reponse of another organisme', async () => {
 
         let app = await startServer();
-        let comment = buildComment({
+        let avis = buildAvis({
             reponse: {
                 text: 'Voici notre réponse',
                 status: 'validated',
@@ -320,11 +320,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
-            insertIntoDatabase('comment', comment)
+            insertIntoDatabase('avis', avis)
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/removeReponse`)
+        .put(`/api/backoffice/avis/${avis._id}/removeReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 404);
@@ -334,14 +334,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can un/report avis', async () => {
 
         let app = await startServer();
-        const comment = buildComment({ read: false, qualification: 'positif' });
+        const avis = buildAvis({ read: false, qualification: 'positif' });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('avis', avis),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .put(`/api/backoffice/avis/${avis._id}/report`)
         .send({ report: true })
         .set('authorization', `Bearer ${token}`);
 
@@ -350,7 +350,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.strictEqual(response.body.read, true);
 
         response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .put(`/api/backoffice/avis/${avis._id}/report`)
         .send({ report: false })
         .set('authorization', `Bearer ${token}`);
 
@@ -363,14 +363,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can not un/report avis of another organisme', async () => {
 
         let app = await startServer();
-        const comment = buildComment({ read: false });
+        const avis = buildAvis({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('avis', avis),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .put(`/api/backoffice/avis/${avis._id}/report`)
         .send({ report: true })
         .set('authorization', `Bearer ${token}`);
 
@@ -380,14 +380,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can mark avis as read/unread', async () => {
 
         let app = await startServer();
-        const comment = buildComment({ read: false });
+        const avis = buildAvis({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('avis', avis),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/read`)
+        .put(`/api/backoffice/avis/${avis._id}/read`)
         .send({ read: true })
         .set('authorization', `Bearer ${token}`);
 
@@ -395,7 +395,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.strictEqual(response.body.read, true);
 
         response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/read`)
+        .put(`/api/backoffice/avis/${avis._id}/read`)
         .send({ read: false })
         .set('authorization', `Bearer ${token}`);
 
@@ -406,14 +406,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can mark avis as read/unread of another organisme', async () => {
 
         let app = await startServer();
-        const comment = buildComment({ read: true });
+        const avis = buildAvis({ read: true });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('avis', avis),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/read`)
+        .put(`/api/backoffice/avis/${avis._id}/read`)
         .send({ read: false })
         .set('authorization', `Bearer ${token}`);
 

@@ -3,14 +3,14 @@ const moment = require('moment');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newComment, randomize, newIntercarif } = require('../../../../../helpers/data/dataset');
+const { newAvis, randomize, newIntercarif } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
     let insertAndReconcile = (intercarifs, avis = []) => {
         return Promise.all([
             ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
-            ...avis.map(data => insertIntoDatabase('comment', data)),
+            ...avis.map(data => insertIntoDatabase('avis', data)),
         ])
         .then(() => reconcile({ sessions: true }));
     };
@@ -34,7 +34,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     _id: commentId,
                     pseudo: pseudo,
                     codeRegion: '11',
@@ -161,7 +161,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -253,7 +253,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -386,7 +386,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -485,7 +485,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -558,7 +558,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     _id: commentId,
                     pseudo,
                     codeRegion: '11',
@@ -646,7 +646,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let sansCommentaire = newComment({
+        let sansCommentaire = newAvis({
             pseudo: 'pseudo',
             codeRegion: '11',
             training: {
@@ -675,7 +675,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 sansCommentaire,
-                newComment({
+                newAvis({
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -700,7 +700,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return avis avec réponse', async () => {
 
         let app = await startServer();
-        let avisAvecReponse = newComment({
+        let avisAvecReponse = newAvis({
             pseudo: 'pseudo',
             codeRegion: '11',
             training: {
@@ -734,7 +734,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 avisAvecReponse,
-                newComment({
+                newAvis({
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -800,7 +800,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     pseudo: '5minutesAgo',
                     codeRegion: '11',
                     training: {
@@ -814,7 +814,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                         },
                     },
                 }),
-                newComment({
+                newAvis({
                     pseudo: '7minutesAgo',
                     codeRegion: '11',
                     training: {
@@ -853,7 +853,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     pseudo: '1',
                     codeRegion: '11',
                     training: {
@@ -869,7 +869,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                         global: 1
                     },
                 }),
-                newComment({
+                newAvis({
                     pseudo: '2',
                     codeRegion: '11',
                     training: {
@@ -910,7 +910,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     pseudo: 'A',
                     codeRegion: '11',
                     training: {
@@ -924,7 +924,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                         },
                     },
                 }),
-                newComment({
+                newAvis({
                     pseudo: 'B',
                     codeRegion: '11',
                     training: {

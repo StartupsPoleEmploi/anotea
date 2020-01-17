@@ -67,15 +67,15 @@ module.exports = ({ db, middlewares }) => {
         let query = buildAvisQuery(filters);
 
 
-        let comments = await db.collection('comment')
+        let avis = await db.collection('avis')
         .find(query)
         .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
         .limit(limit)
         .skip(skip);
 
-        let total = await comments.count();
-        let stream = comments.transformStream({
-            transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
+        let total = await avis.count();
+        let stream = avis.transformStream({
+            transform: avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
         });
 
         return sendArrayAsJsonStream(stream, res, {
@@ -99,12 +99,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.badRequest('Identifiant invalide');
         }
 
-        let comment = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
+        let avis = await db.collection('avis').findOne({ _id: new ObjectID(parameters.id) });
 
-        if (!comment) {
+        if (!avis) {
             throw Boom.notFound('Identifiant inconnu');
         }
-        res.json(createAvisDTO(comment, { notes_decimales: parameters.notes_decimales }));
+        res.json(createAvisDTO(avis, { notes_decimales: parameters.notes_decimales }));
     }));
 
     return router;

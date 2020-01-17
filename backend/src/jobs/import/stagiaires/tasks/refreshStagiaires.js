@@ -11,7 +11,7 @@ module.exports = async (db, logger, file, handler) => {
 
     let stats = {
         stagiaires: 0,
-        comment: 0,
+        avis: 0,
         invalid: 0,
         total: 0,
     };
@@ -82,7 +82,7 @@ module.exports = async (db, logger, file, handler) => {
         );
 
         let meta = getNewMeta(previous, merged);
-        let res = await db.collection('comment').updateOne({ token: previous.token }, {
+        let res = await db.collection('avis').updateOne({ token: previous.token }, {
             $set: {
                 'training.formacodes': merged.training.formacodes,
                 'training.certifInfos': merged.training.certifInfos,
@@ -91,7 +91,7 @@ module.exports = async (db, logger, file, handler) => {
                 ...(meta ? { meta } : {}),
             }
         });
-        stats.comment += getNbModifiedDocuments(res);
+        stats.avis += getNbModifiedDocuments(res);
     };
 
     await pipeline([
@@ -117,9 +117,9 @@ module.exports = async (db, logger, file, handler) => {
 
                 await Promise.all([
                     refreshStagiaire(previous, stagiaire),
-                    db.collection('comment').findOne({ token: previous.token })
-                    .then(comment => {
-                        return comment ? refreshAvis(comment, stagiaire) : false;
+                    db.collection('avis').findOne({ token: previous.token })
+                    .then(avis => {
+                        return avis ? refreshAvis(avis, stagiaire) : false;
                     }),
                 ]);
 

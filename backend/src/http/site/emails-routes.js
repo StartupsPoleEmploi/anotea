@@ -19,21 +19,23 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/emails/:type/:token/templates/:templateName', async (req, res) => {
 
-        const { type, token, templateName, avis } = await Joi.validate(Object.assign({}, req.params, req.query), {
+        const parameters = await Joi.validate(Object.assign({}, req.params, req.query), {
             type: Joi.string().valid(['organismes', 'stagiaires']).required(),
             token: Joi.string().required(),
             templateName: Joi.string().required(),
             avis: Joi.string(),
         }, { abortEarly: false });
 
-        let doc = await db.collection(type === 'organismes' ? 'accounts' : 'stagiaires').findOne({ token });
+        let doc = await db.collection(parameters.type === 'organismes' ? 'accounts' : 'stagiaires').findOne({
+            token: parameters.token
+        });
         if (!doc) {
             return send404(res);
         }
 
-        let comment = avis ? await db.collection('comment').findOne({ token: avis }) : null;
-        let message = emails.getEmailMessageByTemplateName(templateName);
-        let html = await message.render(doc, comment);
+        let avis = parameters.avis ? await db.collection('avis').findOne({ token: parameters.avis }) : null;
+        let message = emails.getEmailMessageByTemplateName(parameters.templateName);
+        let html = await message.render(doc, avis);
 
         return sendHTML(res, html);
     });

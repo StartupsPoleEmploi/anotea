@@ -144,7 +144,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             }
         });
 
-        let result = await db.collection('comment').findOne({ token: stagiaire.token });
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
@@ -213,7 +213,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.strictEqual(response.statusCode, 200);
 
-        let result = await db.collection('comment').findOne({ token: stagiaire.token });
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
@@ -281,7 +281,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.strictEqual(response.statusCode, 200);
 
-        let result = await db.collection('comment').findOne({ token: stagiaire.token });
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
         assert.deepStrictEqual(result.comment.text, 'texte');
     });
 

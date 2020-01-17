@@ -128,7 +128,7 @@ module.exports = {
             id: uuid.v4(),
         }, custom, { test: true });
     },
-    newComment: (custom, date = getDateInThePast()) => {
+    newAvis: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: new ObjectID(),
             token: randomize('token'),

@@ -179,7 +179,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             if (validation.error === null) {
                 avis.rates.global = calculateAverageRate(avis);
                 await Promise.all([
-                    db.collection('comment').insertOne(avis),
+                    db.collection('avis').insertOne(avis),
                     db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
                 ]);
             } else {

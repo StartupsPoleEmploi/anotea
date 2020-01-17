@@ -3,7 +3,7 @@ const faker = require('faker');
 module.exports = async (db, workflow, options = {}) => {
 
     let makeAction = async (nbElements, selector, action) => {
-        let cursor = await db.collection('comment').find(selector).limit(nbElements);
+        let cursor = await db.collection('avis').find(selector).limit(nbElements);
         while (await cursor.hasNext()) {
             let avis = await cursor.next();
             await action(avis);

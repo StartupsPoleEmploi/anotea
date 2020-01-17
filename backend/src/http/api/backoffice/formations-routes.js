@@ -13,7 +13,7 @@ module.exports = ({ db, middlewares }) => {
             organisme: Joi.string().min(9).max(15),
         }, { abortEarly: false });
 
-        let stream = await db.collection('comment')
+        let stream = await db.collection('avis')
         .aggregate([
             {
                 $match: {

@@ -2,7 +2,7 @@ const assert = require('assert');
 const _ = require('lodash');
 const logger = require('../../../helpers/components/fake-logger');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newComment } = require('../../../helpers/data/dataset');
+const { newAvis } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 const addReconciliationAvisMetadata = require('../../../../src/jobs/reconciliation/tasks/addReconciliationAvisMetadata');
 
@@ -11,7 +11,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should insert meta to avis reconciliable', async () => {
 
         let db = await getTestDatabase();
-        let avisReconciliable = newComment({
+        let avisReconciliable = newAvis({
             training: {
                 formacodes: ['22252'],
                 certifInfos: ['80735'],
@@ -31,13 +31,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', avisReconciliable),
+            insertIntoDatabase('avis', avisReconciliable),
         ]);
         await reconcile(db, logger);
 
         await addReconciliationAvisMetadata(db);
 
-        let avis = await db.collection('comment').findOne();
+        let avis = await db.collection('avis').findOne();
         assert.strictEqual(avis.meta.reconciliations.length, 2);
         assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: true,
@@ -47,7 +47,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should create meta to avis non reconciliable', async () => {
 
         let db = await getTestDatabase();
-        let avisNonReconciliable = newComment({
+        let avisNonReconciliable = newAvis({
             training: {
                 organisation: {
                     siret: '22222222222222',
@@ -57,13 +57,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', avisNonReconciliable),
+            insertIntoDatabase('avis', avisNonReconciliable),
         ]);
         await reconcile(db, logger);
 
         await addReconciliationAvisMetadata(db);
 
-        let avis = await db.collection('comment').findOne();
+        let avis = await db.collection('avis').findOne();
         assert.strictEqual(avis.meta.reconciliations.length, 1);
         assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: false,

@@ -1,7 +1,7 @@
 module.exports = (db, regions) => {
 
     let { findActiveRegions } = regions;
-    let avis = db.collection('comment');
+    let avis = db.collection('avis');
     let organismes = db.collection('accounts');
 
     const getOrganismesStats = async (label, codeRegions) => {

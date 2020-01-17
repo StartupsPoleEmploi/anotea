@@ -7,7 +7,7 @@ module.exports = async (db, intercarif, action) => {
     let adresse = action.lieu_de_formation.coordonnees.adresse;
     let siret = action.organisme_formateur.siret_formateur.siret;
 
-    let comments = await db.collection('comment').find({
+    let avis = await db.collection('avis').find({
         'training.organisation.siret': new RegExp(`^${asSiren(siret)}`),
         'status': { $in: ['validated', 'rejected'] },
         '$and': [
@@ -59,9 +59,9 @@ module.exports = async (db, intercarif, action) => {
     })
     .toArray();
 
-    let certifiants = comments.filter(comment => {
-        return !!comment.training.certifInfos.find(c => intercarif._meta.certifinfos.includes(c));
+    let certifiants = avis.filter(a => {
+        return !!a.training.certifInfos.find(c => intercarif._meta.certifinfos.includes(c));
     });
 
-    return { action, comments: certifiants.length > 0 ? certifiants : comments };
+    return { action, comments: certifiants.length > 0 ? certifiants : avis };
 };

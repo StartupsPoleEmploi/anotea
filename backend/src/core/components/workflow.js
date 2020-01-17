@@ -24,9 +24,9 @@ module.exports = (db, logger, emails) => {
         validate: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+            let original = await db.collection('avis').findOne({ _id: new ObjectID(id) });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -69,9 +69,9 @@ module.exports = (db, logger, emails) => {
         reject: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+            let original = await db.collection('avis').findOne({ _id: new ObjectID(id) });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -124,9 +124,9 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
-            let previous = await db.collection('comment').findOne({ _id: oid });
+            let previous = await db.collection('avis').findOne({ _id: oid });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: oid,
                     ...(profile ? profile.getShield() : {}),
@@ -165,10 +165,10 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
-            let previous = await db.collection('comment').findOne({ _id: oid });
+            let previous = await db.collection('avis').findOne({ _id: oid });
 
             let [results] = await Promise.all([
-                db.collection('comment').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
+                db.collection('avis').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
                 db.collection('stagiaires').updateOne({ token: previous.token }, {
                     $set: {
                         avisCreated: false,
@@ -198,7 +198,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -225,7 +225,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -254,7 +254,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -284,9 +284,9 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
-            let original = await db.collection('comment').findOne({ _id: oid });
+            let original = await db.collection('avis').findOne({ _id: oid });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: oid,
                     ...(profile ? profile.getShield() : {}),
@@ -327,7 +327,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -363,7 +363,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -392,7 +392,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -421,7 +421,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),

@@ -16,7 +16,7 @@ module.exports = db => {
             },
             {
                 $lookup: {
-                    from: 'comment',
+                    from: 'avis',
                     let: {
                         campaign: '$_id',
                     },

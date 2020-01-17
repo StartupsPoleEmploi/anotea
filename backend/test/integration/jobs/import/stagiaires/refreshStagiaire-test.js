@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
-const { newComment } = require('../../../../helpers/data/dataset');
+const { newAvis } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/components/fake-logger');
 const importStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/importStagiaires');
 const refreshStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/refreshStagiaires');
@@ -42,7 +42,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         assert.deepStrictEqual(stats, {
             stagiaires: 1,
-            comment: 0,
+            avis: 0,
             invalid: 0,
             total: 2
         });
@@ -105,21 +105,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.strictEqual(next.training.place.inseeCode, '91521');
     });
 
-    it('should update data in comment', async () => {
+    it('should update data in avis', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
         let stagiaire = await db.collection('stagiaires').findOne({ 'personal.email': 'email_1@pe.com' });
-        let previous = newComment({
+        let previous = newAvis({
             token: stagiaire.token,
         });
-        await insertIntoDatabase('comment', previous);
+        await insertIntoDatabase('avis', previous);
 
         let stats = await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('comment').findOne({ token: stagiaire.token });
+        let next = await db.collection('avis').findOne({ token: stagiaire.token });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
             training: {
                 formacodes: ['99999'],
@@ -160,7 +160,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
         assert.deepStrictEqual(stats, {
             stagiaires: 1,
-            comment: 1,
+            avis: 1,
             invalid: 0,
             total: 2,
         });

@@ -1,16 +1,16 @@
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
 const convertCommentToAvis = require('../../../src/core/utils/convertCommentToAvis');
-const { newComment, randomize } = require('../../helpers/data/dataset');
+const { newAvis, randomize } = require('../../helpers/data/dataset');
 
 describe(__filename, () => {
 
-    it('comment should be mapped into avis', async () => {
+    it('avis should be mapped into avis', async () => {
 
         let numeroAction = '14_TE_1234567890';
         let date = new Date();
         let pseudo = randomize('pseudo');
-        let comment = newComment({
+        let avis = newAvis({
             _id: 1234,
             pseudo,
             training: {
@@ -21,7 +21,7 @@ describe(__filename, () => {
         }, date);
 
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data, {
             id: 1234,
@@ -74,14 +74,14 @@ describe(__filename, () => {
 
     it('should add réponse', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             reponse: {
                 text: 'Voici notre réponse',
                 status: 'validated',
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.reponse, {
             texte: 'Voici notre réponse',
@@ -90,35 +90,35 @@ describe(__filename, () => {
 
     it('should ignore réponse (not moderated)', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             reponse: {
                 text: 'Voici notre réponse',
                 status: 'none',
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.strictEqual(data.reponse, undefined);
     });
 
     it('should ignore réponse (rejected)', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             reponse: {
                 text: 'Voici notre réponse',
                 status: 'rejected',
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.strictEqual(data.reponse, undefined);
     });
 
     it('should ignore réponse (avis rejected)', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             status: 'rejected',
             reponse: {
                 text: 'Voici notre réponse',
@@ -126,25 +126,25 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.strictEqual(data.reponse, undefined);
     });
 
     it('should set undefined when commentaire is missing', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             comment: null,
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.strictEqual(data.commentaire, undefined);
     });
 
     it('should handle numeroAction=NULL', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             training: {
                 infoCarif: {
                     numeroAction: 'NULL'
@@ -152,17 +152,17 @@ describe(__filename, () => {
             }
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.strictEqual(data.formation.action.numero, undefined);
     });
 
     it('should handle empty training.certifInfos', async () => {
 
-        let comment = newComment();
-        comment.training.certifInfos = [];
+        let avis = newAvis();
+        avis.training.certifInfos = [];
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.formation.certifications, []);
     });
@@ -170,12 +170,12 @@ describe(__filename, () => {
 
     it('should use _id when date property is missing', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             _id: ObjectID.createFromTime(1),
             date: null
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
     });
@@ -183,7 +183,7 @@ describe(__filename, () => {
 
     it('should ignore title when titleMasked is true', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             comment: {
                 titleMasked: true,
                 title: 'Génial',
@@ -191,26 +191,26 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.commentaire.titre, undefined);
     });
 
     it('should ignore pseudo when pseudoMasked is true', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             pseudoMasked: true,
             pseudo: 'hacker',
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.pseudo, undefined);
     });
 
-    it('should return edited comment when comment has been edited', async () => {
+    it('should return edited avis when comment has been edited', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             comment: {
                 title: 'Génial',
                 text: 'Formation super géniale.',
@@ -226,14 +226,14 @@ describe(__filename, () => {
             }
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.commentaire.texte, 'Formation super géniale.');
     });
 
     it('should not return commentaire when avis has been rejected', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             status: 'rejected',
             comment: {
                 title: 'Génial',
@@ -241,14 +241,14 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.commentaire, undefined);
     });
 
     it('should not return commentaire when avis has not been moderated yet', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             status: 'none',
             comment: {
                 title: 'Génial',
@@ -256,14 +256,14 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.commentaire, undefined);
     });
 
     it('should not return pseudo when avis has been rejected', async () => {
 
-        let comment = newComment({
+        let avis = newAvis({
             status: 'rejected',
             pseudo: 'hacker',
             comment: {
@@ -272,7 +272,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(comment);
+        let data = convertCommentToAvis(avis);
 
         assert.deepStrictEqual(data.pseudo, undefined);
     });

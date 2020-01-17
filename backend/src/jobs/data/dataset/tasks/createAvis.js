@@ -39,7 +39,7 @@ module.exports = async (db, options) => {
             let avis = buildAvis(stagiaire, getCustom());
             await Promise.all([
                 db.collection('stagiaires').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
-                db.collection('comment').insertOne(avis),
+                db.collection('avis').insertOne(avis),
             ]);
         });
     };

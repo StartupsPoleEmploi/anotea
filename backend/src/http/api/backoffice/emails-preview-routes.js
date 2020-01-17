@@ -31,8 +31,8 @@ module.exports = ({ emails, middlewares }) => {
                     }
                 },
             },
-            comment: {
-                token: 'token-comment',
+            avis: {
+                token: 'token-avis',
                 codeRegion: user.codeRegion,
                 comment: {
                     text: 'Super formation. Par contre les locaux sont trop petits',
@@ -54,7 +54,7 @@ module.exports = ({ emails, middlewares }) => {
         let message = emails.getEmailMessageByTemplateName(templateName);
 
         let preview = getPreviewData(req.user);
-        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.comment);
+        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);
 
         return sendHTML(res, html);
     }));

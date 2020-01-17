@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newOrganismeAccount, newModerateurAccount, newComment } = require('../../../helpers/data/dataset');
+const { newOrganismeAccount, newModerateurAccount, newAvis } = require('../../../helpers/data/dataset');
 const logger = require('../../../helpers/components/fake-logger');
 const computeOrganismesScore = require('../../../../src/jobs/organismes/tasks/computeScore');
 
@@ -9,14 +9,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     const prepareDatabase = () => {
         return Promise.all([
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '11111111111111',
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -31,7 +31,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     global: 1,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -46,7 +46,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     global: 3,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -126,7 +126,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
                 siret: '22222222222222',
             })), ['score']),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 status: 'rejected',
                 rates: {
                     accueil: 0,

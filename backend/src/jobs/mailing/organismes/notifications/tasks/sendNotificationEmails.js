@@ -29,7 +29,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
             },
             {
                 $lookup: {
-                    from: 'comment',
+                    from: 'avis',
                     let: {
                         siret: '$organisme.siret',
                     },
