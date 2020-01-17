@@ -115,7 +115,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             let app = await startServer();
             let avis = buildAvis({ token: 'sans-commentaire' });
-            delete avis.comment;
+            delete avis.commentaire;
 
             let [token] = await Promise.all([
                 logAsModerateur(app, 'admin@pole-emploi.fr'),

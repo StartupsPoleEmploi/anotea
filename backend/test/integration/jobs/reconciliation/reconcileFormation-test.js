@@ -11,13 +11,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile formation with avis', async () => {
 
         let db = await getTestDatabase();
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
         let date = new Date();
         let pseudo = randomize('pseudo');
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('avis', newAvis({
-                _id: commentId,
+                _id: avisId,
                 pseudo,
                 training: {
                     formacodes: ['22403'],
@@ -54,7 +54,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             },
             avis: [
                 {
-                    id: commentId,
+                    id: avisId,
                     pseudo: pseudo,
                     date: date,
                     commentaire: {
@@ -422,7 +422,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             },
             status: 'validated',
         });
-        delete avis.comment;
+        delete avis.commentaire;
 
         await Promise.all([
             importIntercarif(),
@@ -469,7 +469,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('avis', newAvis({
                 status: 'rejected',
-                comment: {
+                commentaire: {
                     title: 'WTF',
                     text: 'WTF',
                 },

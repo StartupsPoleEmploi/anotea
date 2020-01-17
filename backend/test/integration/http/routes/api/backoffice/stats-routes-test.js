@@ -185,7 +185,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             let app = await startServer();
             let avis = buildAvis({ status: 'validated' });
-            delete avis.comment;
+            delete avis.commentaire;
             let [token] = await Promise.all([
                 logUser(app),
                 insertIntoDatabase('avis', avis),

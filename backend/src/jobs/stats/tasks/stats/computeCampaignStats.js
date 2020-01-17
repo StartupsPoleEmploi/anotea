@@ -37,7 +37,7 @@ module.exports = db => {
                                 nbCommentaires: {
                                     $sum: {
                                         $cond: {
-                                            if: { $not: ['$comment'] },
+                                            if: { $not: ['$commentaire'] },
                                             then: 0,
                                             else: 1,
                                         }

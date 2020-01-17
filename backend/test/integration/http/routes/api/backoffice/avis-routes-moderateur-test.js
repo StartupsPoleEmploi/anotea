@@ -8,7 +8,7 @@ const { newAvis, newStagiaire, newOrganismeAccount } = require('../../../../../h
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase, logAsOrganisme }) => {
 
-    let buildComment = (custom = {}) => {
+    let buildAvis = (custom = {}) => {
         return newAvis(_.merge({
             codeRegion: '11',
             training: {
@@ -41,10 +41,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('avis', buildComment({ status: 'validated' })),
-            insertIntoDatabase('avis', buildComment({ status: 'rejected' })),
-            insertIntoDatabase('avis', buildComment({ status: 'reported' })),
-            insertIntoDatabase('avis', buildComment({ status: 'none' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'validated' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'rejected' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'reported' })),
+            insertIntoDatabase('avis', buildAvis({ status: 'none' })),
         ]);
 
         let response = await request(app)
@@ -128,12 +128,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('avis', newAvis({
                 pseudo: 'pseudo',
-                comment: {
+                commentaire: {
                     title: 'Trop Génial',
                 },
             })),
             insertIntoDatabase('avis', newAvis({
-                comment: {
+                commentaire: {
                     title: 'Pas cool',
                 },
             })),
@@ -260,7 +260,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('avis', newAvis({
                 _id: id,
-                comment: {
+                commentaire: {
                     text: 'Génial'
                 },
             })),
@@ -272,8 +272,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.comment.text, 'New message');
-        assert.deepStrictEqual(response.body.meta.history[0].comment.text, 'Génial');
+        assert.deepStrictEqual(response.body.commentaire.text, 'New message');
+        assert.deepStrictEqual(response.body.meta.history[0].commentaire.text, 'Génial');
         assert.ok(response.body.lastStatusUpdate);
     });
 
@@ -286,7 +286,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             insertIntoDatabase('avis', newAvis({
                 _id: id,
                 codeRegion: '7',
-                comment: {
+                commentaire: {
                     text: 'Génial'
                 },
             })),
@@ -607,7 +607,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.comment.titleMasked, true);
+        assert.deepStrictEqual(response.body.commentaire.titleMasked, true);
 
         response = await request(app)
         .put(`/api/backoffice/avis/${id}/title`)
@@ -615,7 +615,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.comment.titleMasked, false);
+        assert.deepStrictEqual(response.body.commentaire.titleMasked, false);
     });
 
     it('can not un/mask title of another region', async () => {

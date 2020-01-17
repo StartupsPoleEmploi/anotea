@@ -118,7 +118,7 @@ module.exports = ({ db, middlewares }) => {
                     { status: { $in: ['validated', 'rejected'] } } :
                     {
                         $or: [
-                            { comment: { $exists: parameters.commentaires }, status: 'validated' },
+                            { commentaire: { $exists: parameters.commentaires }, status: 'validated' },
                             { 'reponse.status': 'validated', 'status': 'validated' },
                         ]
 

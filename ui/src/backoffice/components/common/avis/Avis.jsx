@@ -127,7 +127,7 @@ export default class Avis extends React.Component {
                         </div>
                     </div>
                     {
-                        avis.comment && showModerationButtons &&
+                        avis.commentaire && showModerationButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <EditButton

@@ -1,8 +1,8 @@
 const computeScore = require('../../../../core/utils/computeScore');
 const { flatten } = require('../../../job-utils');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const createReconciliatedAvis = require('../../../../core/utils/createReconciliatedAvis');
 
-module.exports = (formation, action, comments) => {
+module.exports = (formation, action, avis) => {
 
     return {
         _id: `${formation._attributes.numero}|${action._attributes.numero}`,
@@ -20,8 +20,8 @@ module.exports = (formation, action, comments) => {
         },
         region: action.lieu_de_formation.coordonnees.adresse.region,
         code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
-        avis: comments.map(a => convertCommentToAvis(a)) || [],
-        score: computeScore(comments),
+        avis: avis.map(a => createReconciliatedAvis(a)) || [],
+        score: computeScore(avis),
         formation: {
             numero: formation._attributes.numero,
             intitule: formation.intitule_formation,

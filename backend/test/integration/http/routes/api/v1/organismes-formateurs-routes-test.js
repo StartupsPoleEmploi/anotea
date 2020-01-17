@@ -395,14 +395,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let date = new Date();
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
         let pseudo = randomize('pseudo');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                _id: commentId,
+                _id: avisId,
                 pseudo,
                 training: {
                     organisation: {
@@ -417,7 +417,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
             avis: [{
-                id: commentId.toString(),
+                id: avisId.toString(),
                 pseudo,
                 date: date.toJSON(),
                 commentaire: {
@@ -483,7 +483,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 },
             },
         });
-        delete sansCommentaire.comment;
+        delete sansCommentaire.commentaire;
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
@@ -521,7 +521,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 status: 'none',
             },
         });
-        delete avisAvecReponse.comment;
+        delete avisAvecReponse.commentaire;
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',

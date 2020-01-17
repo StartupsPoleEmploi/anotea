@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const createReconciliatedAvis = require('../../../../core/utils/createReconciliatedAvis');
 
 let roundNotes = notes => {
     return {
@@ -57,7 +57,7 @@ module.exports = {
         return dto;
     },
     createAvisDTO: (data, options = {}) => {
-        let dto = convertCommentToAvis(data);
+        let dto = createReconciliatedAvis(data);
 
         if (!options.notes_decimales) {
             dto.notes = roundNotes(dto.notes);

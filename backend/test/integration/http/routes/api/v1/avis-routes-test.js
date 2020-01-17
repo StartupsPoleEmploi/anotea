@@ -99,12 +99,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
             pseudo: pseudo,
-            comment: {
+            commentaire: {
                 text: 'Formation super géniale.',
             },
             meta: {
                 original: {
-                    comment: {
+                    commentaire: {
                         text: 'Cool',
                     }
                 }
@@ -463,7 +463,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let avis = newAvis({
             pseudo: pseudo,
         });
-        delete avis.comment;
+        delete avis.commentaire;
         await insertIntoDatabase('avis', avis);
 
         let response = await request(app).get(`/api/v1/avis`);
@@ -478,7 +478,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let pseudo = randomize('pseudo');
         await insertIntoDatabase('avis', newAvis({
             pseudo: pseudo,
-            comment: null,
+            commentaire: null,
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
@@ -503,7 +503,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 0);
     });
 
-    it('should return rejected avis (without pseudo and comment)', async () => {
+    it('should return rejected avis (without pseudo and commentaire)', async () => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');

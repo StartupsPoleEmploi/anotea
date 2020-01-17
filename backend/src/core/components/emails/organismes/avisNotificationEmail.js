@@ -12,7 +12,7 @@ module.exports = (db, regions, mailer) => {
     return {
         templateName,
         render,
-        send: async (organisme, avis, nbUnreadComments) => {
+        send: async (organisme, avis, nbUnreadCommentaires) => {
 
             let onSuccess = () => {
                 return db.collection('accounts').updateOne({ _id: organisme._id }, {
@@ -27,7 +27,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: `Pôle Emploi - Vous avez ${nbUnreadComments || 'des'} nouveaux avis stagiaires`,
+                    subject: `Pôle Emploi - Vous avez ${nbUnreadCommentaires || 'des'} nouveaux avis stagiaires`,
                     body: await render(organisme, avis),
                 },
             )

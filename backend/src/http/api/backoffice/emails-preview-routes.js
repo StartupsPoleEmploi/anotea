@@ -34,7 +34,7 @@ module.exports = ({ emails, middlewares }) => {
             avis: {
                 token: 'token-avis',
                 codeRegion: user.codeRegion,
-                comment: {
+                commentaire: {
                     text: 'Super formation. Par contre les locaux sont trop petits',
                 },
                 reponse: {

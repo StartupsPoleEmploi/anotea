@@ -36,7 +36,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                     pipeline: [
                         {
                             $match: {
-                                comment: { $ne: null },
+                                commentaire: { $ne: null },
                                 read: false,
                                 status: 'validated',
                                 $expr: {
@@ -47,8 +47,8 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                         {
                             $group: {
                                 _id: null,
-                                comment: { $first: '$$ROOT' },
-                                nbUnreadComments: { $sum: 1 }
+                                commentaire: { $first: '$$ROOT' },
+                                nbUnreadCommentaires: { $sum: 1 }
                             }
                         },
                     ],
@@ -63,7 +63,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
             },
             {
                 $match: {
-                    'notificationStatus.nbUnreadComments': { $gte: 5 }
+                    'notificationStatus.nbUnreadCommentaires': { $gte: 5 }
                 }
             }
         ]);
@@ -87,7 +87,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
         try {
             logger.info(`Sending email to ${organisme.raison_sociale}/${organisme.siret}/${organisme.courriel}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
-            await message.send(organisme, notificationStatus.comment, notificationStatus.nbUnreadComments);
+            await message.send(organisme, notificationStatus.commentaire, notificationStatus.nbUnreadCommentaires);
 
             if (options.delay) {
                 await delay(options.delay);

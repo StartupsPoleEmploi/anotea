@@ -14,5 +14,6 @@ execute(async ({ db }) => {
     stats.cleanSiretProperties = await require('./tasks/cleanSiretProperties')(db);
     stats.renameCourrielIntoIdentifiant = await require('./tasks/renameCourrielIntoIdentifiant')(db);
     stats.renameRaisonSociale = await require('./tasks/renameRaisonSociale')(db);
+    stats.renameCommentIntoCommentaires = await require('./tasks/renameCommentIntoCommentaires')(db);
     return stats;
 });

@@ -27,7 +27,7 @@ module.exports = async (db, query) => {
             $sum: {
                 $cond: [{
                     $and: [
-                        { $not: { $not: ['$comment'] } }, //exists
+                        { $not: { $not: ['$commentaire'] } }, //exists
                         ...[options.status ? { $eq: ['$status', options.status] } : {}],
                         ...[options.qualification ? { $eq: ['$qualification', options.qualification] } : {}],
                     ]
@@ -83,7 +83,7 @@ module.exports = async (db, query) => {
                 nbRead: { $sum: { $cond: { if: { $eq: ['$read', true] }, then: 1, else: 0 } } },
                 nbReponses: { $sum: { $cond: { if: { $not: ['$reponse'] }, then: 0, else: 1 } } },
                 nbReponseAModerer: { $sum: { $cond: { if: { $eq: ['$reponse.status', 'none'] }, then: 1, else: 0 } } },
-                nbNotesSeules: { $sum: { $cond: { if: { $not: ['$comment.text'] }, then: 1, else: 0 } } },
+                nbNotesSeules: { $sum: { $cond: { if: { $not: ['$commentaire.text'] }, then: 1, else: 0 } } },
                 nbCommentaires: sumCommentairesWith(),
                 nbCommentairesAModerer: sumCommentairesWith({ status: 'none' }),
                 nbCommentairesValidated: sumCommentairesWith({ status: 'validated' }),

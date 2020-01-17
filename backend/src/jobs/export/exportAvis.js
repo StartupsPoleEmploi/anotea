@@ -15,7 +15,7 @@ execute(async ({ logger, db }) => {
 
     logger.info(`Generating CSV file ${csvFile}...`);
     return pipeline([
-        db.collection('avis').find({ status: 'validated', comment: { $exists: true } }),
+        db.collection('avis').find({ status: 'validated', commentaire: { $exists: true } }),
         transformObjectIntoCSV({
             'date': avis => moment(avis.date).format(),
             'note_accueil': avis => sanitizeNote(avis.rates.accueil),
@@ -24,7 +24,7 @@ execute(async ({ logger, db }) => {
             'note_materiels': avis => sanitizeNote(avis.rates.moyen_materiel),
             'note_accompagnement': avis => sanitizeNote(avis.rates.accompagnement),
             'note_globale': avis => sanitizeNote(avis.rates.global),
-            'commentaire': avis => sanitizeString(_.get(avis, 'comment.text', '')),
+            'commentaire': avis => sanitizeString(_.get(avis, 'commentaire.text', '')),
             'qualification': avis => _.isEmpty(avis.qualification) ? '' : avis.qualification,
         }),
         encodeIntoUTF8(),

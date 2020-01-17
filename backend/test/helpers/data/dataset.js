@@ -166,7 +166,7 @@ module.exports = {
                 global: 2.4,
             },
             pseudo: randomize('pseudo'),
-            comment: {
+            commentaire: {
                 title: 'Génial',
                 text: 'Super formation.'
             },

@@ -156,14 +156,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can create a reponse', async () => {
 
         let app = await startServer();
-        let comment = buildAvis();
+        let avis = buildAvis();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
-            insertIntoDatabase('avis', comment)
+            insertIntoDatabase('avis', avis)
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
+        .put(`/api/backoffice/avis/${avis._id}/addReponse`)
         .set('authorization', `Bearer ${token}`)
         .send({ text: 'Voici notre réponse' });
 

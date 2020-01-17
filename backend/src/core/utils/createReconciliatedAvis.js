@@ -3,12 +3,12 @@ const _ = require('lodash');
 const convertCommentaire = data => {
 
     let commentaire = {};
-    if (!_.isEmpty(data.comment.text)) {
-        commentaire.texte = data.comment.text;
+    if (!_.isEmpty(data.commentaire.text)) {
+        commentaire.texte = data.commentaire.text;
     }
 
-    if (!_.isEmpty(data.comment.title) && !data.comment.titleMasked) {
-        commentaire.titre = data.comment.title;
+    if (!_.isEmpty(data.commentaire.title) && !data.commentaire.titleMasked) {
+        commentaire.titre = data.commentaire.title;
     }
 
     return commentaire;
@@ -69,7 +69,7 @@ module.exports = data => {
         avis.pseudo = data.pseudo;
     }
 
-    if (data.comment && data.status === 'validated') {
+    if (data.commentaire && data.status === 'validated') {
         avis.commentaire = convertCommentaire(data);
     }
 

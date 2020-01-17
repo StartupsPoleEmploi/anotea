@@ -19,10 +19,10 @@ module.exports = async (db, workflow, options = {}) => {
     });
 
     let nbCommentairesActions = nbModerationsActions / 5;
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
+    await makeAction(nbCommentairesActions, { commentaire: { $exists: true }, status: 'validated' }, avis => {
         return workflow.report(avis._id, true);
     });
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
+    await makeAction(nbCommentairesActions, { commentaire: { $exists: true }, status: 'validated' }, avis => {
         return workflow.addReponse(avis._id, faker.lorem.paragraph());
     });
 

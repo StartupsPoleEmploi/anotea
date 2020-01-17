@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
         let pseudo = randomize('pseudo');
         let date = new Date();
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
         await insertAndReconcile(
             [
                 newIntercarif({
@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 newAvis({
-                    _id: commentId,
+                    _id: avisId,
                     pseudo: pseudo,
                     codeRegion: '11',
                     training: {
@@ -94,7 +94,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 }
             },
             avis: [{
-                id: commentId.toString(),
+                id: avisId.toString(),
                 pseudo,
                 date: date.toJSON(),
                 commentaire: {
@@ -235,7 +235,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                         },
                     },
                     status: 'rejected',
-                    comment: {
+                    commentaire: {
                         title: 'WTF',
                         text: 'WTF',
                     },
@@ -513,7 +513,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
         let date = new Date();
         let pseudo = randomize('pseudo');
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
         await insertAndReconcile(
             [
                 newIntercarif({
@@ -528,7 +528,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 newAvis({
-                    _id: commentId,
+                    _id: avisId,
                     pseudo,
                     codeRegion: '11',
                     training: {
@@ -557,7 +557,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
             avis: [{
-                id: commentId.toString(),
+                id: avisId.toString(),
                 pseudo,
                 date: date.toJSON(),
                 commentaire: {
@@ -628,7 +628,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 },
             },
         });
-        delete sansCommentaire.comment;
+        delete sansCommentaire.commentaire;
 
         await insertAndReconcile(
             [
@@ -687,7 +687,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 status: 'none',
             },
         });
-        delete avisAvecReponse.comment;
+        delete avisAvecReponse.commentaire;
 
         await insertAndReconcile(
             [

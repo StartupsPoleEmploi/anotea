@@ -96,7 +96,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         };
 
         if (hasCommentaires) {
-            avis.comment = {
+            avis.commentaire = {
                 title: sanitize(title),
                 text: sanitize(text),
                 titleMasked: false,
@@ -109,21 +109,21 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     const validateAvis = async avis => {
 
         if (avis.pseudo.length > 50 ||
-            (avis.comment !== undefined && (avis.comment.title.length > 50 || avis.comment.text.length > 200))) {
+            (avis.commentaire !== undefined && (avis.commentaire.title.length > 50 || avis.commentaire.text.length > 200))) {
             return { error: 'too long' };
         }
 
         let pseudoOK = avis.pseudo ? await badwords.isGood(avis.pseudo) : true;
-        let commentOK = avis.comment ? await badwords.isGood(avis.comment.text) : true;
-        let commentTitleOK = avis.comment ? await badwords.isGood(avis.comment.title) : true;
+        let textOK = avis.commentaire ? await badwords.isGood(avis.commentaire.text) : true;
+        let titleOK = avis.commentaire ? await badwords.isGood(avis.commentaire.title) : true;
 
-        if (pseudoOK && commentOK && commentTitleOK) {
+        if (pseudoOK && textOK && titleOK) {
             return { error: null, avis };
         } else {
             let badwords = {
                 pseudo: !pseudoOK,
-                comment: !commentOK,
-                commentTitle: !commentTitleOK
+                textOK: !textOK,
+                titleOK: !titleOK
             };
             return { error: 'badwords', badwords };
         }

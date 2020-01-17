@@ -50,7 +50,7 @@ module.exports = async (db, intercarif, action) => {
         rates: 1,
         date: 1,
         codeFinanceur: 1,
-        comment: 1,
+        commentaire: 1,
         pseudo: 1,
         pseudoMasked: 1,
         status: 1,
@@ -63,5 +63,5 @@ module.exports = async (db, intercarif, action) => {
         return !!a.training.certifInfos.find(c => intercarif._meta.certifinfos.includes(c));
     });
 
-    return { action, comments: certifiants.length > 0 ? certifiants : avis };
+    return { action, avis: certifiants.length > 0 ? certifiants : avis };
 };

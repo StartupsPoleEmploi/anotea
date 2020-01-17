@@ -1,6 +1,6 @@
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const convertCommentToAvis = require('../../../src/core/utils/convertCommentToAvis');
+const createReconciliatedAvis = require('../../../src/core/utils/createReconciliatedAvis');
 const { newAvis, randomize } = require('../../helpers/data/dataset');
 
 describe(__filename, () => {
@@ -21,7 +21,7 @@ describe(__filename, () => {
         }, date);
 
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data, {
             id: 1234,
@@ -81,7 +81,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.reponse, {
             texte: 'Voici notre réponse',
@@ -97,7 +97,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.strictEqual(data.reponse, undefined);
     });
@@ -111,7 +111,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.strictEqual(data.reponse, undefined);
     });
@@ -126,7 +126,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.strictEqual(data.reponse, undefined);
     });
@@ -134,10 +134,10 @@ describe(__filename, () => {
     it('should set undefined when commentaire is missing', async () => {
 
         let avis = newAvis({
-            comment: null,
+            commentaire: null,
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.strictEqual(data.commentaire, undefined);
     });
@@ -152,7 +152,7 @@ describe(__filename, () => {
             }
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.strictEqual(data.formation.action.numero, undefined);
     });
@@ -162,7 +162,7 @@ describe(__filename, () => {
         let avis = newAvis();
         avis.training.certifInfos = [];
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.formation.certifications, []);
     });
@@ -175,7 +175,7 @@ describe(__filename, () => {
             date: null
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
     });
@@ -184,14 +184,14 @@ describe(__filename, () => {
     it('should ignore title when titleMasked is true', async () => {
 
         let avis = newAvis({
-            comment: {
+            commentaire: {
                 titleMasked: true,
                 title: 'Génial',
                 text: 'Super formation.'
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.commentaire.titre, undefined);
     });
@@ -203,22 +203,22 @@ describe(__filename, () => {
             pseudo: 'hacker',
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.pseudo, undefined);
     });
 
-    it('should return edited avis when comment has been edited', async () => {
+    it('should return edited avis when commentaire has been edited', async () => {
 
         let avis = newAvis({
-            comment: {
+            commentaire: {
                 title: 'Génial',
                 text: 'Formation super géniale.',
             },
             meta: {
                 history: [
                     {
-                        comment: {
+                        commentaire: {
                             text: 'Formation géniale.'
                         }
                     }
@@ -226,7 +226,7 @@ describe(__filename, () => {
             }
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.commentaire.texte, 'Formation super géniale.');
     });
@@ -235,13 +235,13 @@ describe(__filename, () => {
 
         let avis = newAvis({
             status: 'rejected',
-            comment: {
+            commentaire: {
                 title: 'Génial',
                 text: 'Formation géniale.'
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.commentaire, undefined);
     });
@@ -250,13 +250,13 @@ describe(__filename, () => {
 
         let avis = newAvis({
             status: 'none',
-            comment: {
+            commentaire: {
                 title: 'Génial',
                 text: 'Formation géniale.'
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.commentaire, undefined);
     });
@@ -266,13 +266,13 @@ describe(__filename, () => {
         let avis = newAvis({
             status: 'rejected',
             pseudo: 'hacker',
-            comment: {
+            commentaire: {
                 title: 'Génial',
                 text: 'Formation géniale.'
             },
         });
 
-        let data = convertCommentToAvis(avis);
+        let data = createReconciliatedAvis(avis);
 
         assert.deepStrictEqual(data.pseudo, undefined);
     });

@@ -24,7 +24,7 @@ export default class Notes extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showDetails: !props.avis.comment,
+            showDetails: !props.avis.commentaire,
         };
     }
 

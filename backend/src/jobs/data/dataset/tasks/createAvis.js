@@ -49,7 +49,7 @@ module.exports = async (db, options) => {
         return {
             //Must be reused from questionnaire-routes
             status: 'none',
-            comment: {
+            commentaire: {
                 title: faker.lorem.sentence(),
                 text: faker.lorem.paragraph(),
                 titleMasked: false,

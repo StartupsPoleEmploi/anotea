@@ -133,14 +133,14 @@ module.exports = (db, logger, emails) => {
                 },
                 {
                     $set: {
-                        'comment.text': text,
+                        'commentaire.text': text,
                         'lastStatusUpdate': new Date(),
                     },
                     $push: {
                         'meta.history': {
                             $each: [{
                                 date: new Date(),
-                                comment: { text: previous.comment.text }
+                                commentaire: { text: previous.commentaire.text }
                             }],
                             $position: 0,
                         },
@@ -232,7 +232,7 @@ module.exports = (db, logger, emails) => {
                 },
                 {
                     $set: {
-                        'comment.titleMasked': mask
+                        'commentaire.titleMasked': mask
                     }
                 },
                 { returnOriginal: false },

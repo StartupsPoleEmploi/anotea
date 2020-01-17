@@ -12,7 +12,7 @@
                         Avis signalé dans votre Espace Anotéa
                     </mj-text>
 
-                    <% if (locals.avis && locals.avis.comment) { %>
+                    <% if (locals.avis && locals.avis.commentaire) { %>
                         <mj-text css-class="text-secondary">
                             Vous avez signalé l’avis suivant dans votre Espace Anotéa
                         </mj-text>
@@ -24,11 +24,11 @@
                 </mj-column>
             </mj-section>
 
-            <% if (locals.avis && locals.avis.comment) { %>
+            <% if (locals.avis && locals.avis.commentaire) { %>
                 <mj-section padding-top="0" padding-left="100px" padding-right="100px">
                     <mj-column border="1px dashed #C8CBCE">
                         <mj-text css-class="text-secondary" font-style="italic">
-                            "<%= avis.comment.text %>"
+                            "<%= avis.commentaire.text %>"
                         </mj-text>
                     </mj-column>
                 </mj-section>

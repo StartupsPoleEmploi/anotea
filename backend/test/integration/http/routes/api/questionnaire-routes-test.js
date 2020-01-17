@@ -182,7 +182,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 global: 1.8,
             },
             pseudo: 'JohnD',
-            comment: {
+            commentaire: {
                 title: 'titre',
                 text: 'texte',
                 titleMasked: false,
@@ -282,7 +282,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.strictEqual(response.statusCode, 200);
 
         let result = await db.collection('avis').findOne({ token: stagiaire.token });
-        assert.deepStrictEqual(result.comment.text, 'texte');
+        assert.deepStrictEqual(result.commentaire.text, 'texte');
     });
 
     it('can not submit a questionnaire with invalid words', async () => {
