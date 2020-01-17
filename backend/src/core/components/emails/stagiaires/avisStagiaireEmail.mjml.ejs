@@ -13,10 +13,10 @@
                         Donnez-nous votre avis en 1 minute.
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Vous avez suivi la formation de <%= trainee.training.title %>
-                        du <%= utils.moment(trainee.training.startDate).format('DD/MM/YYYY') %>
-                        au <%= utils.moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %>
-                        à <%= trainee.training.organisation.name %>.
+                        Vous avez suivi la formation de <%= stagiaire.training.title %>
+                        du <%= utils.moment(stagiaire.training.startDate).format('DD/MM/YYYY') %>
+                        au <%= utils.moment(stagiaire.training.scheduledEndDate).format('DD/MM/YYYY') %>
+                        à <%= stagiaire.training.organisation.name %>.
                     </mj-text>
 
                     <mj-button
@@ -90,7 +90,7 @@
                     </mj-text>
 
                     <mj-image padding="0" width="1px" alt="tracking"
-                              src="<%= utils.getPublicUrl(`/emails/stagiaires/${trainee.token}/track`) %>" />
+                              src="<%= utils.getPublicUrl(`/emails/stagiaires/${stagiaire.token}/track`) %>" />
 
                 </mj-column>
             </mj-section>

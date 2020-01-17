@@ -67,7 +67,7 @@ module.exports = async (db, options) => {
 
     return Promise.all(_.range(options.nbStagiaires || 1000).map(() => {
         let stagiaire = createStagiaire(session);
-        return db.collection('trainee').insertOne(stagiaire)
+        return db.collection('stagiaires').insertOne(stagiaire)
         .then(() => stagiaire);
     }));
 

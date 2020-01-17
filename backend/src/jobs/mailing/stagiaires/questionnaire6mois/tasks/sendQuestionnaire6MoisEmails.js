@@ -9,7 +9,7 @@ module.exports = async (db, logger, emails, options = {}) => {
         error: 0,
     };
 
-    let cursor = db.collection('trainee').aggregate([
+    let cursor = db.collection('stagiaires').aggregate([
         {
             $match: {
                 'mailing.questionnaire6Mois.mailSent': { $exists: false },
@@ -21,7 +21,7 @@ module.exports = async (db, logger, emails, options = {}) => {
         {
             $group: {
                 _id: '$trainee.email',
-                trainee: { $first: '$$ROOT' },
+                stagiaire: { $first: '$$ROOT' },
             }
         }
     ])
@@ -29,13 +29,13 @@ module.exports = async (db, logger, emails, options = {}) => {
 
     while (await cursor.hasNext()) {
         stats.total++;
-        let { trainee } = await cursor.next();
+        let { stagiaire } = await cursor.next();
 
         try {
-            logger.info(`Sending email to ${(trainee.trainee.email)}`);
+            logger.info(`Sending email to ${(stagiaire.trainee.email)}`);
             let message = emails.getEmailMessageByTemplateName('questionnaire6MoisEmail');
 
-            await message.send(trainee);
+            await message.send(stagiaire);
 
             if (options.delay) {
                 await delay(options.delay);

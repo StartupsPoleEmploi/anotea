@@ -17,7 +17,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
         let [avisCount, organismesCount, stagiairesCount] = await Promise.all([
             db.collection('comment').count(),
             db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 } }),
-            db.collection('trainee').count({ mailSentDate: { $ne: null } })
+            db.collection('stagiaires').count({ mailSentDate: { $ne: null } })
         ]);
 
         res.render('homepage', {
@@ -61,7 +61,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
         try {
             let userInfo = await peconnect.getUserInfo(getFullUrl(req));
 
-            const results = await db.collection('trainee').find({
+            const results = await db.collection('stagiaires').find({
                 'trainee.email': userInfo.email.toLowerCase(),
                 'avisCreated': false,
                 'training.scheduledEndDate': { $gte: moment().subtract(1, 'years').toDate() }
@@ -74,9 +74,9 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
                 return res.render('errors/formationNotFound');
             }
 
-            let trainee = results[0];
-            db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { 'tracking.peConnectSucceed': new Date() } });
-            return res.redirect(`${configuration.app.public_hostname}/questionnaire/${trainee.token}`);
+            let stagiaire = results[0];
+            db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { 'tracking.peConnectSucceed': new Date() } });
+            return res.redirect(`${configuration.app.public_hostname}/questionnaire/${stagiaire.token}`);
         } catch (e) {
             sentry.sendError(e);
             return res.status(500).render('errors/error');
@@ -94,8 +94,8 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
 
     router.get('/link/:token', async (req, res) => {
 
-        let trainee = await db.collection('trainee').findOne({ token: req.params.token });
-        if (!trainee) {
+        let stagiaire = await db.collection('stagiaires').findOne({ token: req.params.token });
+        if (!stagiaire) {
             res.status(404).send({ error: 'not found' });
             return;
         }
@@ -109,10 +109,10 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             return;
         }
 
-        if (!(trainee.tracking &&
-            trainee.tracking.clickLinks &&
-            trainee.tracking.clickLinks.filter(item => item.goto === goto).length > 0)) {
-            db.collection('trainee').updateOne({ token: req.params.token }, {
+        if (!(stagiaire.tracking &&
+            stagiaire.tracking.clickLinks &&
+            stagiaire.tracking.clickLinks.filter(item => item.goto === goto).length > 0)) {
+            db.collection('stagiaires').updateOne({ token: req.params.token }, {
                 $push: {
                     'tracking.clickLinks': {
                         date: new Date(),
@@ -122,7 +122,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             });
         }
 
-        res.redirect(await externalLinks(db, communes).getLink(trainee, goto));
+        res.redirect(await externalLinks(db, communes).getLink(stagiaire, goto));
     });
 
     return router;

@@ -3,29 +3,29 @@ module.exports = (db, regions, mailer) => {
     const templateName = 'avisRejectedInjureEmail';
     let { utils } = mailer;
 
-    let render = trainee => {
+    let render = stagiaire => {
         return mailer.render(__dirname, templateName, {
-            trainee,
+            stagiaire,
         });
     };
 
     return {
         templateName,
         render,
-        send: async trainee => {
+        send: async stagiaire => {
 
-            let training = trainee.training;
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+            let training = stagiaire.training;
+            let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
             return mailer.createRegionalMailer(region).sendEmail(
-                trainee.trainee.email,
+                stagiaire.trainee.email,
                 {
                     subject: `Rejet de votre avis sur votre formation ${training.title} à ${training.organisation.name}`,
-                    body: await render(trainee),
+                    body: await render(stagiaire),
                 },
                 {
                     list: {
-                        unsubscribe: utils.getUnsubscribeLink(trainee.token),
+                        unsubscribe: utils.getUnsubscribeLink(stagiaire.token),
                     },
                 }
             );

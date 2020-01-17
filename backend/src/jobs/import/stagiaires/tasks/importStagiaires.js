@@ -1,7 +1,7 @@
 const fs = require('fs');
 const md5File = require('md5-file/promise');
 const md5 = require('md5');
-const validateTrainee = require('./utils/validateTrainee');
+const validateStagiaire = require('./utils/validateStagiaire');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
 const { flattenKeys } = require('../../../../core/utils/object-utils');
 const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
@@ -14,26 +14,26 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         date: getCampaignDate(file),
     };
 
-    const isFiltered = trainee => {
+    const isFiltered = stagiaire => {
         if (filters.codeRegion) {
-            return filters.codeRegion === trainee.codeRegion;
+            return filters.codeRegion === stagiaire.codeRegion;
         }
         if (filters.codeFinanceur) {
-            return trainee.training.codeFinanceur.includes(filters.codeFinanceur);
+            return stagiaire.training.codeFinanceur.includes(filters.codeFinanceur);
         }
         return true;
     };
 
-    const hasNotBeenAlreadyImportedOrRemoved = async trainee => {
-        let email = trainee.trainee.email;
-        let [countTrainee, countOptOut] = await Promise.all([
-            db.collection('trainee').countDocuments(flattenKeys(handler.getKey(trainee))),
+    const hasNotBeenAlreadyImportedOrRemoved = async stagiaire => {
+        let email = stagiaire.trainee.email;
+        let [countStagiaires, countOptOut] = await Promise.all([
+            db.collection('stagiaires').countDocuments(flattenKeys(handler.getKey(stagiaire))),
             db.collection('optOut').countDocuments({
                 'md5': md5(email),
             })
         ]);
 
-        return countTrainee === 0 && countOptOut === 0;
+        return countStagiaires === 0 && countOptOut === 0;
     };
 
 
@@ -57,22 +57,22 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         writeObject(async record => {
             try {
                 stats.total++;
-                let trainee = await handler.buildTrainee(record, campaign);
+                let stagiaire = await handler.buildStagiaire(record, campaign);
 
-                if (isFiltered(trainee) && handler.shouldBeImported(trainee) &&
-                    await hasNotBeenAlreadyImportedOrRemoved(trainee)) {
+                if (isFiltered(stagiaire) && handler.shouldBeImported(stagiaire) &&
+                    await hasNotBeenAlreadyImportedOrRemoved(stagiaire)) {
 
-                    await validateTrainee(trainee);
-                    await db.collection('trainee').insertOne(trainee);
+                    await validateStagiaire(stagiaire);
+                    await db.collection('stagiaires').insertOne(stagiaire);
                     stats.imported++;
-                    logger.debug('New trainee inserted');
+                    logger.debug('New stagiaire inserted');
                 } else {
                     stats.ignored++;
-                    logger.debug('Trainee ignored', trainee, {});
+                    logger.debug('Stagiaire ignored', stagiaire, {});
                 }
             } catch (e) {
                 stats.invalid++;
-                logger.error(`Trainee cannot be imported`, record, e);
+                logger.error(`Stagiaire cannot be imported`, record, e);
             }
         }, { parallel: 25 })
     ]);

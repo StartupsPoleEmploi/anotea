@@ -1,6 +1,6 @@
 module.exports = async (db, query) => {
 
-    let results = await db.collection('trainee').aggregate([
+    let results = await db.collection('stagiaires').aggregate([
         {
             $match: query
         },

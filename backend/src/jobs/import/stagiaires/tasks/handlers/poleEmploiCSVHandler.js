@@ -66,25 +66,25 @@ module.exports = (db, regions) => {
                 'liste_financeur',
             ]
         },
-        getKey: trainee => {
+        getKey: stagiaire => {
             return {
                 trainee: {
-                    email: trainee.trainee.email,
+                    email: stagiaire.trainee.email,
                 },
                 training: {
-                    idSession: trainee.training.idSession,
+                    idSession: stagiaire.training.idSession,
                 }
             };
         },
-        shouldBeImported: trainee => {
-            let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
-            let conseilRegional = trainee.training.codeFinanceur.filter(c => isConseilRegional(c)).length > 0;
+        shouldBeImported: stagiaire => {
+            let region = regions.findActiveRegions().find(region => region.codeRegion === stagiaire.codeRegion);
+            let conseilRegional = stagiaire.training.codeFinanceur.filter(c => isConseilRegional(c)).length > 0;
 
-            let isValid = () => region && trainee.trainee.emailValid;
+            let isValid = () => region && stagiaire.trainee.emailValid;
 
             let isAfter = () => {
                 let since = conseilRegional && region.conseil_regional.since ? region.conseil_regional.since : region.since;
-                return moment(trainee.training.scheduledEndDate).isAfter(moment(`${since} -0000`, 'YYYYMMDD Z'));
+                return moment(stagiaire.training.scheduledEndDate).isAfter(moment(`${since} -0000`, 'YYYYMMDD Z'));
             };
 
             let isNotExcluded = () => {
@@ -95,14 +95,14 @@ module.exports = (db, regions) => {
                 if (conseilRegional &&
                     region.conseil_regional.active &&
                     region.conseil_regional.import === 'certifications_only') {
-                    return trainee.training.certifInfos.length > 0;
+                    return stagiaire.training.certifInfos.length > 0;
                 }
                 return true;
             };
 
             return isValid() && isAfter() && isNotExcluded();
         },
-        buildTrainee: async (record, campaign) => {
+        buildStagiaire: async (record, campaign) => {
 
             if (_.isEmpty(record)) {
                 throw new Error(`Données CSV invalides ${record}`);

@@ -3,9 +3,9 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const importTrainee = require('./tasks/importTrainee');
-const validateCsvFile = require('./tasks/validateCsvFile');
-const refreshTrainee = require('./tasks/refreshTrainee');
+const importStagiaire = require('./tasks/importStagiaires');
+const validateCsvFile = require('./tasks/validateStagiaire');
+const refreshStagiaire = require('./tasks/refreshStagiaires');
 
 cli.description('Import des stagiaires')
 .option('--source [name]', 'Source to import (PE or IDF)')
@@ -42,12 +42,12 @@ execute(async ({ logger, db, exit, configuration, regions, mailer, sendSlackNoti
 
     } else if (refresh) {
         logger.info(`Refreshing data with ${file}...`);
-        return source === 'PE' ? refreshTrainee(db, logger, file, handler) : exit('Can only refresh Pôle Emploi CSV file');
+        return source === 'PE' ? refreshStagiaire(db, logger, file, handler) : exit('Can only refresh Pôle Emploi CSV file');
 
     } else {
         logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
         try {
-            let stats = await importTrainee(db, logger, file, handler, filters);
+            let stats = await importStagiaire(db, logger, file, handler, filters);
 
             if (stats.total > 0) {
                 sendSlackNotification({

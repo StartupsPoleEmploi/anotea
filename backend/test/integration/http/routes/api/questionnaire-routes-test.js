@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const _ = require('lodash');
 const { withServer } = require('../../../../helpers/with-server');
-const { newTrainee } = require('../../../../helpers/data/dataset');
+const { newStagiaire } = require('../../../../helpers/data/dataset');
 
 
 describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatabase }) => {
@@ -12,11 +12,11 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let app = await startServer();
         let db = await getTestDatabase();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
@@ -73,7 +73,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             unsubscribe: false,
             mailSent: true,
-            avisCreated: false,
             mailSentDate: date.toJSON(),
             tracking: {
                 firstRead: date.toJSON()
@@ -81,7 +80,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             codeRegion: '11',
         });
 
-        assert.deepStrictEqual(_.omit(response.body.infosRegion, ['trainee']), {
+        assert.deepStrictEqual(_.omit(response.body.infosRegion, ['stagiaire']), {
             showLinks: false,
             region: {
                 nom: 'Île-de-France',
@@ -145,7 +144,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             }
         });
 
-        let result = await db.collection('comment').findOne({ token: trainee.token });
+        let result = await db.collection('comment').findOne({ token: stagiaire.token });
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
@@ -198,11 +197,11 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let app = await startServer();
         let db = await getTestDatabase();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
@@ -214,7 +213,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.strictEqual(response.statusCode, 200);
 
-        let result = await db.collection('comment').findOne({ token: trainee.token });
+        let result = await db.collection('comment').findOne({ token: stagiaire.token });
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
@@ -262,11 +261,11 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let app = await startServer();
         let db = await getTestDatabase();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
@@ -282,7 +281,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.strictEqual(response.statusCode, 200);
 
-        let result = await db.collection('comment').findOne({ token: trainee.token });
+        let result = await db.collection('comment').findOne({ token: stagiaire.token });
         assert.deepStrictEqual(result.comment.text, 'texte');
     });
 
@@ -290,11 +289,11 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         let app = await startServer();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
@@ -315,11 +314,11 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         let app = await startServer();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
@@ -331,7 +330,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.strictEqual(response.statusCode, 200);
 
         response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,

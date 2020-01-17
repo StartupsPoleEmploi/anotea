@@ -136,11 +136,11 @@ module.exports = async (db, logger, file) => {
     };
 
     let certifInfos = await loadCertifinfos(file);
-    let [trainee, comment] = await Promise.all([
-        patch('trainee', certifInfos),
+    let [stagiaires, comment] = await Promise.all([
+        patch('stagiaires', certifInfos),
         patch('comment', certifInfos),
     ]);
 
-    return { trainee, comment };
+    return { stagiaires, comment };
 };
 

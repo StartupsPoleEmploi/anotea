@@ -30,7 +30,7 @@ const buildAvis = (stagiaire, custom = {}) => {
 module.exports = async (db, options) => {
 
     let generateAvis = async (nbElements, getCustom = () => ({})) => {
-        let cursor = await db.collection('trainee').find({ avisCreated: false }).limit(nbElements);
+        let cursor = await db.collection('stagiaires').find({ avisCreated: false }).limit(nbElements);
 
         return batchCursor(cursor, async next => {
             let stagiaire = await next();
@@ -38,7 +38,7 @@ module.exports = async (db, options) => {
             //TODO add a service to create avis
             let avis = buildAvis(stagiaire, getCustom());
             await Promise.all([
-                db.collection('trainee').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
+                db.collection('stagiaires').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
                 db.collection('comment').insertOne(avis),
             ]);
         });

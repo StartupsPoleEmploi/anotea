@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
-module.exports = trainee => {
+module.exports = stagiaire => {
 
-    return Joi.validate(trainee, {
+    return Joi.validate(stagiaire, {
         _id: Joi.string().required(),
         campaign: Joi.string().required(),
         campaignDate: Joi.date().required(),

@@ -3,23 +3,23 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const { newComment } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/components/fake-logger');
-const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
-const refreshTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/refreshTrainee');
+const importStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/importStagiaires');
+const refreshStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/refreshStagiaires');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile, insertIntoDatabase }) => {
 
-    it('should update data in trainee', async () => {
+    it('should update data in stagiaire', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
-        let previous = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
+        await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        let previous = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
 
-        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
+        let stats = await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
+        let next = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
             trainee: {
                 dnIndividuNational: 'AAAAAAA',
@@ -41,7 +41,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         }));
 
         assert.deepStrictEqual(stats, {
-            trainee: 1,
+            stagiaires: 1,
             comment: 0,
             invalid: 0,
             total: 2
@@ -53,16 +53,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
-        await db.collection('trainee').updateMany({}, {
+        await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        await db.collection('stagiaires').updateMany({}, {
             $push: {
                 'meta.history': { value: 'something changed' }
             }
         });
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
+        await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
+        let next = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(next.meta.history.length, 2);
         assert.ok(next.meta.history[0].date);
         assert.deepStrictEqual(_.omit(next.meta.history[0], ['date']), {
@@ -97,11 +97,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
+        await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_2@pe.com' });
+        let next = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_2@pe.com' });
         assert.strictEqual(next.training.place.inseeCode, '91521');
     });
 
@@ -110,16 +110,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
-        let trainee = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
+        await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        let stagiaire = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
         let previous = newComment({
-            token: trainee.token,
+            token: stagiaire.token,
         });
         await insertIntoDatabase('comment', previous);
 
-        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
+        let stats = await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('comment').findOne({ token: trainee.token });
+        let next = await db.collection('comment').findOne({ token: stagiaire.token });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
             training: {
                 formacodes: ['99999'],
@@ -159,7 +159,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             }
         });
         assert.deepStrictEqual(stats, {
-            trainee: 1,
+            stagiaires: 1,
             comment: 1,
             invalid: 0,
             total: 2,

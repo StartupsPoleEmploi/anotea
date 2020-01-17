@@ -3,22 +3,22 @@ module.exports = (db, regions, mailer) => {
     const templateName = 'avisStagiaireEmail';
     let { utils } = mailer;
 
-    let render = trainee => {
-        let utm = utils.getUTM(trainee.campaign);
+    let render = stagiaire => {
+        let utm = utils.getUTM(stagiaire.campaign);
 
         return mailer.render(__dirname, templateName, {
-            trainee,
-            link: utils.getPublicUrl(`/questionnaire/${(trainee.token)}?${(utm)}`),
+            stagiaire,
+            link: utils.getPublicUrl(`/questionnaire/${(stagiaire.token)}?${(utm)}`),
         });
     };
 
     return {
         templateName,
         render,
-        send: async trainee => {
+        send: async stagiaire => {
 
             let onSuccess = () => {
-                return db.collection('trainee').updateOne({ '_id': trainee._id }, {
+                return db.collection('stagiaires').updateOne({ '_id': stagiaire._id }, {
                     $set: {
                         mailSent: true,
                         mailSentDate: new Date(),
@@ -28,13 +28,13 @@ module.exports = (db, regions, mailer) => {
                         mailErrorDetail: ''
                     },
                     $inc: {
-                        mailRetry: trainee.mailRetry >= 0 ? 1 : 0
+                        mailRetry: stagiaire.mailRetry >= 0 ? 1 : 0
                     }
                 });
             };
 
             let onError = async err => {
-                await db.collection('trainee').updateOne({ '_id': trainee._id }, {
+                await db.collection('stagiaires').updateOne({ '_id': stagiaire._id }, {
                     $set: {
                         mailSent: true,
                         mailError: 'smtpError',
@@ -45,16 +45,16 @@ module.exports = (db, regions, mailer) => {
                 throw err;
             };
 
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+            let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
             return mailer.createRegionalMailer(region).sendEmail(
-                trainee.trainee.email,
+                stagiaire.trainee.email,
                 {
                     subject: 'Pôle Emploi vous demande votre avis sur votre formation',
-                    body: await render(trainee),
+                    body: await render(stagiaire),
                 },
                 {
                     list: {
-                        unsubscribe: utils.getUnsubscribeLink(trainee.token),
+                        unsubscribe: utils.getUnsubscribeLink(stagiaire.token),
                     },
                 }
             )

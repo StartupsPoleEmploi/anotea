@@ -4,7 +4,7 @@ const request = require('supertest');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
+const { newComment, newStagiaire, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase, logAsOrganisme }) => {
 
@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('trainee', newTrainee({
+            insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
                 trainee: {
                     email: 'robert@domaine.com',
@@ -307,7 +307,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -328,7 +328,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345', status: 'reported' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '11111111111111',
                 courriel: 'validate@email.fr',
@@ -354,7 +354,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345', status: 'reported' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '11111111111111',
                 courriel: 'reject@email.fr',
@@ -381,7 +381,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345', codeRegion: '7' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -399,7 +399,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -422,7 +422,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -449,7 +449,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -475,7 +475,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345', codeRegion: '7' })),
-            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -493,7 +493,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('trainee', newTrainee({ token: '123', avisCreated: true })),
+            insertIntoDatabase('stagiaires', newStagiaire({ token: '123', avisCreated: true })),
             insertIntoDatabase('comment', newComment({ _id: id, token: '123' })),
         ]);
 
@@ -503,8 +503,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(await db.collection('comment').countDocuments({ _id: id }), 0);
-        let trainee = await db.collection('trainee').findOne({ token: '123' });
-        assert.strictEqual(trainee.avisCreated, false);
+        let stagiaire = await db.collection('stagiaires').findOne({ token: '123' });
+        assert.strictEqual(stagiaire.avisCreated, false);
     });
 
     it('can delete an avis and resend email', async () => {
@@ -513,7 +513,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('trainee', newTrainee({ token: '1234' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ token: '1234' })),
             insertIntoDatabase('comment', newComment({ _id: id, token: '1234' })),
         ]);
 

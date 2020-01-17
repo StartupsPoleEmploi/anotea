@@ -4,7 +4,7 @@ const parse = require('csv-parse');
 const readline = require('readline');
 const colors = require('colors/safe');
 const _ = require('lodash');
-const validateTrainee = require('./utils/validateTrainee');
+const validateStagiaire = require('./utils/validateStagiaire');
 const { getCampaignDate, getCampaignName } = require('./utils/utils');
 
 const ValidationErrorTypes = Object.freeze({
@@ -39,9 +39,9 @@ const isLineValid = (file, handler, rawLine) => {
             }
 
             try {
-                let trainee = await handler.buildTrainee(data[0], campaign);
+                let trainee = await handler.buildStagiaire(data[0], campaign);
                 if (await handler.shouldBeImported(trainee)) {
-                    return validateTrainee(trainee)
+                    return validateStagiaire(trainee)
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
                 } else {

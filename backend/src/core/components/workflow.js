@@ -110,10 +110,10 @@ module.exports = (db, logger, emails) => {
 
                 if ((qualification === 'injure' || qualification === 'alerte')) {
                     sendEmail(async () => {
-                        let trainee = await db.collection('trainee').findOne({ token: original.token });
+                        let stagiaire = await db.collection('stagiaires').findOne({ token: original.token });
 
                         let message = emails.getEmailMessageByTemplateName(`avisRejected${_.capitalize(qualification)}Email`);
-                        return message.send(trainee);
+                        return message.send(stagiaire);
                     });
                 }
             }
@@ -169,7 +169,7 @@ module.exports = (db, logger, emails) => {
 
             let [results] = await Promise.all([
                 db.collection('comment').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
-                db.collection('trainee').updateOne({ token: previous.token }, {
+                db.collection('stagiaires').updateOne({ token: previous.token }, {
                     $set: {
                         avisCreated: false,
                     }
@@ -188,9 +188,9 @@ module.exports = (db, logger, emails) => {
 
             if (options.sendEmail) {
                 sendEmail(async () => {
-                    let trainee = await db.collection('trainee').findOne({ token: previous.token });
+                    let stagiaire = await db.collection('stagiaires').findOne({ token: previous.token });
                     let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
-                    return message.send(trainee);
+                    return message.send(stagiaire);
                 });
             }
         },

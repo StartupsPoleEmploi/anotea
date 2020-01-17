@@ -8,6 +8,7 @@ cli.parse(process.argv);
 execute(async ({ db }) => {
     let stats = {};
     stats.dropCollections = await require('./tasks/dropCollections')(db);
+    stats.renameCollections = await require('./tasks/renameCollections')(db);
     stats.cleanSiretProperties = await require('./tasks/cleanSiretProperties')(db);
     stats.renameIdentifiant = await require('./tasks/renameIdentifiant')(db);
     stats.renameRaisonSociale = await require('./tasks/renameRaisonSociale')(db);

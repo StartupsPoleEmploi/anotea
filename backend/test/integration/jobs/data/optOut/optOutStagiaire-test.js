@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
-const { newTrainee, newComment } = require('../../../../helpers/data/dataset');
+const { newStagiaire, newComment } = require('../../../../helpers/data/dataset');
 const optOutStagiaire = require('../../../../../src/jobs/data/optOut/tasks/optOutStagiaire');
 
 describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
@@ -10,7 +10,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
         let db = await getTestDatabase();
         await Promise.all([
-            insertIntoDatabase('trainee', newTrainee({
+            insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
                 trainee: {
                     email: 'toto@email.fr',
@@ -23,7 +23,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
         await optOutStagiaire(db, 'toto@email.fr');
 
-        assert.ok(await db.collection('trainee').count({ token: '12345' }) === 0);
+        assert.ok(await db.collection('stagiaires').count({ token: '12345' }) === 0);
         assert.ok(await db.collection('comment').count({ token: '12345' }) === 0);
         assert.ok(await db.collection('optOut').count() === 1);
         let doc = await db.collection('optOut').findOne();

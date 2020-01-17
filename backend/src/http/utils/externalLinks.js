@@ -2,7 +2,7 @@ module.exports = (db, communes) => {
 
     const staticLinks = [{ goto: 'clara', url: 'https://clara.pole-emploi.fr' }];
 
-    const getLink = async (trainee, goto) => {
+    const getLink = async (stagiaire, goto) => {
 
         const url = staticLinks.filter(link => link.goto === goto).map(link => {
             return link.url;
@@ -12,11 +12,11 @@ module.exports = (db, communes) => {
         }
 
         const distance = 30; // km
-        const postalCode = trainee.training.place.postalCode;
+        const postalCode = stagiaire.training.place.postalCode;
 
         let [romeMapping, commune] = await Promise.all([
             db.collection('formacodeRomeMapping').aggregate([{
-                $match: { 'formacodes.formacode': { $in: trainee.training.formacodes } }
+                $match: { 'formacodes.formacode': { $in: stagiaire.training.formacodes } }
             }, {
                 $group: { _id: '$codeROME' }
             }]).toArray(),

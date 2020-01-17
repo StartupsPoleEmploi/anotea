@@ -2,7 +2,7 @@ const request = require('supertest');
 const _ = require('lodash');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
+const { newComment, newStagiaire } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsFinanceur, logAsOrganisme }) => {
 
@@ -16,8 +16,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         }, custom));
     };
 
-    let buildTrainee = (custom = {}) => {
-        return newTrainee(_.merge({
+    let buildStagiaire = (custom = {}) => {
+        return newStagiaire(_.merge({
             codeRegion: '11',
             training: {
                 organisation: { siret: '11111111111111' },
@@ -209,15 +209,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase('stagiaires', buildStagiaire({
                     mailSent: true,
                     mailSentDate: new Date()
                 })),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase('stagiaires', buildStagiaire({
                     mailSent: null,
                     mailSentDate: new Date()
                 })),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase('stagiaires', buildStagiaire({
                     mailSent: false,
                     mailSentDate: null
                 })),

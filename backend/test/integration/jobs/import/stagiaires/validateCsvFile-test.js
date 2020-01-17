@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const logger = require('../../../../helpers/components/fake-logger');
-const validateCsvFile = require('../../../../../src/jobs/import/stagiaires/tasks/validateCsvFile');
+const validateCsvFile = require('../../../../../src/jobs/import/stagiaires/tasks/validateStagiaire');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
 

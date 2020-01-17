@@ -3,7 +3,7 @@ const { getNbModifiedDocuments } = require('../../../job-utils');
 
 module.exports = async db => {
     let [questionnaire, questionnaire6Mois, organisme] = await Promise.all([
-        db.collection('trainee').updateMany(
+        db.collection('stagiaires').updateMany(
             {
                 avisCreated: false,
                 mailSent: true,
@@ -19,7 +19,7 @@ module.exports = async db => {
                 }
             }
         ),
-        db.collection('trainee').updateMany(
+        db.collection('stagiaires').updateMany(
             {
                 'mailing.questionnaire6Mois': { $exists: true },
                 'importDate': { $gte: moment().subtract(1, 'months').toDate() },

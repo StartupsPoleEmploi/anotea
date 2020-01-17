@@ -10,7 +10,7 @@ const getDateInThePast = () => moment().subtract('100', 'days').toDate();
 module.exports = {
     randomize,
     randomSIRET,
-    newTrainee: (custom, date = getDateInThePast()) => {
+    newStagiaire: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: `${randomize('test-campaign')}`,
             campaign: 'test-campaign',

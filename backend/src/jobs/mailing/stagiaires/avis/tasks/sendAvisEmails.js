@@ -10,22 +10,22 @@ module.exports = async (db, logger, emails, action, options = {}) => {
         error: 0,
     };
 
-    let cursor = db.collection('trainee').find(action.getQuery());
+    let cursor = db.collection('stagiaires').find(action.getQuery());
     if (options.limit) {
         cursor.limit(options.limit);
     }
 
     while (await cursor.hasNext()) {
         stats.total++;
-        const trainee = await cursor.next();
-        let email = trainee.trainee.email;
-        trainee.trainee.firstName = titleize(trainee.trainee.firstName);
-        trainee.trainee.name = titleize(trainee.trainee.name);
+        const stagiaire = await cursor.next();
+        let email = stagiaire.trainee.email;
+        stagiaire.trainee.firstName = titleize(stagiaire.trainee.firstName);
+        stagiaire.trainee.name = titleize(stagiaire.trainee.name);
 
         try {
-            logger.info(`Sending email to ${email} for campaign ${trainee.campaign}`);
+            logger.info(`Sending email to ${email} for campaign ${stagiaire.campaign}`);
             let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
-            await message.send(trainee);
+            await message.send(stagiaire);
 
             if (options.delay) {
                 await delay(options.delay);

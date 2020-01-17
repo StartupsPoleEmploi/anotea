@@ -13,13 +13,13 @@
                     </mj-text>
 
                     <mj-text css-class="text-secondary">
-                        Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+                        Bonjour <%= stagiaire.trainee.firstName %> <%= stagiaire.trainee.name %>,
                     </mj-text>
 
                     <mj-text css-class="text-secondary">
                         Nous vous informons que nous allons prendre contact avec
-                        "<%= trainee.training.organisation.name %>"
-                        suite au commentaire que vous avez déposé sur "<%= trainee.training.title %>".
+                        "<%= stagiaire.training.organisation.name %>"
+                        suite au commentaire que vous avez déposé sur "<%= stagiaire.training.title %>".
                     </mj-text>
 
                     <%- include('../common/signature.mjml.ejs'); %>

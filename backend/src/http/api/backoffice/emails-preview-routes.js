@@ -15,8 +15,8 @@ module.exports = ({ emails, middlewares }) => {
                 token: 'token-organisme',
                 codeRegion: user.codeRegion,
             },
-            trainee: {
-                token: 'token-trainee',
+            stagiaire: {
+                token: 'token-stagiaire',
                 codeRegion: user.codeRegion,
                 trainee: {
                     firstName: 'Paul',
@@ -54,7 +54,7 @@ module.exports = ({ emails, middlewares }) => {
         let message = emails.getEmailMessageByTemplateName(templateName);
 
         let preview = getPreviewData(req.user);
-        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'trainee'], preview.comment);
+        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.comment);
 
         return sendHTML(res, html);
     }));

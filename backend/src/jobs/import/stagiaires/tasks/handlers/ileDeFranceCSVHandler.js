@@ -29,25 +29,25 @@ module.exports = (db, regions) => {
                 'Id Session DOKELIO',
             ]
         },
-        getKey: trainee => {
+        getKey: stagiaire => {
             return {
                 sourceIDF: true,
                 trainee: {
-                    email: trainee.trainee.email,
+                    email: stagiaire.trainee.email,
                 },
                 training: {
                     infoRegion: {
-                        idActionFormation: trainee.training.infoRegion.idActionFormation,
+                        idActionFormation: stagiaire.training.infoRegion.idActionFormation,
                     }
                 }
             };
         },
-        shouldBeImported: trainee => {
+        shouldBeImported: stagiaire => {
             let idf = regions.findRegionByCodeRegion('11');
-            let isAfter = moment(trainee.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
-            return isAfter && trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null;
+            let isAfter = moment(stagiaire.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
+            return isAfter && stagiaire.trainee.emailValid && stagiaire.training.infoCarif.numeroSession === null;
         },
-        buildTrainee: (record, campaign) => {
+        buildStagiaire: (record, campaign) => {
 
             try {
                 if (_.isEmpty(record)) {

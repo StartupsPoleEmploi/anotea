@@ -2,7 +2,7 @@ module.exports = (db, regions) => {
 
     let { findActiveRegions } = regions;
     let avis = db.collection('comment');
-    let trainee = db.collection('trainee');
+    let stagiaires = db.collection('stagiaires');
 
     const getAvisStats = async (label, codeRegions) => {
 
@@ -21,9 +21,9 @@ module.exports = (db, regions) => {
             nbCommentairesNegatifs,
             nbCommentairesRejetes
         ] = await Promise.all([
-            trainee.countDocuments({ ...filter }),
-            trainee.countDocuments({ 'mailSent': true, ...filter }),
-            db.collection('trainee').aggregate([
+            stagiaires.countDocuments({ ...filter }),
+            stagiaires.countDocuments({ 'mailSent': true, ...filter }),
+            db.collection('stagiaires').aggregate([
                 { $match: { 'mailSent': true, ...filter } },
                 {
                     $group: {
@@ -32,9 +32,9 @@ module.exports = (db, regions) => {
                     }
                 },
             ]).toArray(),
-            trainee.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
-            trainee.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
-            trainee.countDocuments({ 'avisCreated': true, ...filter }),
+            stagiaires.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
+            stagiaires.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
+            stagiaires.countDocuments({ 'avisCreated': true, ...filter }),
             avis.countDocuments({ 'comment': { $ne: null }, ...filter }),
             avis.countDocuments({ 'comment': { $ne: null }, 'status': 'none', ...filter }),
             avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'positif', ...filter }),
