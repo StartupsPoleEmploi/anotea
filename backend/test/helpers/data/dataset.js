@@ -64,7 +64,7 @@ module.exports = {
     },
     newModerateurAccount: custom => {
         return _.merge({
-            courriel: 'admin@pole-emploi.fr',
+            identifiant: 'admin@pole-emploi.fr',
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
             profile: 'moderateur'
@@ -114,7 +114,7 @@ module.exports = {
     },
     newFinancerAccount: custom => {
         return _.merge({
-            courriel: 'contact@financer.fr',
+            identifiant: 'contact@financer.fr',
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
             raisonSociale: 'Conseil Regional',

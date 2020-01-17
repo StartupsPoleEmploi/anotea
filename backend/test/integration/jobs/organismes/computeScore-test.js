@@ -107,13 +107,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await Promise.all([
             prepareDatabase(),
             insertIntoDatabase('accounts', newModerateurAccount({
-                courriel: 'admin@pole-emploi.fr',
+                identifiant: 'admin@pole-emploi.fr',
             })),
         ]);
 
         await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ courriel: 'admin@pole-emploi.fr' });
+        let doc = await db.collection('accounts').findOne({ identifiant: 'admin@pole-emploi.fr' });
         assert.deepStrictEqual(doc.score, undefined);
     });
 
