@@ -26,7 +26,7 @@ module.exports = async (db, logger, file) => {
                     {
                         $setOnInsert: {
                             siret,
-                            raisonSociale: kairos.libelle,
+                            raison_sociale: kairos.libelle,
                             codeRegion: kairos.codeRegion,
                             token: uuid.v4(),
                             creationDate: new Date(),

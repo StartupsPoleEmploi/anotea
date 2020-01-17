@@ -26,7 +26,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 {
                     _id: '1234',
                     siret: '11111111111111',
-                    raisonSociale: 'Pole Emploi Formation',
+                    raison_sociale: 'Pole Emploi Formation',
                     courriel: 'contact@poleemploi-formation.fr',
                     courriels: [
                         { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
@@ -165,17 +165,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111111,
-                raisonSociale: 'Anotea',
+                raison_sociale: 'Anotea',
             })),
 
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
-                raisonSociale: 'anotea Misc',
+                raison_sociale: 'anotea Misc',
             })),
 
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 33333333333333,
-                raisonSociale: 'Pole Emploi',
+                raison_sociale: 'Pole Emploi',
             })),
         ]);
 

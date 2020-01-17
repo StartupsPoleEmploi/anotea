@@ -99,7 +99,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepStrictEqual(_.omit(organisme, ['token', 'creationDate']), {
             _id: parseInt(siret),
             siret,
-            raisonSociale: 'Pole Emploi Formation',
+            raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
             courriels: [{ courriel: 'contact@organisme.fr', source: 'kairos' }],
             sources: ['kairos', 'sso'],
@@ -138,7 +138,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.ok(decodedToken.exp);
         assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
-            raisonSociale: 'Pole Emploi Formation',
+            raison_sociale: 'Pole Emploi Formation',
             sub: siret,
             siret: siret,
             codeRegion: '11',

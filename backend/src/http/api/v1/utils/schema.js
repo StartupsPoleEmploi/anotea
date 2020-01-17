@@ -11,7 +11,7 @@ let getAggregateRating = score => {
 let getOrganization = organisme => {
     return {
         '@type': 'Organization',
-        'name': organisme.raisonSociale || organisme.raison_sociale, //FIXME
+        'name': organisme.raison_sociale,
     };
 };
 

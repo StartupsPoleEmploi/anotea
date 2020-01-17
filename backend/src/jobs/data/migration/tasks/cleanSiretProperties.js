@@ -10,6 +10,10 @@ module.exports = async db => {
     await batchCursor(cursor, async next => {
         let organisme = await next();
 
+        if (organisme.siret) {
+            return;
+        }
+
         let siret = organisme.meta.siretAsString;
         if (siret.startsWith('00000')) {
             siret = siret.split('00000').join('');

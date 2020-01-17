@@ -25,7 +25,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             sources: ['intercarif'],
             profile: 'organisme',
             codeRegion: '11',
-            raisonSociale: 'Anotea Formation Paris',
+            raison_sociale: 'Anotea Formation Paris',
             lieux_de_formation: [
                 {
                     nom: 'Anotea Formation Paris',
@@ -79,7 +79,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             sources: ['intercarif'],
             profile: 'organisme',
             codeRegion: '11',
-            raisonSociale: 'Anotea Formation Paris Bis',
+            raison_sociale: 'Anotea Formation Paris Bis',
             lieux_de_formation: [
                 {
                     nom: 'Anotea Formation Paris Bis',
@@ -108,7 +108,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
-                raisonSociale: 'Formateur',
+                raison_sociale: 'Formateur',
                 courriel: 'OLD@formateur.com',
                 passwordHash: 'hash',
                 token: 'token',
@@ -122,7 +122,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
         assert.deepStrictEqual(_.omit(doc, ['_id', 'updateDate']), {
             siret: '22222222222222',
-            raisonSociale: 'Formateur',
+            raison_sociale: 'Formateur',
             passwordHash: 'hash',
             profile: 'organisme',
             token: 'token',

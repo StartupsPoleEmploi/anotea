@@ -74,7 +74,7 @@ module.exports = {
         return _.merge({
             _id: parseInt(custom.siret || '6080274100045'),
             siret: '6080274100045',
-            raisonSociale: 'Pole Emploi Formation',
+            raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
             courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
@@ -117,7 +117,7 @@ module.exports = {
             identifiant: 'contact@financer.fr',
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
-            raisonSociale: 'Conseil Regional',
+            raison_sociale: 'Conseil Regional',
             codeFinanceur: '2',
             profile: 'financeur'
         }, custom);

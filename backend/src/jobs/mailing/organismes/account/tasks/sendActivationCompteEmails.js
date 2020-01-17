@@ -19,7 +19,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
 
     while (await cursor.hasNext()) {
         let organisme = await cursor.next();
-        logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.siret}/${organisme.courriel}`);
+        logger.info(`Sending email to ${organisme.raison_sociale}/${organisme.siret}/${organisme.courriel}`);
 
         stats.total++;
         try {
