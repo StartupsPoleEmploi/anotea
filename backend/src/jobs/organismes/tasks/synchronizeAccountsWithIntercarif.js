@@ -91,7 +91,7 @@ module.exports = async (db, logger) => {
                         SIRET: id,
                         raisonSociale: formateur.raison_sociale_formateur,
                         codeRegion: findCodeRegion(data),
-                        courriel: data.courriels[0].courriel,
+                        courriel: data.courriels.length > 0 ? data.courriels[0].courriel : null,
                         token: uuid.v4(),
                         creationDate: new Date(),
                         meta: {
@@ -99,8 +99,8 @@ module.exports = async (db, logger) => {
                         }
                     },
                     $addToSet: {
-                        courriels: { $each: data.courriels },
                         sources: 'intercarif',
+                        courriels: { $each: data.courriels },
                     },
                     $set: {
                         profile: 'organisme',

@@ -35,8 +35,8 @@ module.exports = async (db, logger, file) => {
                             courriel,
                         },
                         $addToSet: {
-                            courriels: { courriel, source: 'kairos' },
                             sources: 'kairos',
+                            ...(courriel ? { courriels: { courriel, source: 'kairos' } } : {}),
                         },
                         $set: {
                             profile: 'organisme',
