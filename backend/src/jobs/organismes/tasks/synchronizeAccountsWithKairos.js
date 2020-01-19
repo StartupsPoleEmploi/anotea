@@ -1,5 +1,4 @@
 const uuid = require('node-uuid');
-const _ = require('lodash');
 const { writeObject, pipeline } = require('../../../core/utils/stream-utils');
 const getOrganismesFromKairosCSV = require('./kairos/getOrganismesFromKairosCSV');
 
@@ -18,13 +17,13 @@ module.exports = async (db, logger, file) => {
 
             try {
                 let siret = kairos.siret;
-                let account = await db.collection('accounts').findOne({ siret });
                 let courriel = kairos.emailRGC;
 
                 let results = await db.collection('accounts').updateOne(
                     { siret },
                     {
                         $setOnInsert: {
+                            profile: 'organisme',
                             siret,
                             raison_sociale: kairos.libelle,
                             codeRegion: kairos.codeRegion,
@@ -36,10 +35,6 @@ module.exports = async (db, logger, file) => {
                         $addToSet: {
                             sources: 'kairos',
                             ...(courriel ? { courriels: { courriel, source: 'kairos' } } : {}),
-                        },
-                        $set: {
-                            profile: 'organisme',
-                            ...(_.get(account, 'meta.kairos') ? {} : { 'meta.kairos.eligible': false }),
                         },
                     }
                     , { upsert: true }

@@ -31,11 +31,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             codeRegion: '10',
             raison_sociale: 'Pole Emploi Formation Nord',
             lieux_de_formation: [],
-            meta: {
-                kairos: {
-                    eligible: false,
-                }
-            },
         });
     });
 
@@ -83,11 +78,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
                     }
                 }
             ],
-            meta: {
-                kairos: {
-                    'eligible': false,
-                },
-            },
             profile: 'organisme',
             raison_sociale: 'Anotea Formation Paris',
             sources: ['intercarif', 'kairos'],

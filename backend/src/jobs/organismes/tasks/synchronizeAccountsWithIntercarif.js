@@ -86,6 +86,7 @@ module.exports = async (db, logger) => {
                 { siret },
                 {
                     $setOnInsert: {
+                        profile: 'organisme',
                         siret,
                         raison_sociale: formateur.raison_sociale_formateur,
                         codeRegion: findCodeRegion(data),
@@ -98,8 +99,6 @@ module.exports = async (db, logger) => {
                         courriels: { $each: data.courriels },
                     },
                     $set: {
-                        profile: 'organisme',
-                        //TODO remove underscores
                         lieux_de_formation: _.sortBy(data.lieux_de_formation.map(lieu => {
                             return {
                                 nom: lieu.coordonnees.nom,
