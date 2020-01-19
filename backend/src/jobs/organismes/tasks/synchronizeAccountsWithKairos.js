@@ -40,6 +40,7 @@ module.exports = async (db, logger, file) => {
                         },
                         $set: {
                             profile: 'organisme',
+                            ...(_.get(account, 'meta.kairos') ? {} : { 'meta.kairos.eligible': false }),
                             ...(_.get(account, 'meta.siretAsString') ? {} : { 'meta.siretAsString': kairos.siret }),
                         },
                     }
