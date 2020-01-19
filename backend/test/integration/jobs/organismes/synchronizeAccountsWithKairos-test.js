@@ -33,9 +33,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             lieux_de_formation: [],
             meta: {
                 siretAsString: '33333333333333',
-                kairos: {
-                    eligible: false,
-                }
             },
         });
     });
@@ -86,9 +83,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             ],
             meta: {
                 siretAsString: '22222222222222',
-                kairos: {
-                    'eligible': false,
-                },
             },
             profile: 'organisme',
             raisonSociale: 'Anotea Formation Paris',
