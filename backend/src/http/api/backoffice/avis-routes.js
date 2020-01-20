@@ -73,17 +73,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         }
     }));
 
-    router.put('/api/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-
-        let profile = getProfile(db, regions, req.user);
-        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
-        let { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
-
-        let avis = await workflow.maskPseudo(id, mask, { profile });
-
-        return res.json(avis);
-    }));
-
     router.put('/api/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);

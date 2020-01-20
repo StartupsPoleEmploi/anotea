@@ -165,7 +165,6 @@ module.exports = {
                 accompagnement: 1,
                 global: 2.4,
             },
-            pseudo: randomize('pseudo'),
             commentaire: {
                 title: 'Génial',
                 text: 'Super formation.'

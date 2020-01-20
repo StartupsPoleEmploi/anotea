@@ -226,9 +226,6 @@ definitions:
       id:
         type: string
         description: L'identifiant unique de l'avis
-      pseudo:
-        type: string
-        description: Le pseudo du stagiaire
       date:
         type: string
         description: La date à laquelle l'avis a été crée

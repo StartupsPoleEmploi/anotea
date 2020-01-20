@@ -51,8 +51,6 @@ module.exports = async (db, intercarif, action) => {
         date: 1,
         codeFinanceur: 1,
         commentaire: 1,
-        pseudo: 1,
-        pseudoMasked: 1,
         status: 1,
         reponse: 1,
         codeRegion: 1,

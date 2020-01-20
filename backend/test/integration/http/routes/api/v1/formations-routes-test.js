@@ -18,7 +18,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return formation by id', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
         let date = new Date();
         let avisId = new ObjectID();
         await insertAndReconcile(
@@ -36,7 +35,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newAvis({
                     _id: avisId,
-                    pseudo: pseudo,
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -95,7 +93,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             },
             avis: [{
                 id: avisId.toString(),
-                pseudo,
                 date: date.toJSON(),
                 commentaire: {
                     titre: 'Génial',
@@ -512,7 +509,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        let pseudo = randomize('pseudo');
         let avisId = new ObjectID();
         await insertAndReconcile(
             [
@@ -529,7 +525,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newAvis({
                     _id: avisId,
-                    pseudo,
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -558,7 +553,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body, {
             avis: [{
                 id: avisId.toString(),
-                pseudo,
                 date: date.toJSON(),
                 commentaire: {
                     titre: 'Génial',
@@ -615,8 +609,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
+        let oid = new ObjectID();
+
         let sansCommentaire = newAvis({
-            pseudo: 'pseudo',
+            _id: oid,
             codeRegion: '11',
             training: {
                 formacodes: ['22252'],
@@ -663,14 +659,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, oid.toString());
     });
 
     it('can return avis avec réponse', async () => {
 
         let app = await startServer();
+        let oid = new ObjectID();
+
         let avisAvecReponse = newAvis({
-            pseudo: 'pseudo-avec-réponse',
+            _id: oid,
             codeRegion: '11',
             training: {
                 formacodes: ['22252'],
@@ -722,7 +720,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo-avec-réponse');
+        assert.deepStrictEqual(response.body.avis[0].id, oid.toString());
     });
 
     it('should fail when items_per_page is too big', async () => {
@@ -770,7 +768,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 newAvis({
-                    pseudo: '5minutesAgo',
+                    _id: '5minutesAgo',
                     codeRegion: '11',
                     training: {
                         scheduledEndDate: moment().subtract(5, 'minutes').toDate(),
@@ -784,7 +782,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     },
                 }),
                 newAvis({
-                    pseudo: '7minutesAgo',
+                    _id: '7minutesAgo',
                     codeRegion: '11',
                     training: {
                         scheduledEndDate: moment().subtract(7, 'minutes').toDate(),
@@ -803,8 +801,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let response = await request(app).get('/api/v1/formations/F_XX_XX/avis?tri=date&ordre=asc');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '5minutesAgo');
     });
 
     it('can return avis sorted by notes', async () => {
@@ -823,7 +821,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 newAvis({
-                    pseudo: '1',
+                    _id: '1',
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -839,7 +837,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     },
                 }),
                 newAvis({
-                    pseudo: '2',
+                    _id: '2',
                     codeRegion: '11',
                     training: {
                         formacodes: ['22252'],
@@ -860,8 +858,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let response = await request(app).get('/api/v1/formations/F_XX_XX/avis?tri=notes&ordre=desc');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '2');
-        assert.strictEqual(response.body.avis[1].pseudo, '1');
+        assert.strictEqual(response.body.avis[0].id, '2');
+        assert.strictEqual(response.body.avis[1].id, '1');
     });
 
     it('can return avis sorted by formation', async () => {
@@ -880,7 +878,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 newAvis({
-                    pseudo: 'A',
+                    _id: 'A',
                     codeRegion: '11',
                     training: {
                         title: 'A',
@@ -894,7 +892,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     },
                 }),
                 newAvis({
-                    pseudo: 'B',
+                    _id: 'B',
                     codeRegion: '11',
                     training: {
                         title: 'B',
@@ -916,8 +914,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let response = await request(app).get('/api/v1/formations/F_XX_XX/avis?tri=formation&ordre=desc');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, 'B');
-        assert.strictEqual(response.body.avis[1].pseudo, 'A');
+        assert.strictEqual(response.body.avis[0].id, 'B');
+        assert.strictEqual(response.body.avis[1].id, 'A');
     });
 
 }));

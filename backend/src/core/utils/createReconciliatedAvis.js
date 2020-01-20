@@ -43,10 +43,6 @@ module.exports = data => {
         avis.formation.action.numero = training.infoCarif.numeroAction;
     }
 
-    if (!data.pseudoMasked && data.status !== 'rejected' && !_.isEmpty(data.pseudo)) {
-        avis.pseudo = data.pseudo;
-    }
-
     if (data.commentaire && data.status === 'validated') {
         avis.commentaire = {
             ...(!_.isEmpty(data.commentaire.text) ? { texte: data.commentaire.text } : {}),

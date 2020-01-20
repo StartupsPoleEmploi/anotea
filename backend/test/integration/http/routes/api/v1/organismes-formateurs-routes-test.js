@@ -396,14 +396,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         let date = new Date();
         let avisId = new ObjectID();
-        let pseudo = randomize('pseudo');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: avisId,
-                pseudo,
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -418,7 +416,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(response.body, {
             avis: [{
                 id: avisId.toString(),
-                pseudo,
                 date: date.toJSON(),
                 commentaire: {
                     titre: 'Génial',
@@ -475,8 +472,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
+        let oid = new ObjectID();
+
         let sansCommentaire = newAvis({
-            pseudo: 'pseudo',
+            _id: oid,
             training: {
                 organisation: {
                     siret: '22222222222222',
@@ -502,14 +501,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, oid.toString());
     });
 
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
+        let oid = new ObjectID();
+
         let avisAvecReponse = newAvis({
-            pseudo: 'pseudo',
+            _id: oid,
             training: {
                 organisation: {
                     siret: '22222222222222',
@@ -540,7 +541,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, oid.toString());
     });
 
     it('can search avis and ignoring those archived', async () => {
@@ -584,7 +585,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '5minutesAgo',
+                _id: '5minutesAgo',
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -592,7 +593,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 },
             }, moment().subtract(5, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '6minutesAgo',
+                _id: '6minutesAgo',
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -600,7 +601,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 },
             }, moment().subtract(6, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '7minutesAgo',
+                _id: '7minutesAgo',
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -611,9 +612,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=date');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '5minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].id, '7minutesAgo');
     });
 
     it('should sort avis by date (asc)', async () => {
@@ -625,7 +626,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '5minutesAgo',
+                _id: '5minutesAgo',
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -633,7 +634,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             }, moment().subtract(5, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '6minutesAgo',
+                _id: '6minutesAgo',
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -641,7 +642,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             }, moment().subtract(6, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '7minutesAgo',
+                _id: '7minutesAgo',
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -652,9 +653,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=date&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].id, '5minutesAgo');
     });
 
     it('should sort avis by notes', async () => {
@@ -666,7 +667,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '1', notes: { global: 1 },
+                _id: '1', notes: { global: 1 },
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -674,7 +675,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '3', notes: { global: 3 },
+                _id: '3', notes: { global: 3 },
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -682,7 +683,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '2', notes: { global: 2 },
+                _id: '2', notes: { global: 2 },
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -693,9 +694,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=notes');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '3');
-        assert.strictEqual(response.body.avis[1].pseudo, '2');
-        assert.strictEqual(response.body.avis[2].pseudo, '1');
+        assert.strictEqual(response.body.avis[0].id, '3');
+        assert.strictEqual(response.body.avis[1].id, '2');
+        assert.strictEqual(response.body.avis[2].id, '1');
     });
 
     it('should sort avis by formation', async () => {
@@ -707,7 +708,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: 'C', training: {
+                _id: 'C', training: {
                     title: 'C',
                     organisation: {
                         siret: '22222222222222',
@@ -715,7 +716,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: 'A', training: {
+                _id: 'A', training: {
                     title: 'A',
                     organisation: {
                         siret: '22222222222222',
@@ -723,7 +724,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: 'B', training: {
+                _id: 'B', training: {
                     title: 'B',
                     organisation: {
                         siret: '22222222222222',
@@ -734,9 +735,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=formation&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, 'A');
-        assert.strictEqual(response.body.avis[1].pseudo, 'B');
-        assert.strictEqual(response.body.avis[2].pseudo, 'C');
+        assert.strictEqual(response.body.avis[0].id, 'A');
+        assert.strictEqual(response.body.avis[1].id, 'B');
+        assert.strictEqual(response.body.avis[2].id, 'C');
     });
 
 }));

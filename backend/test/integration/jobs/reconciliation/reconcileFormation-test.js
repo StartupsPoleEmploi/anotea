@@ -13,12 +13,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         let avisId = new ObjectID();
         let date = new Date();
-        let pseudo = randomize('pseudo');
+
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('avis', newAvis({
                 _id: avisId,
-                pseudo,
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
@@ -55,7 +54,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             avis: [
                 {
                     id: avisId,
-                    pseudo: pseudo,
                     date: date,
                     commentaire: {
                         titre: 'Génial',
@@ -356,11 +354,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
     it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
         let db = await getTestDatabase();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
+
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('avis', newAvis({
-                pseudo,
+                _id: oid,
                 training: {
                     formacodes: ['22403'],
                     certifInfos: [],
@@ -376,18 +375,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
+        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.id': oid });
         assert.strictEqual(count, 1);
     });
 
     it('should reconcile comments with same certifinfo/siret/code_postal than the session', async () => {
 
         let db = await getTestDatabase();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
+
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('avis', newAvis({
-                pseudo,
+                _id: oid,
                 training: {
                     formacodes: [],
                     certifInfos: ['80735'],
@@ -403,7 +403,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
+        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.id': oid });
         assert.strictEqual(count, 1);
     });
 

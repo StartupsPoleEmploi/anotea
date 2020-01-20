@@ -23,7 +23,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
             commentaire: {
                 texte: 'texte',
                 titre: 'titre'
@@ -181,7 +180,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 accompagnement: 2,
                 global: 1.8,
             },
-            pseudo: 'JohnD',
             commentaire: {
                 title: 'titre',
                 text: 'texte',
@@ -208,7 +206,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
         });
 
         assert.strictEqual(response.statusCode, 200);
@@ -250,7 +247,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 accompagnement: 2,
                 global: 1.8,
             },
-            pseudo: 'JohnD',
             read: false,
             status: 'validated',
         });
@@ -272,7 +268,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
             commentaire: {
                 texte: 'texte 😂',
                 titre: 'titre'
@@ -300,7 +295,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: '',
             commentaire: {
                 texte: 'Super connard',
                 titre: 'titre'
@@ -325,7 +319,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
         });
         assert.strictEqual(response.statusCode, 200);
 
@@ -337,7 +330,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
         });
         assert.strictEqual(response.statusCode, 423);
     });

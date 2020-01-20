@@ -10,7 +10,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
         let date = new Date();
         let oid = new ObjectID();
 
@@ -18,18 +17,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
                 _id: oid,
-                pseudo: pseudo
             }, date))
         ]);
 
         let response = await request(app).get(`/api/v1/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.filter(a => a.pseudo === pseudo);
+        let avis = response.body.avis.filter(a => a.id === oid.toString());
         assert.strictEqual(avis.length, 1);
         assert.deepStrictEqual(avis[0], {
             id: oid.toString(),
-            pseudo,
             date: date.toJSON(),
             commentaire: {
                 titre: 'Génial',
@@ -92,13 +89,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can get a single avis', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
         let date = new Date();
         let oid = new ObjectID();
 
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
-            pseudo: pseudo,
             commentaire: {
                 text: 'Formation super géniale.',
             },
@@ -116,7 +111,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
             id: oid.toString(),
-            pseudo,
             date: date.toJSON(),
             commentaire: {
                 titre: 'Génial',
@@ -198,14 +192,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis by organisme_formateur', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         let date = new Date();
         let siret = randomSIRET();
 
         await Promise.all([
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
-                pseudo: pseudo,
+                _id: oid,
                 training: {
                     organisation: {
                         siret,
@@ -217,20 +211,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/avis?organisme_formateur=${siret}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.body.avis.filter(a => a.id === oid.toString()).length, 1);
     });
 
     it('can search avis by lieu_de_formation', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         let date = new Date();
         let codePostal = '75000';
 
         await Promise.all([
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
-                pseudo,
+                _id: oid,
                 training: {
                     place: {
                         postalCode: codePostal,
@@ -242,20 +236,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/avis?lieu_de_formation=${codePostal}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.body.avis.filter(a => a.id === oid.toString()).length, 1);
     });
 
     it('can search avis by certif_info', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         let date = new Date();
         let certifInfo = '12345';
 
         await Promise.all([
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
-                pseudo,
+                _id: oid,
                 training: {
                     certifInfos: [certifInfo],
                 }
@@ -265,19 +259,19 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/avis?certif_info=${certifInfo}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.body.avis.filter(a => a.id === oid.toString()).length, 1);
     });
 
     it('can search avis by formacode', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         let formacode = '11111';
 
         await Promise.all([
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
-                pseudo,
+                _id: oid,
                 training: {
                     formacodes: [formacode],
                 }
@@ -287,7 +281,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/avis?formacode=${formacode}`);
 
         assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.filter(a => a.pseudo === pseudo);
+        let avis = response.body.avis.filter(a => a.id === oid.toString());
         assert.strictEqual(avis.length, 1);
         assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
@@ -295,14 +289,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis with partial code', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         let partialFormacode = '224';
         let formacode = '224123';
 
         await Promise.all([
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
-                pseudo,
+                _id: oid,
                 training: {
                     formacodes: [formacode],
                 }
@@ -312,7 +306,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/avis?formacode=${partialFormacode}`);
 
         assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.filter(a => a.pseudo === pseudo);
+        let avis = response.body.avis.filter(a => a.id === oid.toString());
         assert.strictEqual(avis.length, 1);
         assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
@@ -376,16 +370,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let now = moment();
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '5minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].id, '7minutesAgo');
     });
 
     it('should sort avis by date (asc)', async () => {
@@ -394,16 +388,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let now = moment();
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].id, '5minutesAgo');
     });
 
     it('should sort avis by notes', async () => {
@@ -411,16 +405,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: '1', notes: { global: 1 } })),
-            insertIntoDatabase('avis', newAvis({ pseudo: '3', notes: { global: 3 } })),
-            insertIntoDatabase('avis', newAvis({ pseudo: '2', notes: { global: 2 } })),
+            insertIntoDatabase('avis', newAvis({ _id: '1', notes: { global: 1 } })),
+            insertIntoDatabase('avis', newAvis({ _id: '3', notes: { global: 3 } })),
+            insertIntoDatabase('avis', newAvis({ _id: '2', notes: { global: 2 } })),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=notes');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '3');
-        assert.strictEqual(response.body.avis[1].pseudo, '2');
-        assert.strictEqual(response.body.avis[2].pseudo, '1');
+        assert.strictEqual(response.body.avis[0].id, '3');
+        assert.strictEqual(response.body.avis[1].id, '2');
+        assert.strictEqual(response.body.avis[2].id, '1');
     });
 
     it('should sort avis by formation', async () => {
@@ -428,16 +422,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: 'C', training: { title: 'C' } })),
-            insertIntoDatabase('avis', newAvis({ pseudo: 'A', training: { title: 'A' } })),
-            insertIntoDatabase('avis', newAvis({ pseudo: 'B', training: { title: 'B' } })),
+            insertIntoDatabase('avis', newAvis({ _id: 'C', training: { title: 'C' } })),
+            insertIntoDatabase('avis', newAvis({ _id: 'A', training: { title: 'A' } })),
+            insertIntoDatabase('avis', newAvis({ _id: 'B', training: { title: 'B' } })),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=formation&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, 'A');
-        assert.strictEqual(response.body.avis[1].pseudo, 'B');
-        assert.strictEqual(response.body.avis[2].pseudo, 'C');
+        assert.strictEqual(response.body.avis[0].id, 'A');
+        assert.strictEqual(response.body.avis[1].id, 'B');
+        assert.strictEqual(response.body.avis[2].id, 'C');
     });
 
     it('should return empty array when no avis can be found', async () => {
@@ -461,9 +455,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('should return avis (notes)', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         let avis = newAvis({
-            pseudo: pseudo,
+            _id: oid,
         });
         delete avis.commentaire;
         await insertIntoDatabase('avis', avis);
@@ -471,48 +465,46 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.body.avis.filter(a => a.id === oid.toString()).length, 1);
     });
 
     it('should return avis with commentaire=null', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
         await insertIntoDatabase('avis', newAvis({
-            pseudo: pseudo,
+            _id: oid,
             commentaire: null,
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.body.avis.filter(a => a.id === oid.toString()).length, 1);
     });
 
     it('should not return avis not validated yet', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let oid = new ObjectID();
 
         await insertIntoDatabase('avis', newAvis({
-            pseudo: pseudo,
+            _id: oid,
             status: 'none',
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 0);
+        assert.strictEqual(response.body.avis.filter(a => a.id === oid.toString()).length, 0);
     });
 
-    it('should return rejected avis (without pseudo and commentaire)', async () => {
+    it('should return rejected avis (without commentaire)', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
 
         await insertIntoDatabase('avis', newAvis({
             _id: '12345',
-            pseudo: pseudo,
             status: 'rejected',
         }));
 
@@ -572,9 +564,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let intitule = 'fullstack';
         let siret = '12345678901234';
         let codePostal = '75000';
+        let oid = new ObjectID();
 
         await insertIntoDatabase('avis', newAvis({
-            pseudo: 'test-user-intitule',
+            _id: oid,
             training: {
                 title: 'Développeur fullstack',
                 organisation: {
@@ -589,7 +582,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/organisme_formateurs/${siret}/lieu_de_formations/${codePostal}/formations/${intitule}/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.filter(a => a.pseudo === 'test-user-intitule');
+        let avis = response.body.avis.filter(a => a.id === oid.toString());
         assert.strictEqual(avis.length, 1);
         assert.deepStrictEqual(avis[0].formation.intitule, 'Développeur fullstack');
         assert.deepStrictEqual(avis[0].formation.action.lieu_de_formation.code_postal, codePostal);

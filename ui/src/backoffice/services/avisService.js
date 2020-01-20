@@ -13,10 +13,6 @@ export const getExportAvisUrl = (options = {}) => {
     return `${publicUrl}/api/backoffice/avis.csv?${queryString.stringify({ ...options, token })}`;
 };
 
-export const maskPseudo = (id, mask) => {
-    return _put(`/backoffice/avis/${id}/pseudo`, { mask });
-};
-
 export const maskTitle = (id, mask) => {
     return _put(`/backoffice/avis/${id}/title`, { mask });
 };

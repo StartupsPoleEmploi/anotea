@@ -194,33 +194,6 @@ module.exports = (db, logger, emails) => {
                 });
             }
         },
-        maskPseudo: async (id, mask, options = {}) => {
-
-            let profile = ensureProfile(options.profile, 'moderateur');
-
-            let result = await db.collection('avis').findOneAndUpdate(
-                {
-                    _id: new ObjectID(id),
-                    ...(profile ? profile.getShield() : {}),
-                },
-                {
-                    $set: { pseudoMasked: mask }
-                },
-                { returnOriginal: false },
-            );
-
-            if (!result.value) {
-                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-            }
-
-            saveEvent(id, 'maskPseudo', {
-                app: 'moderation',
-                user: profile ? profile.getUser().id : 'admin',
-                profile: 'moderateur',
-            });
-
-            return result.value;
-        },
         maskTitle: async (id, mask, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');

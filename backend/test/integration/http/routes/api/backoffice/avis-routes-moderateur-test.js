@@ -92,7 +92,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             })),
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
-                pseudo: 'kikoo',
                 token: '12345',
             })),
             createIndexes(['avis']),
@@ -127,7 +126,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('avis', newAvis({
-                pseudo: 'pseudo',
                 commentaire: {
                     title: 'Trop Génial',
                 },
@@ -146,7 +144,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.strictEqual(response.body.avis[0].commentaire.title, 'Trop Génial');
     });
 
     it('can search avis by titre (no match) (fulltext)', async () => {
@@ -543,50 +541,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let response = await request(app)
         .delete(`/api/backoffice/avis/${id}`)
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 404);
-    });
-
-
-    it('can un/mask pseudo', async () => {
-
-        let app = await startServer();
-        const id = new ObjectID();
-        let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('avis', newAvis({ _id: id })),
-        ]);
-
-        let response = await request(app)
-        .put(`/api/backoffice/avis/${id}/pseudo`)
-        .send({ mask: true })
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.pseudoMasked, true);
-
-        response = await request(app)
-        .put(`/api/backoffice/avis/${id}/pseudo`)
-        .send({ mask: false })
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.pseudoMasked, false);
-    });
-
-    it('can not un/mask pseudo of another region', async () => {
-
-        let app = await startServer();
-        const id = new ObjectID();
-        let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('avis', newAvis({ _id: id, codeRegion: '7' })),
-        ]);
-
-        let response = await request(app)
-        .put(`/api/backoffice/avis/${id}/pseudo`)
-        .send({ mask: true })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 404);

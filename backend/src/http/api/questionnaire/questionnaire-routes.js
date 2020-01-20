@@ -75,7 +75,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         return Number(Math.round((sum / 5) + 'e1') + 'e-1');
     };
 
-
     const buildAvis = (notes, token, body, stagiaire) => {
 
         let text = _.get(body, 'commentaire.texte', null);
@@ -89,7 +88,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             training: stagiaire.training,
             codeRegion: stagiaire.codeRegion,
             notes: notes,
-            pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
             read: false,
             status: hasCommentaires ? 'none' : 'validated',
             lastStatusUpdate: new Date(),
@@ -108,20 +106,17 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const validateAvis = async avis => {
 
-        if (avis.pseudo.length > 50 ||
-            (avis.commentaire !== undefined && (avis.commentaire.title.length > 50 || avis.commentaire.text.length > 200))) {
+        if (avis.commentaire !== undefined && (avis.commentaire.title.length > 50 || avis.commentaire.text.length > 200)) {
             return { error: 'too long' };
         }
 
-        let pseudoOK = avis.pseudo ? await badwords.isGood(avis.pseudo) : true;
         let textOK = avis.commentaire ? await badwords.isGood(avis.commentaire.text) : true;
         let titleOK = avis.commentaire ? await badwords.isGood(avis.commentaire.title) : true;
 
-        if (pseudoOK && textOK && titleOK) {
+        if (textOK && titleOK) {
             return { error: null, avis };
         } else {
             let badwords = {
-                pseudo: !pseudoOK,
                 textOK: !textOK,
                 titleOK: !titleOK
             };

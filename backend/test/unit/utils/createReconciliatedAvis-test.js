@@ -9,10 +9,8 @@ describe(__filename, () => {
 
         let numeroAction = '14_TE_1234567890';
         let date = new Date();
-        let pseudo = randomize('pseudo');
         let avis = newAvis({
             _id: 1234,
-            pseudo,
             training: {
                 infoCarif: {
                     numeroAction: numeroAction
@@ -25,7 +23,6 @@ describe(__filename, () => {
 
         assert.deepStrictEqual(data, {
             id: 1234,
-            pseudo,
             commentaire: {
                 titre: 'Génial',
                 texte: 'Super formation.',
@@ -196,18 +193,6 @@ describe(__filename, () => {
         assert.deepStrictEqual(data.commentaire.titre, undefined);
     });
 
-    it('should ignore pseudo when pseudoMasked is true', async () => {
-
-        let avis = newAvis({
-            pseudoMasked: true,
-            pseudo: 'hacker',
-        });
-
-        let data = createReconciliatedAvis(avis);
-
-        assert.deepStrictEqual(data.pseudo, undefined);
-    });
-
     it('should return edited avis when commentaire has been edited', async () => {
 
         let avis = newAvis({
@@ -260,21 +245,4 @@ describe(__filename, () => {
 
         assert.deepStrictEqual(data.commentaire, undefined);
     });
-
-    it('should not return pseudo when avis has been rejected', async () => {
-
-        let avis = newAvis({
-            status: 'rejected',
-            pseudo: 'hacker',
-            commentaire: {
-                title: 'Génial',
-                text: 'Formation géniale.'
-            },
-        });
-
-        let data = createReconciliatedAvis(avis);
-
-        assert.deepStrictEqual(data.pseudo, undefined);
-    });
-
 });

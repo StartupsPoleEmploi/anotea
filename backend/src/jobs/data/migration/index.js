@@ -17,5 +17,6 @@ execute(async ({ db }) => {
     stats.renameCommentIntoCommentaires = await require('./tasks/renameCommentIntoCommentaires')(db);
     stats.renameRatesIntoNotes = await require('./tasks/renameRatesIntoNotes')(db);
     stats.unsetStatutRattachement = await require('./tasks/unsetStatutRattachement')(db);
+    stats.deprecatedProperties = await require('./tasks/deprecatedProperties')(db);
     return stats;
 });
