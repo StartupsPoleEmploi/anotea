@@ -7,6 +7,6 @@ const computeStats = require('./tasks/computeStats');
 
 cli.parse(process.argv);
 
-execute(async ({ db, regions }) => {
+execute(({ db, regions }) => {
     return computeStats(db, regions);
 });

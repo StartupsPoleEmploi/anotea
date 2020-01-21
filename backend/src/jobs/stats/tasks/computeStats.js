@@ -12,11 +12,13 @@ module.exports = async (db, regions) => {
         computeCampaignStats(db, regions),
     ]);
 
-    return db.collection('statistics').insertOne({
+    await db.collection('statistics').insertOne({
         date: new Date(),
         organismes: stats[0],
         avis: stats[1],
         api: stats[2],
         campaign: stats[3],
     });
+
+    return { computed: true };
 };
