@@ -22,12 +22,18 @@ module.exports = ({ emails, middlewares }) => {
                     firstName: 'Paul',
                     name: 'Dupond',
                 },
-                training: {
-                    title: 'Formation coiffure',
-                    startDate: moment().subtract(7, 'days').toDate(),
-                    scheduledEndDate: new Date(),
-                    organisation: {
-                        name: 'Centre de formation'
+                formation: {
+                    intitule: 'Formation coiffure',
+                    action: {
+                        organisme_formateur: {
+                            raison_sociale: 'Centre de formation'
+                        },
+                        session: {
+                            periode: {
+                                debut: moment().subtract(7, 'days').toDate(),
+                                fin: new Date(),
+                            },
+                        }
                     }
                 },
             },

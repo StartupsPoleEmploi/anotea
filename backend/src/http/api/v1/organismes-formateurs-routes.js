@@ -112,7 +112,7 @@ module.exports = ({ db, middlewares }) => {
 
         let avis = await db.collection('avis')
         .find({
-            'training.organisation.siret': organisme.siret,
+            'formation.action.organisme_formateur.siret': organisme.siret,
             ...(
                 parameters.commentaires === null ?
                     { status: { $in: ['validated', 'rejected'] } } :

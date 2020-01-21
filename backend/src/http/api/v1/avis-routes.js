@@ -15,20 +15,20 @@ const buildAvisQuery = filters => {
         let query = {};
 
         if (filter.organisme_formateur) {
-            query['training.organisation.siret'] = filter.organisme_formateur;
+            query['formation.action.organisme_formateur.siret'] = filter.organisme_formateur;
         }
 
         if (filter.lieu_de_formation) {
-            query['training.place.postalCode'] = filter.lieu_de_formation;
+            query['formation.action.lieu_de_formation.code_postal'] = filter.lieu_de_formation;
         }
 
         if (filter.certif_info) {
-            query['training.certifInfos'] = filter.certif_info;
+            query['formation.certifications.certif_info'] = filter.certif_info;
         }
 
         if (filter.formacode) {
             let code = filter.formacode;
-            query['training.formacodes'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
+            query['formation.domaine_formation.formacodes'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
 
         return query;
@@ -65,7 +65,6 @@ module.exports = ({ db, middlewares }) => {
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
         let query = buildAvisQuery(filters);
-
 
         let avis = await db.collection('avis')
         .find(query)

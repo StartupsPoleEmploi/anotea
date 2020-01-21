@@ -13,10 +13,10 @@
                         Donnez-nous votre avis en 1 minute.
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Vous avez suivi la formation de <%= stagiaire.training.title %>
-                        du <%= utils.moment(stagiaire.training.startDate).format('DD/MM/YYYY') %>
-                        au <%= utils.moment(stagiaire.training.scheduledEndDate).format('DD/MM/YYYY') %>
-                        à <%= stagiaire.training.organisation.name %>.
+                        Vous avez suivi la formation de <%= stagiaire.formation.intitule %>
+                        du <%= utils.moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY') %>
+                        au <%= utils.moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY') %>
+                        à <%= stagiaire.formation.action.organisme_formateur.raison_sociale %>.
                     </mj-text>
 
                     <mj-button

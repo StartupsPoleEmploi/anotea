@@ -3,7 +3,7 @@ const moment = require('moment/moment');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
-const { newAvis, randomize, randomSIRET } = require('../../../../../helpers/data/dataset');
+const { newAvis, randomSIRET } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -59,7 +59,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         code_postal: '75011',
                         ville: 'Paris'
                     },
-                    organisme_financeurs: [],
+                    organisme_financeurs: [
+                        { code_financeur: '10' },
+                    ],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
                         siret: '11111111111111',
@@ -143,7 +145,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         code_postal: '75011',
                         ville: 'Paris'
                     },
-                    organisme_financeurs: [],
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
                         siret: '11111111111111',
@@ -200,11 +204,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
                 _id: oid,
-                training: {
-                    organisation: {
-                        siret,
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret,
+                        },
                     },
-                }
+                },
             }, date))
         ]);
 
@@ -225,11 +231,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
                 _id: oid,
-                training: {
-                    place: {
-                        postalCode: codePostal,
+                formation: {
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: codePostal,
+                        },
                     },
-                }
+                },
             }, date)),
         ]);
 
@@ -250,9 +258,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
                 _id: oid,
-                training: {
-                    certifInfos: [certifInfo],
-                }
+                formation: {
+                    certifications: [{ certif_info: certifInfo }],
+                },
             }, date)),
         ]);
 
@@ -272,8 +280,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
                 _id: oid,
-                training: {
-                    formacodes: [formacode],
+                formation: {
+                    domaine_formation: {
+                        formacodes: [formacode],
+                    },
                 }
             })),
         ]);
@@ -297,8 +307,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('avis', newAvis()),
             insertIntoDatabase('avis', newAvis({
                 _id: oid,
-                training: {
-                    formacodes: [formacode],
+                formation: {
+                    domaine_formation: {
+                        formacodes: [formacode],
+                    },
                 }
             })),
         ]);
@@ -368,11 +380,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        let now = moment();
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ _id: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ _id: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ _id: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date');
@@ -386,11 +397,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        let now = moment();
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ _id: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ _id: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ _id: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ _id: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
@@ -422,9 +432,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ _id: 'C', training: { title: 'C' } })),
-            insertIntoDatabase('avis', newAvis({ _id: 'A', training: { title: 'A' } })),
-            insertIntoDatabase('avis', newAvis({ _id: 'B', training: { title: 'B' } })),
+            insertIntoDatabase('avis', newAvis({ _id: 'C', formation: { intitule: 'C' } })),
+            insertIntoDatabase('avis', newAvis({ _id: 'A', formation: { intitule: 'A' } })),
+            insertIntoDatabase('avis', newAvis({ _id: 'B', formation: { intitule: 'B' } })),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=formation&ordre=asc');
@@ -568,15 +578,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
-            training: {
-                title: 'Développeur fullstack',
-                organisation: {
-                    siret: siret,
+            formation: {
+                intitule: 'Développeur fullstack',
+                action: {
+                    lieu_de_formation: {
+                        code_postal: codePostal,
+                    },
+                    organisme_formateur: {
+                        siret,
+                    },
                 },
-                place: {
-                    postalCode: codePostal,
-                },
-            }
+            },
         }));
 
         let response = await request(app).get(`/api/v1/organisme_formateurs/${siret}/lieu_de_formations/${codePostal}/formations/${intitule}/avis`);

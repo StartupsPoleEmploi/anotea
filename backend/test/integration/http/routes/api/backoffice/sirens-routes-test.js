@@ -11,11 +11,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: `${33333333333333}`,
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333333333',
+                        },
                     },
-                }
+                },
             })),
         ]);
 

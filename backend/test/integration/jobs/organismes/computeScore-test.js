@@ -10,16 +10,20 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     const prepareDatabase = () => {
         return Promise.all([
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '11111111111111',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '11111111111111',
+                        },
                     },
-                }
+                },
             })),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
                 notes: {
@@ -32,9 +36,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 },
             })),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
                 notes: {
@@ -47,9 +53,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 },
             })),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
                 notes: {
@@ -136,11 +144,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     accompagnement: 0,
                     global: 0
                 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 

@@ -64,9 +64,9 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             const results = await db.collection('stagiaires').find({
                 'personal.email': userInfo.email.toLowerCase(),
                 'avisCreated': false,
-                'training.scheduledEndDate': { $gte: moment().subtract(1, 'years').toDate() }
+                'formation.action.session.periode.fin': { $gte: moment().subtract(1, 'years').toDate() }
             })
-            .sort({ 'training.scheduledEndDate': -1 })
+            .sort({ 'formation.action.session.periode.fin': -1 })
             .limit(1)
             .toArray();
 

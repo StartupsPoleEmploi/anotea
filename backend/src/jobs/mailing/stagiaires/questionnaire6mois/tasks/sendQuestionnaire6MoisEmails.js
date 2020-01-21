@@ -14,7 +14,7 @@ module.exports = async (db, logger, emails, options = {}) => {
             $match: {
                 'mailing.questionnaire6Mois.mailSent': { $exists: false },
                 'campaign': 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                'training.certifInfos.0': { $exists: true },
+                'formation.certifications.0': { $exists: true },
                 'unsubscribe': false,
             }
         },

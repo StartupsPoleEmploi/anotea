@@ -27,6 +27,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(_.omit(results[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-pe',
             avisCreated: false,
+            unsubscribe: false,
+            mailSent: false,
+            codeRegion: '11',
+            refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744',
             personal: {
                 name: 'MARTIN',
                 firstName: 'EUGENE',
@@ -37,38 +41,39 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 dnIndividuNational: '1111111111',
                 idLocal: '0167942369Z'
             },
-            training: {
-                idFormation: '14_AF_0000044465',
-                title: 'Titre professionnel',
-                startDate: new Date('2018-05-22T00:00:00.000Z'),
-                scheduledEndDate: new Date('2018-08-24T00:00:00.000Z'),
-                organisation: {
-                    id: '14000000000000008098',
-                    siret: '82436343601230',
-                    label: 'ANOTEA FORMATION',
-                    name: 'ANOTEA ACCES FORMATION'
+            formation: {
+                numero: '14_AF_0000044465',
+                intitule: 'Titre professionnel',
+                domaine_formation: {
+                    formacodes: ['31734'],
                 },
-                place: {
-                    departement: '91',
-                    postalCode: '91130',
-                    inseeCode: '91521',
-                    city: 'Ris-Orangis'
+                certifications: [{ certif_info: '8122' }],
+                action: {
+                    numero: '14_SE_0000160070',
+                    lieu_de_formation: {
+                        code_postal: '91130',
+                        ville: 'Ris-Orangis',
+                    },
+                    organisme_financeurs: [
+                        { code_financeur: '4' },
+                        { code_financeur: '7' },
+                    ],
+                    organisme_formateur: {
+                        raison_sociale: 'ANOTEA ACCES FORMATION',
+                        label: 'ANOTEA FORMATION',
+                        siret: '82436343601230',
+                        numero: '14000000000000008098',
+                    },
+                    session: {
+                        id: '3565575',
+                        numero: 'SE_0000160070',
+                        periode: {
+                            debut: new Date('2018-05-22T00:00:00.000Z'),
+                            fin: new Date('2018-08-24T00:00:00.000Z'),
+                        },
+                    },
                 },
-                certifInfos: ['8122'],
-                formacodes: ['31734'],
-                idSession: '3565575',
-                infoCarif: {
-                    numeroSession: 'SE_0000160070',
-                    numeroAction: '14_SE_0000160070'
-                },
-                codeFinanceur: [
-                    '4',
-                    '7'
-                ],
             },
-            unsubscribe: false,
-            mailSent: false,
-            codeRegion: '11',
         });
     });
 
@@ -139,8 +144,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let doc = await db.collection('stagiaires').findOne();
         assert.ok(doc.personal);
-        assert.deepStrictEqual(doc.training.formacodes, ['31734', '31735', '31736']);
-        assert.deepStrictEqual(doc.training.certifInfos, ['8122', '8123', '8124']);
+        assert.deepStrictEqual(doc.formation.domaine_formation.formacodes, ['31734', '31735', '31736']);
+        assert.deepStrictEqual(doc.formation.certifications.map(c => c.certif_info), ['8122', '8123', '8124']);
     });
 
     it('should ignore stagiaire already removed', async () => {
@@ -178,6 +183,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             campaign: 'stagiaires-idf',
             sourceIDF: true,
             avisCreated: false,
+            unsubscribe: false,
+            mailSent: false,
+            codeRegion: '11',
+            refreshKey: 'bc2ad42298cfacb72a29dea2f2230660',
             personal: {
                 name: 'MARTIN',
                 firstName: 'Pierre',
@@ -188,40 +197,38 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 dnIndividuNational: null,
                 idLocal: null,
             },
-            training: {
-                idFormation: null,
-                title: 'ANOTEA FORMATION',
-                startDate: new Date('2017-03-15T00:00:00.000Z'),
-                scheduledEndDate: new Date('2018-08-31T00:00:00.000Z'),
-                organisation: {
-                    id: null,
-                    siret: '77568497000673',
-                    label: 'ASSOCIATION AURORE',
-                    name: 'ASSOCIATION AURORE'
+            formation: {
+                numero: null,
+                intitule: 'ANOTEA FORMATION',
+                domaine_formation: {
+                    formacodes: [],
                 },
-                place: {
-                    postalCode: '93190',
-                    city: 'LIVRY GARGAN'
+                certifications: [],
+                action: {
+                    numero: 'S17AVJE93001NR',
+                    lieu_de_formation: {
+                        code_postal: '93190',
+                        ville: 'LIVRY GARGAN',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '2',
+                    }],
+                    organisme_formateur: {
+                        numero: null,
+                        raison_sociale: 'ASSOCIATION AURORE',
+                        label: 'ASSOCIATION AURORE',
+                        siret: '77568497000673',
+                    },
+                    session: {
+                        id: null,
+                        numero: null,
+                        periode: {
+                            debut: new Date('2017-03-15T00:00:00.000Z'),
+                            fin: new Date('2018-08-31T00:00:00.000Z'),
+                        },
+                    },
                 },
-                certifInfos: [],
-                idSession: null,
-                formacodes: [],
-                infoCarif: {
-                    numeroAction: null,
-                    numeroSession: null
-                },
-                codeFinanceur: [
-                    '2'
-                ],
-                infoRegion: {
-                    idTrainee: '111111',
-                    idActionFormation: 'S17AVJE93001NR',
-                    idParcours: '17392'
-                }
             },
-            unsubscribe: false,
-            mailSent: false,
-            codeRegion: '11',
         });
     });
 
@@ -458,7 +465,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('should ignore stagiaire with scheduledEndDate before min date', async () => {
+    it('should ignore stagiaire with fin before min date', async () => {
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe-old.csv');
         let { regions } = await getComponents();
@@ -481,7 +488,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('should ignore stagiaire with scheduledEndDate before min date (IDF)', async () => {
+    it('should ignore stagiaire with fin before min date (IDF)', async () => {
 
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-idf-old.csv');
@@ -508,8 +515,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let doc = await db.collection('stagiaires').findOne();
         assert.deepStrictEqual(doc.personal.phoneNumbers, ['0611111111']);
-        assert.deepStrictEqual(doc.training.certifInfos, []);
-        assert.strictEqual(doc.training.place.inseeCode, undefined);
+        assert.deepStrictEqual(doc.formation.certifications, []);
     });
 
     it('should ignore stagiaire with codeFinanceur filtered', async () => {

@@ -46,29 +46,37 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 emailValid: true,
                 dnIndividuNational: '1111111111'
             },
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date.toJSON(),
-                scheduledEndDate: date.toJSON(),
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date.toJSON(),
+                            fin: date.toJSON(),
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             unsubscribe: false,
             mailSent: true,
@@ -147,29 +155,37 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date,
-                scheduledEndDate: date,
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date,
+                            fin: date,
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             codeRegion: '11',
             notes: {
@@ -214,29 +230,37 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date,
-                scheduledEndDate: date,
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date,
+                            fin: date,
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             codeRegion: '11',
             notes: {

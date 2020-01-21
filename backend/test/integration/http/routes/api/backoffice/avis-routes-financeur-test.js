@@ -9,9 +9,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
     let buildAvis = (custom = {}) => {
         return newAvis(_.merge({
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };
@@ -98,8 +104,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111111111' } } })),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111111111' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
         ]);
 
         let response = await request(app)
@@ -120,7 +126,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
-            insertIntoDatabase('avis', buildAvis({ training: { codeFinanceur: '10' } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '10' }] } } })),
         ]);
 
         let response = await request(app)
@@ -136,8 +142,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
-            insertIntoDatabase('avis', buildAvis({ training: { codeFinanceur: '10' } })),
-            insertIntoDatabase('avis', buildAvis({ training: { codeFinanceur: '2' } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '10' }] } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '2' }] } } })),
         ]);
 
         let response = await request(app)
@@ -153,7 +159,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
-            insertIntoDatabase('avis', buildAvis({ training: { codeFinanceur: '2' } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '2' }] } } })),
         ]);
 
         let response = await request(app)
@@ -169,7 +175,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
-            insertIntoDatabase('avis', buildAvis({ training: { codeFinanceur: '10' } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '10' }] } } })),
         ]);
 
         let response = await request(app)

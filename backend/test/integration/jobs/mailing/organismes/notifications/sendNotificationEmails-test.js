@@ -19,11 +19,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),
@@ -61,11 +63,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),
@@ -127,11 +131,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),
@@ -164,11 +170,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),

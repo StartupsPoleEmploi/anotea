@@ -11,13 +11,16 @@ module.exports = (db, regions, user) => {
     return {
         type: 'financeur',
         getUser: () => user,
-        getShield: () => ({}),
+        getShield: () => ({
+            'codeRegion': user.codeRegion,
+            'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
+        }),
         validators: {
             form: () => {
                 return {
-                    startDate: Joi.number(),
-                    scheduledEndDate: Joi.number(),
-                    idFormation: Joi.string(),
+                    debut: Joi.number(),
+                    fin: Joi.number(),
+                    numeroFormation: Joi.string(),
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
                     siren: Joi.string().min(9).max(9),
                     codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
@@ -41,23 +44,23 @@ module.exports = (db, regions, user) => {
         },
         queries: {
             buildStagiaireQuery: async parameters => {
-                let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
+                let { departement, codeFinanceur, siren, numeroFormation, debut, fin } = parameters;
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
 
                 return {
                     'codeRegion': user.codeRegion,
-                    'training.codeFinanceur': financeur,
-                    ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-                    ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
-                    ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-                    ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                    ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-                    ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+                    'formation.action.organisme_financeurs.code_financeur': financeur,
+                    ...(siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`) } : {}),
+                    ...(codeFinanceur ? { 'formation.action.organisme_financeurs.code_financeur': codeFinanceur } : {}),
+                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
+                    ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
+                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
+                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
                 };
             },
             buildAvisQuery: async parameters => {
                 let {
-                    departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate,
+                    departement, codeFinanceur, siren, numeroFormation, debut, fin,
                     commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
                 } = parameters;
 
@@ -65,12 +68,12 @@ module.exports = (db, regions, user) => {
 
                 return {
                     'codeRegion': user.codeRegion,
-                    'training.codeFinanceur': financeur,
-                    ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-                    ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-                    ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                    ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-                    ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+                    'formation.action.organisme_financeurs.code_financeur': financeur,
+                    ...(siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`) } : {}),
+                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
+                    ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
+                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
+                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),

@@ -40,7 +40,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                                 read: false,
                                 status: 'validated',
                                 $expr: {
-                                    $eq: ['$training.organisation.siret', '$$siret'],
+                                    $eq: ['$formation.action.organisme_formateur.siret', '$$siret'],
                                 },
                             }
                         },

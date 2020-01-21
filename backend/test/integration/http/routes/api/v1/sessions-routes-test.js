@@ -3,7 +3,7 @@ const moment = require('moment');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newAvis, randomize, newIntercarif } = require('../../../../../helpers/data/dataset');
+const { newAvis, newIntercarif } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
@@ -36,13 +36,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newAvis({
                     _id: avisId,
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -123,7 +127,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             code_postal: '75019',
                             ville: 'Paris'
                         },
-                        organisme_financeurs: [],
+                        organisme_financeurs: [
+                            { code_financeur: '10' },
+                        ],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
                             siret: '33333333333333',
@@ -160,13 +166,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -252,13 +262,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '82422814200108',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '82422814200108',
+                            },
                         },
                     },
                     status: 'rejected',
@@ -385,13 +399,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 })
@@ -484,13 +502,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -557,13 +579,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newAvis({
                     _id: avisId,
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -610,7 +636,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             code_postal: '75019',
                             ville: 'Paris'
                         },
-                        organisme_financeurs: [],
+                        organisme_financeurs: [{
+                            code_financeur: '10',
+                        }],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
                             siret: '33333333333333',
@@ -639,18 +667,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
     it('can return avis avec commentaires', async () => {
 
-        let app = await startServer();let oid = new ObjectID();
+        let app = await startServer();
+        let oid = new ObjectID();
 
         let sansCommentaire = newAvis({
             _id: oid,
             codeRegion: '11',
-            training: {
-                formacodes: ['22252'],
-                organisation: {
-                    siret: '33333333333333',
+            formation: {
+                domaine_formation: {
+                    formacodes: ['22252'],
                 },
-                place: {
-                    postalCode: '75019',
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
+                        siret: '33333333333333',
+                    },
                 },
             },
         });
@@ -672,13 +705,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 sansCommentaire,
                 newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 }),
@@ -694,18 +731,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
     it('can return avis avec réponse', async () => {
 
-        let app = await startServer();let oid = new ObjectID();
+        let app = await startServer();
+        let oid = new ObjectID();
 
         let avisAvecReponse = newAvis({
             _id: oid,
             codeRegion: '11',
-            training: {
-                formacodes: ['22252'],
-                organisation: {
-                    siret: '33333333333333',
+            formation: {
+                domaine_formation: {
+                    formacodes: ['22252'],
                 },
-                place: {
-                    postalCode: '75019',
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
+                        siret: '33333333333333',
+                    },
                 },
             },
             reponse: {
@@ -732,13 +774,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 avisAvecReponse,
                 newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 }),
@@ -799,28 +845,44 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newAvis({
                     _id: '5minutesAgo',
                     codeRegion: '11',
-                    training: {
-                        scheduledEndDate: moment().subtract(5, 'minutes').toDate(),
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
+                            session: {
+                                periode: {
+                                    fin: moment().subtract(5, 'minutes').toDate(),
+                                },
+                            },
                         },
                     },
                 }),
                 newAvis({
                     _id: '7minutesAgo',
                     codeRegion: '11',
-                    training: {
-                        scheduledEndDate: moment().subtract(7, 'minutes').toDate(),
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
+                            session: {
+                                periode: {
+                                    fin: moment().subtract(7, 'minutes').toDate(),
+                                },
+                            },
                         },
                     },
                 }),
@@ -852,13 +914,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newAvis({
                     _id: '1',
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -868,13 +934,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newAvis({
                     _id: '2',
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -909,28 +979,36 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newAvis({
                     _id: 'A',
                     codeRegion: '11',
-                    training: {
-                        title: 'A',
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        intitule: 'A',
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 }),
                 newAvis({
                     _id: 'B',
                     codeRegion: '11',
-                    training: {
-                        title: 'B',
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        intitule: 'B',
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                     notes: {
@@ -951,8 +1029,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await insertAndReconcile([
-            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1', codeRegion: '11' }),
-            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2', codeRegion: '24' }),
+            newIntercarif({
+                numeroFormation: 'F_XX_X1',
+                numeroAction: 'AC_XX_XXXXX1',
+                numeroSession: 'SE_XXXXX1',
+                codeRegion: '11'
+            }),
+            newIntercarif({
+                numeroFormation: 'F_XX_X2',
+                numeroAction: 'AC_XX_XXXXX2',
+                numeroSession: 'SE_XXXXX2',
+                codeRegion: '24'
+            }),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?region=11`);
