@@ -12,7 +12,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
-                personal: {
+                individu: {
                     email: 'toto@email.fr',
                 },
             })),

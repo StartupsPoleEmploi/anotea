@@ -18,7 +18,7 @@ execute(async ({ db, logger }) => {
         ...(await migrate('dropCollections')),
         ...(await migrate('renameCollections')),
         ...(await migrate('addJobTypeFlag')),
-        ...(await migrate('renameTraineeIntoPersonnal')),
+        ...(await migrate('renameTraineeIntoIndividu')),
         ...(await migrate('cleanSiretProperties')),
         ...(await migrate('renameCourrielIntoIdentifiant')),
         ...(await migrate('renameRaisonSociale')),

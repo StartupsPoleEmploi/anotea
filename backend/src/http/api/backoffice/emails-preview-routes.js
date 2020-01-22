@@ -18,9 +18,9 @@ module.exports = ({ emails, middlewares }) => {
             stagiaire: {
                 token: 'token-stagiaire',
                 codeRegion: user.codeRegion,
-                personal: {
-                    firstName: 'Paul',
-                    name: 'Dupond',
+                individu: {
+                    prenom: 'Paul',
+                    nom: 'Dupond',
                 },
                 formation: {
                     intitule: 'Formation coiffure',

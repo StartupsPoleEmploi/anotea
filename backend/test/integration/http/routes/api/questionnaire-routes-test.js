@@ -34,17 +34,17 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             campaign: 'test-campaign',
             importDate: date.toJSON(),
             avisCreated: false,
-            personal: {
-                name: 'Dupont',
-                firstName: 'Henri',
-                mailDomain: 'free.fr',
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
+            individu: {
+                nom: 'Dupont',
+                prenom: 'Henri',
                 email: 'henri@email.fr',
-                phoneNumbers: [
+                telephones: [
                     '0123456789',
                     'NULL'
                 ],
                 emailValid: true,
-                dnIndividuNational: '1111111111'
+                identifiant_pe: '1111111111'
             },
             formation: {
                 numero: 'F_XX_XX',
@@ -155,6 +155,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur',
@@ -230,6 +231,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur',

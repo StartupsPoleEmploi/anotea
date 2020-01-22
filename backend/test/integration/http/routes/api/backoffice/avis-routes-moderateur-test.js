@@ -92,7 +92,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
-                personal: {
+                individu: {
                     email: 'robert@domaine.com',
                 },
             })),

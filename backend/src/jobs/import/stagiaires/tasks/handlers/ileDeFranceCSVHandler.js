@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const moment = require('moment');
 const md5 = require('md5');
-const { buildToken, buildEmail } = require('../utils/utils');
+const { buildToken } = require('../utils/utils');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
@@ -33,7 +33,7 @@ module.exports = (db, regions) => {
         shouldBeImported: stagiaire => {
             let idf = regions.findRegionByCodeRegion('11');
             let isAfter = moment(stagiaire.formation.action.session.periode.fin).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
-            return isAfter && stagiaire.personal.emailValid && stagiaire.formation.action.session.numero === null;
+            return isAfter && stagiaire.individu.emailValid && stagiaire.formation.action.session.numero === null;
         },
         buildStagiaire: (record, campaign) => {
 
@@ -41,11 +41,11 @@ module.exports = (db, regions) => {
                 if (_.isEmpty(record)) {
                     return Promise.reject(new Error('Invalid record length'));
                 }
-                const token = buildToken(record['Mail']);
-                const { email, mailDomain } = buildEmail(record['Mail']);
+                let token = buildToken(record['Mail']);
+                let email = record['Mail'].toLowerCase();
                 let numeroAction = record['Numéro Action'];
 
-                let obj = {
+                return {
                     _id: campaign.name + '/' + token,
                     campaign: campaign.name,
                     campaignDate: campaign.date,
@@ -57,15 +57,14 @@ module.exports = (db, regions) => {
                     codeRegion: '11',
                     refreshKey: md5(`${email};${numeroAction}`),
                     token: token, // used as public ID for URLs
-                    personal: {
-                        name: record['Individu.Nom'],
-                        firstName: record['Prénom'],
-                        mailDomain: mailDomain,
-                        email: email,
-                        phoneNumbers: [record['Tel Portable']],
+                    individu: {
+                        nom: record['Individu.Nom'],
+                        prenom: record['Prénom'],
+                        email,
+                        telephones: [record['Tel Portable']],
                         emailValid: true,
-                        dnIndividuNational: null,
-                        idLocal: null,
+                        identifiant_pe: null,
+                        identifiant_local: null,
                     },
                     formation: {
                         numero: null,
@@ -100,8 +99,6 @@ module.exports = (db, regions) => {
                         },
                     },
                 };
-
-                return Promise.resolve(obj);
             } catch (e) {
                 return Promise.reject(e);
             }

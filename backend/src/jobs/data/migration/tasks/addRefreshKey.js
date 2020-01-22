@@ -12,7 +12,7 @@ module.exports = async db => {
     let cursor = db.collection('stagiaires').find({});
     await batchCursor(cursor, async next => {
         let stagiaire = await next();
-        let refreshKey = md5(`${stagiaire.personal.email};${stagiaire.sourceIDF ?
+        let refreshKey = md5(`${stagiaire.individu.email};${stagiaire.sourceIDF ?
             stagiaire.formation.action.numero : stagiaire.formation.action.session.id}`);
 
         let results = await Promise.all([

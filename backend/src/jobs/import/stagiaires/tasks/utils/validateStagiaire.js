@@ -14,15 +14,14 @@ module.exports = stagiaire => {
         token: Joi.string().required(),
         codeRegion: Joi.string().required(),
         refreshKey: Joi.string().required(),
-        personal: {
-            name: Joi.string().required(),
-            firstName: Joi.string().allow('').required(),
-            mailDomain: Joi.string().required(),
+        individu: {
+            nom: Joi.string().required(),
+            prenom: Joi.string().allow('').required(),
             email: Joi.string().email().required(),
-            phoneNumbers: Joi.array().items(Joi.string().allow('')),
+            telephones: Joi.array().items(Joi.string().allow('')),
             emailValid: Joi.boolean().required(),
-            dnIndividuNational: Joi.string().allow(null).required(),
-            idLocal: Joi.string().allow(null).required(),
+            identifiant_pe: Joi.string().allow(null).required(),
+            identifiant_local: Joi.string().allow(null).required(),
         },
         formation: {
             numero: Joi.string().allow(null).required(),

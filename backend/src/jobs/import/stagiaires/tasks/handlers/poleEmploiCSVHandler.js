@@ -74,7 +74,7 @@ module.exports = (db, regions) => {
                 return isConseilRegional(o.code_financeur);
             }).length > 0;
 
-            let isValid = () => region && stagiaire.personal.emailValid;
+            let isValid = () => region && stagiaire.individu.emailValid;
 
             let isAfter = () => {
                 let since = conseilRegional && region.conseil_regional.since ? region.conseil_regional.since : region.since;
@@ -104,7 +104,7 @@ module.exports = (db, regions) => {
 
             let region = regions.findRegionByPostalCode(record['dc_cp_lieuformation']);
             let token = buildToken(record['c_adresseemail']);
-            let { email, mailDomain } = buildEmail(record['c_adresseemail']);
+            let email = record['c_adresseemail'].toLowerCase();
             let idSession = record['dn_session_id'];
 
             return {
@@ -118,15 +118,14 @@ module.exports = (db, regions) => {
                 token: token,
                 codeRegion: region.codeRegion,
                 refreshKey: md5(`${email};${idSession}`),
-                personal: {
-                    name: record['c_nomcorrespondance'],
-                    firstName: record['c_prenomcorrespondance'],
-                    mailDomain: mailDomain,
+                individu: {
+                    nom: record['c_nomcorrespondance'],
+                    prenom: record['c_prenomcorrespondance'],
                     email: email,
-                    phoneNumbers: removeEmptyValues([record['c_telephone1'], record['c_telephone2']]),
+                    telephones: removeEmptyValues([record['c_telephone1'], record['c_telephone2']]),
                     emailValid: record['c_validitemail_id'] === 'V',
-                    dnIndividuNational: record['dn_individu_national'],
-                    idLocal: record['c_individulocal']
+                    identifiant_pe: record['dn_individu_national'],
+                    identifiant_local: record['c_individulocal']
                 },
                 formation: {
                     numero: record['dc_formation_id'],

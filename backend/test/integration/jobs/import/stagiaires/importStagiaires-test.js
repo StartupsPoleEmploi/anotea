@@ -19,7 +19,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let count = await db.collection('stagiaires').countDocuments();
         assert.strictEqual(count, 4);
-        let results = await db.collection('stagiaires').find({ 'personal.name': 'MARTIN' }).toArray();
+        let results = await db.collection('stagiaires').find({ 'individu.nom': 'MARTIN' }).toArray();
         assert.ok(results[0]._id);
         assert.ok(results[0].importDate);
         assert.ok(results[0].campaignDate);
@@ -31,15 +31,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             mailSent: false,
             codeRegion: '11',
             refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744',
-            personal: {
-                name: 'MARTIN',
-                firstName: 'EUGENE',
-                mailDomain: 'pe.com',
+            individu: {
+                nom: 'MARTIN',
+                prenom: 'EUGENE',
                 email: 'email_1@pe.com',
-                phoneNumbers: ['0611111111'],
+                telephones: ['0611111111'],
                 emailValid: true,
-                dnIndividuNational: '1111111111',
-                idLocal: '0167942369Z'
+                identifiant_pe: '1111111111',
+                identifiant_local: '0167942369Z'
             },
             formation: {
                 numero: '14_AF_0000044465',
@@ -143,7 +142,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importStagiaires(db, logger, getTestFile('stagiaires-pe-multi-formacodes-certifinfos.csv'), handler);
 
         let doc = await db.collection('stagiaires').findOne();
-        assert.ok(doc.personal);
+        assert.ok(doc.individu);
         assert.deepStrictEqual(doc.formation.domaine_formation.formacodes, ['31734', '31735', '31736']);
         assert.deepStrictEqual(doc.formation.certifications.map(c => c.certif_info), ['8122', '8123', '8124']);
     });
@@ -174,7 +173,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let count = await db.collection('stagiaires').countDocuments();
         assert.strictEqual(count, 5);
-        let docs = await db.collection('stagiaires').find({ 'personal.email': 'email1@pe.fr' }).toArray();
+        let docs = await db.collection('stagiaires').find({ 'individu.email': 'email1@pe.fr' }).toArray();
         assert.ok(docs[0]._id);
         assert.ok(docs[0].importDate);
         assert.ok(docs[0].campaignDate);
@@ -187,15 +186,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             mailSent: false,
             codeRegion: '11',
             refreshKey: 'bc2ad42298cfacb72a29dea2f2230660',
-            personal: {
-                name: 'MARTIN',
-                firstName: 'Pierre',
-                mailDomain: 'pe.fr',
+            individu: {
+                nom: 'MARTIN',
+                prenom: 'Pierre',
                 email: 'email1@pe.fr',
-                phoneNumbers: ['06 12 34 56 78'],
+                telephones: ['06 12 34 56 78'],
                 emailValid: true,
-                dnIndividuNational: null,
-                idLocal: null,
+                identifiant_pe: null,
+                identifiant_local: null,
             },
             formation: {
                 numero: null,
@@ -344,8 +342,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
 
         let doc = await db.collection('stagiaires').findOne();
-        assert.ok(doc.personal);
-        assert.deepStrictEqual(doc.personal.email, 'email_4@pe.com');
+        assert.ok(doc.individu);
+        assert.deepStrictEqual(doc.individu.email, 'email_4@pe.com');
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 3,
@@ -456,7 +454,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         assert.strictEqual(await db.collection('stagiaires').count(), 1);
         let doc = await db.collection('stagiaires').findOne();
-        assert.deepStrictEqual(doc.personal.email, 'email_1@pe.com');
+        assert.deepStrictEqual(doc.individu.email, 'email_1@pe.com');
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 1,
@@ -514,7 +512,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importStagiaires(db, logger, csvFile, handler);
 
         let doc = await db.collection('stagiaires').findOne();
-        assert.deepStrictEqual(doc.personal.phoneNumbers, ['0611111111']);
+        assert.deepStrictEqual(doc.individu.telephones, ['0611111111']);
         assert.deepStrictEqual(doc.formation.certifications, []);
     });
 

@@ -47,7 +47,7 @@ module.exports = (db, regions, mailer) => {
 
             let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
             return mailer.createRegionalMailer(region).sendEmail(
-                stagiaire.personal.email,
+                stagiaire.individu.email,
                 {
                     subject: 'Pôle Emploi vous demande votre avis sur votre formation',
                     body: await render(stagiaire),

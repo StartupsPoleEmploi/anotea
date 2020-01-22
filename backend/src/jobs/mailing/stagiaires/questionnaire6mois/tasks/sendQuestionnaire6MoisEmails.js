@@ -20,7 +20,7 @@ module.exports = async (db, logger, emails, options = {}) => {
         },
         {
             $group: {
-                _id: 'personal.email',
+                _id: 'individu.email',
                 stagiaire: { $first: '$$ROOT' },
             }
         }
@@ -32,7 +32,7 @@ module.exports = async (db, logger, emails, options = {}) => {
         let { stagiaire } = await cursor.next();
 
         try {
-            logger.info(`Sending email to ${(stagiaire.personal.email)}`);
+            logger.info(`Sending email to ${(stagiaire.individu.email)}`);
             let message = emails.getEmailMessageByTemplateName('questionnaire6MoisEmail');
 
             await message.send(stagiaire);

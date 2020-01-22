@@ -24,7 +24,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
     };
 
     const hasNotBeenAlreadyImportedOrRemoved = async stagiaire => {
-        let email = stagiaire.personal.email;
+        let email = stagiaire.individu.email;
         let [countStagiaires, countOptOut] = await Promise.all([
             db.collection('stagiaires').countDocuments({ refreshKey: stagiaire.refreshKey }),
             db.collection('optOut').countDocuments({ md5: md5(email) })

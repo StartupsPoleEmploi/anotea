@@ -17,14 +17,13 @@ const createStagiaire = session => {
         campaign: 'dataset',
         importDate: getDateInThePast(),
         codeRegion: session.code_region,
-        personal: {
-            name: faker.name.lastName(),
-            firstName: faker.name.firstName(),
-            mailDomain: email.split('@')[1],
+        individu: {
+            nom: faker.name.lastName(),
+            prenom: faker.name.firstName(),
             email: email,
-            phoneNumbers: [faker.phone.phoneNumber('06########')],
+            telephones: [faker.phone.phoneNumber('06########')],
             emailValid: true,
-            dnIndividuNational: faker.phone.phoneNumber('##########')
+            identifiant_pe: faker.phone.phoneNumber('##########')
         },
         formation: {
             numero: formation.numero,
