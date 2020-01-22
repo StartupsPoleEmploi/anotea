@@ -10,6 +10,7 @@ cli.description('Import des stagiaires')
 .option('--file [file]', 'The CSV file to import')
 .option('--region [codeRegion]', 'Code region to filter')
 .option('--financeur [codeFinanceur]', 'Code financeur to filter')
+.option('-x, --unpack', 'Handle file as an archive')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
@@ -20,7 +21,7 @@ let sources = {
 
 execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
-    let { file, source, region, financeur } = cli;
+    let { file, source, region, financeur, unpack } = cli;
     let filters = {
         codeRegion: region,
         codeFinanceur: financeur,
@@ -34,7 +35,7 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
     logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
     try {
-        let stats = await importStagiaire(db, logger, file, handler, filters);
+        let stats = await importStagiaire(db, logger, file, handler, filters, { unpack });
 
         if (stats.total > 0) {
             sendSlackNotification({

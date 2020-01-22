@@ -1,11 +1,12 @@
 const fs = require('fs');
+const bz2 = require('unbzip2-stream');
 const md5File = require('md5-file/promise');
 const md5 = require('md5');
 const validateStagiaire = require('./utils/validateStagiaire');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
 const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
 
-module.exports = async (db, logger, file, handler, filters = {}) => {
+module.exports = async (db, logger, file, handler, filters = {}, options = {}) => {
 
     let hash = await md5File(file);
     let campaign = {
@@ -48,6 +49,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
 
     await pipeline([
         fs.createReadStream(file),
+        ...(options.unpack ? [bz2()] : []),
         parseCSV(handler.csvOptions),
         ignoreFirstLine(),
         transformObject(sanitizeCsvLine),
