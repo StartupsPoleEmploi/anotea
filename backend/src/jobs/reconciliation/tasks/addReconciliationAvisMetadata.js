@@ -9,7 +9,7 @@ module.exports = async db => {
     await batchCursor(cursor, async next => {
         let avis = await next();
 
-        let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.id': avis._id });
+        let count = await db.collection('actionsReconciliees').countDocuments({ 'avis._id': avis._id });
 
         let reconciliations = _.get(avis, 'meta.reconciliations');
         let isReconciliable = count > 0;

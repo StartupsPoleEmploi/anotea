@@ -10,16 +10,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
 
         let { mailer, emails } = await createEmailMocks();
         let db = await getTestDatabase();
-        let email = `${randomize('name')}@email.fr`;
+        let email = `${randomize('nom')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                personal: {
+                individu: {
                     email,
                 },
             })),
             insertIntoDatabase('stagiaires', newStagiaire({
-                personal: {
+                individu: {
                     email: 'not-sent@stagiaire.org',
                 },
             })),
@@ -28,7 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await sendQuestionnaire6MoisEmails(db, logger, emails);
 
         assert.strictEqual(mailer.getLastEmailMessageSent().email, email);
-        let stagiaire = await db.collection('stagiaires').findOne({ 'personal.email': email });
+        let stagiaire = await db.collection('stagiaires').findOne({ 'individu.email': email });
         let status = stagiaire.mailing.questionnaire6Mois;
         assert.ok(status.mailSent);
         assert.ok(status.mailSentDate);
@@ -41,13 +41,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
 
         let { mailer, emails } = await createEmailMocks();
         let db = await getTestDatabase();
-        let email = `${randomize('name')}@email.fr`;
+        let email = `${randomize('nom')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
                 mailSent: false,
                 mailSentDate: null,
-                personal: {
+                individu: {
                     email,
                 },
                 mailing: {
@@ -67,11 +67,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
 
         let db = await getTestDatabase();
         let { emails } = await createEmailMocks({ fail: true });
-        let email = `${randomize('name')}@email.fr`;
+        let email = `${randomize('nom')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                personal: {
+                individu: {
                     email,
                 },
             })),
@@ -81,7 +81,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             await sendQuestionnaire6MoisEmails(db, logger, emails);
             assert.fail();
         } catch (e) {
-            let stagiaire = await db.collection('stagiaires').findOne({ 'personal.email': email });
+            let stagiaire = await db.collection('stagiaires').findOne({ 'individu.email': email });
             let status = stagiaire.mailing.questionnaire6Mois;
             assert.strictEqual(status.mailSent, true);
             assert.strictEqual(status.mailSentDate, undefined);

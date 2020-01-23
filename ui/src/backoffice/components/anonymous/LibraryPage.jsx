@@ -175,7 +175,7 @@ const LibraryPage = () => {
                     <div className="form-group">
                         <label>Periode</label>
                         <Periode
-                            periode={{ startDate: new Date(), endDate: new Date() }}
+                            periode={{ debut: new Date(), fin: new Date() }}
                             onChange={noop}
                         />
                     </div>

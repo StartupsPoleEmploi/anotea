@@ -17,9 +17,9 @@ module.exports = ({ db, middlewares }) => {
             },
             {
                 $group: {
-                    _id: { $substr: ['$training.organisation.siret', 0, 9] },
-                    siren: { $first: { $substr: ['$training.organisation.siret', 0, 9] } },
-                    name: { $first: '$training.organisation.name' },
+                    _id: { $substr: ['$formation.action.organisme_formateur.siret', 0, 9] },
+                    siren: { $first: { $substr: ['$formation.action.organisme_formateur.siret', 0, 9] } },
+                    name: { $first: '$formation.action.organisme_formateur.raison_sociale' },
                     nbAvis: { $sum: 1 }
                 }
             },

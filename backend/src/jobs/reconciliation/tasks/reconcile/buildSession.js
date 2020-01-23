@@ -1,7 +1,6 @@
 const moment = require('moment');
 const computeScore = require('../../../../core/utils/computeScore');
-const { flatten } = require('../../../job-utils');
-const createReconciliatedAvis = require('../../../../core/utils/createReconciliatedAvis');
+const _ = require('lodash');
 
 module.exports = (formation, action, session, avis) => {
 
@@ -14,7 +13,7 @@ module.exports = (formation, action, session, avis) => {
             debut: moment(`${session.periode.debut} -0000`, 'YYYYMMDD Z').toDate(),
             fin: moment(`${session.periode.fin} -0000`, 'YYYYMMDD Z').toDate(),
         },
-        avis: avis.map(a => createReconciliatedAvis(a)) || [],
+        avis,
         score: computeScore(avis),
         formation: {
             numero: formation._attributes.numero,
@@ -23,9 +22,7 @@ module.exports = (formation, action, session, avis) => {
             domaine_formation: {
                 formacodes: formation._meta.formacodes,
             },
-            certifications: {
-                certifinfos: formation._meta.certifinfos,
-            },
+            certifications: formation._meta.certifinfos.map(c => ({ certif_info: c })),
             organisme_responsable: {
                 raison_sociale: formation.organisme_formation_responsable.raison_sociale,
                 siret: formation.organisme_formation_responsable.siret_organisme_formation.siret,
@@ -38,7 +35,7 @@ module.exports = (formation, action, session, avis) => {
                     ville: action.lieu_de_formation.coordonnees.adresse.ville,
                 },
                 organisme_financeurs: action.organisme_financeurs ?
-                    flatten(action.organisme_financeurs.map(of => of.code_financeur)) : [],
+                    action.organisme_financeurs.map(of => _.pick(of, ['code_financeur'])) : [],
                 organisme_formateur: {
                     raison_sociale: action.organisme_formateur.raison_sociale_formateur,
                     siret: action.organisme_formateur.siret_formateur.siret,
@@ -48,7 +45,8 @@ module.exports = (formation, action, session, avis) => {
         },
         meta: {
             import_date: new Date(),
-            source: {//TODO remove source field in v2
+            source: {
+                //TODO remove source field in v2
                 numero_formation: formation._attributes.numero,
                 numero_action: action._attributes.numero,
                 numero_session: session._attributes.numero,

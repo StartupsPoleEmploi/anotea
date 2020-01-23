@@ -23,7 +23,7 @@ export default class Periode extends React.Component {
     }
 
     onReset() {
-        return this.props.onChange({ startDate: null, endDate: null });
+        return this.props.onChange({ debut: null, fin: null });
     }
 
     render() {
@@ -32,15 +32,15 @@ export default class Periode extends React.Component {
         return (
             <div className="Periode d-flex justify-content-around align-items-center">
                 <Date
-                    value={periode.startDate}
+                    value={periode.debut}
                     min={min}
-                    onChange={date => this.onDateChange('startDate', date)}
+                    onChange={date => this.onDateChange('debut', date)}
                 />
                 <span className="au">à</span>
                 <Date
-                    value={periode.endDate}
-                    min={periode.startDate || min}
-                    onChange={date => this.onDateChange('endDate', date)}
+                    value={periode.fin}
+                    min={periode.debut || min}
+                    onChange={date => this.onDateChange('fin', date)}
                 />
                 <span className="clear" onClick={() => this.onReset()}>
                     <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" className="css-tj5bde-Svg"><path

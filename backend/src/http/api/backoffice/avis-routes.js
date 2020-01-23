@@ -22,6 +22,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         }, { abortEarly: false });
 
         let query = await queries.buildAvisQuery(parameters);
+        //debugger;
         let cursor = db.collection('avis')
         .find(query)
         .sort({ [parameters.sortBy || 'date']: -1 })

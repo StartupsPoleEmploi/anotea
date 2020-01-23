@@ -14,13 +14,13 @@ module.exports = (db, regions, mailer) => {
         render,
         send: async stagiaire => {
 
-            let training = stagiaire.training;
+            let formation = stagiaire.formation;
             let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
             return mailer.createRegionalMailer(region).sendEmail(
-                stagiaire.personal.email,
+                stagiaire.individu.email,
                 {
-                    subject: `Rejet de votre avis sur votre formation ${training.title} à ${training.organisation.name}`,
+                    subject: `Rejet de votre avis sur votre formation ${formation.intitule} à ${formation.action.organisme_formateur.raison_sociale}`,
                     body: await render(stagiaire),
                 },
                 {

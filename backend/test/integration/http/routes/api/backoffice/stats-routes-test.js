@@ -9,9 +9,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     let buildAvis = (custom = {}) => {
         return newAvis(_.merge({
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };
@@ -19,9 +25,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     let buildStagiaire = (custom = {}) => {
         return newStagiaire(_.merge({
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };

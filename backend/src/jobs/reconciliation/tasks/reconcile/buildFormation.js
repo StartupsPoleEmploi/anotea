@@ -1,5 +1,4 @@
 const computeScore = require('../../../../core/utils/computeScore');
-const createReconciliatedAvis = require('../../../../core/utils/createReconciliatedAvis');
 
 module.exports = (formation, avis) => {
 
@@ -27,11 +26,12 @@ module.exports = (formation, avis) => {
             siret: formation.organisme_formation_responsable.siret_organisme_formation.siret,
             numero: formation.organisme_formation_responsable._attributes.numero,
         },
-        avis: avis.map(a => createReconciliatedAvis(a)) || [],
+        avis,
         score: computeScore(avis),
         meta: {
             import_date: new Date(),
-            source: {//TODO remove source field in v2
+            source: {
+                //TODO remove source field in v2
                 numero_formation: formation._attributes.numero,
                 type: 'intercarif',
             },

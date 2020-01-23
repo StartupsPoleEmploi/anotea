@@ -11,9 +11,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     let buildAvis = (custom = {}) => {
         return newAvis(_.merge({
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };
@@ -86,7 +92,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
-                personal: {
+                individu: {
                     email: 'robert@domaine.com',
                 },
             })),
@@ -206,7 +212,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 status: 'none',
             },
         });
-        let organisme = newOrganismeAccount({ siret: avis.training.organisation.siret });
+        let organisme = newOrganismeAccount({ siret: avis.formation.action.organisme_formateur.siret });
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('avis', avis),

@@ -16,7 +16,7 @@ module.exports = (db, regions, mailer) => {
             let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
             return mailer.createRegionalMailer(region).sendEmail(
-                stagiaire.personal.email,
+                stagiaire.individu.email,
                 {
                     subject: 'Nous avons bien pris en compte votre commentaire',
                     body: await render(stagiaire),

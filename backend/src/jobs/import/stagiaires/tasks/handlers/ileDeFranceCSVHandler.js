@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const moment = require('moment');
-const { buildToken, buildEmail } = require('../utils/utils');
+const md5 = require('md5');
+const { buildToken } = require('../utils/utils');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
@@ -29,23 +30,10 @@ module.exports = (db, regions) => {
                 'Id Session DOKELIO',
             ]
         },
-        getKey: stagiaire => {
-            return {
-                sourceIDF: true,
-                personal: {
-                    email: stagiaire.personal.email,
-                },
-                training: {
-                    infoRegion: {
-                        idActionFormation: stagiaire.training.infoRegion.idActionFormation,
-                    }
-                }
-            };
-        },
         shouldBeImported: stagiaire => {
             let idf = regions.findRegionByCodeRegion('11');
-            let isAfter = moment(stagiaire.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
-            return isAfter && stagiaire.personal.emailValid && stagiaire.training.infoCarif.numeroSession === null;
+            let isAfter = moment(stagiaire.formation.action.session.periode.fin).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
+            return isAfter && stagiaire.individu.emailValid && stagiaire.formation.action.session.numero === null;
         },
         buildStagiaire: (record, campaign) => {
 
@@ -53,10 +41,11 @@ module.exports = (db, regions) => {
                 if (_.isEmpty(record)) {
                     return Promise.reject(new Error('Invalid record length'));
                 }
-                const token = buildToken(record['Mail']);
-                const { email, mailDomain } = buildEmail(record['Mail']);
+                let token = buildToken(record['Mail']);
+                let email = record['Mail'].toLowerCase();
+                let numeroAction = record['Numéro Action'];
 
-                let obj = {
+                return {
                     _id: campaign.name + '/' + token,
                     campaign: campaign.name,
                     campaignDate: campaign.date,
@@ -66,49 +55,50 @@ module.exports = (db, regions) => {
                     unsubscribe: false,
                     mailSent: false,
                     codeRegion: '11',
+                    refreshKey: md5(`${email};${numeroAction}`),
                     token: token, // used as public ID for URLs
-                    personal: {
-                        name: record['Individu.Nom'],
-                        firstName: record['Prénom'],
-                        mailDomain: mailDomain,
-                        email: email,
-                        phoneNumbers: [record['Tel Portable']],
+                    individu: {
+                        nom: record['Individu.Nom'],
+                        prenom: record['Prénom'],
+                        email,
+                        telephones: [record['Tel Portable']],
                         emailValid: true,
-                        dnIndividuNational: null,
-                        idLocal: null,
+                        identifiant_pe: null,
+                        identifiant_local: null,
                     },
-                    training: {
-                        idFormation: null,
-                        title: record['Libellé Action'],
-                        startDate: parseDate(record['Date Entree']),
-                        scheduledEndDate: parseDate(record['Date Sortie']),
-                        organisation: {
-                            id: null,
-                            siret: record['SIRET'],
-                            label: record['Raison Sociale'],
-                            name: record['Raison Sociale']
+                    formation: {
+                        numero: null,
+                        intitule: record['Libellé Action'],
+                        domaine_formation: {
+                            formacodes: [],
                         },
-                        place: {
-                            postalCode: record['Code Postal'],
-                            city: record['Ville']
+                        certifications: [],
+                        action: {
+                            numero: numeroAction,
+                            lieu_de_formation: {
+                                code_postal: record['Code Postal'],
+                                ville: record['Ville'],
+                            },
+                            organisme_financeurs: [{
+                                code_financeur: '2',
+                            }],
+                            organisme_formateur: {
+                                numero: null,
+                                siret: record['SIRET'],
+                                raison_sociale: record['Raison Sociale'],
+                                label: record['Raison Sociale'],
+                            },
+                            session: {
+                                id: null,
+                                numero: record['Id Session DOKELIO'] === '' ? null : record['Id Session DOKELIO'],
+                                periode: {
+                                    debut: parseDate(record['Date Entree']),
+                                    fin: parseDate(record['Date Sortie']),
+                                },
+                            },
                         },
-                        certifInfos: [],
-                        formacodes: [],
-                        idSession: null,
-                        infoCarif: {
-                            numeroAction: null,
-                            numeroSession: record['Id Session DOKELIO'] === '' ? null : record['Id Session DOKELIO']
-                        },
-                        codeFinanceur: ['2'],
-                        infoRegion: {
-                            idTrainee: record['Identifiant Stagiaire'],
-                            idActionFormation: record['Numéro Action'],
-                            idParcours: record['Identifiant Composante']
-                        }
                     },
                 };
-
-                return Promise.resolve(obj);
             } catch (e) {
                 return Promise.reject(e);
             }

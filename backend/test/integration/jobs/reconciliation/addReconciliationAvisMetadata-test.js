@@ -11,27 +11,30 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should insert meta to avis reconciliable', async () => {
 
         let db = await getTestDatabase();
-        let avisReconciliable = newAvis({
-            training: {
-                formacodes: ['22252'],
-                certifInfos: ['80735'],
-                organisation: {
-                    siret: '22222222222222',
-                },
-                place: {
-                    postalCode: '75019',
-                },
-            },
-            meta: {
-                reconciliations: [{
-                    reconciliable: false,
-                }]
-            }
-        });
-
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('avis', avisReconciliable),
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    intitule: 'A',
+                    domaine_formation: {
+                        formacodes: ['22252'],
+                    },
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
+                    },
+                },
+                meta: {
+                    reconciliations: [{
+                        reconciliable: false,
+                    }]
+                }
+            })),
         ]);
         await reconcile(db, logger);
 
@@ -48,11 +51,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let avisNonReconciliable = newAvis({
-            training: {
-                organisation: {
-                    siret: '22222222222222',
+            formation: {
+                action: {
+                    organisme_formateur: {
+                        siret: '22222222222222',
+                    },
                 },
-            }
+            },
         });
 
         await Promise.all([

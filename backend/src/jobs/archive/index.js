@@ -17,7 +17,7 @@ execute(async ({ db, logger, sendSlackNotification }) => {
 
     let cursor = db.collection('avis')
     .find({
-        'training.scheduledEndDate': {
+        'formation.action.session.periode.fin': {
             $lte: new Date(moment().subtract(24, 'months').format('YYYY-MM-DDTHH:mm:ss.SSSZ'))
         }
     });

@@ -2,7 +2,7 @@ const md5 = require('md5');
 
 module.exports = async (db, email) => {
 
-    let doc = await db.collection('stagiaires').findOne({ 'personal.email': email });
+    let doc = await db.collection('stagiaires').findOne({ 'individu.email': email });
 
     if (!doc) {
         throw new Error(`Unable to find stagiaires ${email}`);

@@ -85,8 +85,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             date: new Date(),
             token: token,
             campaign: stagiaire.campaign,
-            training: stagiaire.training,
+            formation: stagiaire.formation,
             codeRegion: stagiaire.codeRegion,
+            refreshKey: stagiaire.refreshKey,
             notes: notes,
             read: false,
             status: hasCommentaires ? 'none' : 'validated',
@@ -127,13 +128,13 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const getInfosRegion = async stagiaire => {
 
-        let trainingTooOld = stagiaire.training.scheduledEndDate < moment().subtract(90, 'days');
+        let formationTooOld = stagiaire.formation.action.session.periode.fin < moment().subtract(90, 'days');
         let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
         return {
             stagiaire,
             region,
-            showLinks: await externalLinks(db, communes).getLink(stagiaire, 'pe') !== null && !trainingTooOld
+            showLinks: await externalLinks(db, communes).getLink(stagiaire, 'pe') !== null && !formationTooOld
         };
     };
 

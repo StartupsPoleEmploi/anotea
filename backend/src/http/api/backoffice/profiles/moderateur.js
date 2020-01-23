@@ -5,7 +5,7 @@ const isEmail = require('isemail').validate;
 
 module.exports = (db, user) => {
 
-    const getStagiaire = email => db.collection('stagiaires').findOne({ 'personal.email': email });
+    const getStagiaire = email => db.collection('stagiaires').findOne({ 'individu.email': email });
 
     return {
         type: 'moderateur',

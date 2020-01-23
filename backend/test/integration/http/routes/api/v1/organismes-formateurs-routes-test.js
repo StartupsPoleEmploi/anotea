@@ -3,7 +3,7 @@ const assert = require('assert');
 const moment = require('moment');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
-const { newOrganismeAccount, newAvis, randomize } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount, newAvis } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -326,9 +326,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({ siret: '11111111111111' })),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '11111111111111',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '11111111111111',
+                        },
                     },
                 },
                 notes: {
@@ -402,9 +404,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: avisId,
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, date)),
@@ -442,7 +446,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                             code_postal: '75011',
                             ville: 'Paris'
                         },
-                        organisme_financeurs: [],
+                        organisme_financeurs: [{
+                            code_financeur: '10',
+                        }],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
                             siret: '22222222222222',
@@ -476,9 +482,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let sansCommentaire = newAvis({
             _id: oid,
-            training: {
-                organisation: {
-                    siret: '22222222222222',
+            formation: {
+                action: {
+                    organisme_formateur: {
+                        siret: '22222222222222',
+                    },
                 },
             },
         });
@@ -489,9 +497,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             })),
             insertIntoDatabase('avis', sansCommentaire),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
@@ -511,9 +521,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let avisAvecReponse = newAvis({
             _id: oid,
-            training: {
-                organisation: {
-                    siret: '22222222222222',
+            formation: {
+                action: {
+                    organisme_formateur: {
+                        siret: '22222222222222',
+                    },
                 },
             },
             reponse: {
@@ -529,9 +541,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             })),
             insertIntoDatabase('avis', avisAvecReponse),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
@@ -552,16 +566,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
             insertIntoDatabase('avis', newAvis({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
                 status: 'archived',
@@ -586,25 +604,31 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: '5minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, moment().subtract(5, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
                 _id: '6minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, moment().subtract(6, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
                 _id: '7minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, moment().subtract(7, 'minutes').toDate())),
@@ -627,27 +651,33 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: '5minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, moment().subtract(5, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
                 _id: '6minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, moment().subtract(6, 'minutes').toDate())),
             insertIntoDatabase('avis', newAvis({
                 _id: '7minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
@@ -668,27 +698,33 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: '1', notes: { global: 1 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: '3', notes: { global: 3 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
             insertIntoDatabase('avis', newAvis({
                 _id: '2', notes: { global: 2 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -708,28 +744,37 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                _id: 'C', training: {
-                    title: 'C',
-                    organisation: {
-                        siret: '22222222222222',
+                _id: 'C',
+                formation: {
+                    intitule: 'C',
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
             insertIntoDatabase('avis', newAvis({
-                _id: 'A', training: {
-                    title: 'A',
-                    organisation: {
-                        siret: '22222222222222',
+                _id: 'A',
+                formation: {
+                    intitule: '1',
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
             insertIntoDatabase('avis', newAvis({
-                _id: 'B', training: {
-                    title: 'B',
-                    organisation: {
-                        siret: '22222222222222',
+                _id: 'B',
+                formation: {
+                    intitule: 'B',
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 

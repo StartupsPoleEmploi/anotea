@@ -9,9 +9,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     let buildAvis = (custom = {}) => {
         return newAvis(_.merge({}, {
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };
@@ -70,7 +76,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
             insertIntoDatabase('avis', buildAvis({
                 codeRegion: '6',
-                training: { organisation: { siret: '11111111111111' } },
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '11111111111111',
+                        },
+                    },
+                },
             })),
         ]);
 
@@ -87,8 +99,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111111111' } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111111111' } } } })),
         ]);
 
         let response = await request(app)
@@ -97,7 +109,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111111111');
+        assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111111111');
     });
 
     it('can search avis with siren', async () => {
@@ -105,8 +117,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '22222222222222' } } } })),
         ]);
 
         let response = await request(app)
@@ -115,7 +127,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111122222');
+        assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111122222');
     });
 
     it('can not search avis with another siren', async () => {
@@ -123,8 +135,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '22222222222222' } } } })),
         ]);
 
         let response = await request(app)
@@ -140,8 +152,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '11111111111111' } } })),
-            insertIntoDatabase('avis', buildAvis({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111111111' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '22222222222222' } } } })),
         ]);
 
         let response = await request(app)
@@ -150,7 +162,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111111111');
+        assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111111111');
     });
 
     it('can create a reponse', async () => {
@@ -219,8 +231,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         let app = await startServer();
         let avis = buildAvis({
-            training: {
-                organisation: { siret: '11111111111111' },
+            formation: {
+                action: {
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         });
         let [token] = await Promise.all([

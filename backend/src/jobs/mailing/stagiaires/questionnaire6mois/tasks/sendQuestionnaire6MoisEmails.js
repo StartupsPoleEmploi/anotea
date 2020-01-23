@@ -14,13 +14,13 @@ module.exports = async (db, logger, emails, options = {}) => {
             $match: {
                 'mailing.questionnaire6Mois.mailSent': { $exists: false },
                 'campaign': 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                'training.certifInfos.0': { $exists: true },
+                'formation.certifications.0': { $exists: true },
                 'unsubscribe': false,
             }
         },
         {
             $group: {
-                _id: 'personal.email',
+                _id: 'individu.email',
                 stagiaire: { $first: '$$ROOT' },
             }
         }
@@ -32,7 +32,7 @@ module.exports = async (db, logger, emails, options = {}) => {
         let { stagiaire } = await cursor.next();
 
         try {
-            logger.info(`Sending email to ${(stagiaire.personal.email)}`);
+            logger.info(`Sending email to ${(stagiaire.individu.email)}`);
             let message = emails.getEmailMessageByTemplateName('questionnaire6MoisEmail');
 
             await message.send(stagiaire);

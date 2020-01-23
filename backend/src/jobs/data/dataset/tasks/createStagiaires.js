@@ -17,38 +17,29 @@ const createStagiaire = session => {
         campaign: 'dataset',
         importDate: getDateInThePast(),
         codeRegion: session.code_region,
-        personal: {
-            name: faker.name.lastName(),
-            firstName: faker.name.firstName(),
-            mailDomain: email.split('@')[1],
+        individu: {
+            nom: faker.name.lastName(),
+            prenom: faker.name.firstName(),
             email: email,
-            phoneNumbers: [faker.phone.phoneNumber('06########')],
+            telephones: [faker.phone.phoneNumber('06########')],
             emailValid: true,
-            dnIndividuNational: faker.phone.phoneNumber('##########')
+            identifiant_pe: faker.phone.phoneNumber('##########')
         },
-        training: {
-            idFormation: formation.numero,
-            title: formation.intitule,
-            startDate: getDateInThePast(),
-            scheduledEndDate: getDateInThePast(),
-            organisation: {
-                id: formation.action.organisme_formateur.numero,
-                siret: formation.action.organisme_formateur.siret,
-                label: formation.action.organisme_formateur.raison_sociale,
-                name: formation.action.organisme_formateur.raison_sociale,
+        formation: {
+            numero: formation.numero,
+            intitule: formation.intitule,
+            domaine_formation: formation.domaine_formation,
+            certifications: formation.certifications,
+            action: {
+                numero: formation.action.numero,
+                lieu_de_formation: formation.action.lieu_de_formation,
+                organisme_financeurs: formation.action.organisme_financeurs,
+                organisme_formateur: formation.action.organisme_formateur,
+                session: {
+                    numero: session.numero,
+                    periode: session.periode,
+                },
             },
-            place: {
-                postalCode: formation.action.lieu_de_formation.code_postal,
-                city: formation.action.lieu_de_formation.ville
-            },
-            certifInfos: formation.certifications.certifinfos,
-            formacodes: formation.domaine_formation.formacodes,
-            idSession: session.numero,
-            infoCarif: {
-                numeroAction: formation.action.numero,
-                numeroSession: session.numero
-            },
-            codeFinanceur: formation.action.organisme_financeurs[0],
         },
         unsubscribe: false,
         mailSent: true,

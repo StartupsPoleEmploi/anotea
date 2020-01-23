@@ -18,14 +18,14 @@ module.exports = ({ db, middlewares }) => {
             {
                 $match: {
                     'codeRegion': req.user.codeRegion,
-                    ...(organisme ? { 'training.organisation.siret': new RegExp(`^${organisme}`) } : {}),
+                    ...(organisme ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${organisme}`) } : {}),
                 }
             },
             {
                 $group: {
-                    _id: '$training.idFormation',
-                    idFormation: { $first: '$training.idFormation' },
-                    title: { $first: '$training.title' },
+                    _id: '$formation.numero',
+                    numeroFormation: { $first: '$formation.numero' },
+                    title: { $first: '$formation.intitule' },
                     nbAvis: { $sum: 1 }
                 }
             },

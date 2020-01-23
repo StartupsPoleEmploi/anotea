@@ -12,15 +12,15 @@ module.exports = (db, communes) => {
         }
 
         const distance = 30; // km
-        const postalCode = stagiaire.training.place.postalCode;
+        const codePostal = stagiaire.formation.action.lieu_de_formation.code_postal;
 
         let [romeMapping, commune] = await Promise.all([
             db.collection('formacodeRomeMapping').aggregate([{
-                $match: { 'formacodes.formacode': { $in: stagiaire.training.formacodes } }
+                $match: { 'formacodes.formacode': { $in: stagiaire.formation.domaine_formation.formacodes } }
             }, {
                 $group: { _id: '$codeROME' }
             }]).toArray(),
-            communes.findCommuneByPostalCode(postalCode)
+            communes.findCommuneByPostalCode(codePostal)
         ]);
 
         const romeList = romeMapping.map(mapping => {
@@ -28,7 +28,7 @@ module.exports = (db, communes) => {
         });
 
         let rome = romeList[0];
-        let inseeCode = commune ? commune.inseeCode : postalCode;
+        let inseeCode = commune ? commune.inseeCode : codePostal;
 
         if (romeList.length > 0) {
             if (goto === 'lbb') {
