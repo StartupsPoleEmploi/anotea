@@ -3,7 +3,7 @@ const faker = require('faker');
 module.exports = async (db, workflow, options = {}) => {
 
     let makeAction = async (nbElements, selector, action) => {
-        let cursor = await db.collection('comment').find(selector).limit(nbElements);
+        let cursor = await db.collection('avis').find(selector).limit(nbElements);
         while (await cursor.hasNext()) {
             let avis = await cursor.next();
             await action(avis);
@@ -19,10 +19,10 @@ module.exports = async (db, workflow, options = {}) => {
     });
 
     let nbCommentairesActions = nbModerationsActions / 5;
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
+    await makeAction(nbCommentairesActions, { commentaire: { $exists: true }, status: 'validated' }, avis => {
         return workflow.report(avis._id, true);
     });
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
+    await makeAction(nbCommentairesActions, { commentaire: { $exists: true }, status: 'validated' }, avis => {
         return workflow.addReponse(avis._id, faker.lorem.paragraph());
     });
 

@@ -3,14 +3,14 @@ const moment = require('moment');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newComment, randomize, newIntercarif } = require('../../../../../helpers/data/dataset');
+const { newAvis, newIntercarif } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
     let insertAndReconcile = (intercarifs, avis = []) => {
         return Promise.all([
             ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
-            ...avis.map(data => insertIntoDatabase('comment', data)),
+            ...avis.map(data => insertIntoDatabase('avis', data)),
         ])
         .then(() => reconcile({ actions: true }));
     };
@@ -18,9 +18,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return action by id', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
         let date = new Date();
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
 
         await insertAndReconcile(
             [
@@ -34,20 +33,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
-                    _id: commentId,
-                    pseudo: pseudo,
+                newAvis({
+                    _id: avisId,
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -97,8 +99,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 }
             },
             avis: [{
-                id: commentId.toString(),
-                pseudo,
+                id: avisId.toString(),
                 date: date.toJSON(),
                 commentaire: {
                     titre: 'Génial',
@@ -125,7 +126,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             code_postal: '75019',
                             ville: 'Paris'
                         },
-                        organisme_financeurs: [],
+                        organisme_financeurs: [{
+                            code_financeur: '10',
+                        }],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
                             siret: '33333333333333',
@@ -160,18 +163,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -226,19 +233,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '82422814200108',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '82422814200108',
+                            },
                         },
                     },
                     status: 'rejected',
-                    comment: {
+                    commentaire: {
                         title: 'WTF',
                         text: 'WTF',
                     },
@@ -359,15 +370,19 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 })
@@ -457,18 +472,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
+                newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -515,8 +534,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        let pseudo = randomize('pseudo');
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
         await insertAndReconcile(
             [
                 newIntercarif({
@@ -530,20 +548,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
-                    _id: commentId,
-                    pseudo,
+                newAvis({
+                    _id: avisId,
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -560,8 +581,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
             avis: [{
-                id: commentId.toString(),
-                pseudo,
+                id: avisId.toString(),
                 date: date.toJSON(),
                 commentaire: {
                     titre: 'Génial',
@@ -588,7 +608,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             code_postal: '75019',
                             ville: 'Paris'
                         },
-                        organisme_financeurs: [],
+                        organisme_financeurs: [
+                            { code_financeur: '10' },
+                        ],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
                             siret: '33333333333333',
@@ -618,20 +640,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let sansCommentaire = newComment({
-            pseudo: 'pseudo',
+        let sansCommentaire = newAvis({
+            _id: '1234',
             codeRegion: '11',
-            training: {
-                formacodes: ['22252'],
-                organisation: {
-                    siret: '33333333333333',
+            formation: {
+                domaine_formation: {
+                    formacodes: ['22252'],
                 },
-                place: {
-                    postalCode: '75019',
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
+                        siret: '33333333333333',
+                    },
                 },
             },
         });
-        delete sansCommentaire.comment;
+        delete sansCommentaire.commentaire;
 
         await insertAndReconcile(
             [
@@ -647,15 +673,19 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 sansCommentaire,
-                newComment({
+                newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 }),
@@ -666,22 +696,26 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, '1234');
     });
 
     it('can return avis avec réponse', async () => {
 
         let app = await startServer();
-        let avisAvecReponse = newComment({
-            pseudo: 'pseudo',
+        let avisAvecReponse = newAvis({
+            _id: '1234',
             codeRegion: '11',
-            training: {
-                formacodes: ['22252'],
-                organisation: {
-                    siret: '33333333333333',
+            formation: {
+                domaine_formation: {
+                    formacodes: ['22252'],
                 },
-                place: {
-                    postalCode: '75019',
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
+                        siret: '33333333333333',
+                    },
                 },
             },
             reponse: {
@@ -690,7 +724,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 status: 'none',
             },
         });
-        delete avisAvecReponse.comment;
+        delete avisAvecReponse.commentaire;
 
         await insertAndReconcile(
             [
@@ -706,15 +740,19 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ],
             [
                 avisAvecReponse,
-                newComment({
+                newAvis({
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 }),
@@ -725,7 +763,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, '1234');
     });
 
     it('should fail when items_per_page is too big', async () => {
@@ -772,31 +810,47 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
-                    pseudo: '5minutesAgo',
+                newAvis({
+                    _id: '5minutesAgo',
                     codeRegion: '11',
-                    training: {
-                        scheduledEndDate: moment().subtract(5, 'minutes').toDate(),
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
+                            session: {
+                                periode: {
+                                    fin: moment().subtract(5, 'minutes').toDate(),
+                                },
+                            },
                         },
                     },
                 }),
-                newComment({
-                    pseudo: '7minutesAgo',
+                newAvis({
+                    _id: '7minutesAgo',
                     codeRegion: '11',
-                    training: {
-                        scheduledEndDate: moment().subtract(7, 'minutes').toDate(),
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
+                            session: {
+                                periode: {
+                                    fin: moment().subtract(7, 'minutes').toDate(),
+                                },
+                            },
                         },
                     },
                 }),
@@ -806,8 +860,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis?tri=date&ordre=asc');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '5minutesAgo');
     });
 
     it('can return avis sorted by notes', async () => {
@@ -825,35 +879,43 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
-                    pseudo: '1',
+                newAvis({
+                    _id: '1',
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         global: 1
                     },
                 }),
-                newComment({
-                    pseudo: '2',
+                newAvis({
+                    _id: '2',
                     codeRegion: '11',
-                    training: {
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         global: 2,
                     },
                 }),
@@ -863,8 +925,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis?tri=notes&ordre=desc');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '2');
-        assert.strictEqual(response.body.avis[1].pseudo, '1');
+        assert.strictEqual(response.body.avis[0].id, '2');
+        assert.strictEqual(response.body.avis[1].id, '1');
     });
 
     it('can return avis sorted by formation', async () => {
@@ -882,34 +944,42 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 })
             ],
             [
-                newComment({
-                    pseudo: 'A',
+                newAvis({
+                    _id: 'A',
                     codeRegion: '11',
-                    training: {
-                        title: 'A',
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        intitule: 'A',
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
                 }),
-                newComment({
-                    pseudo: 'B',
+                newAvis({
+                    _id: 'B',
                     codeRegion: '11',
-                    training: {
-                        title: 'B',
-                        formacodes: ['22252'],
-                        organisation: {
-                            siret: '33333333333333',
+                    formation: {
+                        intitule: 'B',
+                        domaine_formation: {
+                            formacodes: ['22252'],
                         },
-                        place: {
-                            postalCode: '75019',
+                        action: {
+                            lieu_de_formation: {
+                                code_postal: '75019',
+                            },
+                            organisme_formateur: {
+                                siret: '33333333333333',
+                            },
                         },
                     },
-                    rates: {
+                    notes: {
                         global: 2,
                     },
                 }),
@@ -919,16 +989,26 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis?tri=formation&ordre=desc');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, 'B');
-        assert.strictEqual(response.body.avis[1].pseudo, 'A');
+        assert.strictEqual(response.body.avis[0].id, 'B');
+        assert.strictEqual(response.body.avis[1].id, 'A');
     });
 
     it('can search though all actions filtered by region', async () => {
 
         let app = await startServer();
         await insertAndReconcile([
-            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1', codeRegion: '11' }),
-            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2', codeRegion: '24' }),
+            newIntercarif({
+                numeroFormation: 'F_XX_X1',
+                numeroAction: 'AC_XX_XXXXX1',
+                numeroSession: 'SE_XXXXX1',
+                codeRegion: '11'
+            }),
+            newIntercarif({
+                numeroFormation: 'F_XX_X2',
+                numeroAction: 'AC_XX_XXXXX2',
+                numeroSession: 'SE_XXXXX2',
+                codeRegion: '24'
+            }),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?region=11`);

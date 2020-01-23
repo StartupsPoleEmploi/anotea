@@ -1,8 +1,7 @@
 const computeScore = require('../../../../core/utils/computeScore');
-const { flatten } = require('../../../job-utils');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const _ = require('lodash');
 
-module.exports = (formation, action, comments) => {
+module.exports = (formation, action, avis) => {
 
     return {
         _id: `${formation._attributes.numero}|${action._attributes.numero}`,
@@ -12,7 +11,7 @@ module.exports = (formation, action, comments) => {
             ville: action.lieu_de_formation.coordonnees.adresse.ville,
         },
         organisme_financeurs: action.organisme_financeurs ?
-            flatten(action.organisme_financeurs.map(of => of.code_financeur)) : [],
+            action.organisme_financeurs.map(of => _.pick(of, ['code_financeur'])) : [],
         organisme_formateur: {
             raison_sociale: action.organisme_formateur.raison_sociale_formateur,
             siret: action.organisme_formateur.siret_formateur.siret,
@@ -20,8 +19,8 @@ module.exports = (formation, action, comments) => {
         },
         region: action.lieu_de_formation.coordonnees.adresse.region,
         code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
-        avis: comments.map(a => convertCommentToAvis(a)) || [],
-        score: computeScore(comments),
+        avis,
+        score: computeScore(avis),
         formation: {
             numero: formation._attributes.numero,
             intitule: formation.intitule_formation,
@@ -40,7 +39,8 @@ module.exports = (formation, action, comments) => {
         },
         meta: {
             import_date: new Date(),
-            source: {//TODO remove source field in v2
+            source: {
+                //TODO remove source field in v2
                 numero_formation: formation._attributes.numero,
                 numero_action: action._attributes.numero,
                 type: 'intercarif',

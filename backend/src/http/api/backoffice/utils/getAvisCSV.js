@@ -4,10 +4,10 @@ const moment = require('moment');
 let sanitizeNote = note => `${note}`.replace(/\./g, ',');
 let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
 
-let getStatus = comment => {
-    if (comment.status === 'archived') {
+let getStatus = avis => {
+    if (avis.status === 'archived') {
         return 'Archivé';
-    } else if (comment.status === 'validated') {
+    } else if (avis.status === 'validated') {
         return 'Validé';
     } else {
         return 'En cours de modération';
@@ -25,38 +25,37 @@ let getReponseStatus = reponse => {
     }
 };
 
-let getQualification = comment => {
-    return _.isEmpty(comment.qualification) ? '' : comment.qualification;
+let getQualification = avis => {
+    return _.isEmpty(avis.qualification) ? '' : avis.qualification;
 };
 
 module.exports = profile => {
     return {
-        'id': comment => comment._id,
-        'note accueil': comment => sanitizeNote(comment.rates.accueil),
-        'note contenu formation': comment => sanitizeNote(comment.rates.contenu_formation),
-        'note equipe formateurs': comment => sanitizeNote(comment.rates.equipe_formateurs),
-        'note matériel': comment => sanitizeNote(comment.rates.moyen_materiel),
-        'note accompagnement': comment => sanitizeNote(comment.rates.accompagnement),
-        'note global': comment => sanitizeNote(comment.rates.global),
-        'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
-        'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-        ...(profile === 'organisme' ? {} : { 'qualification': comment => getQualification(comment) }),
-        'statut': comment => getStatus(comment),
-        'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
-        'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
-        'id formation': comment => comment.training.idFormation,
-        'titre formation': comment => comment.training.title,
-        'date début': comment => moment(comment.training.startDate).format('DD/MM/YYYY'),
-        'date de fin prévue': comment => moment(comment.training.scheduledEndDate).format('DD/MM/YYYY'),
-        'siret organisme': comment => comment.training.organisation.siret,
-        'libellé organisme': comment => comment.training.organisation.label,
-        'nom organisme': comment => comment.training.organisation.name,
-        'code postal': comment => comment.training.place.postalCode,
-        'ville': comment => comment.training.place.city,
-        'certifInfos': comment => comment.training.certifInfos.join(','),
-        'formacodes': comment => comment.training.formacodes.join(','),
-        'id session': comment => comment.training.idSession,
-        'AES reçu': comment => comment.training.aesRecu,
-        'code financeur': comment => comment.training.codeFinanceur,
+        'id': avis => avis._id,
+        'note accueil': avis => sanitizeNote(avis.notes.accueil),
+        'note contenu formation': avis => sanitizeNote(avis.notes.contenu_formation),
+        'note equipe formateurs': avis => sanitizeNote(avis.notes.equipe_formateurs),
+        'note matériel': avis => sanitizeNote(avis.notes.moyen_materiel),
+        'note accompagnement': avis => sanitizeNote(avis.notes.accompagnement),
+        'note global': avis => sanitizeNote(avis.notes.global),
+        'titre': avis => sanitizeString(_.get(avis, 'commentaire.title', '')),
+        'commentaire': avis => sanitizeString(_.get(avis, 'commentaire.text', '')),
+        ...(profile === 'organisme' ? {} : { 'qualification': avis => getQualification(avis) }),
+        'statut': avis => getStatus(avis),
+        'réponse': avis => sanitizeString(_.get(avis, 'reponse.text', '')),
+        'réponse statut': avis => avis.reponse ? getReponseStatus(avis.reponse.status) : '',
+        'id formation': avis => avis.formation.numero,
+        'titre formation': avis => avis.formation.intitule,
+        'date début': avis => moment(avis.formation.action.session.periode.debut).format('DD/MM/YYYY'),
+        'date de fin prévue': avis => moment(avis.formation.action.session.periode.fin).format('DD/MM/YYYY'),
+        'siret organisme': avis => avis.formation.action.organisme_formateur.siret,
+        'libellé organisme': avis => avis.formation.action.organisme_formateur.label,
+        'nom organisme': avis => avis.formation.action.organisme_formateur.raison_sociale,
+        'code postal': avis => avis.formation.action.lieu_de_formation.code_postal,
+        'ville': avis => avis.formation.action.lieu_de_formation.ville,
+        'certifInfos': avis => avis.formation.certifications.map(c => c.certif_info).join(','),
+        'formacodes': avis => avis.formation.domaine_formation.formacodes.join(','),
+        'id session': avis => avis.formation.action.session.id,
+        'code financeur': avis => avis.formation.action.organisme_financeurs.map(o => o.code_financeur).join(','),
     };
 };

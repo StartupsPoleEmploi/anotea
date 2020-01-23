@@ -52,23 +52,23 @@ module.exports = async (db, logger) => {
                 .map(action => findAvisReconciliables(db, intercarif, action))
             );
 
-            let actions = reconciliations.reduce((acc, { action, comments }) => {
+            let actions = reconciliations.reduce((acc, { action, avis }) => {
                 return [
                     ...acc,
-                    buildAction(intercarif, action, comments),
+                    buildAction(intercarif, action, avis),
                 ];
             }, []);
 
-            let sessions = reconciliations.reduce((acc, { action, comments }) => {
+            let sessions = reconciliations.reduce((acc, { action, avis }) => {
                 let sessions = action.sessions;
                 return [
                     ...acc,
-                    ...sessions.map(session => buildSession(intercarif, action, session, comments)),
+                    ...sessions.map(session => buildSession(intercarif, action, session, avis)),
                 ];
             }, []);
 
             let formation = buildFormation(intercarif,
-                _.chain(reconciliations).flatMap(r => r.comments).uniqBy('token').value()
+                _.chain(reconciliations).flatMap(r => r.avis).uniqBy('token').value()
             );
 
             await Promise.all([

@@ -37,10 +37,6 @@ export default class Formulaire extends Component {
                 value: '',
                 isValid: true,
             },
-            pseudo: {
-                value: '',
-                isValid: true,
-            },
         },
         stagiaire: null,
         showErrorMessage: null,
@@ -56,9 +52,7 @@ export default class Formulaire extends Component {
 
     isFormValid = () => {
         let commentaire = this.state.commentaire;
-        let isCommentaireValid = commentaire.texte.isValid &&
-            commentaire.titre.isValid &&
-            commentaire.pseudo.isValid;
+        let isCommentaireValid = commentaire.texte.isValid && commentaire.titre.isValid;
 
         return this.state.isNotesValid && isCommentaireValid;
     };
@@ -101,7 +95,6 @@ export default class Formulaire extends Component {
                     avis_equipe_formateurs: this.state.notes[2].value,
                     avis_moyen_materiel: this.state.notes[3].value,
                     avis_accompagnement: this.state.notes[4].value,
-                    pseudo: this.state.commentaire.pseudo.value,
                     commentaire: {
                         texte: this.state.commentaire.texte.value,
                         titre: this.state.commentaire.titre.value,

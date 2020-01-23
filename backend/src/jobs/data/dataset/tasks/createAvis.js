@@ -14,8 +14,8 @@ const buildAvis = (stagiaire, custom = {}) => {
         campaign: 'dataset',
         read: false,
         codeRegion: stagiaire.codeRegion,
-        training: stagiaire.training,
-        rates: {
+        formation: stagiaire.formation,
+        notes: {
             accueil: 3,
             contenu_formation: 2,
             equipe_formateurs: 4,
@@ -30,7 +30,7 @@ const buildAvis = (stagiaire, custom = {}) => {
 module.exports = async (db, options) => {
 
     let generateAvis = async (nbElements, getCustom = () => ({})) => {
-        let cursor = await db.collection('trainee').find({ avisCreated: false }).limit(nbElements);
+        let cursor = await db.collection('stagiaires').find({ avisCreated: false }).limit(nbElements);
 
         return batchCursor(cursor, async next => {
             let stagiaire = await next();
@@ -38,8 +38,8 @@ module.exports = async (db, options) => {
             //TODO add a service to create avis
             let avis = buildAvis(stagiaire, getCustom());
             await Promise.all([
-                db.collection('trainee').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
-                db.collection('comment').insertOne(avis),
+                db.collection('stagiaires').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
+                db.collection('avis').insertOne(avis),
             ]);
         });
     };
@@ -49,7 +49,7 @@ module.exports = async (db, options) => {
         return {
             //Must be reused from questionnaire-routes
             status: 'none',
-            comment: {
+            commentaire: {
                 title: faker.lorem.sentence(),
                 text: faker.lorem.paragraph(),
                 titleMasked: false,

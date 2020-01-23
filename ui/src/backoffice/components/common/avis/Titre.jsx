@@ -14,21 +14,21 @@ export default class Titre extends React.Component {
 
     toggle = async () => {
         let avis = this.props.avis;
-        let updated = await maskTitle(avis._id, !avis.comment.titleMasked);
+        let updated = await maskTitle(avis._id, !avis.commentaire.titleMasked);
         this.props.onChange(updated);
     };
 
     render() {
         let { avis, showModerationButtons } = this.props;
 
-        if (!avis.comment || !avis.comment.title) {
+        if (!avis.commentaire || !avis.commentaire.title) {
             return <div className="Titre empty">Aucun titre</div>;
         }
         return (
             <div className="Titre">
-                <span className={`mr-1 title ${avis.comment.titleMasked ? 'masked' : ''}`}>{avis.comment.title}</span>
+                <span className={`mr-1 title ${avis.commentaire.titleMasked ? 'masked' : ''}`}>{avis.commentaire.title}</span>
                 {showModerationButtons &&
-                <i className={`far ${avis.comment.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
+                <i className={`far ${avis.commentaire.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
                 }
             </div>
         );

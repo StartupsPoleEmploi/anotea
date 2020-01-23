@@ -19,21 +19,23 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/emails/:type/:token/templates/:templateName', async (req, res) => {
 
-        const { type, token, templateName, avis } = await Joi.validate(Object.assign({}, req.params, req.query), {
+        const parameters = await Joi.validate(Object.assign({}, req.params, req.query), {
             type: Joi.string().valid(['organismes', 'stagiaires']).required(),
             token: Joi.string().required(),
             templateName: Joi.string().required(),
             avis: Joi.string(),
         }, { abortEarly: false });
 
-        let doc = await db.collection(type === 'organismes' ? 'accounts' : 'trainee').findOne({ token });
+        let doc = await db.collection(parameters.type === 'organismes' ? 'accounts' : 'stagiaires').findOne({
+            token: parameters.token
+        });
         if (!doc) {
             return send404(res);
         }
 
-        let comment = avis ? await db.collection('comment').findOne({ token: avis }) : null;
-        let message = emails.getEmailMessageByTemplateName(templateName);
-        let html = await message.render(doc, comment);
+        let avis = parameters.avis ? await db.collection('avis').findOne({ token: parameters.avis }) : null;
+        let message = emails.getEmailMessageByTemplateName(parameters.templateName);
+        let html = await message.render(doc, avis);
 
         return sendHTML(res, html);
     });
@@ -55,10 +57,10 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/emails/stagiaires/:token/track', async (req, res) => {
         let token = req.params.token;
-        let trainee = await db.collection('trainee').findOne({ token });
-        if (trainee) {
-            let trackingFieldName = trainee.tracking && trainee.tracking.firstRead ? 'lastRead' : 'firstRead';
-            db.collection('trainee').updateOne({ token }, {
+        let stagiaire = await db.collection('stagiaires').findOne({ token });
+        if (stagiaire) {
+            let trackingFieldName = stagiaire.tracking && stagiaire.tracking.firstRead ? 'lastRead' : 'firstRead';
+            db.collection('stagiaires').updateOne({ token }, {
                 $set: {
                     [`tracking.${trackingFieldName}`]: new Date()
                 }
@@ -69,13 +71,13 @@ module.exports = ({ db, logger, emails }) => {
     });
 
     router.get('/emails/stagiaires/:token/unsubscribe', async (req, res) => {
-        let trainee = await db.collection('trainee').findOne({ token: req.params.token });
-        if (!trainee) {
+        let stagiaire = await db.collection('stagiaires').findOne({ token: req.params.token });
+        if (!stagiaire) {
             return send404(res);
         }
 
         try {
-            await db.collection('trainee').update({ '_id': trainee._id }, {
+            await db.collection('stagiaires').update({ '_id': stagiaire._id }, {
                 $set: {
                     'unsubscribe': true
                 }

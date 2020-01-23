@@ -24,7 +24,7 @@ export default class Notes extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showDetails: !props.avis.comment,
+            showDetails: !props.avis.commentaire,
         };
     }
 
@@ -63,11 +63,11 @@ export default class Notes extends React.Component {
                 </Button>
                 {this.state.showDetails &&
                 <div className="details d-flex justify-content-between">
-                    {this.createNote('Accueil', avis.rates.accueil)}
-                    {this.createNote('Contenu', avis.rates.contenu_formation)}
-                    {this.createNote('Formateurs', avis.rates.equipe_formateurs)}
-                    {this.createNote('Matériels', avis.rates.moyen_materiel)}
-                    {this.createNote('Accompagnement', avis.rates.accompagnement)}
+                    {this.createNote('Accueil', avis.notes.accueil)}
+                    {this.createNote('Contenu', avis.notes.contenu_formation)}
+                    {this.createNote('Formateurs', avis.notes.equipe_formateurs)}
+                    {this.createNote('Matériels', avis.notes.moyen_materiel)}
+                    {this.createNote('Accompagnement', avis.notes.accompagnement)}
                 </div>
                 }
             </div>

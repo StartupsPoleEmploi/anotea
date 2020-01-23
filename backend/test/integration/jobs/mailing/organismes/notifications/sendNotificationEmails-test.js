@@ -3,7 +3,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/with-mongodb');
-const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
+const { newAvis, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const sendNotificationEmails = require('../../../../../../src/jobs/mailing/organismes/notifications/tasks/sendNotificationEmails');
 
@@ -16,14 +16,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             ...(
                 _.range(5).map(() => {
-                    return insertIntoDatabase('comment', newComment({
+                    return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),
@@ -58,14 +60,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             ...(
                 _.range(5).map(() => {
-                    return insertIntoDatabase('comment', newComment({
+                    return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),
@@ -124,14 +128,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             ...(
                 _.range(2).map(() => {
-                    return insertIntoDatabase('comment', newComment({
+                    return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),
@@ -161,14 +167,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             ...(
                 _.range(5).map(() => {
-                    return insertIntoDatabase('comment', newComment({
+                    return insertIntoDatabase('avis', newAvis({
                         read: false,
                         status: 'validated',
-                        training: {
-                            organisation: {
-                                siret: '31705038300064',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
                             },
-                        }
+                        },
                     }));
                 })
             ),

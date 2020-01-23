@@ -7,16 +7,16 @@ module.exports = avis => {
     }
 
     let score = avis.reduce((acc, avis) => {
-        let { rates } = avis;
+        let { notes } = avis;
         acc.nb_avis++;
-        acc.notes.accueil += rates.accueil;
-        acc.notes.contenu_formation += rates.contenu_formation;
-        acc.notes.equipe_formateurs += rates.equipe_formateurs;
-        acc.notes.moyen_materiel += rates.moyen_materiel;
-        acc.notes.accompagnement += rates.accompagnement;
-        acc.notes.global += rates.global;
-        acc.aggregation.global.max = Math.max(rates.global, acc.aggregation.global.max);
-        acc.aggregation.global.min = Math.min(rates.global, acc.aggregation.global.min);
+        acc.notes.accueil += notes.accueil;
+        acc.notes.contenu_formation += notes.contenu_formation;
+        acc.notes.equipe_formateurs += notes.equipe_formateurs;
+        acc.notes.moyen_materiel += notes.moyen_materiel;
+        acc.notes.accompagnement += notes.accompagnement;
+        acc.notes.global += notes.global;
+        acc.aggregation.global.max = Math.max(notes.global, acc.aggregation.global.max);
+        acc.aggregation.global.min = Math.min(notes.global, acc.aggregation.global.min);
         return acc;
     }, {
         nb_avis: 0,

@@ -2,17 +2,17 @@ module.exports = (db, regions, mailer) => {
 
     const templateName = 'reponseRejectedEmail';
 
-    let render = (organisme, comment) => {
+    let render = (organisme, avis) => {
         return mailer.render(__dirname, templateName, {
             organisme,
-            comment,
+            avis,
         });
     };
 
     return {
         templateName,
         render,
-        send: async (organisme, comment) => {
+        send: async (organisme, avis) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
@@ -20,7 +20,7 @@ module.exports = (db, regions, mailer) => {
                 organisme.courriel,
                 {
                     subject: 'Pôle Emploi - Votre réponse n\'a pas été prise en compte',
-                    body: await render(organisme, comment),
+                    body: await render(organisme, avis),
                 },
             );
         },

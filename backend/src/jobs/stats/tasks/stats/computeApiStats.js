@@ -4,7 +4,7 @@ module.exports = (db, regions) => {
 
     let getAvisReconciliesStats = async (label, codeRegions) => {
 
-        let avis = db.collection('comment');
+        let avis = db.collection('avis');
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
         let [
@@ -22,7 +22,7 @@ module.exports = (db, regions) => {
             sessionsReconciliees.countDocuments({
                 'code_region': { $in: codeRegions },
                 'score.nb_avis': { $gte: 1 },
-                'formation.certifications.certifinfos.0': { $exists: true }
+                'formation.certifications.0': { $exists: true }
             }),
             sessionsReconciliees.aggregate([
                 { $match: { 'code_region': { $in: codeRegions } } },

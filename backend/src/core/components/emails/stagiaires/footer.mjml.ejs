@@ -29,13 +29,13 @@
         <mj-text>
             <div class="text-tertiary">
                 Si vous ne souhaitez plus participer à l'enquête,
-                <a href="<%= utils.getUnsubscribeLink(trainee.token) %>" class="link">vous pouvez vous désinscrire</a>.
+                <a href="<%= utils.getUnsubscribeLink(stagiaire.token) %>" class="link">vous pouvez vous désinscrire</a>.
             </div>
         </mj-text>
         <mj-text>
             <div class="text-tertiary">
                 Si vous ne parvenez pas à lire ce mail,
-                <a href="<%= utils.getConsultationLink('stagiaires', templateName, trainee.token) %>"
+                <a href="<%= utils.getConsultationLink('stagiaires', templateName, stagiaire.token) %>"
                    target="_blank" class="link">
                     cliquez-ici
                 </a>

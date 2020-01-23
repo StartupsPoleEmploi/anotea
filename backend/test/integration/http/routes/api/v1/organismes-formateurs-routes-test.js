@@ -3,7 +3,7 @@ const assert = require('assert');
 const moment = require('moment');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
-const { newOrganismeAccount, newComment, randomize } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount, newAvis } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -325,13 +325,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({ siret: '11111111111111' })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: '11111111111111',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '11111111111111',
+                        },
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 3,
                     contenu_formation: 2,
                     equipe_formateurs: 4,
@@ -395,18 +397,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let date = new Date();
-        let commentId = new ObjectID();
-        let pseudo = randomize('pseudo');
+        let avisId = new ObjectID();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
-                _id: commentId,
-                pseudo,
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: avisId,
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, date)),
@@ -417,8 +419,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
             avis: [{
-                id: commentId.toString(),
-                pseudo,
+                id: avisId.toString(),
                 date: date.toJSON(),
                 commentaire: {
                     titre: 'Génial',
@@ -445,7 +446,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                             code_postal: '75011',
                             ville: 'Paris'
                         },
-                        organisme_financeurs: [],
+                        organisme_financeurs: [{
+                            code_financeur: '10',
+                        }],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
                             siret: '22222222222222',
@@ -475,24 +478,30 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let sansCommentaire = newComment({
-            pseudo: 'pseudo',
-            training: {
-                organisation: {
-                    siret: '22222222222222',
+        let oid = new ObjectID();
+
+        let sansCommentaire = newAvis({
+            _id: oid,
+            formation: {
+                action: {
+                    organisme_formateur: {
+                        siret: '22222222222222',
+                    },
                 },
             },
         });
-        delete sansCommentaire.comment;
+        delete sansCommentaire.commentaire;
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', sansCommentaire),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', sansCommentaire),
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
@@ -502,17 +511,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, oid.toString());
     });
 
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let avisAvecReponse = newComment({
-            pseudo: 'pseudo',
-            training: {
-                organisation: {
-                    siret: '22222222222222',
+        let oid = new ObjectID();
+
+        let avisAvecReponse = newAvis({
+            _id: oid,
+            formation: {
+                action: {
+                    organisme_formateur: {
+                        siret: '22222222222222',
+                    },
                 },
             },
             reponse: {
@@ -521,16 +534,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 status: 'none',
             },
         });
-        delete avisAvecReponse.comment;
+        delete avisAvecReponse.commentaire;
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', avisAvecReponse),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', avisAvecReponse),
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
@@ -540,7 +555,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+        assert.deepStrictEqual(response.body.avis[0].id, oid.toString());
     });
 
     it('can search avis and ignoring those archived', async () => {
@@ -550,17 +565,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
                 status: 'archived',
@@ -583,27 +602,33 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '5minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '5minutesAgo',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '6minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '6minutesAgo',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '7minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '7minutesAgo',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             }, moment().subtract(7, 'minutes').toDate())),
@@ -611,9 +636,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=date');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '5minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].id, '7minutesAgo');
     });
 
     it('should sort avis by date (asc)', async () => {
@@ -624,37 +649,43 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '5minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '5minutesAgo',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '6minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '6minutesAgo',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '7minutesAgo',
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '7minutesAgo',
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=date&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[0].id, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].id, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].id, '5minutesAgo');
     });
 
     it('should sort avis by notes', async () => {
@@ -665,37 +696,43 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '1', rates: { global: 1 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '1', notes: { global: 1 },
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '3', rates: { global: 3 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '3', notes: { global: 3 },
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: '2', rates: { global: 2 },
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: '2', notes: { global: 2 },
+                formation: {
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=notes');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '3');
-        assert.strictEqual(response.body.avis[1].pseudo, '2');
-        assert.strictEqual(response.body.avis[2].pseudo, '1');
+        assert.strictEqual(response.body.avis[0].id, '3');
+        assert.strictEqual(response.body.avis[1].id, '2');
+        assert.strictEqual(response.body.avis[2].id, '1');
     });
 
     it('should sort avis by formation', async () => {
@@ -706,37 +743,46 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: 'C', training: {
-                    title: 'C',
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: 'C',
+                formation: {
+                    intitule: 'C',
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: 'A', training: {
-                    title: 'A',
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: 'A',
+                formation: {
+                    intitule: '1',
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: 'B', training: {
-                    title: 'B',
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: 'B',
+                formation: {
+                    intitule: 'B',
+                    action: {
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=formation&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, 'A');
-        assert.strictEqual(response.body.avis[1].pseudo, 'B');
-        assert.strictEqual(response.body.avis[2].pseudo, 'C');
+        assert.strictEqual(response.body.avis[0].id, 'A');
+        assert.strictEqual(response.body.avis[1].id, 'B');
+        assert.strictEqual(response.body.avis[2].id, 'C');
     });
 
 }));

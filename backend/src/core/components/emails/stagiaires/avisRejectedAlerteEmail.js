@@ -3,27 +3,27 @@ module.exports = (db, regions, mailer) => {
     const templateName = 'avisRejectedAlerteEmail';
     let { utils } = mailer;
 
-    let render = trainee => {
+    let render = stagiaire => {
         return mailer.render(__dirname, templateName, {
-            trainee,
+            stagiaire,
         });
     };
 
     return {
         templateName,
         render,
-        send: async trainee => {
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+        send: async stagiaire => {
+            let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
             return mailer.createRegionalMailer(region).sendEmail(
-                trainee.trainee.email,
+                stagiaire.individu.email,
                 {
                     subject: 'Nous avons bien pris en compte votre commentaire',
-                    body: await render(trainee),
+                    body: await render(stagiaire),
                 },
                 {
                     list: {
-                        unsubscribe: utils.getUnsubscribeLink(trainee.token),
+                        unsubscribe: utils.getUnsubscribeLink(stagiaire.token),
                     },
                 }
             );

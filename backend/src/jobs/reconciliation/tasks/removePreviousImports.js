@@ -1,6 +1,6 @@
 const moment = require('moment/moment');
 
-module.exports = (db, retention = moment().subtract(12, 'hours').toDate()) => {
+module.exports = (db, retention = moment().subtract(1, 'hours').toDate()) => {
 
     let query = {
         $or: [

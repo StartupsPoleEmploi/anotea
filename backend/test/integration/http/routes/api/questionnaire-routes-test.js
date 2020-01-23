@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const _ = require('lodash');
 const { withServer } = require('../../../../helpers/with-server');
-const { newTrainee } = require('../../../../helpers/data/dataset');
+const { newStagiaire } = require('../../../../helpers/data/dataset');
 
 
 describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatabase }) => {
@@ -12,18 +12,17 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let app = await startServer();
         let db = await getTestDatabase();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
             commentaire: {
                 texte: 'texte',
                 titre: 'titre'
@@ -35,45 +34,52 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             campaign: 'test-campaign',
             importDate: date.toJSON(),
             avisCreated: false,
-            trainee: {
-                name: 'Dupont',
-                firstName: 'Henri',
-                mailDomain: 'free.fr',
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
+            individu: {
+                nom: 'Dupont',
+                prenom: 'Henri',
                 email: 'henri@email.fr',
-                phoneNumbers: [
+                telephones: [
                     '0123456789',
                     'NULL'
                 ],
                 emailValid: true,
-                dnIndividuNational: '1111111111'
+                identifiant_pe: '1111111111'
             },
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date.toJSON(),
-                scheduledEndDate: date.toJSON(),
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date.toJSON(),
+                            fin: date.toJSON(),
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             unsubscribe: false,
             mailSent: true,
-            avisCreated: false,
             mailSentDate: date.toJSON(),
             tracking: {
                 firstRead: date.toJSON()
@@ -81,7 +87,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             codeRegion: '11',
         });
 
-        assert.deepStrictEqual(_.omit(response.body.infosRegion, ['trainee']), {
+        assert.deepStrictEqual(_.omit(response.body.infosRegion, ['stagiaire']), {
             showLinks: false,
             region: {
                 nom: 'Île-de-France',
@@ -145,36 +151,45 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             }
         });
 
-        let result = await db.collection('comment').findOne({ token: trainee.token });
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date,
-                scheduledEndDate: date,
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date,
+                            fin: date,
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             codeRegion: '11',
-            rates: {
+            notes: {
                 accueil: 2,
                 contenu_formation: 2,
                 equipe_formateurs: 1,
@@ -182,8 +197,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 accompagnement: 2,
                 global: 1.8,
             },
-            pseudo: 'JohnD',
-            comment: {
+            commentaire: {
                 title: 'titre',
                 text: 'texte',
                 titleMasked: false,
@@ -198,52 +212,60 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let app = await startServer();
         let db = await getTestDatabase();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
         });
 
         assert.strictEqual(response.statusCode, 200);
 
-        let result = await db.collection('comment').findOne({ token: trainee.token });
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
         assert.ok(result.lastStatusUpdate);
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date,
-                scheduledEndDate: date,
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date,
+                            fin: date,
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             codeRegion: '11',
-            rates: {
+            notes: {
                 accueil: 2,
                 contenu_formation: 2,
                 equipe_formateurs: 1,
@@ -251,7 +273,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 accompagnement: 2,
                 global: 1.8,
             },
-            pseudo: 'JohnD',
             read: false,
             status: 'validated',
         });
@@ -262,18 +283,17 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let app = await startServer();
         let db = await getTestDatabase();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
             commentaire: {
                 texte: 'texte 😂',
                 titre: 'titre'
@@ -282,26 +302,25 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.strictEqual(response.statusCode, 200);
 
-        let result = await db.collection('comment').findOne({ token: trainee.token });
-        assert.deepStrictEqual(result.comment.text, 'texte');
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
+        assert.deepStrictEqual(result.commentaire.text, 'texte');
     });
 
     it('can not submit a questionnaire with invalid words', async () => {
 
         let app = await startServer();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: '',
             commentaire: {
                 texte: 'Super connard',
                 titre: 'titre'
@@ -315,30 +334,28 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         let app = await startServer();
         let date = new Date();
-        let trainee = newTrainee({}, date);
-        await insertIntoDatabase('trainee', trainee);
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
 
         let response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
         });
         assert.strictEqual(response.statusCode, 200);
 
         response = await request(app)
-        .post(`/api/questionnaire/${trainee.token}`)
+        .post(`/api/questionnaire/${stagiaire.token}`)
         .send({
             avis_accueil: 2,
             avis_contenu_formation: 2,
             avis_equipe_formateurs: 1,
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
-            pseudo: 'John D.',
         });
         assert.strictEqual(response.statusCode, 423);
     });

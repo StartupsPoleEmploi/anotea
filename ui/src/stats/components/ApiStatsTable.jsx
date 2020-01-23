@@ -13,12 +13,12 @@ export default class ApiStatsTable extends Component {
         super(props);
 
         this.state = {
-            showRates: true,
+            showNotes: true,
         };
     }
 
     computeRate(dividend, divisor) {
-        return this.state.showRates ? calculateRate(dividend, divisor) : dividend;
+        return this.state.showNotes ? calculateRate(dividend, divisor) : dividend;
     }
 
     render() {
@@ -37,10 +37,10 @@ export default class ApiStatsTable extends Component {
                         <th scope="col">
                             <div>
                                 <input
-                                    name="showRates"
+                                    name="showNotes"
                                     type="checkbox"
-                                    checked={this.state.showRates}
-                                    onChange={() => this.setState({ showRates: !this.state.showRates })} />
+                                    checked={this.state.showNotes}
+                                    onChange={() => this.setState({ showNotes: !this.state.showNotes })} />
                                 <span> Taux</span>
                             </div>
                         </th>

@@ -1,10 +1,10 @@
 module.exports = db => {
 
-    let trainee = db.collection('trainee');
+    let stagiaires = db.collection('stagiaires');
 
     let getCampaignReconciliesStats = async () => {
 
-        return trainee.aggregate([
+        return stagiaires.aggregate([
             {
                 $group: {
                     _id: '$campaign',
@@ -16,7 +16,7 @@ module.exports = db => {
             },
             {
                 $lookup: {
-                    from: 'comment',
+                    from: 'avis',
                     let: {
                         campaign: '$_id',
                     },
@@ -37,7 +37,7 @@ module.exports = db => {
                                 nbCommentaires: {
                                     $sum: {
                                         $cond: {
-                                            if: { $not: ['$comment'] },
+                                            if: { $not: ['$commentaire'] },
                                             then: 0,
                                             else: 1,
                                         }

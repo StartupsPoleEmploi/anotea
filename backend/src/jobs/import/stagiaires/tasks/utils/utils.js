@@ -15,20 +15,6 @@ module.exports = {
         .update(email + uuid.v4())
         .digest('hex');
     },
-    buildEmail: data => {
-        try {
-            let email = data.toLowerCase();
-            return {
-                email: email,
-                mailDomain: email.split('@')[1],
-            };
-        } catch (e) {
-            return {
-                email: null,
-                mailDomain: null,
-            };
-        }
-    },
     getCampaignName,
     getCampaignDate: file => {
         const name = getCampaignName(file);

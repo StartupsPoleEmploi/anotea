@@ -15,17 +15,17 @@ execute(async ({ db, logger, sendSlackNotification }) => {
         archived: 0,
     };
 
-    let cursor = db.collection('comment')
+    let cursor = db.collection('avis')
     .find({
-        'training.scheduledEndDate': {
+        'formation.action.session.periode.fin': {
             $lte: new Date(moment().subtract(24, 'months').format('YYYY-MM-DDTHH:mm:ss.SSSZ'))
         }
     });
 
     await batchCursor(cursor, async next => {
-        const comment = await next();
-        let res = await db.collection('comment').updateOne(
-            { _id: comment._id },
+        const avis = await next();
+        let res = await db.collection('avis').updateOne(
+            { _id: avis._id },
             { $set: { 'status': 'archived' } }
         );
         if (res.result.nModified > 0) {

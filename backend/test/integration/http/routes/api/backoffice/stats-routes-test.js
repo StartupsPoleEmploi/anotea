@@ -2,26 +2,38 @@ const request = require('supertest');
 const _ = require('lodash');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
+const { newAvis, newStagiaire } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsFinanceur, logAsOrganisme }) => {
 
-    let buildComment = (custom = {}) => {
-        return newComment(_.merge({
+    let buildAvis = (custom = {}) => {
+        return newAvis(_.merge({
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };
 
-    let buildTrainee = (custom = {}) => {
-        return newTrainee(_.merge({
+    let buildStagiaire = (custom = {}) => {
+        return newStagiaire(_.merge({
             codeRegion: '11',
-            training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+            formation: {
+                action: {
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        siret: '11111111111111',
+                    },
+                },
             },
         }, custom));
     };
@@ -52,8 +64,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({
-                    rates: {
+                insertIntoDatabase('avis', buildAvis({
+                    notes: {
                         accueil: 3,
                         contenu_formation: 3,
                         equipe_formateurs: 3,
@@ -62,8 +74,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                         global: 3,
                     },
                 })),
-                insertIntoDatabase('comment', buildComment({
-                    rates: {
+                insertIntoDatabase('avis', buildAvis({
+                    notes: {
                         accueil: 3,
                         contenu_formation: 3,
                         equipe_formateurs: 3,
@@ -72,8 +84,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                         global: 3,
                     },
                 })),
-                insertIntoDatabase('comment', buildComment({
-                    rates: {
+                insertIntoDatabase('avis', buildAvis({
+                    notes: {
                         accueil: 2,
                         contenu_formation: 2,
                         equipe_formateurs: 1,
@@ -164,8 +176,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
-                insertIntoDatabase('comment', buildComment({ status: 'reported' })),
+                insertIntoDatabase('avis', buildAvis({ status: 'validated' })),
+                insertIntoDatabase('avis', buildAvis({ status: 'reported' })),
             ]);
 
             let response = await request(app)
@@ -184,11 +196,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         it(`[${profileName}] can compute avis stats (notes)`, async () => {
 
             let app = await startServer();
-            let notes = buildComment({ status: 'validated' });
-            delete notes.comment;
+            let avis = buildAvis({ status: 'validated' });
+            delete avis.commentaire;
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', notes),
+                insertIntoDatabase('avis', avis),
             ]);
 
             let response = await request(app)
@@ -209,15 +221,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase('stagiaires', buildStagiaire({
                     mailSent: true,
                     mailSentDate: new Date()
                 })),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase('stagiaires', buildStagiaire({
                     mailSent: null,
                     mailSentDate: new Date()
                 })),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase('stagiaires', buildStagiaire({
                     mailSent: false,
                     mailSentDate: null
                 })),

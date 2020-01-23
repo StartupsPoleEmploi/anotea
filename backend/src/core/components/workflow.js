@@ -24,9 +24,9 @@ module.exports = (db, logger, emails) => {
         validate: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+            let original = await db.collection('avis').findOne({ _id: new ObjectID(id) });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -54,7 +54,7 @@ module.exports = (db, logger, emails) => {
             if (options.sendEmail && original.status === 'reported') {
                 sendEmail(async () => {
                     let organisme = await db.collection('accounts').findOne({
-                        siret: original.training.organisation.siret,
+                        siret: original.formation.action.organisme_formateur.siret,
                     });
 
                     let message = emails.getEmailMessageByTemplateName('avisReportedCanceledEmail');
@@ -69,9 +69,9 @@ module.exports = (db, logger, emails) => {
         reject: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+            let original = await db.collection('avis').findOne({ _id: new ObjectID(id) });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -100,7 +100,7 @@ module.exports = (db, logger, emails) => {
                 if (original.status === 'reported') {
                     sendEmail(async () => {
                         let organisme = await db.collection('accounts').findOne({
-                            siret: original.training.organisation.siret,
+                            siret: original.formation.action.organisme_formateur.siret,
                         });
 
                         let message = emails.getEmailMessageByTemplateName('avisReportedConfirmedEmail');
@@ -110,10 +110,10 @@ module.exports = (db, logger, emails) => {
 
                 if ((qualification === 'injure' || qualification === 'alerte')) {
                     sendEmail(async () => {
-                        let trainee = await db.collection('trainee').findOne({ token: original.token });
+                        let stagiaire = await db.collection('stagiaires').findOne({ token: original.token });
 
                         let message = emails.getEmailMessageByTemplateName(`avisRejected${_.capitalize(qualification)}Email`);
-                        return message.send(trainee);
+                        return message.send(stagiaire);
                     });
                 }
             }
@@ -124,23 +124,23 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
-            let previous = await db.collection('comment').findOne({ _id: oid });
+            let previous = await db.collection('avis').findOne({ _id: oid });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: oid,
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
-                        'comment.text': text,
+                        'commentaire.text': text,
                         'lastStatusUpdate': new Date(),
                     },
                     $push: {
                         'meta.history': {
                             $each: [{
                                 date: new Date(),
-                                comment: { text: previous.comment.text }
+                                commentaire: { text: previous.commentaire.text }
                             }],
                             $position: 0,
                         },
@@ -165,11 +165,11 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
-            let previous = await db.collection('comment').findOne({ _id: oid });
+            let previous = await db.collection('avis').findOne({ _id: oid });
 
             let [results] = await Promise.all([
-                db.collection('comment').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
-                db.collection('trainee').updateOne({ token: previous.token }, {
+                db.collection('avis').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
+                db.collection('stagiaires').updateOne({ token: previous.token }, {
                     $set: {
                         avisCreated: false,
                     }
@@ -188,51 +188,24 @@ module.exports = (db, logger, emails) => {
 
             if (options.sendEmail) {
                 sendEmail(async () => {
-                    let trainee = await db.collection('trainee').findOne({ token: previous.token });
+                    let stagiaire = await db.collection('stagiaires').findOne({ token: previous.token });
                     let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
-                    return message.send(trainee);
+                    return message.send(stagiaire);
                 });
             }
-        },
-        maskPseudo: async (id, mask, options = {}) => {
-
-            let profile = ensureProfile(options.profile, 'moderateur');
-
-            let result = await db.collection('comment').findOneAndUpdate(
-                {
-                    _id: new ObjectID(id),
-                    ...(profile ? profile.getShield() : {}),
-                },
-                {
-                    $set: { pseudoMasked: mask }
-                },
-                { returnOriginal: false },
-            );
-
-            if (!result.value) {
-                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-            }
-
-            saveEvent(id, 'maskPseudo', {
-                app: 'moderation',
-                user: profile ? profile.getUser().id : 'admin',
-                profile: 'moderateur',
-            });
-
-            return result.value;
         },
         maskTitle: async (id, mask, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
-                        'comment.titleMasked': mask
+                        'commentaire.titleMasked': mask
                     }
                 },
                 { returnOriginal: false },
@@ -254,7 +227,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -284,9 +257,9 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
-            let original = await db.collection('comment').findOne({ _id: oid });
+            let original = await db.collection('avis').findOne({ _id: oid });
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: oid,
                     ...(profile ? profile.getShield() : {}),
@@ -313,7 +286,7 @@ module.exports = (db, logger, emails) => {
             if (options.sendEmail) {
                 sendEmail(async () => {
                     let organisme = await db.collection('accounts').findOne({
-                        siret: original.training.organisation.siret,
+                        siret: original.formation.action.organisme_formateur.siret,
                     });
 
                     let message = emails.getEmailMessageByTemplateName('reponseRejectedEmail');
@@ -327,7 +300,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -363,7 +336,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -392,7 +365,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
@@ -421,7 +394,7 @@ module.exports = (db, logger, emails) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
-            let result = await db.collection('comment').findOneAndUpdate(
+            let result = await db.collection('avis').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),

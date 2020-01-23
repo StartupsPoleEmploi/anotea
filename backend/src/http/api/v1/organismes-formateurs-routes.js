@@ -110,15 +110,15 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Identifiant inconnu');
         }
 
-        let comments = await db.collection('comment')
+        let avis = await db.collection('avis')
         .find({
-            'training.organisation.siret': organisme.siret,
+            'formation.action.organisme_formateur.siret': organisme.siret,
             ...(
                 parameters.commentaires === null ?
                     { status: { $in: ['validated', 'rejected'] } } :
                     {
                         $or: [
-                            { comment: { $exists: parameters.commentaires }, status: 'validated' },
+                            { commentaire: { $exists: parameters.commentaires }, status: 'validated' },
                             { 'reponse.status': 'validated', 'status': 'validated' },
                         ]
 
@@ -129,9 +129,9 @@ module.exports = ({ db, middlewares }) => {
         .limit(limit)
         .skip(skip);
 
-        let total = await comments.count();
-        let stream = comments.transformStream({
-            transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
+        let total = await avis.count();
+        let stream = avis.transformStream({
+            transform: avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
         });
 
         return sendArrayAsJsonStream(stream, res, {

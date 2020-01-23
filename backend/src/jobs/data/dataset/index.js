@@ -66,7 +66,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
     logger.info(`Compute stats accounts....`);
     await computeStats(db, regions);
 
-    let stagiaire = await db.collection('trainee').findOne({ avisCreated: false });
+    let stagiaire = await db.collection('stagiaires').findOne({ avisCreated: false });
 
     return {
         dataset: 'ready',
