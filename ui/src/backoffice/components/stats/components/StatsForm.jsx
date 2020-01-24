@@ -17,8 +17,8 @@ export default class StatsForm extends React.Component {
         super();
         this.state = {
             periode: {
-                startDate: null,
-                endDate: null,
+                debut: null,
+                fin: null,
             },
             regions: {
                 selected: null,
@@ -27,17 +27,6 @@ export default class StatsForm extends React.Component {
             },
         };
     }
-
-
-    getFormParameters = () => {
-        let { periode, regions } = this.state;
-
-        return {
-            startDate: periode.startDate ? moment(periode.startDate).valueOf() : null,
-            endDate: periode.endDate ? moment(periode.endDate).valueOf() : null,
-            codeRegion: _.get(regions, 'selected.codeRegion', null),
-        };
-    };
 
     async componentDidMount() {
 
@@ -50,11 +39,49 @@ export default class StatsForm extends React.Component {
 
         this.setState({
             periode: {
-                startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
-                endDate: query.endDate ? moment(parseInt(query.endDate)).toDate() : null,
+                debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
+                fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
             },
         });
     }
+
+    getFormParameters = () => {
+        let { periode, regions } = this.state;
+
+        return {
+            debut: periode.debut ? moment(periode.debut).valueOf() : null,
+            fin: periode.fin ? moment(periode.fin).valueOf() : null,
+            codeRegion: _.get(regions, 'selected.codeRegion', null),
+        };
+    };
+
+    isFormLoading = () => {
+        let { regions } = this.state;
+        return regions.loading;
+    };
+
+    getFormParametersFromQuery = () => {
+        let { query } = this.props;
+        return _.pick(query, ['codeRegion', 'debut', 'fin']);
+    };
+
+    isFormSynchronizedWithQuery = () => {
+        let data = _(this.getFormParameters()).omitBy(_.isNil).value();
+        return this.isFormLoading() || _.isEqual(data, this.getFormParametersFromQuery());
+    };
+
+    resetForm = () => {
+        this.setState({
+            periode: {
+                debut: null,
+                fin: null,
+            },
+            regions: {
+                selected: null,
+                ..._.pick(this.state.regions, ['results', 'loading']),
+            },
+        });
+    };
 
     updatePeriode = periode => {
         return new Promise(resolve => {
@@ -100,11 +127,12 @@ export default class StatsForm extends React.Component {
     render() {
 
         let { periode, regions } = this.state;
+        let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
             <Form>
                 <div className="form-row">
-                    <div className="form-group col-lg-6 offset-xl-2 col-xl-5">
+                    <div className="form-group offset-lg-2 col-lg-4">
                         <label>Regions</label>
                         <Select
                             value={regions.selected}
@@ -112,25 +140,36 @@ export default class StatsForm extends React.Component {
                             loading={regions.loading}
                             optionKey="codeRegion"
                             label={option => option.nom}
-                            placeholder={'Regions'}
+                            placeholder={'Toutes les régions'}
                             trackingId="Regions"
                             onChange={option => {
                                 return this.updateSelectBox('regions', option);
                             }}
                         />
                     </div>
-                    <div className="form-group col-lg-6 col-xl-3">
+                    <div className="form-group col-lg-4">
                         <label>Période</label>
                         <Periode
                             periode={periode}
-                            min={moment('2016-01-01T00:00:00Z').toDate()}
+                            min={moment('2019-07-01T00:00:00Z').toDate()}
+                            max={moment().subtract(1, 'days').toDate()}
                             onChange={periode => this.updatePeriode(periode)}
                         />
                     </div>
                 </div>
-                <div className="form-row justify-content-center">
-                    <div className="form-group buttons">
-                        <Button size="large" color="blue" onClick={() => this.props.onSubmit(this.getFormParameters())}>
+                <div className="form-row">
+                    <div className="form-group offset-lg-3 col-lg-6 offset-xl-3 col-xl-6 text-center">
+                        <Button size="small" onClick={this.resetForm} className="mr-3">
+                            <i className="fas fa-times mr-2"></i>
+                            Réinitialiser les filtres
+                        </Button>
+                        <Button
+                            size="large"
+                            color="blue"
+                            onClick={() => this.props.onSubmit(this.getFormParameters())}
+                            style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
+                        >
+                            {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
                             Rechercher
                         </Button>
                     </div>

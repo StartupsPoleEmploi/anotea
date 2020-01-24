@@ -4,6 +4,8 @@ import moment from 'moment';
 import { clearDates, convertIntoDatepicker, setEndDate, setStartDate, updateDatepicker } from './datepicker';
 import './Date.scss';
 
+let depths = ['days', 'months'];
+
 export default class Date extends React.Component {
 
     static propTypes = {
@@ -12,10 +14,12 @@ export default class Date extends React.Component {
         pattern: PropTypes.string,
         min: PropTypes.object,
         max: PropTypes.object,
+        depth: PropTypes.string,
     };
 
     static defaultProps = {
         pattern: 'DD/MM/YYYY',
+        depth: 'days',
     };
 
     constructor(props) {
@@ -26,13 +30,14 @@ export default class Date extends React.Component {
     formatDate = (date = new Date()) => moment(date).format(this.props.pattern);
 
     componentDidMount() {
-        let { pattern, min, max } = this.props;
+        let { pattern, min, max, depth } = this.props;
         let input = this.reference.current;
 
         convertIntoDatepicker(input,
             {
                 startView: 2,
                 maxViewMode: 2,
+                minViewMode: depths.findIndex(v => v === depth) || 0,
                 autoclose: true,
                 language: 'fr',
                 format: pattern.toLowerCase(),

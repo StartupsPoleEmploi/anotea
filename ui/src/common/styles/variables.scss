@@ -63,8 +63,8 @@ $shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
   }
 }
 
-@mixin box() {
-  background-color: $color-white;
+@mixin box($color: $color-white) {
+  background-color: $color;
   padding: 1rem;
   font-size: 1rem;
   border-radius: 8px;

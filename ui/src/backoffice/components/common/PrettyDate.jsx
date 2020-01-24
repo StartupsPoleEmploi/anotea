@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-const PrettyDate = ({ date, numeric }) => {
-    return (<span>{moment(date).format(numeric ? 'L' : 'LL')}</span>);
+const PrettyDate = ({ date, format, transform = v => v }) => {
+    let value = moment(date).format(format || 'LL');
+    return (<span>{transform(value)}</span>);
 };
 
 PrettyDate.propTypes = {
     date: PropTypes.object.isRequired,
-    numeric: PropTypes.bool,
+    format: PropTypes.string,
+    transform: PropTypes.func,
 };
 
 export default PrettyDate;

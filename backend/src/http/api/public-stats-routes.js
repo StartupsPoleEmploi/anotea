@@ -7,42 +7,37 @@ module.exports = ({ db }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
-    const getRegionalStats = async parameters => {
+    const getStats = async (type, fields, filters = {}) => {
 
         let res = await db.collection('statistics').aggregate([
             {
                 $match: {
                     $and: [
-                        { date: { $gte: moment(parameters.startDate).toDate() } },
-                        { date: { $lte: moment(parameters.endDate).toDate() } },
+                        ...(filters.debut ? [{ date: { $gte: moment(filters.debut).toDate() } }] : []),
+                        ...(filters.fin ? [{ date: { $lte: moment(filters.fin).toDate() } }] : []),
                     ]
                 },
             },
             {
                 $project: {
                     date: 1,
-                    avis: 1,
+                    [type]: 1,
                 },
             },
             {
-                $unwind: '$avis'
+                $unwind: `$${type}`
             },
             {
                 $group: {
-                    _id: '$avis.label',
-                    label: { $first: '$avis.label' },
-                    codeRegions: { $first: '$avis.codeRegions' },
-                    nbStagiairesImportes: { $push: { value: '$avis.nbStagiairesImportes', date: '$date' } },
-                    nbStagiairesContactes: { $push: { value: '$avis.nbStagiairesContactes', date: '$date' } },
-                    nbMailEnvoyes: { $push: { value: '$avis.nbMailEnvoyes', date: '$date' } },
-                    nbMailsOuverts: { $push: { value: '$avis.nbMailsOuverts', date: '$date' } },
-                    nbQuestionnairesValidees: { $push: { value: '$avis.nbQuestionnairesValidees', date: '$date' } },
-                    nbLiensCliques: { $push: { value: '$avis.nbLiensCliques', date: '$date' } },
-                    nbAvisAvecCommentaire: { $push: { value: '$avis.nbAvisAvecCommentaire', date: '$date' } },
-                    nbCommentairesAModerer: { $push: { value: '$avis.nbCommentairesAModerer', date: '$date' } },
-                    nbCommentairesPositifs: { $push: { value: '$avis.nbCommentairesPositifs', date: '$date' } },
-                    nbCommentairesNegatifs: { $push: { value: '$avis.nbCommentairesNegatifs', date: '$date' } },
-                    nbCommentairesRejetes: { $push: { value: '$avis.nbCommentairesRejetes', date: '$date' } },
+                    _id: `$${type}.label`,
+                    label: { $first: `$${type}.label` },
+                    codeRegions: { $first: `$${type}.codeRegions` },
+                    ...fields.reduce((acc, field) => {
+                        return {
+                            ...acc,
+                            ...{ [field]: { $push: { value: `$${type}.${field}`, date: '$date' } } },
+                        };
+                    }, {}),
                 },
             },
         ]).toArray();
@@ -51,43 +46,55 @@ module.exports = ({ db }) => {
             return {};
         }
 
-
         let national = res.find(r => r.label === 'Toutes');
-        let regional = res.find(r => r.codeRegions.length === 1 && r.codeRegions[0] === parameters.codeRegion);
+        let regional = res.find(r => r.codeRegions.length === 1 && r.codeRegions.includes(filters.codeRegion));
 
         return {
-            ...regional,
-            meta: {
-                national: Object.keys(national).reduce((acc, key) => {
-                    if (key.startsWith('nb')) {
-                        acc[key] = national[key].map(({ date, value }) => {
-                            let nbRegionsWithStats = res.length - 1;
-                            return {
-                                date,
-                                value: Number(Math.round((value / nbRegionsWithStats) + 'e0') + 'e-0'),
-                            };
-                        });
-                    } else {
-                        acc[key] = national[key];
-                    }
+            ...(filters.codeRegion ? { regional } : {}),
+            national: Object.keys(national).reduce((acc, key) => {
+                if (key.startsWith('nb')) {
+                    acc[key] = national[key].map(({ date, value }) => {
+                        let nbRegionsWithStats = res.length - 1;
+                        return {
+                            date,
+                            value: Number(Math.round((value / nbRegionsWithStats) + 'e0') + 'e-0'),
+                        };
+                    });
+                } else {
+                    acc[key] = national[key];
+                }
 
-                    return acc;
-                }, {}),
-            }
+                return acc;
+            }, {}),
         };
     };
 
     router.get('/api/stats', tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.query, {
-            codeRegion: Joi.string().default('11'),
-            startDate: Joi.number().default(moment().subtract(1, 'months').startOf('month').subtract(1, 'days').valueOf()),
-            endDate: Joi.number().default(moment().valueOf()),
+            codeRegion: Joi.string(),
+            debut: Joi.number().default(moment().subtract(1, 'months').startOf('month').subtract(1, 'days').valueOf()),
+            fin: Joi.number().default(moment().valueOf()),
         }, { abortEarly: false });
 
-        let stats = await getRegionalStats(parameters);
+        let results = await Promise.all([
+            getStats('avis', [
+                'nbStagiairesContactes',
+                'nbQuestionnairesValidees',
+                'nbAvisAvecCommentaire',
+                'nbCommentairesPositifs',
+                'nbCommentairesNegatifs',
+                'nbCommentairesRejetes',
+            ], parameters),
+            getStats('organismes', ['organismesActifs', 'nbReponses'], parameters),
+            getStats('api', ['nbSessions', 'nbAvis', 'nbAvisRestituables'], parameters),
+        ]);
 
-        res.json(stats);
+        res.json({
+            avis: results[0],
+            organismes: results[1],
+            api: results[2],
+        });
     }));
 
     return router;
