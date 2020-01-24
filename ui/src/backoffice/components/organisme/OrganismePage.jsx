@@ -26,7 +26,7 @@ export default class OrganismePage extends React.Component {
             form: {
                 periode: {
                     debut: null,
-                    endDate: null,
+                    fin: null,
                 },
                 departements: {
                     selected: null,
@@ -79,7 +79,7 @@ export default class OrganismePage extends React.Component {
             form: {
                 periode: {
                     debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
-                    endDate: query.fin ? moment(parseInt(query.fin)).toDate() : null,
+                    fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
                 },
             }
         });
@@ -140,7 +140,7 @@ export default class OrganismePage extends React.Component {
             form: {
                 periode: {
                     debut: null,
-                    endDate: null,
+                    fin: null,
                 },
                 departements: {
                     selected: null,
@@ -167,7 +167,7 @@ export default class OrganismePage extends React.Component {
             siren: _.get(form, 'sirens.selected.siren', null),
             numeroFormation: _.get(form, 'formations.selected.numeroFormation', null),
             debut: form.periode.debut ? moment(form.periode.debut).valueOf() : null,
-            fin: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
+            fin: form.periode.fin ? moment(form.periode.fin).valueOf() : null,
         };
     };
 

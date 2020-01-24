@@ -10,12 +10,12 @@ const TextSummary = ({ form, query }) => {
     let departement = departements && departements.results.find(f => f.code === query.departement);
     let formation = formations && formations.results.find(f => f.idFormation === query.idFormation);
     let debut = query.debut ? moment(parseInt(query.debut)).format('DD/MM/YYYY') : null;
-    let endDate = moment(query.fin ? parseInt(query.fin) : new Date()).format('DD/MM/YYYY');
+    let fin = moment(query.fin ? parseInt(query.fin) : new Date()).format('DD/MM/YYYY');
 
     return (
         <div className="TextSummary d-flex justify-content-center align-items-center">
             <span>
-                Formation échues {debut ? `entre le ${debut} et le ${endDate}` : `jusqu'au ${endDate}`}
+                Formation échues {debut ? `entre le ${debut} et le ${fin}` : `jusqu'au ${fin}`}
             </span>
             <span>{departement ? departement.label : 'Tous les départements'}</span>
             <span>{formation ? formation.title : 'Toutes les formations'}</span>
