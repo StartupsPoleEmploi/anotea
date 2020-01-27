@@ -23,7 +23,6 @@ export default class StatsPage extends React.Component {
                 ...this.state.form,
             });
         });
-
     };
 
     onFilterClicked = parameters => {

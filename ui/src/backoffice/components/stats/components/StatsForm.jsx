@@ -45,6 +45,11 @@ export default class StatsForm extends React.Component {
         });
     }
 
+    getFormParametersFromQuery = () => {
+        let { query } = this.props;
+        return _.pick(query, ['codeRegion', 'debut', 'fin']);
+    };
+
     getFormParameters = () => {
         let { periode, regions } = this.state;
 
@@ -60,27 +65,9 @@ export default class StatsForm extends React.Component {
         return regions.loading;
     };
 
-    getFormParametersFromQuery = () => {
-        let { query } = this.props;
-        return _.pick(query, ['codeRegion', 'debut', 'fin']);
-    };
-
     isFormSynchronizedWithQuery = () => {
         let data = _(this.getFormParameters()).omitBy(_.isNil).value();
         return this.isFormLoading() || _.isEqual(data, this.getFormParametersFromQuery());
-    };
-
-    resetForm = () => {
-        this.setState({
-            periode: {
-                debut: null,
-                fin: null,
-            },
-            regions: {
-                selected: null,
-                ..._.pick(this.state.regions, ['results', 'loading']),
-            },
-        });
     };
 
     updatePeriode = periode => {
@@ -121,6 +108,19 @@ export default class StatsForm extends React.Component {
                     selected
                 },
             }, resolve);
+        });
+    };
+
+    resetForm = () => {
+        this.setState({
+            periode: {
+                debut: null,
+                fin: null,
+            },
+            regions: {
+                selected: null,
+                ..._.pick(this.state.regions, ['results', 'loading']),
+            },
         });
     };
 

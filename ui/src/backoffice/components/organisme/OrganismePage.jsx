@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
-import moment from 'moment';
 import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
-import { Form, Periode, Select } from '../common/page/form/Form';
-import { getFormations } from '../../services/formationsService';
-import Button from '../../../common/components/Button';
 import OrganismeAvisPanel from './components/OrganismeAvisPanel';
 import OrganismeAvisChartsPanel from './components/OrganismeAvisChartsPanel';
 import AppContext from '../../BackofficeContext';
-import { getDepartements } from '../../services/departementsService';
+import OrganismeForm from './components/OrganismeForm';
 
 export default class OrganismePage extends React.Component {
 
@@ -23,270 +18,40 @@ export default class OrganismePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            form: {
-                periode: {
-                    debut: null,
-                    fin: null,
-                },
-                departements: {
-                    selected: null,
-                    loading: true,
-                    results: [],
-                },
-                sirens: {
-                    selected: null,
-                    loading: true,
-                    results: [],
-                },
-                formations: {
-                    selected: null,
-                    loading: true,
-                    results: [],
-                },
-            },
+            form: {},
         };
     }
 
-    setStateDeep(data, callback) {
-        return this.setState(_.merge({}, this.state, data), callback);
-    }
-
-    async componentDidMount() {
-
-        let { account } = this.context;
-        let query = this.props.router.getQuery();
-
-        this.loadSelectBox('departements', () => getDepartements())
-        .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
-        });
-
-        this.loadSelectBox('sirens', () => {
-            return [
-                { siren: account.siret.substring(0, 9), name: 'Tous les centres' }
-            ];
-        })
-        .then(results => {
-            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
-        });
-
-        this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || account.siret }))
-        .then(results => {
-            return this.updateSelectBox('formations', results.find(f => f.numeroFormation === query.numeroFormation));
-        });
-
-        this.setStateDeep({
-            form: {
-                periode: {
-                    debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
-                    fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
-                },
-            }
-        });
-    }
-
-    loadSelectBox = async (type, loader) => {
-
-        this.setStateDeep({
-            form: {
-                [type]: {
-                    selected: null,
-                    loading: true,
-                    results: [],
-                },
-            }
-        });
-
-        let results = await loader();
-
-        return new Promise(resolve => {
-            this.setStateDeep({
-                form: {
-                    [type]: {
-                        selected: null,
-                        loading: false,
-                        results,
-                    },
-                }
-            }, () => resolve(results));
+    onSubmit = form => {
+        this.setState({ form }, () => {
+            this.props.router.refreshCurrentPage({
+                ...this.state.form,
+            });
         });
     };
 
-    updateSelectBox = (type, data) => {
-        return new Promise(resolve => {
-            this.setStateDeep({
-                form: {
-                    [type]: {
-                        ...this.state[type],
-                        selected: data
-                    },
-                }
-            }, resolve);
-        });
-    };
-
-    updatePeriode = periode => {
-        return new Promise(resolve => {
-            this.setStateDeep({
-                form: {
-                    periode: Object.assign({}, periode),
-                }
-            }, resolve);
-        });
-    };
-
-    resetForm = () => {
-        this.setStateDeep({
-            form: {
-                periode: {
-                    debut: null,
-                    fin: null,
-                },
-                departements: {
-                    selected: null,
-                },
-                sirens: {
-                    selected: null,
-                },
-                formations: {
-                    selected: null,
-                },
-            }
-        });
-    };
-
-    getFormParametersFromQuery = () => {
-        let query = this.props.router.getQuery();
-        return _.pick(query, ['departement', 'siren', 'numeroFormation', 'debut', 'fin']);
-    };
-
-    getFormParameters = () => {
-        let { form } = this.state;
-        return {
-            departement: _.get(form, 'departements.selected.code', null),
-            siren: _.get(form, 'sirens.selected.siren', null),
-            numeroFormation: _.get(form, 'formations.selected.numeroFormation', null),
-            debut: form.periode.debut ? moment(form.periode.debut).valueOf() : null,
-            fin: form.periode.fin ? moment(form.periode.fin).valueOf() : null,
-        };
-    };
-
-    isFormLoading = () => {
-        let { form } = this.state;
-        return form.departements.loading || form.sirens.loading || form.formations.loading;
-    };
-
-    isFormSynchronizedWithQuery = () => {
-        let data = _(this.getFormParameters()).omitBy(_.isNil).value();
-        return this.isFormLoading() || _.isEqual(data, this.getFormParametersFromQuery());
-    };
-
-    onSubmit = () => {
-        return this.props.router.refreshCurrentPage(this.getFormParameters());
-    };
-
-    onTabClicked = (path, parameters) => {
+    onTabClicked = (path, parameters = {}) => {
         return this.props.router.goToPage(path, {
-            ...this.getFormParametersFromQuery(),
+            ...this.state.form,
             ...parameters
         });
     };
 
     onFilterClicked = parameters => {
         return this.props.router.refreshCurrentPage({
-            ...this.getFormParametersFromQuery(),
+            ...this.state.form,
             ...parameters,
         });
     };
 
     render() {
         let { router } = this.props;
-        let { form } = this.state;
-        let { departements, sirens, formations, periode } = form;
-        let user = this.context;
-        let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
+        let query = router.getQuery();
 
         return (
             <Page
                 loading={this.state.loading}
-                form={
-                    <Form>
-                        <div className="form-row">
-                            <div className="form-group col-lg-6 col-xl-3">
-                                <label>Période</label>
-                                <Periode
-                                    periode={periode}
-                                    min={moment('2016-01-01T00:00:00Z').toDate()}
-                                    onChange={periode => this.updatePeriode(periode)}
-                                />
-                            </div>
-                            <div className="form-group col-lg-6 col-xl-3">
-                                <label>Départements</label>
-                                <Select
-                                    value={departements.selected}
-                                    options={departements.results}
-                                    loading={departements.loading}
-                                    optionKey="code"
-                                    label={option => option.label}
-                                    placeholder={'Tous les départements'}
-                                    trackingId="Départements"
-                                    onChange={option => this.updateSelectBox('departements', option)}
-                                />
-                            </div>
-                            <div className="form-group col-lg-6">
-                                <label>Centres</label>
-                                <Select
-                                    value={sirens.selected}
-                                    options={sirens.results}
-                                    loading={sirens.loading}
-                                    optionKey="organisme"
-                                    label={option => option.name}
-                                    placeholder={user.raison_sociale || ''}
-                                    trackingId="Centres"
-                                    onChange={async option => {
-                                        await this.updateSelectBox('sirens', option);
-                                        this.loadSelectBox('formations', () => {
-                                            let organisme = option ? option.siren : user.siret;
-                                            if (organisme !== router.getQuery().siren) {
-                                                return getFormations({ organisme });
-                                            }
-                                        });
-                                    }}
-                                />
-                            </div>
-                            <div className="form-group offset-lg-6 col-lg-6">
-                                <label>Formation</label>
-                                <Select
-                                    value={formations.selected}
-                                    options={formations.results}
-                                    loading={formations.loading}
-                                    optionKey="numeroFormation"
-                                    label={option => option.title}
-                                    placeholder={'Toutes les formations'}
-                                    trackingId="Formation"
-                                    onChange={option => this.updateSelectBox('formations', option)}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-row justify-content-center">
-                            <div className="form-group buttons">
-                                <Button size="small" onClick={this.resetForm} className="mr-3">
-                                    <i className="fas fa-times mr-2"></i>
-                                    Réinitialiser les filtres
-                                </Button>
-                                <Button
-                                    size="large"
-                                    color="orange"
-                                    onClick={() => this.onSubmit()}
-                                    style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
-                                >
-                                    {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
-                                    Rechercher
-                                </Button>
-                            </div>
-                        </div>
-                    </Form>
-                }
+                form={<OrganismeForm query={query} onSubmit={this.onSubmit} />}
                 tabs={
                     <Tabs>
                         <Tab
@@ -297,7 +62,10 @@ export default class OrganismePage extends React.Component {
                         <Tab
                             label="Liste des avis"
                             isActive={() => router.isActive('/admin/organisme/avis/liste')}
-                            onClick={() => this.onTabClicked('/admin/organisme/avis/liste', { read: false, sortBy: 'date' })} />
+                            onClick={() => this.onTabClicked('/admin/organisme/avis/liste', {
+                                read: false,
+                                sortBy: 'date'
+                            })} />
                     </Tabs>
                 }
                 panel={
