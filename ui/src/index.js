@@ -42,6 +42,7 @@ let app = (
     <Router>
         <Switch>
             <Redirect exact from="/" to="/admin" />
+            <Redirect exact from="/stats" to="/admin/stats" />
         </Switch>
 
         <Route path="/widget" render={() => <Widget />} />
