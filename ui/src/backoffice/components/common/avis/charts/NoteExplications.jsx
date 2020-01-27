@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Star from '../../../common/page/panel/results/stats/Star';
+import Star from '../../page/panel/results/stats/Star';
 import './NoteExplications.scss';
 
 const NoteCriteria = props => {

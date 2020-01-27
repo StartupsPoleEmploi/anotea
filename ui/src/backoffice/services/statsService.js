@@ -10,7 +10,7 @@ export const getAvisStats = (options = {}) => {
 };
 
 export const getPublicStats = (options = {}) => {
-    return _get(`/stats?${queryString.stringify(options)}`);
+    return _get(`/backoffice/stats?${queryString.stringify(options)}`);
 };
 
 export const divide = (dividend, divisor) => {

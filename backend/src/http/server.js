@@ -44,7 +44,6 @@ module.exports = components => {
     app.use(require('./api/v1/sessions-routes')(httpComponents));
     app.use(require('./api/v1/organismes-formateurs-routes')(httpComponents));
     app.use(require('./api/v1/swagger-routes')(httpComponents));
-    app.use(require('./api/public-stats-routes')(httpComponents));
     app.use(require('./api/regions-routes')(httpComponents));
     app.use(require('./api/kairos/kairos-routes')(httpComponents));
     app.use(require('./api/backoffice/login-routes')(httpComponents));

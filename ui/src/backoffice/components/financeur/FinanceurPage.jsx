@@ -13,7 +13,7 @@ import FINANCEURS from '../../utils/financeurs';
 import AppContext from '../../BackofficeContext';
 import Button from '../../../common/components/Button';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
-import FinanceurStatsPanel from './components/FinanceurStatsPanel';
+import FinanceurAvisChartsPanel from './components/FinanceurAvisChartsPanel';
 
 export default class FinanceurPage extends React.Component {
 
@@ -206,8 +206,8 @@ export default class FinanceurPage extends React.Component {
         return this.props.router.refreshCurrentPage(this.getFormParameters());
     };
 
-    onTabClicked = (tab, parameters = {}) => {
-        return this.props.router.goToPage(`/admin/financeur/avis/${tab}`, {
+    onTabClicked = (path, parameters = {}) => {
+        return this.props.router.goToPage(path, {
             ...this.getFormParametersFromQuery(),
             ...parameters
         });
@@ -334,13 +334,13 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/admin/financeur/avis/stats')}
-                            onClick={() => this.onTabClicked('stats')} />
+                            isActive={() => router.isActive('/admin/financeur/avis/charts')}
+                            onClick={() => this.onTabClicked('/admin/financeur/avis/charts')} />
 
                         <Tab
                             label="Liste des avis"
                             isActive={() => router.isActive('/admin/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { sortBy: 'date' })} />
+                            onClick={() => this.onTabClicked('/admin/financeur/avis/liste', { sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
@@ -350,10 +350,10 @@ export default class FinanceurPage extends React.Component {
                             form={form}
                             onFilterClicked={this.onFilterClicked} /> :
                         <Route
-                            path={'/admin/financeur/avis/stats'}
+                            path={'/admin/financeur/avis/charts'}
                             render={() => {
                                 return (
-                                    <FinanceurStatsPanel
+                                    <FinanceurAvisChartsPanel
                                         query={query}
                                         form={form}
                                     />

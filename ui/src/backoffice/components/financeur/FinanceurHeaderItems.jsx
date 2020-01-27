@@ -3,17 +3,17 @@ import Link from '../common/header/Link';
 
 export default function FinanceurHeaderItems() {
 
-    let publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:3003';
-
     return (
         <ul className="nav">
             <li className="nav-item">
-                <Link className="nav-link" url="/admin/financeur/avis/stats">
+                <Link className="nav-link" url="/admin/financeur/avis/charts">
                     Avis stagiaires
                 </Link>
             </li>
             <li className="nav-item">
-                <a href={`${publicUrl}/stats`} target="_blank" rel="noopener noreferrer" className="nav-link">Statistiques Anotéa</a>
+                <Link className="nav-link" url="/admin/stats">
+                    Statistiques Anotéa
+                </Link>
             </li>
             <li className="nav-item right">
                 <Link className="nav-link" url="/admin/financeur/mon-compte">

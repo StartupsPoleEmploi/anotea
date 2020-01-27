@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './CommentairesStats.scss';
+import './CommentairesPies.scss';
 import Pie from '../../../common/page/panel/results/stats/Pie';
 
-const CommentairesStats = ({ stats }) => {
+const CommentairesPies = ({ stats }) => {
 
     let colors = ['#007E54', '#E5F2ED', '#66B298'];
 
     return (
-        <div className="CommentairesStats">
+        <div className="CommentairesPies">
             <div className="title">Les commentaires</div>
             <div className="box d-flex flex-wrap flex-row">
                 <div className="chart first">
@@ -79,8 +79,8 @@ const CommentairesStats = ({ stats }) => {
     );
 };
 
-CommentairesStats.propTypes = {
+CommentairesPies.propTypes = {
     stats: PropTypes.object.isRequired,
 };
 
-export default CommentairesStats;
+export default CommentairesPies;

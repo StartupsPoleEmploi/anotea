@@ -84,12 +84,12 @@ class Backoffice extends Component {
                 routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
-                defaultPath: '/admin/financeur/avis/stats',
+                defaultPath: '/admin/financeur/avis/charts',
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes router={router} />,
             }),
             organisme: () => ({
-                defaultPath: '/admin/organisme/avis/stats',
+                defaultPath: '/admin/organisme/avis/charts',
                 headerItems: <OrganismeHeaderItems />,
                 routes: <OrganismeRoutes router={router} />,
             }),
@@ -113,6 +113,7 @@ class Backoffice extends Component {
                         <Switch>
                             <Redirect exact from="/" to={layout.defaultPath} />
                             <Redirect exact from="/admin" to={layout.defaultPath} />
+                            <Redirect exact from={`/admin/${account.profile}`} to={layout.defaultPath} />
                         </Switch>
 
                         <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />

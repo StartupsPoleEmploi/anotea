@@ -4,11 +4,11 @@ import _ from 'lodash';
 import { getAvisStats, getStagiairesStats } from '../../../services/statsService';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../../../common/components/Loader';
-import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
+import NoteRepartition from '../../common/avis/charts/NoteRepartition';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import StagiairesStats from './StagiairesStats';
 
-export default class OrganismeStatsPanel extends React.Component {
+export default class OrganismeAvisChartsPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -56,7 +56,7 @@ export default class OrganismeStatsPanel extends React.Component {
                             <>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <NoteDetails notes={avis.notes} total={avis.total} />
+                                        <NoteRepartition notes={avis.notes} total={avis.total} />
                                     </div>
                                 </div>
                                 <div className="row">

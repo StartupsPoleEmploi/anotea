@@ -8,7 +8,7 @@ import { Form, Periode, Select } from '../common/page/form/Form';
 import { getFormations } from '../../services/formationsService';
 import Button from '../../../common/components/Button';
 import OrganismeAvisPanel from './components/OrganismeAvisPanel';
-import OrganismeStatsPanel from './components/OrganismeStatsPanel';
+import OrganismeAvisChartsPanel from './components/OrganismeAvisChartsPanel';
 import AppContext from '../../BackofficeContext';
 import { getDepartements } from '../../services/departementsService';
 
@@ -185,8 +185,8 @@ export default class OrganismePage extends React.Component {
         return this.props.router.refreshCurrentPage(this.getFormParameters());
     };
 
-    onTabClicked = (tab, parameters) => {
-        return this.props.router.goToPage(`/admin/organisme/avis/${tab}`, {
+    onTabClicked = (path, parameters) => {
+        return this.props.router.goToPage(path, {
             ...this.getFormParametersFromQuery(),
             ...parameters
         });
@@ -291,21 +291,19 @@ export default class OrganismePage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/admin/organisme/avis/stats')}
-                            onClick={() => this.onTabClicked('stats')} />
+                            isActive={() => router.isActive('/admin/organisme/avis/charts')}
+                            onClick={() => this.onTabClicked('/admin/organisme/avis/charts')} />
 
                         <Tab
                             label="Liste des avis"
                             isActive={() => router.isActive('/admin/organisme/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { read: false, sortBy: 'date' })} />
+                            onClick={() => this.onTabClicked('/admin/organisme/avis/liste', { read: false, sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
                     router.isActive('/admin/organisme/avis/liste') ?
-                        <OrganismeAvisPanel
-                            query={router.getQuery()}
-                            onFilterClicked={this.onFilterClicked} /> :
-                        <OrganismeStatsPanel query={router.getQuery()} />
+                        <OrganismeAvisPanel query={router.getQuery()} onFilterClicked={this.onFilterClicked} /> :
+                        <OrganismeAvisChartsPanel query={router.getQuery()} />
                 }
             />
         );

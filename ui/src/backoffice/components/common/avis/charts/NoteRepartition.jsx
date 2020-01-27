@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Star from './Star';
-import './NoteDetails.scss';
+import Star from '../../page/panel/results/stats/Star';
+import './NoteRepartition.scss';
 
-const NoteRepartition = props => {
+const NoteGauges = props => {
 
     let percentage = value => `${Math.round((value / props.total) * 100)}%`;
 
     return (
-        <div className="NoteRepartition">
+        <div className="NoteGauges">
             <div className="moyenne">
                 <div className="label">{props.label}</div>
                 <div className="note">
@@ -76,7 +76,7 @@ const NoteRepartition = props => {
     );
 };
 
-NoteRepartition.propTypes = {
+NoteGauges.propTypes = {
     label: PropTypes.string.isRequired,
     note: PropTypes.object.isRequired,
     total: PropTypes.number.isRequired,
@@ -105,26 +105,26 @@ NoteGlobale.propTypes = {
     total: PropTypes.number.isRequired,
 };
 
-const NoteDetails = ({ notes, total }) => {
+const NoteRepartition = ({ notes, total }) => {
 
     return (
-        <div className="NoteDetails">
+        <div className="NoteRepartition">
             <div className="title">Les notes</div>
             <div className="box d-flex flex-wrap justify-content-between">
                 <NoteGlobale note={notes.global} total={total} />
-                <NoteRepartition label="Accueil" note={notes.accueil} total={total} />
-                <NoteRepartition label="Contenu" note={notes.contenu_formation} total={total} />
-                <NoteRepartition label="Formateurs" note={notes.equipe_formateurs} total={total} />
-                <NoteRepartition label="Matériels" note={notes.moyen_materiel} total={total} />
-                <NoteRepartition label="Accompagnement" note={notes.accompagnement} total={total} />
+                <NoteGauges label="Accueil" note={notes.accueil} total={total} />
+                <NoteGauges label="Contenu" note={notes.contenu_formation} total={total} />
+                <NoteGauges label="Formateurs" note={notes.equipe_formateurs} total={total} />
+                <NoteGauges label="Matériels" note={notes.moyen_materiel} total={total} />
+                <NoteGauges label="Accompagnement" note={notes.accompagnement} total={total} />
             </div>
         </div>
     );
 };
 
-NoteDetails.propTypes = {
+NoteRepartition.propTypes = {
     notes: PropTypes.object.isRequired,
     total: PropTypes.number.isRequired,
 };
 
-export default NoteDetails;
+export default NoteRepartition;

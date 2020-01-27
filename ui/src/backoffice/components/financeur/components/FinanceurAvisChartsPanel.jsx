@@ -5,16 +5,16 @@ import { getAvisStats } from '../../../services/statsService';
 import Panel from '../../common/page/panel/Panel';
 import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Loader from '../../../../common/components/Loader';
-import CommentairesStats from './stats/CommentairesStats';
-import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
+import CommentairesPies from '../../common/avis/charts/CommentairesPies';
+import NoteRepartition from '../../common/avis/charts/NoteRepartition';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import Button from '../../../../common/components/Button';
-import NoteExplications from './stats/NoteExplications';
+import NoteExplications from '../../common/avis/charts/NoteExplications';
 import PDF, { buildPDF } from '../../common/pdf/PDF';
 import TextSummary from '../../common/page/panel/summary/TextSummary';
 import AppContext from '../../../BackofficeContext';
 
-export default class FinanceurStatsPanel extends React.Component {
+export default class FinanceurAvisChartsPanel extends React.Component {
 
     static contextType = AppContext;
 
@@ -101,12 +101,12 @@ export default class FinanceurStatsPanel extends React.Component {
                                 <>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <NoteDetails notes={stats.notes} total={stats.total} />
+                                            <NoteRepartition notes={stats.notes} total={stats.total} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <CommentairesStats stats={stats} />
+                                            <CommentairesPies stats={stats} />
                                         </div>
                                     </div>
                                 </>
@@ -128,7 +128,7 @@ export default class FinanceurStatsPanel extends React.Component {
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <CommentairesStats stats={stats} />
+                                            <CommentairesPies stats={stats} />
                                         </div>
                                     </div>
                                 </>
