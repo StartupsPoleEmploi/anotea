@@ -10,11 +10,11 @@ import { isPasswordStrongEnough } from '../../utils/password-utils';
 import { activate, getActivationStatus } from '../../services/activationService';
 import { login } from '../../services/loginService';
 import { NavLink } from 'react-router-dom';
-import AppContext from '../../BackofficeContext';
+import BackofficeContext from '../../BackofficeContext';
 
 export default class ActivationComptePage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,
@@ -98,10 +98,10 @@ export default class ActivationComptePage extends React.Component {
                 title={'Accéder à mon espace Anotéa'}
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">{account.nom}</div>}
+                                title={account.nom}
                                 elements={
                                     <>
                                         <label>Votre identifiant pour la connexion</label>
@@ -111,7 +111,9 @@ export default class ActivationComptePage extends React.Component {
                                         {account.status === 'active' ?
                                             <>
                                                 <div className="clarification">
-                                                    <div>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</div>
+                                                    <div>Un Espace Anotéa a déjà été créé pour cet Organisme de
+                                                        Formation.
+                                                    </div>
                                                     <div className="mt-1">
                                                         Cliquez sur
                                                         <NavLink to="/admin/mot-de-passe-oublie">
@@ -155,17 +157,15 @@ export default class ActivationComptePage extends React.Component {
                                 }
                                 buttons={
                                     account.status === 'active' ? <div /> :
-                                        <>
-                                            <Button
-                                                type="submit"
-                                                size="large"
-                                                color="blue"
-                                                disabled={this.state.loading}
-                                                onClick={() => this.onSubmit()}
-                                            >
-                                                Confirmer
-                                            </Button>
-                                        </>
+                                        <Button
+                                            type="submit"
+                                            size="large"
+                                            color="orange"
+                                            disabled={this.state.loading}
+                                            onClick={() => this.onSubmit()}
+                                        >
+                                            Confirmer
+                                        </Button>
                                 }
                             />
                         }

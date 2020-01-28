@@ -58,7 +58,6 @@ export default class Select extends React.Component {
 
     render() {
         let { trackClick } = this.context;
-
         let creatable = this.props.type === 'create';
         let SelectType = creatable ? CreatableSelect : ReactSelect;
 

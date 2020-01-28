@@ -5,12 +5,12 @@ import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getFormations } from '../../../services/formationsService';
 import Button from '../../../../common/components/Button';
-import AppContext from '../../../BackofficeContext';
+import BackofficeContext from '../../../BackofficeContext';
 import { getDepartements } from '../../../services/departementsService';
 
 export default class OrganismeForm extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,

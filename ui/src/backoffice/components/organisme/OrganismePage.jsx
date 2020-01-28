@@ -4,12 +4,12 @@ import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import OrganismeAvisPanel from './components/OrganismeAvisPanel';
 import OrganismeAvisChartsPanel from './components/OrganismeAvisChartsPanel';
-import AppContext from '../../BackofficeContext';
+import BackofficeContext from '../../BackofficeContext';
 import OrganismeForm from './components/OrganismeForm';
 
 export default class OrganismePage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,

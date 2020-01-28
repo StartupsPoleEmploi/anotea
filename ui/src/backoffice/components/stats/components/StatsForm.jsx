@@ -5,8 +5,11 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getRegions } from '../../../services/regionsService';
+import BackofficeContext from '../../../BackofficeContext';
 
 export default class StatsForm extends React.Component {
+
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -128,6 +131,7 @@ export default class StatsForm extends React.Component {
 
         let { periode, regions } = this.state;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
+        let { theme } = this.context;
 
         return (
             <Form>
@@ -165,7 +169,7 @@ export default class StatsForm extends React.Component {
                         </Button>
                         <Button
                             size="large"
-                            color="blue"
+                            color={theme.buttonColor}
                             onClick={() => this.props.onSubmit(this.getFormParameters())}
                             style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
                         >

@@ -7,12 +7,12 @@ import { getSirens } from '../../../services/sirensService';
 import { getFormations } from '../../../services/formationsService';
 import { getDepartements } from '../../../services/departementsService';
 import FINANCEURS from '../../../utils/financeurs';
-import AppContext from '../../../BackofficeContext';
+import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
 
 export default class FinanceurForm extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,

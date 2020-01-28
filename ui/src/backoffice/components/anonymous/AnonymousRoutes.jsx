@@ -6,7 +6,6 @@ import MotDePasseOubliePage from './MotDePasseOubliePage';
 import LoginPage from './LoginPage';
 import ActivationComptePage from './ActivationComptePage';
 import LibraryPage from './LibraryPage';
-import StatsPage from '../stats/StatsPage';
 
 export default class AnonymousRoutes extends React.Component {
 

@@ -90,6 +90,7 @@ const LibraryPage = () => {
                 </div>
 
                 <ButtonShowcase size="large" />
+                <ButtonShowcase size="large" color="orange" />
                 <ButtonShowcase size="large" color="red" />
                 <ButtonShowcase size="large" color="green" />
                 <ButtonShowcase size="large" color="blue" />
@@ -101,6 +102,7 @@ const LibraryPage = () => {
                 </div>
 
                 <ButtonShowcase size="medium" />
+                <ButtonShowcase size="medium" color="orange" />
                 <ButtonShowcase size="medium" color="red" />
                 <ButtonShowcase size="medium" color="green" />
                 <ButtonShowcase size="medium" color="blue" />
@@ -112,6 +114,7 @@ const LibraryPage = () => {
                 </div>
 
                 <ButtonShowcase size="small" />
+                <ButtonShowcase size="small" color="orange" />
                 <ButtonShowcase size="small" color="red" />
                 <ButtonShowcase size="small" color="green" />
                 <ButtonShowcase size="small" color="blue" />

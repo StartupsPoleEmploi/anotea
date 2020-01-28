@@ -9,6 +9,7 @@ import GlobalStats from './GlobalStats';
 import OrganismeStats from './OrganismeStats';
 import FormationStats from './FormationStats';
 import CommentairesStats from './CommentairesStats';
+import PDF, { buildPDF } from '../../common/pdf/PDF';
 
 export default class StatsPanel extends React.Component {
 
@@ -21,7 +22,9 @@ export default class StatsPanel extends React.Component {
         super();
         this.state = {
             stats: null,
+            showPDFDocument: false,
         };
+        this.pdfReference = React.createRef();
     }
 
     componentDidMount() {
@@ -41,6 +44,15 @@ export default class StatsPanel extends React.Component {
         });
     };
 
+    generatePDF = () => {
+        this.setState({ showPDFDocument: true }, async () => {
+            window.scrollTo(0, 0);
+            new Promise(resolve => setTimeout(() => resolve(), 250))
+            .then(() => buildPDF(this.pdfReference.current))
+            .then(() => this.setState({ showPDFDocument: false }));
+        });
+    };
+
     render() {
 
         let { query } = this.props;
@@ -50,40 +62,72 @@ export default class StatsPanel extends React.Component {
         }
 
         return (
-            <Panel
-                className="StatsPanel"
-                summary={
-                    <div className="row">
-                        <div className="offset-sm-8 col-sm-4 text-right">
-                            <Button
-                                size="medium"
-                                onClick={() => console.log('export')}>
-                                <i className="fas fa-download pr-2"></i>Exporter
-                            </Button>
-                        </div>
-                    </div>
-                }
-                results={
-                    <div>
-                        <div className="row mb-4">
-                            <div className="col-12">
-                                <GlobalStats query={query} stats={this.state.stats} />
+            <>
+                <Panel
+                    className="StatsPanel"
+                    summary={
+                        <div className="row">
+                            <div className="offset-sm-8 col-sm-4 text-right">
+                                <Button
+                                    size="medium"
+                                    disabled={this.state.showPDFDocument}
+                                    onClick={() => this.generatePDF()}>
+                                    <i className="fas fa-download pr-2"></i>Exporter
+                                </Button>
                             </div>
                         </div>
-                        <div className="row mb-4">
-                            <div className="col-6">
-                                <OrganismeStats query={query} stats={this.state.stats} />
-                                <div className="mt-4">
-                                    <CommentairesStats query={query} stats={this.state.stats} />
+                    }
+                    results={
+                        <div>
+                            <div className="row mb-4">
+                                <div className="col-12">
+                                    <GlobalStats query={query} stats={this.state.stats} />
                                 </div>
                             </div>
-                            <div className="col-6">
-                                <FormationStats query={query} stats={this.state.stats} />
+                            <div className="row mb-4">
+                                <div className="col-6">
+                                    <OrganismeStats query={query} stats={this.state.stats} />
+                                    <div className="mt-4">
+                                        <CommentairesStats query={query} stats={this.state.stats} />
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    <FormationStats query={query} stats={this.state.stats} />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+                />
+                {this.state.showPDFDocument &&
+                <div ref={this.pdfReference}>
+                    <PDF
+                        title={'Statistiques'}
+                        main={
+                            <>
+                                <div>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <GlobalStats query={query} stats={this.state.stats} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <OrganismeStats query={query} stats={this.state.stats} />
+                                            <div className="">
+                                                <CommentairesStats query={query} stats={this.state.stats} />
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <FormationStats query={query} stats={this.state.stats} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        }
+                    />
+                </div>
                 }
-            />
+            </>
         );
     }
 }

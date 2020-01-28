@@ -13,7 +13,7 @@ import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './Backoffice.scss';
 import Header from './components/common/header/Header';
-import AppContext from './BackofficeContext';
+import BackofficeContext from './BackofficeContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
 import WithAnalytics from '../common/components/analytics/WithAnalytics';
 import StatsRoutes from './components/stats/StatsRoutes';
@@ -82,33 +82,50 @@ class Backoffice extends Component {
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
                 headerItems: <ModerateurHeaderItems router={router} />,
                 routes: <ModerateurRoutes router={router} />,
+                theme: {
+                    backgroundColor: 'blue',
+                    buttonColor: 'blue',
+                }
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis/charts',
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes router={router} />,
+                theme: {
+                    backgroundColor: 'green',
+                    buttonColor: 'green',
+                }
             }),
             organisme: () => ({
                 defaultPath: '/admin/organisme/avis/charts',
                 headerItems: <OrganismeHeaderItems />,
                 routes: <OrganismeRoutes router={router} />,
+                theme: {
+                    backgroundColor: 'black',
+                    buttonColor: 'orange',
+                }
             }),
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
                 routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />,
+                theme: {
+                    backgroundColor: 'black',
+                    buttonColor: 'orange',
+                }
             })
         };
 
         let layout = backoffices[account.profile]();
-        let appContext = {
+        let context = {
             account,
+            theme: layout.theme,
             showMessage: this.showGlobalMessage,
         };
 
         return (
             <WithAnalytics category={`backoffice/${account.profile}`}>
-                <AppContext.Provider value={appContext}>
+                <BackofficeContext.Provider value={context}>
                     <div className="Backoffice">
                         <Switch>
                             <Redirect exact from="/" to={layout.defaultPath} />
@@ -123,13 +140,11 @@ class Backoffice extends Component {
                         <StatsRoutes router={router} />,
 
                         {message &&
-                        <GlobalMessage message={message} onClose={() => {
-                            return this.setState({ message: null });
-                        }}
+                        <GlobalMessage message={message} onClose={() => this.setState({ message: null })}
                         />
                         }
                     </div>
-                </AppContext.Provider>
+                </BackofficeContext.Provider>
             </WithAnalytics>
         );
     }

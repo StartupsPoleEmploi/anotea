@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
-import AppContext from '../../BackofficeContext';
+import BackofficeContext from '../../BackofficeContext';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
 import FinanceurAvisChartsPanel from './components/FinanceurAvisChartsPanel';
 import FinanceurForm from './components/FinanceurForm';
 
 export default class FinanceurPage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,

@@ -6,7 +6,7 @@ export default function FinanceurHeaderItems() {
     return (
         <ul className="nav">
             <li className="nav-item">
-                <Link className="nav-link" url="/admin/financeur/avis/charts">
+                <Link className="nav-link" url="/admin/financeur/avis">
                     Avis stagiaires
                 </Link>
             </li>

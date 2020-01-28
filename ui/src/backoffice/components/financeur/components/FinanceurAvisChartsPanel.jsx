@@ -12,11 +12,11 @@ import Button from '../../../../common/components/Button';
 import NoteExplications from '../../common/avis/charts/NoteExplications';
 import PDF, { buildPDF } from '../../common/pdf/PDF';
 import TextSummary from '../../common/page/panel/summary/TextSummary';
-import AppContext from '../../../BackofficeContext';
+import BackofficeContext from '../../../BackofficeContext';
 
 export default class FinanceurAvisChartsPanel extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,

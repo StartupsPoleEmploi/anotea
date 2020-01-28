@@ -14,11 +14,11 @@ import { Form } from '../../common/page/form/Form';
 import Button from '../../../../common/components/Button';
 import InputText from '../../common/page/form/InputText';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import AppContext from '../../../BackofficeContext';
+import BackofficeContext from '../../../BackofficeContext';
 
 export default class GestionOrganismePage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,

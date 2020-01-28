@@ -1,20 +1,27 @@
 @import 'src/common/styles/variables';
 
 .Backoffice .Header {
+
+  @include themes();
+
   padding-top: 0.8em;
   padding-bottom: 1.75em;
 
-  @include profile-background-color();
+  &.green {
+    .dropdown-menu {
+      background-color: $color-green;
+    }
+  }
 
-  &.moderateur {
+  &.blue {
     .dropdown-menu {
       background-color: $color-blue;
     }
   }
 
-  &.financeur {
+  &.black {
     .dropdown-menu {
-      background-color: $color-green;
+      background-color: $color-black;
     }
   }
 

@@ -8,11 +8,11 @@ import Page from '../common/page/Page';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { checkIfPasswordTokenExists, resetPassword } from '../../services/passwordService';
 import { isPasswordStrongEnough } from '../../utils/password-utils';
-import AppContext from '../../BackofficeContext';
+import BackofficeContext from '../../BackofficeContext';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,
@@ -91,13 +91,13 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
         return (
             <Page
+                backgroundColor="grey"
                 title={'Votre espace Anotéa'}
                 panel={
                     <Panel
-                        backgroundColor="blue"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">Créer un nouveau mot de passe</div>}
+                                title="Créer un nouveau mot de passe"
                                 elements={
                                     <>
                                         <label>Nouveau mot de passe</label>
@@ -124,7 +124,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         <Button
                                             type="submit"
                                             size="large"
-                                            color="blue"
+                                            color="orange"
                                             disabled={this.state.loading}
                                             onClick={() => this.onSubmit()}
                                         >
