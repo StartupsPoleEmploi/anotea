@@ -15,20 +15,20 @@ const buildAvisQuery = filters => {
         let query = {};
 
         if (filter.organisme_formateur) {
-            query['training.organisation.siret'] = filter.organisme_formateur;
+            query['formation.action.organisme_formateur.siret'] = filter.organisme_formateur;
         }
 
         if (filter.lieu_de_formation) {
-            query['training.place.postalCode'] = filter.lieu_de_formation;
+            query['formation.action.lieu_de_formation.code_postal'] = filter.lieu_de_formation;
         }
 
         if (filter.certif_info) {
-            query['training.certifInfos'] = filter.certif_info;
+            query['formation.certifications.certif_info'] = filter.certif_info;
         }
 
         if (filter.formacode) {
             let code = filter.formacode;
-            query['training.formacodes'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
+            query['formation.domaine_formation.formacodes'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
 
         return query;
@@ -66,16 +66,15 @@ module.exports = ({ db, middlewares }) => {
         let skip = pagination.page * limit;
         let query = buildAvisQuery(filters);
 
-
-        let comments = await db.collection('comment')
+        let avis = await db.collection('avis')
         .find(query)
         .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
         .limit(limit)
         .skip(skip);
 
-        let total = await comments.count();
-        let stream = comments.transformStream({
-            transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
+        let total = await avis.count();
+        let stream = avis.transformStream({
+            transform: avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
         });
 
         return sendArrayAsJsonStream(stream, res, {
@@ -99,12 +98,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.badRequest('Identifiant invalide');
         }
 
-        let comment = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
+        let avis = await db.collection('avis').findOne({ _id: new ObjectID(parameters.id) });
 
-        if (!comment) {
+        if (!avis) {
             throw Boom.notFound('Identifiant inconnu');
         }
-        res.json(createAvisDTO(comment, { notes_decimales: parameters.notes_decimales }));
+        res.json(createAvisDTO(avis, { notes_decimales: parameters.notes_decimales }));
     }));
 
     return router;

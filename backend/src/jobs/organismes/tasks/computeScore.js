@@ -14,8 +14,8 @@ module.exports = async (db, logger) => {
         const organisme = await next();
         stats.total++;
         try {
-            let avis = await db.collection('comment').find({
-                'training.organisation.siret': organisme.meta.siretAsString,
+            let avis = await db.collection('avis').find({
+                'formation.action.organisme_formateur.siret': organisme.siret,
                 'status': { $in: ['validated', 'rejected'] },
             }).toArray();
 
@@ -28,7 +28,7 @@ module.exports = async (db, logger) => {
 
         } catch (e) {
             stats.invalid++;
-            logger.error(`Can not compute score for organisme ${organisme.meta.siretAsString}`, e);
+            logger.error(`Can not compute score for organisme ${organisme.siret}`, e);
         }
     });
 

@@ -1,5 +1,4 @@
 const express = require('express');
-const _ = require('lodash');
 const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch } = require('../../utils/routes-utils');
@@ -23,7 +22,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             type: 'login-access-token',
             source: {
                 profile: 'organisme',
-                siret: organisme.meta.siretAsString,
+                siret: organisme.siret,
                 id: organisme._id,
             }
         });
@@ -41,7 +40,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             region: region.nom,
             codeRegion: account.codeRegion,
             ...(profile === 'financeur' ? { codeFinanceur: account.codeFinanceur } : {}),
-            ...(profile === 'organisme' ? { siret: account.meta.siretAsString, raisonSociale: account.raisonSociale } : {}),
+            ...(profile === 'organisme' ? { siret: account.siret, raison_sociale: account.raison_sociale } : {}),
         });
     };
 
@@ -86,8 +85,8 @@ module.exports = ({ db, auth, passwords, regions }) => {
         let account = await db.collection('accounts').findOne({
             'passwordHash': { $exists: true },
             '$or': [
-                { 'courriel': identifiant },
-                { 'meta.siretAsString': identifiant },
+                { identifiant },
+                { 'siret': identifiant },
             ]
         });
         if (account && await checkPassword(password, account.passwordHash)) {
@@ -116,9 +115,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             throw Boom.badRequest('Token invalide', e);
         }
 
-        let organisme = await db.collection('accounts').findOne({
-            'meta.siretAsString': user.sub,
-        });
+        let organisme = await db.collection('accounts').findOne({ 'siret': user.sub });
 
         if (await isTokenAlreadyUsed(organisme._id, parameters.access_token)) {
             throw Boom.badRequest('Token déjà utilisé');

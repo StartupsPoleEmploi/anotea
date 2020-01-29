@@ -33,11 +33,11 @@ const BadgeSummary = ({ form, query, ellipsis }) => {
 
     let departement = departements && departements.results.find(f => f.code === query.departement);
     let siren = sirens && sirens.results.find(f => f.siren === query.siren);
-    let formation = formations && formations.results.find(f => f.idFormation === query.idFormation);
+    let formation = formations && formations.results.find(f => f.numeroFormation === query.numeroFormation);
     let financeur = financeurs && financeurs.results.find(f => f.code === query.codeFinanceur);
-    let periode = `${query.startDate ? moment(parseInt(query.startDate)).format('DD/MM/YYYY') : ''}` +
-        `${query.startDate && query.scheduledEndDate ? '-' : ''}` +
-        `${query.scheduledEndDate ? moment(parseInt(query.scheduledEndDate)).format('DD/MM/YYYY') : ''}`;
+    let periode = `${query.debut ? moment(parseInt(query.debut)).format('DD/MM/YYYY') : ''}` +
+        `${query.debut && query.fin ? '-' : ''}` +
+        `${query.fin ? moment(parseInt(query.fin)).format('DD/MM/YYYY') : ''}`;
 
     return (
         <div className="d-flex flex-wrap">
@@ -45,7 +45,7 @@ const BadgeSummary = ({ form, query, ellipsis }) => {
             {siren && <Badge ellipsis={ellipsis} color="green" text={siren.name} />}
             {formation && <Badge ellipsis={ellipsis} color="green" text={formation.title} />}
             {financeur && <Badge ellipsis={ellipsis} color="green" text={financeur.label} />}
-            {(query.startDate || query.scheduledEndDate) && <Badge ellipsis={ellipsis} color="green" text={periode} />}
+            {(query.debut || query.fin) && <Badge ellipsis={ellipsis} color="green" text={periode} />}
         </div>
     );
 };

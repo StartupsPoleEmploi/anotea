@@ -11,8 +11,8 @@ class SendAction {
             'mailSent': false,
             'avisCreated': false,
             'unsubscribe': false,
-            'training.organisation.siret': { $ne: '' },
-            'training.scheduledEndDate': { $lte: new Date() },
+            'formation.action.organisme_formateur.siret': { $ne: '' },
+            'formation.action.session.periode.fin': { $lte: new Date() },
             ...(this.filters.codeRegions ? { 'codeRegion': { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { 'campaign': this.filters.campaign } : {}),
         };

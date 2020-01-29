@@ -10,11 +10,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let organisme = newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
-            meta: {
-                siretAsString: '11111111111111'
-            },
+            _id: '1234',
+            siret: '11111111111111',
         });
         await insertIntoDatabase('accounts', organisme);
 
@@ -27,9 +24,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body, {
             organismes: [
                 {
-                    _id: 11111111111111,
-                    SIRET: 11111111111111,
-                    raisonSociale: 'Pole Emploi Formation',
+                    _id: '1234',
+                    siret: '11111111111111',
+                    raison_sociale: 'Pole Emploi Formation',
                     courriel: 'contact@poleemploi-formation.fr',
                     courriels: [
                         { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
@@ -65,9 +62,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                             },
                         },
                     },
-                    meta: {
-                        siretAsString: '11111111111111'
-                    },
                     profile: 'organisme'
                 }
             ],
@@ -89,19 +83,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let actif = newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
-            meta: {
-                siretAsString: '11111111111111'
-            },
+            siret: '11111111111111',
             passwordHash: 'fake',
         });
         let inactif = newOrganismeAccount({
-            _id: 33333333333333,
-            SIRET: 33333333333333,
-            meta: {
-                siretAsString: '33333333333333'
-            },
+            siret: '33333333333333',
         });
         delete inactif.passwordHash;
 
@@ -118,6 +104,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
         assert.deepStrictEqual(response.body.organismes[0]._id, 11111111111111);
+        assert.deepStrictEqual(response.body.organismes[0].siret, '11111111111111');
     });
 
     it('can search organismes inactifs', async () => {
@@ -125,19 +112,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let actif = newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
-            meta: {
-                siretAsString: '11111111111111'
-            },
+            siret: '11111111111111',
             passwordHash: 'fake',
         });
         let inactif = newOrganismeAccount({
-            _id: 33333333333333,
-            SIRET: 33333333333333,
-            meta: {
-                siretAsString: '33333333333333'
-            },
+            siret: '33333333333333',
         });
         delete inactif.passwordHash;
 
@@ -153,7 +132,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
-        assert.deepStrictEqual(response.body.organismes[0]._id, 33333333333333);
+        assert.deepStrictEqual(response.body.organismes[0].siret, '33333333333333');
     });
 
     it('can search organismes by SIRET', async () => {
@@ -162,18 +141,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 11111111111111,
-                SIRET: 11111111111111,
-                meta: {
-                    siretAsString: '11111111111111'
-                },
+                siret: '11111111111111',
             })),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 33333333333333,
-                SIRET: 33333333333333,
-                meta: {
-                    siretAsString: '33333333333333'
-                },
+                siret: '33333333333333',
             })),
         ]);
 
@@ -184,7 +155,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
-        assert.deepStrictEqual(response.body.organismes[0]._id, 33333333333333);
+        assert.deepStrictEqual(response.body.organismes[0].siret, '33333333333333');
     });
 
     it('can search organismes by raison sociale', async () => {
@@ -194,17 +165,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111111,
-                raisonSociale: 'Anotea',
+                raison_sociale: 'Anotea',
             })),
 
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
-                raisonSociale: 'anotea Misc',
+                raison_sociale: 'anotea Misc',
             })),
 
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 33333333333333,
-                raisonSociale: 'Pole Emploi',
+                raison_sociale: 'Pole Emploi',
             })),
         ]);
 
@@ -215,8 +186,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 2);
-        assert.ok(response.body.organismes.find(o => o._id, 11111111111111));
-        assert.ok(response.body.organismes.find(o => o._id, 22222222222222));
+        assert.ok(response.body.organismes.find(o => o.siret, '11111111111111'));
+        assert.ok(response.body.organismes.find(o => o.siret, '22222222222222'));
     });
 
     it('can search organismes by courriel', async () => {
@@ -225,12 +196,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 11111111111111,
+                siret: '11111111111111',
                 courriel: 'contact@anotea.fr',
             })),
 
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 33333333333333,
+                siret: '33333333333333',
                 courriel: 'contact@poleemploi-formation.fr',
             })),
         ]);
@@ -242,27 +213,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
-        assert.deepStrictEqual(response.body.organismes[0]._id, 11111111111111);
+        assert.deepStrictEqual(response.body.organismes[0].siret, '11111111111111');
     });
-
-
 
     it('can edit email (no duplicates)', async () => {
 
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
-        let id = 11111111111111;
 
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: id,
-            SIRET: id,
-            meta: {
-                siretAsString: '11111111111111'
-            },
+            _id: 1234,
         }));
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/${id}/updateCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/1234/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ courriel: 'contact@poleemploi-formation.fr' });
 

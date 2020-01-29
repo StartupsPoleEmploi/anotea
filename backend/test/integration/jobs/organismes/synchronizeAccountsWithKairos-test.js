@@ -16,12 +16,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
         await synchronizeAccountsWithKairos(db, logger, csvFile);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 33333333333333 });
+        let doc = await db.collection('accounts').findOne({ siret: '33333333333333' });
+        assert.ok(doc._id);
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
-            _id: 33333333333333,
-            SIRET: 33333333333333,
+        assert.deepStrictEqual(_.omit(doc, ['_id', 'creationDate', 'updateDate', 'token']), {
+            siret: '33333333333333',
             courriel: 'contact+kairos@formation.fr',
             courriels: [
                 { courriel: 'contact+kairos@formation.fr', source: 'kairos' },
@@ -29,14 +29,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             sources: ['kairos'],
             profile: 'organisme',
             codeRegion: '10',
-            raisonSociale: 'Pole Emploi Formation Nord',
+            raison_sociale: 'Pole Emploi Formation Nord',
             lieux_de_formation: [],
-            meta: {
-                siretAsString: '33333333333333',
-                kairos: {
-                    eligible: false,
-                }
-            },
         });
     });
 
@@ -62,12 +56,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
         await synchronizeAccountsWithIntercarif(db, logger);
         await synchronizeAccountsWithKairos(db, logger, csvFile);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
+        assert.ok(doc._id);
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
-            _id: 22222222222222,
-            SIRET: 22222222222222,
+        assert.deepStrictEqual(_.omit(doc, ['_id', 'creationDate', 'updateDate', 'token']), {
+            siret: '22222222222222',
             codeRegion: '11',
             courriel: 'anotea.pe+paris@gmail.com',
             courriels: [
@@ -84,14 +78,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
                     }
                 }
             ],
-            meta: {
-                siretAsString: '22222222222222',
-                kairos: {
-                    'eligible': false,
-                },
-            },
             profile: 'organisme',
-            raisonSociale: 'Anotea Formation Paris',
+            raison_sociale: 'Anotea Formation Paris',
             sources: ['intercarif', 'kairos'],
         });
     });

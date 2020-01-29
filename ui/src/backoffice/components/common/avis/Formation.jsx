@@ -11,15 +11,18 @@ export default class Formation extends React.Component {
 
     render() {
         let avis = this.props.avis;
+        let formation = avis.formation;
+        let action = formation.action;
+
         return (
             <div className="Formation">
-                <p className="name">{avis.training.organisation.name}</p>
+                <p className="name">{action.organisme_formateur.raison_sociale}</p>
                 <p>
-                    <span>{avis.training.title}</span><br />
+                    <span>{formation.intitule}</span><br />
                     <span>
-                    {avis.training.place.city}
-                        &nbsp;du <PrettyDate date={new Date(avis.training.startDate)} numeric={true} />
-                        &nbsp;au <PrettyDate date={new Date(avis.training.scheduledEndDate)} numeric={true} />
+                    {action.lieu_de_formation.ville}
+                        &nbsp;du <PrettyDate date={new Date(action.session.periode.debut)} numeric={true} />
+                        &nbsp;au <PrettyDate date={new Date(action.session.periode.fin)} numeric={true} />
                 </span>
                 </p>
             </div>

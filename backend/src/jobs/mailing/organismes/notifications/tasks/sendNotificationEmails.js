@@ -29,26 +29,26 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
             },
             {
                 $lookup: {
-                    from: 'comment',
+                    from: 'avis',
                     let: {
-                        siret: '$organisme.meta.siretAsString',
+                        siret: '$organisme.siret',
                     },
                     pipeline: [
                         {
                             $match: {
-                                comment: { $ne: null },
+                                commentaire: { $ne: null },
                                 read: false,
                                 status: 'validated',
                                 $expr: {
-                                    $eq: ['$training.organisation.siret', '$$siret'],
+                                    $eq: ['$formation.action.organisme_formateur.siret', '$$siret'],
                                 },
                             }
                         },
                         {
                             $group: {
                                 _id: null,
-                                comment: { $first: '$$ROOT' },
-                                nbUnreadComments: { $sum: 1 }
+                                commentaire: { $first: '$$ROOT' },
+                                nbUnreadCommentaires: { $sum: 1 }
                             }
                         },
                     ],
@@ -63,7 +63,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
             },
             {
                 $match: {
-                    'notificationStatus.nbUnreadComments': { $gte: 5 }
+                    'notificationStatus.nbUnreadCommentaires': { $gte: 5 }
                 }
             }
         ]);
@@ -85,9 +85,9 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
         let { organisme, notificationStatus } = await cursor.next();
         stats.total++;
         try {
-            logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${organisme.courriel}`);
+            logger.info(`Sending email to ${organisme.raison_sociale}/${organisme.siret}/${organisme.courriel}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
-            await message.send(organisme, notificationStatus.comment, notificationStatus.nbUnreadComments);
+            await message.send(organisme, notificationStatus.commentaire, notificationStatus.nbUnreadCommentaires);
 
             if (options.delay) {
                 await delay(options.delay);

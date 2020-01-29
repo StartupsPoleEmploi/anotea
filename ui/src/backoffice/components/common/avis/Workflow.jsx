@@ -8,7 +8,7 @@ export const Workflow = ({ avis, showStatus }) => {
 
     const getStatus = avis => {
 
-        if (!avis.comment) {
+        if (!avis.commentaire) {
             return <div />;
         }
 

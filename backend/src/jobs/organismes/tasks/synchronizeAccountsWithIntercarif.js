@@ -81,30 +81,24 @@ module.exports = async (db, logger) => {
 
             let formateur = data.organisme_formateur;
             let siret = formateur.siret_formateur.siret;
-            let id = parseInt(siret, 10);
 
             let results = await db.collection('accounts').updateOne(
-                { _id: id },
+                { siret },
                 {
                     $setOnInsert: {
-                        _id: id,
-                        SIRET: id,
-                        raisonSociale: formateur.raison_sociale_formateur,
+                        profile: 'organisme',
+                        siret,
+                        raison_sociale: formateur.raison_sociale_formateur,
                         codeRegion: findCodeRegion(data),
                         courriel: data.courriels.length > 0 ? data.courriels[0].courriel : null,
                         token: uuid.v4(),
                         creationDate: new Date(),
-                        meta: {
-                            siretAsString: siret,
-                        }
                     },
                     $addToSet: {
                         sources: 'intercarif',
                         courriels: { $each: data.courriels },
                     },
                     $set: {
-                        profile: 'organisme',
-                        //TODO remove underscores
                         lieux_de_formation: _.sortBy(data.lieux_de_formation.map(lieu => {
                             return {
                                 nom: lieu.coordonnees.nom,

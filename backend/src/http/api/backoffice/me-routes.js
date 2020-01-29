@@ -18,7 +18,7 @@ module.exports = ({ db, middlewares, passwords }) => {
             password: Joi.string().required(),
         }, { abortEarly: false });
 
-        let query = user.profile === 'organisme' ? { _id: parseInt(user.id) } : { _id: new ObjectID(user.id) };
+        let query = user.profile === 'organisme' ? { _id: user.id } : { _id: new ObjectID(user.id) };
         let account = await db.collection('accounts').findOne(query);
         if (await checkPassword(current, account.passwordHash)) {
 

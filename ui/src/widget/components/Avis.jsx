@@ -21,7 +21,7 @@ export default class Avis extends Component {
                 <div className="stagiaire">
                     <Stars note={avis.notes.global} />
                     <span className="par">par</span>
-                    <span className="pseudo">{avis.pseudo ? avis.pseudo : 'un stagiaire'}</span>
+                    <span className="pseudo">un stagiaire</span>
                 </div>
                 {avis.commentaire &&
                 <div className={`titre ${avis.commentaire.titre ? 'd-block' : 'd-none'}`}>

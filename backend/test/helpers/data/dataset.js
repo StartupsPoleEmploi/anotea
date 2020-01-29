@@ -10,47 +10,55 @@ const getDateInThePast = () => moment().subtract('100', 'days').toDate();
 module.exports = {
     randomize,
     randomSIRET,
-    newTrainee: (custom, date = getDateInThePast()) => {
+    newStagiaire: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: `${randomize('test-campaign')}`,
             campaign: 'test-campaign',
             importDate: date,
             avisCreated: false,
-            trainee: {
-                name: 'Dupont',
-                firstName: 'Henri',
-                mailDomain: 'free.fr',
+            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
+            individu: {
+                nom: 'Dupont',
+                prenom: 'Henri',
                 email: 'henri@email.fr',
-                phoneNumbers: [
+                telephones: [
                     '0123456789',
                     'NULL'
                 ],
                 emailValid: true,
-                dnIndividuNational: '1111111111'
+                identifiant_pe: '1111111111'
             },
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date,
-                scheduledEndDate: date,
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date,
+                            fin: date,
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
             unsubscribe: false,
             mailSent: true,
@@ -64,17 +72,17 @@ module.exports = {
     },
     newModerateurAccount: custom => {
         return _.merge({
-            courriel: 'admin@pole-emploi.fr',
+            identifiant: 'admin@pole-emploi.fr',
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
             profile: 'moderateur'
         }, custom);
     },
-    newOrganismeAccount: custom => {
+    newOrganismeAccount: (custom = {}) => {
         return _.merge({
-            _id: 6080274100045,
-            SIRET: 6080274100045,
-            raisonSociale: 'Pole Emploi Formation',
+            _id: parseInt(custom.siret || '6080274100045'),
+            siret: '6080274100045',
+            raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
             courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
@@ -109,18 +117,15 @@ module.exports = {
                     },
                 },
             },
-            meta: {
-                siretAsString: '6080274100045',
-            },
             profile: 'organisme'
         }, custom);
     },
     newFinancerAccount: custom => {
         return _.merge({
-            courriel: 'contact@financer.fr',
+            identifiant: 'contact@financer.fr',
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
-            raisonSociale: 'Conseil Regional',
+            raison_sociale: 'Conseil Regional',
             codeFinanceur: '2',
             profile: 'financeur'
         }, custom);
@@ -131,36 +136,44 @@ module.exports = {
             id: uuid.v4(),
         }, custom, { test: true });
     },
-    newComment: (custom, date = getDateInThePast()) => {
+    newAvis: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: new ObjectID(),
             token: randomize('token'),
             campaign: 'test',
-            training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
-                startDate: date,
-                scheduledEndDate: date,
-                organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur',
+                domaine_formation: {
+                    formacodes: ['46242'],
                 },
-                place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                certifications: [{ certif_info: '78997' }],
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75011',
+                        ville: 'Paris',
+                    },
+                    organisme_financeurs: [{
+                        code_financeur: '10',
+                    }],
+                    organisme_formateur: {
+                        raison_sociale: 'INSTITUT DE FORMATION',
+                        label: 'Pole Emploi Formation',
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
+                    },
+                    session: {
+                        id: '2422722',
+                        numero: 'SE_XXXXXX',
+                        periode: {
+                            debut: date,
+                            fin: date,
+                        },
+                    },
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
-                infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
-                },
-                codeFinanceur: '10'
             },
-            rates: {
+            notes: {
                 accueil: 3,
                 contenu_formation: 2,
                 equipe_formateurs: 4,
@@ -168,8 +181,7 @@ module.exports = {
                 accompagnement: 1,
                 global: 2.4,
             },
-            pseudo: randomize('pseudo'),
-            comment: {
+            commentaire: {
                 title: 'Génial',
                 text: 'Super formation.'
             },

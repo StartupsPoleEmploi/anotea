@@ -32,8 +32,8 @@ export default class Organisme extends React.Component {
         return (
             <div className="Organisme row">
                 <div className="col-sm-3 offset-md-1">
-                    <p className="raison-sociale">{organisme.raisonSociale}</p>
-                    <p className="siret">{organisme.meta.siretAsString}</p>
+                    <p className="raison-sociale">{organisme.raison_sociale}</p>
+                    <p className="siret">{organisme.siret}</p>
                 </div>
 
                 <div className="col-2">

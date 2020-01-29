@@ -99,7 +99,7 @@ export default class Avis extends React.Component {
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
-                                <Stars note={avis.rates.global} />
+                                <Stars note={avis.notes.global} />
                                 {renderWorkflow(avis)}
                             </div>
 
@@ -127,7 +127,7 @@ export default class Avis extends React.Component {
                         </div>
                     </div>
                     {
-                        avis.comment && showModerationButtons &&
+                        avis.commentaire && showModerationButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <EditButton

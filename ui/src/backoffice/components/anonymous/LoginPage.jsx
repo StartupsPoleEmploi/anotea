@@ -64,6 +64,9 @@ export default class LoginPage extends React.Component {
             />;
         }
 
+        let errorMessage = 'Votre identifiant et/ou votre mot de passe sont incorrects. ' +
+            'Si vous êtes un organisme, vous devez désormais vous identifier avec votre numéro de SIRET';
+
         return (
             <Page
                 className="LoginPage"
@@ -81,7 +84,7 @@ export default class LoginPage extends React.Component {
                                             value={this.state.identifiant}
                                             placeholder="Entrez votre SIRET"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
-                                            error={this.state.error ? 'Votre identifiant est incorrect.' : ''}
+                                            error={this.state.error ? errorMessage : ''}
                                         />
 
                                         <label className="mt-3">Mot de passe</label>
@@ -90,7 +93,7 @@ export default class LoginPage extends React.Component {
                                             value={this.state.password}
                                             placeholder="Entrez votre mot de passe "
                                             onChange={event => this.setState({ password: event.target.value })}
-                                            error={this.state.error ? 'Votre mot de passe est erroné.' : ''}
+                                            error={this.state.error ? ' ' : ''}
                                         />
                                     </>
                                 }

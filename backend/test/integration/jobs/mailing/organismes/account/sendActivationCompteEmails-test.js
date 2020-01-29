@@ -17,14 +17,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let { emails, mailer } = await createEmailMocks();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
                 score: {
                     nb_avis: 1,
-                },
-                meta: {
-                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);
@@ -116,29 +112,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
     it('should send email to new organismes only (SendAction)', async () => {
 
         let db = await getTestDatabase();
-        let id = 31705038300064;
         let { emails, mailer } = await createEmailMocks();
         let action = new SendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: id,
-                SIRET: id,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 1,
-                    siretAsString: `${id}`,
                 },
                 passwordHash: null,
                 mailSentDate: null,
                 sources: ['intercarif'],
             })),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 11111111111,
-                SIRET: 11111111111,
+                siret: '11111111111111',
                 courriel: 'not-sent@organisme.fr',
                 meta: {
                     nbAvis: 1,
-                    siretAsString: `11111111111`,
                 },
                 passwordHash: '12345',
                 mailSentDate: null,
@@ -162,12 +153,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let { emails } = await createEmailMocks();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 11111111111,
-                SIRET: 11111111111,
+                siret: '11111111111111',
                 courriel: 'not-sent@organisme.fr',
                 meta: {
                     nbAvis: 1,
-                    siretAsString: `11111111111`,
                 },
                 passwordHash: null,
                 mailSentDate: null,
@@ -195,23 +184,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
-                meta: {
-                    siretAsString: `${31705038300064}`,
-                },
                 passwordHash: null,
                 mailSentDate: moment().subtract('40', 'days').toDate(),
                 sources: ['intercarif'],
             })),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 11111111111,
-                SIRET: 11111111111,
+                siret: '11111111111111',
                 courriel: 'not-sent@organisme.fr',
-                meta: {
-                    siretAsString: `11111111111`,
-                },
                 passwordHash: '12345',
                 mailSentDate: null,
                 sources: ['intercarif'],
@@ -235,12 +216,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 11111111111,
-                SIRET: 11111111111,
+                siret: '11111111111111',
                 courriel: 'not-sent@organisme.fr',
-                meta: {
-                    siretAsString: `11111111111`,
-                },
                 passwordHash: '12345',
                 mailSentDate: moment().subtract('1', 'days').toDate(),
                 sources: ['intercarif'],
@@ -263,12 +240,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
-                meta: {
-                    siretAsString: `${31705038300064}`,
-                },
                 passwordHash: '12345',
                 mailSentDate: moment().subtract('40', 'days').toDate(),
                 sources: ['intercarif'],

@@ -16,8 +16,6 @@ class Summary extends Component {
                 <div className="row">
                     <div className="col-sm-3 separator">
                         <AverageScore score={this.props.averageScore} />
-                        <span className="by">par &nbsp;</span>
-                        <span className="pseudo">{this.props.commentaire.pseudo.value || 'anonyme'}</span>
                     </div>
                     <div className="col-sm-9">
                         {this.props.commentaire.titre.value &&

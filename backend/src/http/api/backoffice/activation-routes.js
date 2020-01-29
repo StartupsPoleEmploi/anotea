@@ -13,8 +13,8 @@ module.exports = ({ db, passwords }) => {
         let account = await db.collection('accounts').findOne({ token: req.params.token });
         if (account) {
             return res.json({
-                nom: account.raisonSociale,
-                identifiant: account.meta.siretAsString,
+                nom: account.raison_sociale,
+                identifiant: account.siret,
                 status: account.passwordHash ? 'active' : 'inactive',
             });
         }

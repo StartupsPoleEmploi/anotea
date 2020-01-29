@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
 
 let roundNotes = notes => {
     return {
@@ -12,7 +11,40 @@ let roundNotes = notes => {
     };
 };
 
+let createAvisDTO = (data, options = {}) => {
+
+    let dto = _.cloneDeep(_.pick(data, ['_id', 'notes', 'formation', 'date']));
+    dto.id = dto._id;
+    delete dto._id;
+    delete dto.formation.action.organisme_formateur.label;
+    delete dto.formation.action.session.id;
+
+    if (!options.notes_decimales) {
+        dto.notes = roundNotes(dto.notes);
+    }
+
+    if (data.commentaire && data.status === 'validated') {
+        dto.commentaire = {
+            ...(!_.isEmpty(data.commentaire.text) ? { texte: data.commentaire.text } : {}),
+            ...(!_.isEmpty(data.commentaire.title) && !data.commentaire.titleMasked ? { titre: data.commentaire.title } : {}),
+        };
+    } else {
+        delete dto.commentaire;
+    }
+
+    if (data.reponse && data.status === 'validated' && data.reponse.status === 'validated') {
+        data.reponse = {
+            texte: data.reponse.text,
+        };
+    } else {
+        delete dto.reponse;
+    }
+
+    return dto;
+};
+
 module.exports = {
+    createAvisDTO,
     createIntercarifDTO: (data, options = {}) => {
         let dto = _.cloneDeep(data);
 
@@ -24,7 +56,7 @@ module.exports = {
         }
 
         if (!options.notes_decimales && dto.avis) {
-            dto.avis = dto.avis.map(a => Object.assign(a, { notes: roundNotes(a.notes) }));
+            dto.avis = dto.avis.map(a => createAvisDTO(a, options));
         }
 
         if (!options.notes_decimales && dto.score && dto.score.notes) {
@@ -42,9 +74,9 @@ module.exports = {
     },
     createOrganismeFomateurDTO: (organisme, options = {}) => {
         let dto = {
-            id: `${organisme._id}`,
-            raison_sociale: organisme.raisonSociale,
-            siret: organisme.meta ? organisme.meta.siretAsString : undefined,
+            id: organisme._id,
+            raison_sociale: organisme.raison_sociale,
+            siret: organisme.siret,
             numero: organisme.numero, //TODO deprecated
             lieux_de_formation: organisme.lieux_de_formation,
             score: organisme.score,
@@ -52,15 +84,6 @@ module.exports = {
 
         if (!options.notes_decimales && dto.score && dto.score.notes) {
             dto.score.notes = roundNotes(dto.score.notes);
-        }
-
-        return dto;
-    },
-    createAvisDTO: (comment, options = {}) => {
-        let dto = convertCommentToAvis(comment);
-
-        if (!options.notes_decimales) {
-            dto.notes = roundNotes(dto.notes);
         }
 
         return dto;

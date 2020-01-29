@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { IdNotFoundError } = require('../../../../core/errors');
-const { createPaginationDTO } = require('../utils/dto');
+const { createPaginationDTO, createAvisDTO } = require('../utils/dto');
 
 module.exports = (db, type) => async parameters => {
 
@@ -32,7 +32,7 @@ module.exports = (db, type) => async parameters => {
     }], [parameters.ordre]);
 
     return {
-        avis: sorted.slice(skip, skip + limit),
+        avis: sorted.slice(skip, skip + limit).map(a => createAvisDTO(a, { notes_decimales: parameters.notes_decimales })),
         meta: {
             pagination: createPaginationDTO(pagination, sorted.length)
         },

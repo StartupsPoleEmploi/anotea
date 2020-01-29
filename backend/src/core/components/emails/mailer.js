@@ -46,7 +46,7 @@ module.exports = (configuration, regions) => {
     return {
         utils,
         render: async (rootDir, templateName, data = {}) => {
-            let doc = (data.account || data.organisme || data.trainee);
+            let doc = (data.account || data.organisme || data.stagiaire);
             let mjmlTemplate = await renderFile(path.join(rootDir, `${templateName}.mjml.ejs`), {
                 ...data,
                 ...(doc ? { region: regions.findRegionByCodeRegion(doc.codeRegion) } : {}),

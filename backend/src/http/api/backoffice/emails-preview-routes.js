@@ -11,32 +11,36 @@ module.exports = ({ emails, middlewares }) => {
     let getPreviewData = user => {
         return {
             organisme: {
+                siret: '123456789000000',
                 token: 'token-organisme',
                 codeRegion: user.codeRegion,
-                meta: {
-                    siretAsString: '123456789000000',
-                }
             },
-            trainee: {
-                token: 'token-trainee',
+            stagiaire: {
+                token: 'token-stagiaire',
                 codeRegion: user.codeRegion,
-                trainee: {
-                    firstName: 'Paul',
-                    name: 'Dupond',
+                individu: {
+                    prenom: 'Paul',
+                    nom: 'Dupond',
                 },
-                training: {
-                    title: 'Formation coiffure',
-                    startDate: moment().subtract(7, 'days').toDate(),
-                    scheduledEndDate: new Date(),
-                    organisation: {
-                        name: 'Centre de formation'
+                formation: {
+                    intitule: 'Formation coiffure',
+                    action: {
+                        organisme_formateur: {
+                            raison_sociale: 'Centre de formation'
+                        },
+                        session: {
+                            periode: {
+                                debut: moment().subtract(7, 'days').toDate(),
+                                fin: new Date(),
+                            },
+                        }
                     }
                 },
             },
-            comment: {
-                token: 'token-comment',
+            avis: {
+                token: 'token-avis',
                 codeRegion: user.codeRegion,
-                comment: {
+                commentaire: {
                     text: 'Super formation. Par contre les locaux sont trop petits',
                 },
                 reponse: {
@@ -56,7 +60,7 @@ module.exports = ({ emails, middlewares }) => {
         let message = emails.getEmailMessageByTemplateName(templateName);
 
         let preview = getPreviewData(req.user);
-        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'trainee'], preview.comment);
+        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);
 
         return sendHTML(res, html);
     }));

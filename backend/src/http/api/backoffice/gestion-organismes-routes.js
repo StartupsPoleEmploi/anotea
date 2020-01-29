@@ -36,9 +36,9 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             codeRegion: codeRegion,
             ...(search ? {
                 $or: [
-                    { 'meta.siretAsString': search },
+                    { 'siret': search },
                     { 'courriel': search },
-                    { 'raisonSociale': new RegExp(search, 'i') }]
+                    { 'raison_sociale': new RegExp(search, 'i') }]
             } : {}),
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         })
@@ -92,8 +92,8 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
         try {
             await sendCSVStream(stream, res, {
-                'Siret': organisme => organisme.meta.siretAsString,
-                'Nom': organisme => organisme.raisonSociale,
+                'Siret': organisme => organisme.siret,
+                'Nom': organisme => organisme.raison_sociale,
                 'Email': organisme => organisme.courriel,
                 'Nombre d\'Avis': organisme => organisme.score.nb_avis,
                 'Kairos': organisme => isKairos(organisme),

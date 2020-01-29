@@ -2,13 +2,14 @@ module.exports = ({ tri, ordre }) => {
     let field;
     switch (tri) {
         case 'notes':
-            field = 'rates.global';
+            field = 'notes.global';
             break;
         case 'formation':
-            field = 'training.title';
+            field = 'formation.intitule';
             break;
         default:
-            field = 'training.scheduledEndDate';
+            field = 'formation.action.session.periode.fin';
     }
+
     return { [field]: ordre === 'asc' ? 1 : -1 };
 };

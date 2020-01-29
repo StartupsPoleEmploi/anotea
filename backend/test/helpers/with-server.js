@@ -16,15 +16,15 @@ module.exports = {
                         ...custom,
                     });
                 },
-                logAsModerateur: async (app, courriel, custom) => {
+                logAsModerateur: async (app, identifiant, custom) => {
 
                     await testContext.insertIntoDatabase('accounts', newModerateurAccount({
-                        courriel,
+                        identifiant,
                     }, custom));
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
-                    .send({ identifiant: courriel, password: 'password' });
+                    .send({ identifiant, password: 'password' });
                     assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
@@ -32,12 +32,8 @@ module.exports = {
                 logAsOrganisme: async (app, courriel, siret, custom) => {
 
                     await testContext.insertIntoDatabase('accounts', newOrganismeAccount({
-                        _id: parseInt(siret),
-                        SIRET: parseInt(siret),
+                        siret,
                         courriel,
-                        meta: {
-                            siretAsString: siret
-                        },
                     }, custom));
 
                     let response = await request(app)
@@ -47,17 +43,17 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-                logAsFinanceur: async (app, courriel, codeFinanceur, custom) => {
+                logAsFinanceur: async (app, identifiant, codeFinanceur, custom) => {
 
                     await testContext.insertIntoDatabase('accounts', newFinancerAccount({
-                        courriel,
+                        identifiant,
                         codeFinanceur: `${codeFinanceur}`,
                         ...custom,
                     }, custom));
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
-                    .send({ identifiant: courriel, password: 'password' });
+                    .send({ identifiant, password: 'password' });
                     assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;

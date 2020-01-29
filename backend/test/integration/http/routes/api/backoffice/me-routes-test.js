@@ -50,7 +50,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not update my password with invalid current password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount({ courriel: 'admin@pole-emploi.fr' }));
+        await insertIntoDatabase('accounts', newModerateurAccount({ identifiant: 'admin@pole-emploi.fr' }));
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
 
         let response = await request(app)
@@ -67,7 +67,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not update my password with weak password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount({ courriel: 'admin@pole-emploi.fr' }));
+        await insertIntoDatabase('accounts', newModerateurAccount({ identifiant: 'admin@pole-emploi.fr' }));
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
 
         let response = await request(app)

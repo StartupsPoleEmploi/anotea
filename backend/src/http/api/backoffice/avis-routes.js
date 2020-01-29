@@ -22,7 +22,8 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         }, { abortEarly: false });
 
         let query = await queries.buildAvisQuery(parameters);
-        let cursor = db.collection('comment')
+        //debugger;
+        let cursor = db.collection('avis')
         .find(query)
         .sort({ [parameters.sortBy || 'date']: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
@@ -58,7 +59,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
             token: Joi.string(),
         }, { abortEarly: false });
 
-        let stream = db.collection('comment')
+        let stream = db.collection('avis')
         .find({
             ...await queries.buildAvisQuery(parameters),
         })
@@ -71,17 +72,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
             //FIXME we must handle errors
             logger.error('Unable to send CSV file', e);
         }
-    }));
-
-    router.put('/api/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-
-        let profile = getProfile(db, regions, req.user);
-        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
-        let { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
-
-        let avis = await workflow.maskPseudo(id, mask, { profile });
-
-        return res.json(avis);
     }));
 
     router.put('/api/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

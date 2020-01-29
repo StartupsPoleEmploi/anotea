@@ -1,7 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const { ignoreFirstLine, pipeline, writeObject } = require('../../../../core/utils/stream-utils');
-const { getDifferences, mergeDeep } = require('../../../../core/utils/object-utils');
+const { getDifferences } = require('../../../../core/utils/object-utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
 const parse = require('csv-parse');
 
@@ -77,10 +77,12 @@ module.exports = async (db, logger, file) => {
         };
 
         let getNewCertifInfos = doc => {
-            return _.uniq(doc.training.certifInfos.reduce((acc, code) => {
+            let res = _.uniq(doc.formation.certifications.map(c => c.certif_info).reduce((acc, code) => {
                 let codes = certifications[code] ? [...certifications[code], code] : [code];
                 return [...acc, ...codes];
             }, []));
+
+            return _.sortBy(res.map(c => ({ certif_info: c })), ['certif_info']);
         };
 
         let getNewMeta = (previous, next) => {
@@ -104,21 +106,14 @@ module.exports = async (db, logger, file) => {
             try {
                 stats.total++;
                 let previous = await cursor.next();
-                let merged = mergeDeep({},
-                    previous,
-                    {
-                        training: {
-                            certifInfos: getNewCertifInfos(previous),
-                        },
-                    },
-                );
-                let meta = getNewMeta(previous, merged);
+                let next = _.cloneDeep(previous);
+                next.formation.certifications = getNewCertifInfos(previous);
 
-                if (previous.training.certifInfos.find(code => certifications[code])) {
+                if (previous.formation.certifications.map(c => c.certif_info).find(code => certifications[code])) {
                     let results = await db.collection(collectionName).updateOne({ _id: previous._id }, {
                         $set: {
-                            'training.certifInfos': merged.training.certifInfos,
-                            ...(meta ? { meta } : {}),
+                            'formation.certifications': next.formation.certifications,
+                            'meta': getNewMeta(previous, next),
                         }
                     });
 
@@ -136,11 +131,11 @@ module.exports = async (db, logger, file) => {
     };
 
     let certifInfos = await loadCertifinfos(file);
-    let [trainee, comment] = await Promise.all([
-        patch('trainee', certifInfos),
-        patch('comment', certifInfos),
+    let [stagiaires, avis] = await Promise.all([
+        patch('stagiaires', certifInfos),
+        patch('avis', certifInfos),
     ]);
 
-    return { trainee, comment };
+    return { stagiaires, avis };
 };
 

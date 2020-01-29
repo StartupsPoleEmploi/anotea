@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
-const { newComment } = require('../../../../../helpers/data/dataset');
+const { newAvis } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur }) => {
 
@@ -10,14 +10,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_XX',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333333333}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333333333',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -28,7 +30,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.length, 1);
         assert.deepStrictEqual(response.body[0], {
-            idFormation: 'F_XX_XX',
+            numeroFormation: 'F_XX_XX',
             title: 'Développeur',
             nbAvis: 1,
         });
@@ -39,23 +41,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_XX',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333333333}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333333333',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_11',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333311111}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_11',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333311111',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -65,7 +71,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.length, 1);
-        assert.strictEqual(response.body[0].idFormation, 'F_XX_11');
+        assert.strictEqual(response.body[0].numeroFormation, 'F_XX_11');
     });
 
     it('can get formations filtered by organisme (siren)', async () => {
@@ -73,23 +79,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_XX',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333333333}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333333333',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_11',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333311111}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_11',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333333333',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -107,23 +117,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_XX',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333333333}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333333333',
+                        },
                     },
-                }
+                },
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    idFormation: 'F_XX_11',
-                    title: 'Développeur',
-                    organisation: {
-                        siret: `${33333333311111}`,
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    numero: 'F_XX_11',
+                    intitule: 'Développeur',
+                    action: {
+                        organisme_formateur: {
+                            siret: '33333333311111',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -133,7 +147,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.length, 1);
-        assert.strictEqual(response.body[0].idFormation, 'F_XX_11');
+        assert.strictEqual(response.body[0].numeroFormation, 'F_XX_11');
     });
 
 

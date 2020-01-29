@@ -11,13 +11,13 @@ module.exports = (db, regions, user) => {
     return {
         type: 'organisme',
         getUser: () => user,
-        getShield: () => ({ 'training.organisation.siret': new RegExp(`^${asSiren(user.siret)}`) }),
+        getShield: () => ({ 'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`) }),
         validators: {
             form: () => {
                 return {
-                    startDate: Joi.number(),
-                    scheduledEndDate: Joi.number(),
-                    idFormation: Joi.string(),
+                    debut: Joi.number(),
+                    fin: Joi.number(),
+                    numeroFormation: Joi.string(),
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
                     siren: Joi.string().regex(new RegExp(`^${user.siret.substring(0, 9)}`), 'siren'),
                 };
@@ -38,29 +38,29 @@ module.exports = (db, regions, user) => {
         },
         queries: {
             buildStagiaireQuery: async parameters => {
-                let { departement, idFormation, startDate, scheduledEndDate, siren = user.siret } = parameters;
+                let { departement, numeroFormation, debut, fin, siren = user.siret } = parameters;
 
                 return {
-                    'training.organisation.siret': new RegExp(`^${siren}`),
-                    ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-                    ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                    ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-                    ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+                    'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`),
+                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
+                    ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
+                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
+                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
                 };
             },
             buildAvisQuery: async parameters => {
                 let {
-                    departement, idFormation, startDate, scheduledEndDate, siren = user.siret,
+                    departement, numeroFormation, debut, fin, siren = user.siret,
                     reponseStatuses, read, statuses = ['validated', 'reported']
                 } = parameters;
 
 
                 return {
-                    'training.organisation.siret': new RegExp(`^${siren}`),
-                    ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-                    ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                    ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-                    ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+                    'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`),
+                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
+                    ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
+                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
+                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
                     ...(_.isBoolean(read) ? { read } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),

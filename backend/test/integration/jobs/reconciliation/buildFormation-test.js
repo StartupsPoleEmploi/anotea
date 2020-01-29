@@ -3,7 +3,7 @@ const _ = require('lodash');
 const logger = require('../../../helpers/components/fake-logger');
 const ObjectID = require('mongodb').ObjectID;
 const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newComment, randomize, newIntercarif } = require('../../../helpers/data/dataset');
+const { newAvis, newIntercarif } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
@@ -11,24 +11,28 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile formation with avis', async () => {
 
         let db = await getTestDatabase();
-        let commentId = new ObjectID();
+        let avisId = new ObjectID();
         let date = new Date();
-        let pseudo = randomize('pseudo');
+
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                _id: commentId,
-                pseudo,
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                _id: avisId,
+                token: 'token-1234',
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             }, date)),
         ]);
 
@@ -54,12 +58,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             },
             avis: [
                 {
-                    id: commentId,
-                    pseudo: pseudo,
+                    _id: avisId,
                     date: date,
+                    codeRegion: '11',
+                    status: 'validated',
+                    token: 'token-1234',
                     commentaire: {
-                        titre: 'Génial',
-                        texte: 'Super formation.',
+                        title: 'Génial',
+                        text: 'Super formation.',
                     },
                     notes: {
                         accueil: 3,
@@ -88,13 +94,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                                 code_postal: '75019',
                                 ville: 'Paris'
                             },
-                            organisme_financeurs: [],
+                            organisme_financeurs: [{
+                                code_financeur: '10',
+                            }],
                             organisme_formateur: {
+                                label: 'Pole Emploi Formation',
                                 raison_sociale: 'INSTITUT DE FORMATION',
                                 siret: '22222222222222',
                                 numero: '14_OF_XXXXXXXXXX'
                             },
                             session: {
+                                id: '2422722',
                                 numero: 'SE_XXXXXX',
                                 periode: {
                                     debut: date,
@@ -141,18 +151,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: '1234',
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: [],
-                    organisation: {
-                        siret: '22222222244444',
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -160,7 +173,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let action = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
-        assert.deepStrictEqual(action.avis[0].id, '1234');
+        assert.deepStrictEqual(action.avis[0]._id, '1234');
     });
 
     it('should reconcile actions with avis (ignore archived)', async () => {
@@ -168,19 +181,23 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 _id: '1234',
                 status: 'archived',
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -195,19 +212,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    formacodes: ['XXXXX'],
-                    certifInfos: [{
-                        code: 'YYYYY',
-                    }],
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['XXXXX'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: 'YYYYY' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -231,17 +250,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             insertIntoDatabase('intercarif', intercarif),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
-                }
+                },
             })),
         ]);
 
@@ -256,18 +279,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 1,
                     contenu_formation: 1,
                     equipe_formateurs: 3,
@@ -276,18 +303,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 5,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 1,
                     contenu_formation: 1,
                     equipe_formateurs: 4,
@@ -296,18 +327,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 5,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+            insertIntoDatabase('avis', newAvis({
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 2,
                     contenu_formation: 1,
                     equipe_formateurs: 1,
@@ -340,7 +375,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-    it('should create session with empty avis list when no comment can be found', async () => {
+    it('should create session with empty avis list when no avis can be found', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -356,77 +391,92 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
     it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
         let db = await getTestDatabase();
-        let pseudo = randomize('pseudo');
-        await Promise.all([
-            importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                pseudo,
-                training: {
+        let oid = new ObjectID();
+
+        let avis = newAvis({
+            _id: oid,
+            formation: {
+                domaine_formation: {
                     formacodes: ['22403'],
-                    certifInfos: [],
-                    organisation: {
+                },
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
                         siret: '22222222222222',
                     },
-                    place: {
-                        postalCode: '75019',
-                    },
-                }
-            })),
+                },
+            },
+        });
+        avis.formation.certifications = [];
+        await Promise.all([
+            importIntercarif(),
+            insertIntoDatabase('avis', avis),
         ]);
 
         await reconcile(db, logger);
 
-        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
+        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis._id': oid });
         assert.strictEqual(count, 1);
     });
 
     it('should reconcile comments with same certifinfo/siret/code_postal than the session', async () => {
 
         let db = await getTestDatabase();
-        let pseudo = randomize('pseudo');
-        await Promise.all([
-            importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                pseudo,
-                training: {
-                    formacodes: [],
-                    certifInfos: ['80735'],
-                    organisation: {
+        let oid = new ObjectID();
+
+        let avis = newAvis({
+            _id: oid,
+            formation: {
+                certifications: [{ certif_info: '80735' }],
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
                         siret: '22222222222222',
                     },
-                    place: {
-                        postalCode: '75019',
-                    },
-                }
-            })),
+                },
+            },
+        });
+        avis.formation.domaine_formation.formacodes = [];
+        await Promise.all([
+            importIntercarif(),
+            insertIntoDatabase('avis', avis),
         ]);
 
         await reconcile(db, logger);
 
-        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
+        let count = await db.collection('formationsReconciliees').countDocuments({ 'avis._id': oid });
         assert.strictEqual(count, 1);
     });
 
-    it('should reconcile comment (notes)', async () => {
+    it('should reconcile avis (notes)', async () => {
 
         let db = await getTestDatabase();
-        let comment = newComment({
-            training: {
-                certifInfos: ['80735'],
-                organisation: {
-                    siret: '22222222222222',
+        let avis = newAvis({
+            formation: {
+                domaine_formation: {
+                    formacodes: ['22403'],
                 },
-                place: {
-                    postalCode: '75019',
+                certifications: [{ certif_info: '80735' }],
+                action: {
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                    },
+                    organisme_formateur: {
+                        siret: '22222222222222',
+                    },
                 },
             },
             status: 'validated',
         });
-        delete comment.comment;
+        delete avis.commentaire;
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('avis', avis),
         ]);
 
         await reconcile(db, logger);
@@ -436,21 +486,25 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(formation.avis[0].commentaire, undefined);
     });
 
-    it('should ignore not yet validated comment', async () => {
+    it('should ignore not yet validated avis', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 status: 'none',
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),
@@ -462,25 +516,29 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepStrictEqual(formation.avis, []);
     });
 
-    it('should reconcile rejected comment', async () => {
+    it('should reconcile rejected avis', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('avis', newAvis({
                 status: 'rejected',
-                comment: {
+                commentaire: {
                     title: 'WTF',
                     text: 'WTF',
                 },
-                training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
-                    organisation: {
-                        siret: '22222222222222',
+                formation: {
+                    domaine_formation: {
+                        formacodes: ['22403'],
                     },
-                    place: {
-                        postalCode: '75019',
+                    certifications: [{ certif_info: '80735' }],
+                    action: {
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                        },
+                        organisme_formateur: {
+                            siret: '22222222222222',
+                        },
                     },
                 },
             })),

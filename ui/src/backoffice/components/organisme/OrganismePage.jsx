@@ -25,8 +25,8 @@ export default class OrganismePage extends React.Component {
         this.state = {
             form: {
                 periode: {
-                    startDate: null,
-                    endDate: null,
+                    debut: null,
+                    fin: null,
                 },
                 departements: {
                     selected: null,
@@ -72,14 +72,14 @@ export default class OrganismePage extends React.Component {
 
         this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || account.siret }))
         .then(results => {
-            return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation));
+            return this.updateSelectBox('formations', results.find(f => f.numeroFormation === query.numeroFormation));
         });
 
         this.setStateDeep({
             form: {
                 periode: {
-                    startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
-                    endDate: query.scheduledEndDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
+                    debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
+                    fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
                 },
             }
         });
@@ -139,8 +139,8 @@ export default class OrganismePage extends React.Component {
         this.setStateDeep({
             form: {
                 periode: {
-                    startDate: null,
-                    endDate: null,
+                    debut: null,
+                    fin: null,
                 },
                 departements: {
                     selected: null,
@@ -157,7 +157,7 @@ export default class OrganismePage extends React.Component {
 
     getFormParametersFromQuery = () => {
         let query = this.props.router.getQuery();
-        return _.pick(query, ['departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
+        return _.pick(query, ['departement', 'siren', 'numeroFormation', 'debut', 'fin']);
     };
 
     getFormParameters = () => {
@@ -165,9 +165,9 @@ export default class OrganismePage extends React.Component {
         return {
             departement: _.get(form, 'departements.selected.code', null),
             siren: _.get(form, 'sirens.selected.siren', null),
-            idFormation: _.get(form, 'formations.selected.idFormation', null),
-            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
-            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
+            numeroFormation: _.get(form, 'formations.selected.numeroFormation', null),
+            debut: form.periode.debut ? moment(form.periode.debut).valueOf() : null,
+            fin: form.periode.fin ? moment(form.periode.fin).valueOf() : null,
         };
     };
 
@@ -241,7 +241,7 @@ export default class OrganismePage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="organisme"
                                     label={option => option.name}
-                                    placeholder={user.raisonSociale || ''}
+                                    placeholder={user.raison_sociale || ''}
                                     trackingId="Centres"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
@@ -260,7 +260,7 @@ export default class OrganismePage extends React.Component {
                                     value={formations.selected}
                                     options={formations.results}
                                     loading={formations.loading}
-                                    optionKey="idFormation"
+                                    optionKey="numeroFormation"
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
                                     trackingId="Formation"

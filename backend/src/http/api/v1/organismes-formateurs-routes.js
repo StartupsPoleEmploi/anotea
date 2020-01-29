@@ -12,7 +12,6 @@ const schema = require('./utils/schema');
 module.exports = ({ db, middlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let collection = db.collection('accounts');
     let { createHMACAuthMiddleware } = middlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
@@ -36,7 +35,7 @@ module.exports = ({ db, middlewares }) => {
         let query = {
             ...(parameters.id ? { '_id': { $in: parameters.id.map(id => parseInt(id)) } } : {}),
             ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
-            ...(parameters.siret ? { 'SIRET': { $in: parameters.siret.map(id => parseInt(id)) } } : {}),
+            ...(parameters.siret ? { 'siret': { $in: parameters.siret } } : {}),
             ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
             ...(parameters.lieu_de_formation ? {
                 $or: [
@@ -46,7 +45,7 @@ module.exports = ({ db, middlewares }) => {
             } : {}),
         };
 
-        let organismes = await collection.find(query)
+        let organismes = await db.collection('accounts').find(query)
         .project(buildProjection(parameters.fields))
         .limit(limit)
         .skip(skip);
@@ -74,7 +73,7 @@ module.exports = ({ db, middlewares }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let organisme = await collection.findOne(
+        let organisme = await db.collection('accounts').findOne(
             { _id: parseInt(parameters.id) },
             { projection: buildProjection(parameters.fields) },
         );
@@ -105,15 +104,21 @@ module.exports = ({ db, middlewares }) => {
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
 
-        let comments = await db.collection('comment')
+        let organisme = await db.collection('accounts').findOne({ _id: parseInt(parameters.id) });
+
+        if (!organisme) {
+            throw Boom.notFound('Identifiant inconnu');
+        }
+
+        let avis = await db.collection('avis')
         .find({
-            'training.organisation.siret': parameters.id,
+            'formation.action.organisme_formateur.siret': organisme.siret,
             ...(
                 parameters.commentaires === null ?
                     { status: { $in: ['validated', 'rejected'] } } :
                     {
                         $or: [
-                            { comment: { $exists: parameters.commentaires }, status: 'validated' },
+                            { commentaire: { $exists: parameters.commentaires }, status: 'validated' },
                             { 'reponse.status': 'validated', 'status': 'validated' },
                         ]
 
@@ -124,17 +129,9 @@ module.exports = ({ db, middlewares }) => {
         .limit(limit)
         .skip(skip);
 
-        let [total, organisme] = await Promise.all([
-            comments.count(),
-            collection.findOne({ _id: parseInt(parameters.id) })
-        ]);
-
-        if (!organisme) {
-            throw Boom.notFound('Identifiant inconnu');
-        }
-
-        let stream = comments.transformStream({
-            transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
+        let total = await avis.count();
+        let stream = avis.transformStream({
+            transform: avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
         });
 
         return sendArrayAsJsonStream(stream, res, {

@@ -10,10 +10,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
+                siret: '6080274100045',
                 courriel: 'contactus@poleemploi-formation.fr',
-                meta: {
-                    siretAsString: '6080274100045'
-                }
             })),
         ]);
 
@@ -70,15 +68,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
         let token = randomize('token');
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
-            meta: {
-                siretAsString: '11111111111111',
-            },
+            _id: '1234',
+            siret: '11111111111111',
         }));
         await insertIntoDatabase('forgottenPasswordTokens', newForgottenPasswordToken({
             creationDate: new Date(),
-            id: 11111111111111,
+            id: '1234',
             token,
             profile: 'organisme'
         }));
@@ -105,7 +100,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         //should flag account as rehashed
         let db = await getTestDatabase();
-        let res = await db.collection('accounts').findOne({ _id: 11111111111111 });
+        let res = await db.collection('accounts').findOne({ siret: '11111111111111' });
         assert.ok(res.meta);
         assert.ok(res.meta.rehashed);
     });
