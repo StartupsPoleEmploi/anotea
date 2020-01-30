@@ -50,6 +50,7 @@ module.exports = (components, options = {}) => {
     app.use(require('./api/backoffice/activation-routes')(httpComponents));
     app.use(require('./api/backoffice/me-routes')(httpComponents));
     app.use(require('./api/backoffice/avis-routes')(httpComponents));
+    app.use(require('./api/backoffice/stagiaires-routes')(httpComponents));
     app.use(require('./api/backoffice/formations-routes')(httpComponents));
     app.use(require('./api/backoffice/sirens-routes')(httpComponents));
     app.use(require('./api/backoffice/departements-routes')(httpComponents));

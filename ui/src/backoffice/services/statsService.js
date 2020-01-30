@@ -1,14 +1,6 @@
 import { _get } from '../../common/utils/http-client';
 import queryString from 'query-string';
 
-export const getStagiairesStats = (options = {}) => {
-    return _get(`/backoffice/stats/stagiaires?${queryString.stringify(options)}`);
-};
-
-export const getAvisStats = (options = {}) => {
-    return _get(`/backoffice/stats/avis?${queryString.stringify(options)}`);
-};
-
 export const getPublicStats = (options = {}) => {
     return _get(`/backoffice/stats?${queryString.stringify(options)}`);
 };

@@ -57,3 +57,6 @@ export const reportAvis = (id, report) => {
     return _put(`/backoffice/avis/${id}/report`, { report });
 };
 
+export const getAvisStats = (options = {}) => {
+    return _get(`/backoffice/avis/stats?${queryString.stringify(options)}`);
+};

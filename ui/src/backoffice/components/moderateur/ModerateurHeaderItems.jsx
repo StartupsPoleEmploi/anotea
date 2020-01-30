@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from '../common/header/Link';
-import { getAvisStats } from '../../services/statsService';
+import { getAvisStats } from '../../services/avisService';
 import Pastille from '../common/Pastille';
 
 export default class ModerateurHeaderItems extends React.Component {

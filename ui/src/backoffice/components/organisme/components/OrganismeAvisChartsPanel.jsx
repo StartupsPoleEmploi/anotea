@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { getAvisStats, getStagiairesStats } from '../../../services/statsService';
+import { getAvisStats } from '../../../services/avisService';
+import { getStagiairesStats } from '../../../services/stagiairesService';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../../../common/components/Loader';
 import NoteRepartition from '../../common/avis/charts/NoteRepartition';

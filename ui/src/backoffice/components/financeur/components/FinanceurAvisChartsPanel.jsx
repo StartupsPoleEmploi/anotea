@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { getAvisStats } from '../../../services/statsService';
+import { getAvisStats } from '../../../services/avisService';
 import Panel from '../../common/page/panel/Panel';
 import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Loader from '../../../../common/components/Loader';

@@ -9,7 +9,7 @@ import { Filter, Filters } from '../../common/page/panel/filters/Filters';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
-import { getAvisStats } from '../../../services/statsService';
+import { getAvisStats } from '../../../services/avisService';
 import { Workflow } from '../../common/avis/Workflow';
 
 export default class ModerationReponsesPage extends React.Component {
