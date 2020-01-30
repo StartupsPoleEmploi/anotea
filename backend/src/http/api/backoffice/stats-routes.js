@@ -1,10 +1,9 @@
 const express = require('express');
-const Joi = require('joi');
 const moment = require('moment');
+const Joi = require('joi');
 const computeStagiairesStats = require('./utils/computeStagiairesStats');
 const computeAvisStats = require('./utils/computeAvisStats');
-const computePublicStats = require('./utils/computePublicStats');
-const { tryAndCatch } = require('../../utils/routes-utils');
+const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
 const getProfile = require('./profiles/getProfile');
 
 module.exports = ({ db, middlewares, regions }) => {
@@ -15,29 +14,39 @@ module.exports = ({ db, middlewares, regions }) => {
 
     router.get('/api/backoffice/stats', tryAndCatch(async (req, res) => {
 
-        let parameters = await Joi.validate(req.query, {
+        let firstStatsDate = moment('2019-08-01').valueOf();
+        let now = moment().valueOf();
+
+        let { codeRegion, debut, fin } = await Joi.validate(req.query, {
             codeRegion: Joi.string(),
-            debut: Joi.number().default(moment().subtract(1, 'months').startOf('month').subtract(1, 'days').valueOf()),
-            fin: Joi.number().default(moment().valueOf()),
+            debut: Joi.number().min(firstStatsDate).max(now).default(firstStatsDate),
+            fin: Joi.number().max(now).default(now),
         }, { abortEarly: false });
 
-        let results = await Promise.all([
-            computePublicStats(db, 'avis', [
-                'nbStagiairesContactes',
-                'nbQuestionnairesValidees',
-                'nbAvisAvecCommentaire',
-                'nbCommentairesPositifs',
-                'nbCommentairesNegatifs',
-                'nbCommentairesRejetes',
-            ], parameters),
-            computePublicStats(db, 'organismes', ['organismesActifs', 'nbReponses'], parameters),
-            computePublicStats(db, 'api', ['nbSessions', 'nbAvis', 'nbAvisRestituables'], parameters),
-        ]);
+        let stream = await db.collection('statistics')
+        .find({
+            date: {
+                $gte: moment(debut).toDate(),
+                $lte: moment(fin).toDate(),
+            }
+        })
+        .project({
+            '_id': 0,
+            'national.campagnes': 0,
+        })
+        .sort({ date: -1 })
+        .transformStream({
+            transform: ({ date, national, regions }) => {
+                return {
+                    date,
+                    national,
+                    ...(codeRegion ? { regional: regions[codeRegion] } : {}),
+                };
+            }
+        });
 
-        res.json({
-            avis: results[0],
-            organismes: results[1],
-            api: results[2],
+        return sendArrayAsJsonStream(stream, res, {
+            arrayPropertyName: 'stats',
         });
     }));
 

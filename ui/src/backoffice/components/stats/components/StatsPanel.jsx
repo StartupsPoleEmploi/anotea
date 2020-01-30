@@ -6,10 +6,10 @@ import { getPublicStats } from '../../../services/statsService';
 import Button from '../../../../common/components/Button';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import GlobalStats from './GlobalStats';
-import OrganismeStats from './OrganismeStats';
-import FormationStats from './FormationStats';
-import CommentairesStats from './CommentairesStats';
 import PDF, { buildPDF } from '../../common/pdf/PDF';
+import OrganismeStats from './OrganismeStats';
+import CommentairesStats from './CommentairesStats';
+import FormationStats from './FormationStats';
 
 export default class StatsPanel extends React.Component {
 
@@ -21,7 +21,7 @@ export default class StatsPanel extends React.Component {
     constructor() {
         super();
         this.state = {
-            stats: null,
+            results: {},
             showPDFDocument: false,
         };
         this.pdfReference = React.createRef();
@@ -39,8 +39,8 @@ export default class StatsPanel extends React.Component {
 
     fetchStats = () => {
         return new Promise(async resolve => {
-            let stats = await getPublicStats(this.props.query);
-            this.setState({ stats }, () => resolve());
+            let results = await getPublicStats(this.props.query);
+            this.setState({ results }, () => resolve());
         });
     };
 
@@ -56,8 +56,9 @@ export default class StatsPanel extends React.Component {
     render() {
 
         let { query } = this.props;
+        let { results } = this.state;
 
-        if (_.isEmpty(this.state.stats)) {
+        if (_.isEmpty(results.stats)) {
             return <EmptyResults />;
         }
 
@@ -81,18 +82,20 @@ export default class StatsPanel extends React.Component {
                         <div>
                             <div className="row mb-4">
                                 <div className="col-12">
-                                    <GlobalStats query={query} stats={this.state.stats} />
+                                    <GlobalStats query={query} stats={results.stats} />
                                 </div>
                             </div>
                             <div className="row mb-4">
-                                <div className="col-6">
-                                    <OrganismeStats query={query} stats={this.state.stats} />
+                                <div className="col-sm-12 col-md-6">
+                                    <OrganismeStats query={query} stats={results.stats} />
                                     <div className="mt-4">
-                                        <CommentairesStats query={query} stats={this.state.stats} />
+                                        <CommentairesStats query={query} stats={results.stats} />
                                     </div>
                                 </div>
-                                <div className="col-6">
-                                    <FormationStats query={query} stats={this.state.stats} />
+                                <div className="col-sm-12 col-md-6">
+                                    <div className="mt-4 mt-md-0">
+                                        <FormationStats query={query} stats={results.stats} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -103,26 +106,9 @@ export default class StatsPanel extends React.Component {
                     <PDF
                         title={'Statistiques'}
                         main={
-                            <>
-                                <div>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <GlobalStats query={query} stats={this.state.stats} />
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6">
-                                            <OrganismeStats query={query} stats={this.state.stats} />
-                                            <div className="">
-                                                <CommentairesStats query={query} stats={this.state.stats} />
-                                            </div>
-                                        </div>
-                                        <div className="col-6">
-                                            <FormationStats query={query} stats={this.state.stats} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
+                            <div>
+                                PDF
+                            </div>
                         }
                     />
                 </div>

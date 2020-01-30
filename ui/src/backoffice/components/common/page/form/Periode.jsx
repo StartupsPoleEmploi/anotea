@@ -45,7 +45,6 @@ export default class Periode extends React.Component {
                 <Date
                     value={periode.fin}
                     min={periode.debut || min}
-                    max={max}
                     depth={'months'}
                     onChange={date => this.onDateChange('fin', date)}
                 />

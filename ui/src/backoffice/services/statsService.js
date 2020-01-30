@@ -26,6 +26,3 @@ export const percentage = (dividend, divisor) => {
     return `${divide(dividend * 100, divisor)}%`;
 };
 
-export const latest = history => {
-    return history[history.length - 1].value;
-};

@@ -48,12 +48,17 @@ export default class StatsForm extends React.Component {
         });
     }
 
-    getFormParametersFromQuery = () => {
+    getParametersFromQuery = () => {
         let { query } = this.props;
-        return _.pick(query, ['codeRegion', 'debut', 'fin']);
+
+        return {
+            ...(query.debut ? { debut: parseInt(query.debut) } : {}),
+            ...(query.fin ? { fin: parseInt(query.fin) } : {}),
+            ...(query.codeRegion ? { codeRegion: query.codeRegion } : {}),
+        };
     };
 
-    getFormParameters = () => {
+    getParametersFromForm = () => {
         let { periode, regions } = this.state;
 
         return {
@@ -69,14 +74,14 @@ export default class StatsForm extends React.Component {
     };
 
     isFormSynchronizedWithQuery = () => {
-        let data = _(this.getFormParameters()).omitBy(_.isNil).value();
-        return this.isFormLoading() || _.isEqual(data, this.getFormParametersFromQuery());
+        let data = _(this.getParametersFromForm()).omitBy(_.isNil).value();
+        return this.isFormLoading() || _.isEqual(data, this.getParametersFromQuery());
     };
 
     updatePeriode = periode => {
         return new Promise(resolve => {
             this.setState({
-                periode: Object.assign({}, periode),
+                periode,
             }, resolve);
         });
     };
@@ -145,7 +150,7 @@ export default class StatsForm extends React.Component {
                             optionKey="codeRegion"
                             label={option => option.nom}
                             placeholder={'Toutes les régions'}
-                            trackingId="Regions"
+                            trackingId="Re  gions"
                             onChange={option => {
                                 return this.updateSelectBox('regions', option);
                             }}
@@ -155,7 +160,7 @@ export default class StatsForm extends React.Component {
                         <label>Période</label>
                         <Periode
                             periode={periode}
-                            min={moment('2019-07-01T00:00:00Z').toDate()}
+                            min={moment('2019-08-01T00:00:00Z').toDate()}
                             max={moment().subtract(1, 'days').toDate()}
                             onChange={periode => this.updatePeriode(periode)}
                         />
@@ -170,7 +175,7 @@ export default class StatsForm extends React.Component {
                         <Button
                             size="large"
                             color={theme.buttonColor}
-                            onClick={() => this.props.onSubmit(this.getFormParameters())}
+                            onClick={() => this.props.onSubmit(this.getParametersFromForm())}
                             style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
                         >
                             {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}

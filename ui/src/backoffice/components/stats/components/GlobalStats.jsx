@@ -1,36 +1,86 @@
 import React from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import HistoryLines from './HistoryLines';
 import './Stats.scss';
 import PrettyDate from '../../common/PrettyDate';
-import { latest, percentage } from '../../../services/statsService';
+import { divide, percentage } from '../../../services/statsService';
 
 export default class GlobalStats extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
-        stats: PropTypes.object.isRequired,
+        stats: PropTypes.array.isRequired,
     };
 
-    convertToLine = (id, history) => {
-        let data = history.map((h, index) => {
-            let previous = history[index - 1] || { value: 0 };
-            let yValue = h.value - previous.value;
-            return { x: h.date, y: yValue };
-        });
-        data.shift();
+    getGroupByUnit = (debut, fin) => {
+
+        let start = moment(parseInt(debut) || moment('2019-08-01'));
+        let end = moment(parseInt(fin) || moment());
+        let diff = end.diff(start, 'days');
+
+        if (diff >= 90) {
+            return 'month';
+        } else if (diff >= 15) {
+            return 'week';
+        }
+        return 'day';
+    };
+
+    convertToLine = (type, stats, groupBy = 'week') => {
+
         return {
-            id,
-            data: data
+            id: `Taux de répondants (${type})`,
+            data: stats
+            .map((data, index) => {
+                let date = data.date;
+                let hasPrevious = !!(stats[index + 1] && stats[index + 1][type]);
+                let hasCurrent = !!(data[type]);
+
+                let previous = hasPrevious ? stats[index + 1][type].avis : { nbStagiairesContactes: 0, nbAvis: 0 };
+                let current = hasCurrent ? data[type].avis : { nbStagiairesContactes: 0, nbAvis: 0 };
+
+                return {
+                    date,
+                    nbAvis: current.nbAvis - previous.nbAvis,
+                    nbStagiairesContactes: current.nbStagiairesContactes - previous.nbStagiairesContactes,
+                };
+            })
+            .reduce((acc, data) => {
+                let selector = moment(data.date).endOf(groupBy).format('YYYY-MM-DDTHH:mm:ss.SSS');
+                let group = acc.find(v => v.date === selector);
+                if (!group) {
+                    group = {
+                        date: selector,
+                        nbStagiairesContactes: 0,
+                        nbAvis: 0,
+                    };
+                    acc.push(group);
+                }
+
+                group.nbStagiairesContactes += data.nbStagiairesContactes;
+                group.nbAvis += data.nbAvis;
+
+                return acc;
+
+            }, [])
+            .map(data => {
+                return {
+                    x: data.date,
+                    y: divide(data.nbAvis * 100, data.nbStagiairesContactes)
+                };
+            }),
         };
     };
 
     render() {
-        let { query } = this.props;
-        let regional = this.props.stats.avis.regional;
-        let national = this.props.stats.avis.national;
-        let stats = regional || national;
+        let { query, stats } = this.props;
+        let latest = stats[0];
+        let regional = latest.regional;
+        let national = latest.national;
+        let current = regional || national;
 
+        let groupBy = this.getGroupByUnit(query.debut, query.fin);
         return (
             <div className="Stats">
                 <div className="main d-flex justify-content-center justify-content-lg-between">
@@ -52,20 +102,20 @@ export default class GlobalStats extends React.Component {
                             </>
                             }
                         </div>
-                        <div className="d-flex justify-content-around text-center flex-wrap">
+                        <div className="d-flex justify-content-around flex-wrap">
                             <div className="stats">
                                 <div className="name">Total avis déposés</div>
-                                <div className="value">{latest(stats.nbQuestionnairesValidees)}</div>
+                                <div className="value">{current.avis.nbAvis}</div>
                             </div>
                             <div className="stats">
                                 <div className="name">Taux répondants</div>
                                 <div>
                                     <span className="value highlighted">
-                                        {percentage(latest(stats.nbQuestionnairesValidees), latest(stats.nbStagiairesContactes))}
+                                        {percentage(current.avis.nbAvis, current.avis.nbStagiairesContactes)}
                                     </span>
                                     {regional &&
-                                    <span className="value compare ml-3">
-                                        {percentage(latest(national.nbQuestionnairesValidees), latest(national.nbStagiairesContactes))}*
+                                    <span className="value compare">
+                                        {percentage(national.avis.nbAvis, national.avis.nbStagiairesContactes)}*
                                     </span>
                                     }
                                 </div>
@@ -75,10 +125,12 @@ export default class GlobalStats extends React.Component {
                     <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }}>
                         <HistoryLines
                             data={[
-                                this.convertToLine('Nationale', national.nbQuestionnairesValidees),
-                                ...(regional ? [this.convertToLine('Régional', regional.nbQuestionnairesValidees)] : []),
+                                this.convertToLine('national', stats, groupBy),
+                                ...(regional ? [this.convertToLine('regional', stats, groupBy)] : []),
                             ]}
-                            colors={[...(regional ? ['rgba(35, 47, 56, 0.4)'] : []), '#F28017']}
+                            colors={regional ? ['rgba(35, 47, 56, 0.4)', '#F28017'] : ['rgba(35, 47, 56, 0.4)']}
+                            groupBy={groupBy}
+                            format={v => `${v}%`}
                         />
                     </div>
                 </div>

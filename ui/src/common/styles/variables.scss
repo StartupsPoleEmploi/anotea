@@ -43,7 +43,7 @@ $color-yellow-60: #F7D383;
 $color-yellow-30: #F6F0E0;
 $color-yellow-10: #FDF7EA;
 
-$shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
+$shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
 
 @mixin themes() {
   &.green {

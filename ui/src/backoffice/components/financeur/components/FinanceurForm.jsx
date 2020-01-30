@@ -90,7 +90,7 @@ export default class FinanceurForm extends React.Component {
         });
     }
 
-    getFormParametersFromQuery = () => {
+    getParametersFromQuery = () => {
         let { query } = this.props;
         return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'numeroFormation', 'debut', 'fin']);
     };
@@ -114,13 +114,13 @@ export default class FinanceurForm extends React.Component {
 
     isFormSynchronizedWithQuery = () => {
         let data = _(this.getFormParameters()).omitBy(_.isNil).value();
-        return this.isFormLoading() || _.isEqual(data, this.getFormParametersFromQuery());
+        return this.isFormLoading() || _.isEqual(data, this.getParametersFromQuery());
     };
 
     updatePeriode = periode => {
         return new Promise(resolve => {
             this.setState({
-                periode: Object.assign({}, periode),
+                periode,
             }, resolve);
         });
     };

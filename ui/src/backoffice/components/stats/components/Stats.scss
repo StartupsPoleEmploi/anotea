@@ -2,9 +2,30 @@
 
 .Backoffice .Stats {
 
-  .main {
+  .name {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+  }
 
+  .value {
+    font-size: 2rem;
+    font-weight: $font-weight-boldest;
+
+    &.highlighted {
+      color: $color-orange
+    }
+
+    &.compare {
+      font-size: 0.875rem;
+      padding-left: 0.5rem;
+      color: $color-black-60;
+      font-weight: $font-weight-normal;
+    }
+  }
+
+  .main {
     @include box();
+    box-shadow: 0 0 20px 0 rgba(55, 57, 76, 0.1) !important;
 
     &.with-details {
       border-bottom-left-radius: 0;
@@ -14,8 +35,7 @@
 
     .title {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
       margin-bottom: 1rem;
       font-size: 1.5rem;
       font-weight: $font-weight-boldest;
@@ -25,75 +45,49 @@
       }
 
       .description {
-        font-size: 1.125rem;
+        margin-left: 0.5rem;
+        font-size: 1rem;
         color: $color-black-60;
-        font-weight: $font-weight-bold;
+        font-weight: $font-weight-normal;
       }
     }
 
     .stats {
-      padding-right: 1rem;
       padding-left: 1rem;
+      padding-right: 1rem;
       border-right: 1px solid $color-grey-25;
       flex-grow: 1;
-      text-align: center;
+
+      &:first-child {
+        padding-left: 0;
+      }
 
       &:last-child {
         border-right: none;
-      }
-
-      .name {
-        font-size: 0.875rem;
-        text-transform: uppercase;
-      }
-
-      .value {
-        font-size: 2rem;
-        font-weight: $font-weight-boldest;
-
-        &.highlighted {
-          color: $color-orange
-        }
-
-        &.compare {
-          font-size: 1.125rem;
-          color: $color-black-60;
-          font-weight: $font-weight-normal;
-        }
       }
     }
   }
 
   .details {
-    background-color: $color-grey-5;
-    padding: 1rem;
-    border-right: 2px solid $color-white;
-    box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.15);
-    flex-grow: 0.3;
-
-    &:last-child {
-      border-bottom-right-radius: 8px;
-      border-right: unset;
-    }
-
-    &:first-child {
-      flex-grow: 0.4;
-      border-bottom-left-radius: 8px;
-    }
+    display: flex;
+    justify-content: space-between;
 
     .stats {
+      background-color: $color-grey-5;
+      padding: 1rem;
+      border-right: 1px solid $color-white;
+      box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.15);
+      flex-grow: 1;
 
-      .name {
-        font-size: 0.875rem;
-        text-transform: uppercase;
+      &:first-child {
+        border-bottom-left-radius: 8px;
       }
 
-      .value {
-        font-size: 2rem;
-        font-weight: $font-weight-boldest;
+      &:last-child {
+        border-bottom-right-radius: 8px;
+        border-right: unset;
       }
     }
   }
-
 
 }

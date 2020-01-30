@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { divide, latest, percentage } from '../../../services/statsService';
+import { percentage } from '../../../services/statsService';
 
 export default class FormationStats extends React.Component {
 
@@ -11,9 +11,11 @@ export default class FormationStats extends React.Component {
     };
 
     render() {
-        let regional = this.props.stats.api.regional;
-        let national = this.props.stats.api.national;
-        let stats = regional || national;
+        let { stats } = this.props;
+        let latest = stats[0];
+        let regional = latest.regional;
+        let national = latest.national;
+        let current = regional || national;
 
         return (
             <div className="Stats">
@@ -21,24 +23,24 @@ export default class FormationStats extends React.Component {
                     <div className="title">
                         <div>
                             <i className="fas fa-sign-out-alt a-icon"></i>
-                            Formations en ligne
+                            Formations
                         </div>
-                        <div className="description">Catalogue intercarif</div>
+                        <div className="description">(source Intercarif)</div>
                     </div>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
-                            <div className="name">Nombre</div>
-                            <div className="value">{latest(stats.nbSessions)}</div>
+                            <div className="name">Formations en ligne</div>
+                            <div className="value">{current.api.nbSessions}</div>
                         </div>
                         <div className="stats">
-                            <div className="name">Taux</div>
+                            <div className="name">Formation avec un avis</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(latest(stats.nbAvisRestituables), latest(stats.nbAvis))}
+                                    {percentage(current.api.nbSessionsAvecAvis, current.api.nbSessions)}
                                 </span>
                                 {regional &&
-                                <span className="value compare ml-3">
-                                    {percentage(latest(national.nbAvisRestituables), latest(national.nbAvis))}*
+                                <span className="value compare">
+                                    {percentage(national.nbSessionsAvecAvis, national.nbSessions)}*
                                 </span>
                                 }
                             </div>
@@ -46,13 +48,9 @@ export default class FormationStats extends React.Component {
                     </div>
                 </div>
                 <div className="details">
-                    <div className="d-flex justify-content-start flex-wrap">
-                        <div className="stats">
-                            <div className="name">Nombre d'avis moyen par session</div>
-                            <div className="value">
-                                {divide(latest(stats.nbAvisRestituables), latest(stats.nbAvis))}
-                            </div>
-                        </div>
+                    <div className="stats">
+                        <div className="name">Nombre d'avis moyen par session</div>
+                        <div className="value">{current.api.nbAvisParSession}</div>
                     </div>
                 </div>
             </div>

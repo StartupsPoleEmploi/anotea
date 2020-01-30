@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { latest, percentage } from '../../../services/statsService';
+import { percentage } from '../../../services/statsService';
 
 export default class OrganismeStats extends React.Component {
 
@@ -11,12 +11,11 @@ export default class OrganismeStats extends React.Component {
     };
 
     render() {
-        let regional = this.props.stats.organismes.regional;
-        let national = this.props.stats.organismes.national;
-        let stats = regional || national;
-
-        let avis = this.props.stats.avis;
-        let avisStats = avis.regional || avis.national;
+        let { stats } = this.props;
+        let latest = stats[0];
+        let regional = latest.regional;
+        let national = latest.national;
+        let current = regional || national;
 
         return (
             <div className="Stats">
@@ -30,21 +29,21 @@ export default class OrganismeStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
                             <div className="name">Nombre</div>
-                            <div className="value">{latest(stats.organismesActifs)}</div>
+                            <div className="value">{current.organismes.nbOrganismesActifs}</div>
                         </div>
                         <div className="stats">
                             <div className="name">Avis répondus</div>
-                            <div className="value">{latest(stats.nbReponses)}</div>
+                            <div className="value">{current.avis.nbReponses}</div>
                         </div>
                         <div className="stats">
                             <div className="name">Taux réponse</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(latest(stats.nbReponses), latest(avisStats.nbQuestionnairesValidees))}
+                                    {percentage(current.avis.nbReponses, current.avis.nbAvis)}
                                 </span>
                                 {regional &&
-                                <span className="value compare ml-3">
-                                    {percentage(latest(national.nbReponses), latest(avisStats.nbQuestionnairesValidees))}*
+                                <span className="value compare">
+                                    {percentage(current.avis.nbReponses, current.avis.nbAvis)}*
                                 </span>
                                 }
                             </div>

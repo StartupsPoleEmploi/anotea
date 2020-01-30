@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { latest, percentage } from '../../../services/statsService';
+import { percentage } from '../../../services/statsService';
 
 export default class CommentairesStats extends React.Component {
 
@@ -11,9 +11,11 @@ export default class CommentairesStats extends React.Component {
     };
 
     render() {
-        let regional = this.props.stats.avis.regional;
-        let national = this.props.stats.avis.national;
-        let stats = regional || national;
+        let { stats } = this.props;
+        let latest = stats[0];
+        let regional = latest.regional;
+        let national = latest.national;
+        let current = regional || national;
 
         return (
             <div className="Stats">
@@ -27,17 +29,17 @@ export default class CommentairesStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
                             <div className="name">Commentaires</div>
-                            <div className="value">{latest(stats.nbAvisAvecCommentaire)}</div>
+                            <div className="value">{current.avis.nbAvisAvecCommentaire}</div>
                         </div>
                         <div className="stats">
                             <div className="name">Taux</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(latest(stats.nbAvisAvecCommentaire), latest(stats.nbQuestionnairesValidees))}
+                                    {percentage(current.avis.nbAvisAvecCommentaire, current.avis.nbAvis)}
                                 </span>
                                 {regional &&
-                                <span className="value compare ml-3">
-                                    {percentage(latest(national.nbAvisAvecCommentaire), latest(national.nbQuestionnairesValidees))}*
+                                <span className="value compare">
+                                    {percentage(national.avis.nbAvisAvecCommentaire, national.avis.nbAvis)}*
                                 </span>
                                 }
                             </div>
@@ -45,30 +47,39 @@ export default class CommentairesStats extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="d-flex justify-content-between">
-                    <div className="details">
-                        <div className="stats">
-                            <div className="name">Positifs ou neutres</div>
-                            <div className="value">
-                                {latest(stats.nbCommentairesPositifs)}
-                            </div>
-                        </div>
+                <div className="details">
+                    <div className="stats">
+                        <div className="name">Positifs ou neutres</div>
+                        <span className="value">
+                            {percentage(current.avis.nbCommentairesPositifs, current.avis.nbAvisAvecCommentaire)}
+                        </span>
+                        {regional &&
+                        <span className="value compare">
+                            {percentage(national.avis.nbCommentairesPositifs, national.avis.nbAvisAvecCommentaire)}*
+                        </span>
+                        }
                     </div>
-                    <div className="details">
-                        <div className="stats">
-                            <div className="name">Négatifs</div>
-                            <div className="value">
-                                {latest(stats.nbCommentairesNegatifs)}
-                            </div>
-                        </div>
+                    <div className="stats">
+                        <div className="name">Négatifs</div>
+                        <span className="value">
+                            {percentage(current.avis.nbCommentairesNegatifs, current.avis.nbAvisAvecCommentaire)}
+                        </span>
+                        {regional &&
+                        <span className="value compare">
+                            {percentage(national.avis.nbCommentairesNegatifs, national.avis.nbAvisAvecCommentaire)}*
+                        </span>
+                        }
                     </div>
-                    <div className="details">
-                        <div className="stats">
-                            <div className="name">Rejetés</div>
-                            <div className="value">
-                                {latest(stats.nbCommentairesRejetes)}
-                            </div>
-                        </div>
+                    <div className="stats">
+                        <div className="name">Rejetés</div>
+                        <span className="value">
+                            {percentage(current.avis.nbCommentairesRejetes, current.avis.nbAvisAvecCommentaire)}
+                        </span>
+                        {regional &&
+                        <span className="value compare">
+                            {percentage(national.avis.nbCommentairesRejetes, national.avis.nbAvisAvecCommentaire)}*
+                        </span>
+                        }
                     </div>
                 </div>
             </div>
