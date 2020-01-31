@@ -89,7 +89,7 @@ module.exports = async (db, logger, file) => {
 
             let differences = getDifferences(previous, next);
             if (_.isEmpty(differences)) {
-                return previous.meta;
+                return previous.meta || {};
             }
 
             let meta = _.cloneDeep(previous.meta) || {};
