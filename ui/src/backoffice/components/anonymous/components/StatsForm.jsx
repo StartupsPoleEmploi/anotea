@@ -150,7 +150,7 @@ export default class StatsForm extends React.Component {
                             optionKey="codeRegion"
                             label={option => option.nom}
                             placeholder={'Toutes les régions'}
-                            trackingId="Re  gions"
+                            trackingId="Regions"
                             onChange={option => {
                                 return this.updateSelectBox('regions', option);
                             }}

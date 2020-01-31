@@ -29,7 +29,7 @@ export default class Periode extends React.Component {
     }
 
     render() {
-        let { periode, min, max } = this.props;
+        let { periode, min, max, depth } = this.props;
 
         return (
             <div className="Periode d-flex justify-content-around align-items-center">
@@ -38,14 +38,14 @@ export default class Periode extends React.Component {
                     value={periode.debut}
                     min={min}
                     max={max}
-                    depth={'months'}
+                    depth={depth || 'days'}
                     onChange={date => this.onDateChange('debut', date)}
                 />
                 <span className="au">à</span>
                 <Date
                     value={periode.fin}
                     min={periode.debut || min}
-                    depth={'months'}
+                    depth={depth || 'days'}
                     onChange={date => this.onDateChange('fin', date)}
                 />
                 <span className="clear" onClick={() => this.onReset()}>
