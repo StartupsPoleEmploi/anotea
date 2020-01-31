@@ -1,6 +1,6 @@
 apps:
   - name: backend
-    script: 'npm run start:watch'
+    script: 'npm run start'
     cwd: backend
     instances: 1
     watch: false

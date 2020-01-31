@@ -1,33 +1,34 @@
-$(document).ready(() => {
+$(document).ready(function() {
 
-    $.get('/api/regions', data => {
+    $.get('/api/regions', function(data) {
         let html = '';
-        data.forEach(region => {
-            html += `<option value='${region.email}'>${region.nom}</option>`;
-        });
+        for (var i = 0; i < data.length; i++) {
+            var region = data[i];
+            html += '<option value="' + region.email + '">' + region.nom + '</option>';
+        }
+
         $('#region-select').html(html);
     });
 
-    const closeModal = () => {
+    const closeModal = function() {
         $('.modal').hide();
     };
 
-    const openModal = () => {
+    const openModal = function() {
         $('.modal').show();
     };
 
-    $('.open-modal-contact').click(e => {
+    $('.open-modal-contact').click(function(e) {
         e.preventDefault();
         openModal();
     });
 
-    $('.modal-contact .button.cancel').click(() => {
+    $('.modal-contact .button.cancel').click(function() {
         closeModal();
     });
 
-    $('.modal-contact .button.ok').click(() => {
+    $('.modal-contact .button.ok').click(function() {
         closeModal();
-        //console.log($('#region-select').val());
-        location.href = `mailto:${$('#region-select').val()}`;
+        location.href = 'mailto:' + $('#region-select').val();
     });
 });

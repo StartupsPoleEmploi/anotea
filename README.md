@@ -49,10 +49,12 @@ Les améliorations apportées à la réconciliation sont listées dans le [CHANG
 ## Développement
 Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)
 
-Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 10 soit installé. 
+Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 12+ soit installé. 
+
+Il est également conseillé d'installer docker 18+ et docker-compose 1.25+
 
 Anotea est composé de deux projets : 
-- `backend` qui contient un serveur node.js et expose des serveurs via [une API](API.md)
+- `backend` qui contient un serveur node.js et expose des API
 - `ui` qui contient les interfaces graphiques
 
 ### Démarrer l'application
@@ -64,9 +66,11 @@ npm install
 npm start
 ```
 
-Pour plus d'options démarrage, vous pouvez consulter la [Boite à outils](#Boite-à-outils)
+Par défaut les deux projets sont configurés pour prendre en compte automatiquement les modifications du code source.
 
-Vous pouvez ensuite créer un jeu de données en local au moyen de la commande suivante:
+#### Jeu de données
+
+Vous pouvez créer un jeu de données en local au moyen de la commande suivante:
 
 ```
 cd backend
@@ -76,52 +80,29 @@ node src/jobs/data/dataset --drop
 Ce script va générer un ensemble de données permettant à l'application de fonctionner.
 Le sortie console du script vous donnera les instructions pour vous connecter à l'application.
 
-### Boite à outils
-
 #### Mode développement avancé
 
-Afin d'éviter de devoir lancer tous les projets à la main, il est possible de tous les démarrer en une seule commande :
+Afin d'éviter de devoir lancer les deux projets à la main, il est possible de les démarrer en une seule commande.
+
+Ce script utilise `pm2`, il est donc nécessaire de l'installer auparavant
 
 ```
 npm install pm2 -g
+```
+
+puis 
+ 
+```
 bash dev.sh
 ```
 
-Pour stopper les projets : 
+Pour éviter que le script installe les dépendances npm à chaque fois:
 
 ```
-pm2 delete dev.yml
+SKIP_NPM_INSTALL=true bash dev.sh
 ```
 
-#### Tests
-
-Par défaut, les tests d'intégration utilisent la base MongoDB démarrée sur la port 27017.
-Afin que les tests s'éxecutent rapidement, vous pouvez démarrer un MongoDB in-memory :
-
-```
-mongod --dbpath <path to data dir> --port 27018 --storageEngine=ephemeralForTest
-```
-
-Vous pouvez ensuite lancer les tests avec la commande suivante :
-
-```
-cd backend
-ANOTEA_MONGODB_URI=mongodb://localhost:27018/anotea?w=1 npm run test
-```
-
-#### Envoyer des emails en local
-
-Certains fonctionnalités envoient des emails et ont donc besoin d'un serveur SMTP.
-Vous pouvez démarrer en local un serveur MailHog :
-
-```
-cd backend
-npm run smtp:start
-```
-
-Si vous avez démarré l'application via Docker un container MailHog est automatiquement lancé. 
-
-### Démarrer l'application via Docker
+#### Docker
 
 Il est possible de démarrer Anotéa au sein de containers Docker.
 
@@ -137,9 +118,9 @@ Cette commande va construire et démarrer plusieurs containers :
 
 - Un container `nginx`, reverse proxy qui est le point d'entrée de l'application pour tous les appels http
 - Un container `backend` contenant le serveur node.js
+- Un container `ui` contenant les interfaces graphiques
 - Un container `mongodb`  
-- Des containers pour servir les ressources web statiques (`widget`, `backoffice`, `questionnaire`,...)
-- ...
+- Des containers pour gérer les logs (EFK)  
 
 ![Anotea Docker_Diagram](./misc/doc/diagram/anotea-docker-diagram.svg)
 
@@ -152,8 +133,6 @@ docker build -t anotea_script .
 docker run anotea_script bash -c "node src/jobs/<nom du script>"
 ```
 
-#### Adapter la configuration Docker en local
-
 Il est possible de fournir une configuration spécifique dans le fichier `docker-compose.local.yml` :
 
 ```sh
@@ -162,12 +141,50 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml up
 
 Les fichiers seront fusionnés avec la configuration par défaut.
 
-Vous pouvez prendre exemple sur les fichiers `docker-compose.override.yml` et `docker-compose.test.yml`
+Vous pouvez prendre exemple sur les fichiers `docker-compose.override.yml` et `docker-compose.test.yml`.
+
+Pour information, c'est le mécanisme utilisé pour configurer les différents environnements.
 
 Pour plus d'informations sur le mécanisme de surcharge de docker-compose voir [https://docs.docker.com/compose/extends/](https://docs.docker.com/compose/extends/) 
 
+#### Envoyer des emails en local
 
-Par exemple il est possible d'ajouter d'une variable d'environnement dans le backend
+Certains fonctionnalités envoient des emails et ont donc besoin d'un serveur SMTP.
+Vous pouvez démarrer en local un serveur MailHog (nécessite Docker) :
+
+```
+cd backend
+npm run smtp:start
+```
+
+Si vous avez démarré l'application via Docker un container MailHog est automatiquement lancé. 
+
+
+### Tests
+
+Pour lancer les tests, il faut executer la commande
+ 
+```
+cd backend
+npm run test
+```
+
+ou 
+
+```
+cd backend
+npm run test:unit && npm run test:integration
+```
+
+Attention, les tests d'intégration partent du principe qu'une base MongoDB est démarrée sur la port 27017.
+
+
+Une commande permet également de lancer tous les tests en démarrant un MongoDB in-memory sur le port 27018 (nécessite Docker)  :
+
+```
+cd backend
+npm run test:all
+```
 
 <p align="center">
 <img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="20%" height="20%" />

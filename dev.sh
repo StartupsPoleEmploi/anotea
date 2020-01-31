@@ -24,6 +24,7 @@ function start_projects() {
 
 function stop_projects() {
     pm2 stop dev.yml
+    pm2 delete dev.yml
 }
 
 function show_logs() {
