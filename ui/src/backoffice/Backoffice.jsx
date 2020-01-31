@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import jwtDecode from 'jwt-decode';
-import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from '../common/utils/http-client';
 import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
@@ -10,13 +9,13 @@ import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
 import AnonymousRoutes from './components/anonymous/AnonymousRoutes';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
-import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './Backoffice.scss';
 import Header from './components/common/header/Header';
 import BackofficeContext from './BackofficeContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
 import WithAnalytics from '../common/components/analytics/WithAnalytics';
-import StatsRoutes from './components/stats/StatsRoutes';
+import { Chunk } from './components/common/Chunk';
+import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 
 class Backoffice extends Component {
 
@@ -78,48 +77,61 @@ class Backoffice extends Component {
         let { account, message } = this.state;
         let { router } = this.props;
         let backoffices = {
-            moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
-                headerItems: <ModerateurHeaderItems router={router} />,
-                routes: <ModerateurRoutes router={router} />,
+            moderateur: {
                 theme: {
                     backgroundColor: 'blue',
                     buttonColor: 'blue',
-                }
-            }),
-            financeur: () => ({
-                defaultPath: '/admin/financeur/avis/charts',
-                headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes router={router} />,
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<ModerateurHeaderItems router={router} />)} />,
+                        routes: <Chunk name="moderateur" load={() => (<ModerateurRoutes router={router} />)} />
+                    };
+                },
+            },
+            financeur: {
                 theme: {
                     backgroundColor: 'green',
                     buttonColor: 'green',
-                }
-            }),
-            organisme: () => ({
-                defaultPath: '/admin/organisme/avis/charts',
-                headerItems: <OrganismeHeaderItems />,
-                routes: <OrganismeRoutes router={router} />,
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<FinanceurHeaderItems />)} />,
+                        routes: <Chunk name="financeur" load={() => (<FinanceurRoutes router={router} />)} />
+                    };
+                },
+            },
+            organisme: {
                 theme: {
                     backgroundColor: 'black',
                     buttonColor: 'orange',
-                }
-            }),
-            anonymous: () => ({
-                defaultPath: '/admin/login',
-                headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />,
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<OrganismeHeaderItems />)} />,
+                        routes: <Chunk name="organisme" load={() => (<OrganismeRoutes router={router} />)} />
+                    };
+                },
+            },
+            anonymous: {
                 theme: {
                     backgroundColor: 'black',
                     buttonColor: 'orange',
-                }
-            })
+                },
+                components: () => {
+                    return {
+                        header: <div />,
+                        routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />
+                    };
+                },
+            },
         };
 
-        let layout = backoffices[account.profile]();
+        let { theme, components } = backoffices[account.profile];
+        let { header, routes } = components();
         let context = {
             account,
-            theme: layout.theme,
+            theme,
             showMessage: this.showGlobalMessage,
         };
 
@@ -127,21 +139,14 @@ class Backoffice extends Component {
             <WithAnalytics category={`backoffice/${account.profile}`}>
                 <BackofficeContext.Provider value={context}>
                     <div className="Backoffice">
-                        <Switch>
-                            <Redirect exact from="/" to={layout.defaultPath} />
-                            <Redirect exact from="/admin" to={layout.defaultPath} />
-                            <Redirect exact from={`/admin/${account.profile}`} to={layout.defaultPath} />
-                        </Switch>
-
-                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />
-
-                        {layout.routes}
-
-                        <StatsRoutes router={router} />,
-
-                        {message &&
-                        <GlobalMessage message={message} onClose={() => this.setState({ message: null })}
+                        <Header
+                            items={header}
+                            defaultPath={`/admin/${account.profile}`}
+                            onLogout={this.onLogout}
                         />
+                        {routes}
+                        {message &&
+                        <GlobalMessage message={message} onClose={() => this.setState({ message: null })} />
                         }
                     </div>
                 </BackofficeContext.Provider>
