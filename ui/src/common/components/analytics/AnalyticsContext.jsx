@@ -1,5 +1,6 @@
 /* global ga */
 import React from 'react';
+import { log } from '../../../backoffice/utils/logger';
 
 let isEnabled;
 
@@ -25,7 +26,7 @@ const onRouteChanged = callback => {
 export const initialize = (trackingId, options = {}) => {
 
     isEnabled = !!trackingId;
-    console.log(`GoogleAnalytics enabled=${isEnabled}`);
+    log(`GoogleAnalytics enabled=${isEnabled}`);
 
     if (!isEnabled) {
         return;

@@ -1,9 +1,11 @@
+import { log } from '../../backoffice/utils/logger';
+
 let isEnabled;
 
 export const initialize = id => {
 
     isEnabled = !!id;
-    console.log(`Hotjar enabled=${isEnabled}`);
+    log(`Hotjar enabled=${isEnabled}`);
 
     if (!isEnabled) {
         return;
