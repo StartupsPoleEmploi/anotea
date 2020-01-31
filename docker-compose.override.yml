@@ -63,7 +63,7 @@ services:
     image: anotea_fluentbit
     container_name: anotea_fluentbit
     build:
-      context: misc/efk/fluentbit
+      context: misc/docker/efk/fluentbit
     ports:
       - "127.0.0.1:24224:24224"
     environment:
@@ -79,7 +79,7 @@ services:
     image: anotea_elasticsearch
     container_name: anotea_elasticsearch
     build:
-      context: misc/efk/elasticsearch
+      context: misc/docker/efk/elasticsearch
     ports:
       - "127.0.0.1:9200:9200"
     environment:
@@ -91,7 +91,7 @@ services:
     image: anotea_kibana
     container_name: anotea_kibana
     build:
-      context: misc/efk/kibana
+      context: misc/docker/efk/kibana
     ports:
       - "127.0.0.1:5601:5601"
     depends_on:

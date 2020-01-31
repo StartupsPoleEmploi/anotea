@@ -49,7 +49,9 @@ Cette API permet aux utilisateurs de l'application Kairos de se connecter automa
 
 Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/kairos/doc
 
-![Kairos specifications](misc/doc/kairos/api-kairos.svg)
+Le processus d'authentification est le suivant :
+
+![Kairos specifications](kairos/api-kairos.svg)
 
 ### Authentification
 
@@ -65,3 +67,19 @@ Le token doit être crée en générant un token JWT avec les claims iat et sub 
 
 - `iat` : Nombre de secondes depuis l'Unix Epoch UTC.
 - `sub` : Votre API Key
+
+
+## Backoffice
+
+L'API backoffice fournit les outils permettant aux modérateurs, financeurs et organismes de gérer les avis.
+Cette API est privée et n'a pas pour l'instant vocation à être consommée par un partenaire externe.
+
+### Authentification
+
+Cette API requière une authentification de type JWT.
+
+Le header Authorization est de la forme suivante :
+
+```
+Authorization: "Bearer <token>"
+```
