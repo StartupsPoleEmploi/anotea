@@ -81,7 +81,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
         let stream = await db.collection('accounts').find({
             profile: 'organisme',
-            codeRegion: codeRegion,
+            codeRegion,
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         }, { token: 0 }).stream();
 
