@@ -35,7 +35,7 @@ execute(async ({ db, logger, sendSlackNotification }) => {
 
     if (stats.archived > 0) {
         sendSlackNotification({
-            text: `[STAGIAIRE] ${stats.archived} stagiaires ont été archivé(s)`,
+            text: `[AVIS] ${stats.archived} avis ont été archivé(s)`,
         });
     }
 
