@@ -55,6 +55,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         });
     });
 
+
+    it('should update certifinfos (stagiaire no differences)', async () => {
+
+        let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos.csv');
+        await insertIntoDatabase('stagiaires', newStagiaire({
+            _id: '1234',
+            formation: {
+                numero: 'F_XX_XX',
+                certifications: [{ certif_info: '10013' }, { certif_info: '74037' }],
+            },
+        }));
+
+        await patchCertifInfos(db, logger, certifinfosFile);
+
+        let stagiaire = await db.collection('stagiaires').findOne({ _id: '1234' });
+
+        assert.ok(stagiaire.meta);
+    });
+
     it('should update certifinfos (avis)', async () => {
 
         let db = await getTestDatabase();
