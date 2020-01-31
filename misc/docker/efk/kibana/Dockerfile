@@ -4,6 +4,8 @@ FROM docker.elastic.co/kibana/kibana-oss:6.2.3
 USER root
 RUN yum -y install wget curl && yum clean all
 
+RUN sh -c "curl https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry && chmod +x /usr/local/bin/retry"
+
 # Add your kibana plugins setup here
 # Example: RUN kibana-plugin install <name|url>
 
@@ -13,6 +15,7 @@ RUN mv /tmp/jq /usr/local/bin
 
 USER kibana
 
+COPY app/scripts /opt/scripts
 COPY app/kibana.yml /usr/share/kibana/config/kibana.yml
 
 

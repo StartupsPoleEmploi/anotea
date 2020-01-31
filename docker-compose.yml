@@ -5,7 +5,7 @@ services:
     image: anotea_nginx
     container_name: anotea_nginx
     build:
-      context: misc/nginx
+      context: misc/docker/nginx
     ports:
       - 80:80
     mem_limit: 64m

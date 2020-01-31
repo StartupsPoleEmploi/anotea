@@ -7,46 +7,21 @@ Vous êtes donc certains que les avis que vous consultez sont fiables.
 
 ## Comment cela fonctionne-t-il ?
 
-Dans le cadre de sa recherche d'emploi, une personne peut suivre une formation financée par Pôle Emploi et/ou par la région dans laquelle il habite.
+Dans le cadre de sa recherche d'emploi, une personne peut suivre une formation financée par Pôle Emploi et/ou par 
+la région dans laquelle il habite.
 
-Lorsque la formation est terminée, Anotéa envoie par mail un questionnaire à cette personne — qu'on appelle stagiaire —  pourqu'il puisse déposer un avis sur la formation (la réponse à ce questionnaire est facultative).
+Lorsque la formation est terminée, Anotéa envoie par mail un questionnaire à cette personne — qu'on appelle stagiaire —  
+pourqu'il puisse déposer un avis sur la formation (la réponse à ce questionnaire est facultative).
 
-Une fois l'avis déposé et anonymisé, il est potentiellement consultable sur tous les sites qui utilisent Anotéa (ex: https://labonneformation.pole-emploi.fr)
+Une fois l'avis déposé et anonymisé, il est [réconcilié](misc/doc/RECONCILIATION.md) afin d'être potentiellement consultable 
+sur tous les sites qui utilisent Anotéa (ex: https://labonneformation.pole-emploi.fr).  
 
-Afin de récupérer les avis, ces sites peuvent utiliser deux canaux fournis par Anotéa : l'[api](API.md) et le [widget](WIDGET.md)
-
-### En détails 
+Ces sites utilisent deux canaux fournis par Anotéa : l'[api](misc/doc/API.md) et le [widget](misc/doc/WIDGET.md) 
 
 ![Anotea Diagram](./misc/doc/diagram/anotea-diagram.svg)
 
-#### Réconciliation
-
-Les formations suivies par les stagiaires sont référencées dans un catalogue.
-
-Chaque formation peut être dispensée par plusieurs organismes formateurs, dans plusieurs lieux et à des dates différentes.
-
-Quand un stagiaire dépose un avis sur une formation, il le fait donc pour
-
- 1. un organisme formateur
- 2. un lieu de formation (ex: 45000)
- 3. une période (ex: du 01/01/2018 au 31/01/2018).
-
-Ces trois critères représentent une session de formation. 
-
-Le stagiaire étant contacté à la fin de la session, l'avis est donc déposé sur une session terminée. 
-
-Le but de la réconciliation va être d'identifier dans le catalogue de formations, des sessions similaires en cours ou à venir. 
-Une session est considérée comme similaire si elle possède
- 
- - le même `siren` que l'organisme formateur
- - le même lieu de formation (`code postal`)
- - au moins un `formacode` ou `certifinfo` identique
-        
-Une fois que les sessions ont été identifiées, l'avis déposé est alors rattaché à ces sessions.
-
-Les améliorations apportées à la réconciliation sont listées dans le [CHANGELOG](CHANGELOG.md#Réconciliation) 
-
 ## Développement
+
 Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)
 
 Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 12+ soit installé. 
@@ -77,7 +52,8 @@ cd backend
 node src/jobs/data/dataset --drop
 ```
 
-Ce script va générer un ensemble de données permettant à l'application de fonctionner.
+Ce script part du principe qu'une base MongoDB est démarrée sur la port 27017 et va générer 
+un ensemble de données permettant à l'application de fonctionner.
 Le sortie console du script vous donnera les instructions pour vous connecter à l'application.
 
 #### Mode développement avancé
@@ -102,50 +78,7 @@ Pour éviter que le script installe les dépendances npm à chaque fois:
 SKIP_NPM_INSTALL=true bash dev.sh
 ```
 
-#### Docker
-
-Il est possible de démarrer Anotéa au sein de containers Docker.
-
-Cette option permet d'avoir une environnement quasiment identique à celui de la production (reverse proxy,...).
-
-Nous l'utilisons la plupart du temps pour reproduire une anomalie liée au déploiement.
-
-```
-docker-compose up --build
-```
-
-Cette commande va construire et démarrer plusieurs containers :
-
-- Un container `nginx`, reverse proxy qui est le point d'entrée de l'application pour tous les appels http
-- Un container `backend` contenant le serveur node.js
-- Un container `ui` contenant les interfaces graphiques
-- Un container `mongodb`  
-- Des containers pour gérer les logs (EFK)  
-
-![Anotea Docker_Diagram](./misc/doc/diagram/anotea-docker-diagram.svg)
-
-L'application est ensuite accessible à l'url `http://localhost`
-
-Pour executer un script dans un conteneur Docker, il faut lancer la commande :
-
-```sh
-docker build -t anotea_script .
-docker run anotea_script bash -c "node src/jobs/<nom du script>"
-```
-
-Il est possible de fournir une configuration spécifique dans le fichier `docker-compose.local.yml` :
-
-```sh
-docker-compose -f docker-compose.yml -f docker-compose.local.yml up
-```
-
-Les fichiers seront fusionnés avec la configuration par défaut.
-
-Vous pouvez prendre exemple sur les fichiers `docker-compose.override.yml` et `docker-compose.test.yml`.
-
-Pour information, c'est le mécanisme utilisé pour configurer les différents environnements.
-
-Pour plus d'informations sur le mécanisme de surcharge de docker-compose voir [https://docs.docker.com/compose/extends/](https://docs.docker.com/compose/extends/) 
+Il également possible de démarrer l'application au sein de [containers Docker](misc/doc/DOCKER.md). 
 
 #### Envoyer des emails en local
 
@@ -162,7 +95,7 @@ Si vous avez démarré l'application via Docker un container MailHog est automat
 
 ### Tests
 
-Pour lancer les tests, il faut executer la commande
+Pour lancer les tests, il faut exécuter la commande
  
 ```
 cd backend
@@ -177,7 +110,6 @@ npm run test:unit && npm run test:integration
 ```
 
 Attention, les tests d'intégration partent du principe qu'une base MongoDB est démarrée sur la port 27017.
-
 
 Une commande permet également de lancer tous les tests en démarrant un MongoDB in-memory sur le port 27018 (nécessite Docker)  :
 
