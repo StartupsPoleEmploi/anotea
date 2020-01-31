@@ -140,7 +140,7 @@ module.exports = {
         return _.merge({
             _id: new ObjectID(),
             token: randomize('token'),
-            campaign: 'test',
+            campaign: 'test-campaign',
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur',

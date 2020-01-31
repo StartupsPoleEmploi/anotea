@@ -19,7 +19,7 @@ module.exports = async db => {
                 nbOrganismesContactes: o.nbOrganismesContactes,
                 nbMailsEnvoyes: o.mailsEnvoyes,
                 nbOuvertureMails: o.ouvertureMails,
-                nbClicDansLien: o.nbClicDansLien,
+                nbLiensCliques: o.nbClicDansLien,
                 nbOrganismesActifs: o.organismesActifs,
             };
         });

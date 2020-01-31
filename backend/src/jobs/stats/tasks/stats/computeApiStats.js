@@ -13,9 +13,7 @@ module.exports = async (db, codeRegion) => {
         nbSessionsCertifiantesAvecAvis,
         avisPerSession,
     ] = await Promise.all([
-        avis.countDocuments({
-            ...filter,
-        }),
+        avis.countDocuments({ ...filter }),
         avis.countDocuments({ 'meta.reconciliations.0.reconciliable': true, ...filter }),
         sessionsReconciliees.countDocuments({ ...filterSnakeCase }),
         sessionsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 1 }, ...filterSnakeCase }),
