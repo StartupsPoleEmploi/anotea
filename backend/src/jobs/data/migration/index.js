@@ -15,18 +15,6 @@ execute(async ({ db, logger }) => {
     };
 
     return {
-        ...(await migrate('dropCollections')),
-        ...(await migrate('renameCollections')),
-        ...(await migrate('addJobTypeFlag')),
-        ...(await migrate('renameTraineeIntoIndividu')),
-        ...(await migrate('cleanSiretProperties')),
-        ...(await migrate('renameCourrielIntoIdentifiant')),
-        ...(await migrate('renameRaisonSociale')),
-        ...(await migrate('renameCommentIntoCommentaires')),
-        ...(await migrate('renameRatesIntoNotes')),
-        ...(await migrate('unsetStatutRattachement')),
-        ...(await migrate('deprecatedProperties')),
-        ...(await migrate('renameTrainingIntoFormation')),
-        ...(await migrate('addRefreshKey')),
+        ...(await migrate('addLieuxDeFormation')),
     };
 });
