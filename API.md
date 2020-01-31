@@ -2,13 +2,13 @@
 
 Anotea expose plusieurs API web :
 
-## API publique
+## API publique (v1)
 
 L'API publique groupe tous les services permettant de consulter les avis déposés par les stagiaires.
 
-Ell est disponible sur l'Emploi Store Dev (https://www.emploi-store-dev.fr/portail-developpeur/catalogueapi)
+Elle est disponible sur l'Emploi Store Dev (https://www.emploi-store-dev.fr/portail-developpeur/catalogueapi)
 
-La documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/doc/#/Publique
+La documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/v1/doc
 
 ### Authentification
 
@@ -24,7 +24,7 @@ Authorization: "ANOTEA-HMAC-SHA256 <api_key>:<timestamp>:<digest>"
 - `timestamp` :  Nombre de millisecondes depuis l'Unix Epoch UTC.
 - `digest` :  Digest spécifique à l'appel.
   
-Le digest doit être crée en générant, à partir de votre secret, un HMAC SHA256 de la chaine de caractères composée des informations suivantes concaténées dans l'ordre :
+Le digest doit être créé en générant, à partir de votre secret, un HMAC SHA256 de la chaine de caractères composée des informations suivantes concaténées dans l'ordre :
 
 `digest = "timestamp + method + path + body"`
 
@@ -45,9 +45,9 @@ https://anotea.pole-emploi.fr/api/v1/ping/authenticated \
 
 ## Kairos
 
-Cette API permet aux utilistateurs de l'application Kairos de se connecter automatiquement à Anotéa.
+Cette API permet aux utilisateurs de l'application Kairos de se connecter automatiquement à Anotéa.
 
-Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/doc/#/Kairos
+Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/kairos/doc
 
 ![Kairos specifications](misc/doc/kairos/api-kairos.svg)
 

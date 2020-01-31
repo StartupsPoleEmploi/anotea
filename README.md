@@ -54,7 +54,7 @@ Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.j
 Il est également conseillé d'installer docker 18+ et docker-compose 1.25+
 
 Anotea est composé de deux projets : 
-- `backend` qui contient un serveur node.js et expose des serveurs via [une API](API.md)
+- `backend` qui contient un serveur node.js et expose des API
 - `ui` qui contient les interfaces graphiques
 
 ### Démarrer l'application
