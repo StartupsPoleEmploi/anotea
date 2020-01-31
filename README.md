@@ -49,7 +49,9 @@ Les améliorations apportées à la réconciliation sont listées dans le [CHANG
 ## Développement
 Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)
 
-Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 12 soit installé. 
+Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 12+ soit installé. 
+
+Il est également conseillé d'installer docker 18+ et docker-compose 1.25+
 
 Anotea est composé de deux projets : 
 - `backend` qui contient un serveur node.js et expose des serveurs via [une API](API.md)
@@ -148,7 +150,7 @@ Pour plus d'informations sur le mécanisme de surcharge de docker-compose voir [
 #### Envoyer des emails en local
 
 Certains fonctionnalités envoient des emails et ont donc besoin d'un serveur SMTP.
-Vous pouvez démarrer en local un serveur MailHog :
+Vous pouvez démarrer en local un serveur MailHog (nécessite Docker) :
 
 ```
 cd backend
@@ -160,21 +162,29 @@ Si vous avez démarré l'application via Docker un container MailHog est automat
 
 ### Tests
 
-Par défaut, les tests d'intégration utilisent la base MongoDB démarrée sur la port 27017.
-Afin que les tests s'éxecutent rapidement, vous pouvez démarrer un MongoDB in-memory :
-
+Pour lancer les tests, il faut executer la commande
+ 
 ```
-mongod --dbpath <path to data dir> --port 27018 --storageEngine=ephemeralForTest
+cd backend
+npm run test
 ```
 
-Vous pouvez ensuite lancer les tests avec la commande suivante :
+ou 
 
 ```
 cd backend
-ANOTEA_MONGODB_URI=mongodb://localhost:27018/anotea?w=1 npm run test
+npm run test:unit && npm run test:integration
 ```
 
-Pour information, c'est le mécanisme utilisé pour executer les tests d'intégration sur Travis.
+Attention, les tests d'intégration partent du principe qu'une base MongoDB est démarrée sur la port 27017.
+
+
+Une commande permet également de lancer tous les tests en démarrant un MongoDB in-memory sur le port 27018 (nécessite Docker)  :
+
+```
+cd backend
+npm run test:all
+```
 
 <p align="center">
 <img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="20%" height="20%" />

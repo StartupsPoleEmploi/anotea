@@ -17,14 +17,16 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint src test",
-    "smtp:start": "docker rm smtp; docker run -d --name smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
-    "smtp:stop": "docker stop smtp",
+    "smtp:start": "docker rm anotea-smtp; docker run -d --name anotea-smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
+    "smtp:stop": "docker stop anotea-smtp",
+    "db:start": "docker rm anotea-db; docker run -d --name anotea-db -p 27017:27017 -v $(pwd)/../.data/mongodb/db:/data/db mongo:4.2.2-bionic --wiredTigerCacheSizeGB 1",
+    "db:stop": "docker stop anotea-db",
     "start": "nodemon --inspect --ignore test/ index.js",
-    "test": "npm run test:all",
-    "test:all": "npm run test:unit && npm run test:integration",
-    "test:coverage": "nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "mocha --recursive --exit --timeout 1000 test/unit",
     "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
-    "test:unit": "mocha --recursive --exit --timeout 1000 test/unit"
+    "test:coverage": "nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
+    "test:all": "docker stop anotea-db-test; docker rm anotea-db-test; docker run --name anotea-db-test -p 27018:27018 -d mongo:4.2.2-bionic --storageEngine=ephemeralForTest --port 27018 && ANOTEA_MONGODB_URI=mongodb://127.0.0.1:27018/anotea?w=1 npm run test"
   },
   "dependencies": {
     "@sentry/node": "5.10.2",
