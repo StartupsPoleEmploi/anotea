@@ -35,10 +35,10 @@ module.exports = (db, regions) => {
             stagiaires.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
             stagiaires.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
             stagiaires.countDocuments({ 'avisCreated': true, ...filter }),
-            avis.countDocuments({ 'avis': { $ne: null }, ...filter }),
-            avis.countDocuments({ 'avis': { $ne: null }, 'status': 'none', ...filter }),
-            avis.countDocuments({ 'avis': { $ne: null }, 'qualification': 'positif', ...filter }),
-            avis.countDocuments({ 'avis': { $ne: null }, 'qualification': 'négatif', ...filter }),
+            avis.countDocuments({ 'commentaire': { $exists: true }, ...filter }),
+            avis.countDocuments({ 'commentaire': { $exists: true }, 'status': 'none', ...filter }),
+            avis.countDocuments({ 'commentaire': { $exists: true }, 'qualification': 'positif', ...filter }),
+            avis.countDocuments({ 'commentaire': { $exists: true }, 'qualification': 'négatif', ...filter }),
             avis.countDocuments({ 'status': 'rejected', ...filter })
         ]);
 
