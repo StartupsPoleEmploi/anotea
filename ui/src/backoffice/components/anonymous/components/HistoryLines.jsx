@@ -19,17 +19,15 @@ export default class HistoryLines extends React.Component {
     render() {
 
         let { lines, groupBy, format, colors } = this.props;
-
         return (
             <ResponsiveLine
                 data={lines}
-                margin={{ top: 10, right: 10, bottom: 120, left: 60 }}
+                margin={{ top: 10, right: 40, bottom: 120, left: 40 }}
                 xScale={{
                     type: 'time',
                     format: '%Y-%m-%dT%H:%M:%S.%L', //parsed by d3-time-format lib
-                    precision: 'day',
+                    //precision: 'day',
                 }}
-
                 axisBottom={{
                     format: v => groupBy === 'month' ? moment(v).format('MMMM YYYY') : moment(v).format('YYYY-MM-DD'),
                     tickValues: `every 1 ${groupBy || 'week'}s`

@@ -35,17 +35,19 @@ export default class GlobalStats extends React.Component {
                 let date = data.date;
                 let hasPrevious = !!(stats[index + 1] && stats[index + 1][type]);
                 let hasCurrent = !!(data[type]);
-                let previous = hasPrevious ? stats[index + 1][type].avis : { nbStagiairesContactes: 0, nbAvis: 0 };
-                let current = hasCurrent ? data[type].avis : { nbStagiairesContactes: 0, nbAvis: 0 };
+                let fallback = { nbStagiairesContactes: 0, nbAvis: 0 };
+                let previous = hasPrevious ? stats[index + 1][type].avis : fallback;
+                let current = hasCurrent ? data[type].avis : fallback;
 
                 return {
                     date,
                     nbAvis: current.nbAvis - previous.nbAvis,
-                    nbStagiairesContactes: (current.nbStagiairesContactes - previous.nbStagiairesContactes),
+                    nbStagiairesContactes: current.nbStagiairesContactes - previous.nbStagiairesContactes,
                 };
             })
-            .reduce((acc, data) => {
-                let selector = moment(data.date).startOf(groupBy).format('YYYY-MM-DDTHH:mm:ss.SSS');
+            .reverse()
+            .reduce((acc, bucket) => {
+                let selector = moment(bucket.date).startOf(groupBy).format('YYYY-MM-DDTHH:mm:ss.SSS');
                 let group = acc.find(v => v.date === selector);
                 if (!group) {
                     group = {
@@ -56,16 +58,18 @@ export default class GlobalStats extends React.Component {
                     acc.push(group);
                 }
 
-                group.nbStagiairesContactes += data.nbStagiairesContactes;
-                group.nbAvis += data.nbAvis;
+                group.nbStagiairesContactes += bucket.nbStagiairesContactes;
+                group.nbAvis += bucket.nbAvis;
 
                 return acc;
 
             }, [])
-            .map(data => {
+            .filter(b => b.nbStagiairesContactes > 0)// Ignore bucket when nothing has been sent
+            .slice(0, -1)// Drop last bucket
+            .map(bucket => {
                 return {
-                    x: data.date,
-                    y: divide(data.nbAvis * 100, data.nbStagiairesContactes)
+                    x: bucket.date,
+                    y: divide(bucket.nbAvis * 100, bucket.nbStagiairesContactes)
                 };
             }),
         };
