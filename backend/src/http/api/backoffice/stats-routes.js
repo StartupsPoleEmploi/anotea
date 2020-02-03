@@ -15,7 +15,7 @@ module.exports = ({ db }) => {
         let { codeRegion, debut, fin } = await Joi.validate(req.query, {
             codeRegion: Joi.string(),
             debut: Joi.number().min(firstStatsDate).max(now).default(firstStatsDate),
-            fin: Joi.number().max(now).default(now),
+            fin: Joi.number().default(now),
         }, { abortEarly: false });
 
         let stream = await db.collection('statistics')

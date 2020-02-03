@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import HistoryLines from './HistoryLines';
 import './Stats.scss';
 import PrettyDate from '../../common/PrettyDate';
-import { divide, percentage } from '../../../services/statsService';
+import { diff, divide, percentage } from '../../../services/statsService';
 
 export default class GlobalStats extends React.Component {
 
@@ -27,8 +27,7 @@ export default class GlobalStats extends React.Component {
         return 'day';
     };
 
-    convertToLine = (type, stats, groupBy = 'week') => {
-
+    convertToLine = (stats, type, groupBy = 'week') => {
         return {
             id: `Taux de répondants (${type})`,
             data: stats
@@ -36,18 +35,17 @@ export default class GlobalStats extends React.Component {
                 let date = data.date;
                 let hasPrevious = !!(stats[index + 1] && stats[index + 1][type]);
                 let hasCurrent = !!(data[type]);
-
                 let previous = hasPrevious ? stats[index + 1][type].avis : { nbStagiairesContactes: 0, nbAvis: 0 };
                 let current = hasCurrent ? data[type].avis : { nbStagiairesContactes: 0, nbAvis: 0 };
 
                 return {
                     date,
                     nbAvis: current.nbAvis - previous.nbAvis,
-                    nbStagiairesContactes: current.nbStagiairesContactes - previous.nbStagiairesContactes,
+                    nbStagiairesContactes: (current.nbStagiairesContactes - previous.nbStagiairesContactes),
                 };
             })
             .reduce((acc, data) => {
-                let selector = moment(data.date).endOf(groupBy).format('YYYY-MM-DDTHH:mm:ss.SSS');
+                let selector = moment(data.date).startOf(groupBy).format('YYYY-MM-DDTHH:mm:ss.SSS');
                 let group = acc.find(v => v.date === selector);
                 if (!group) {
                     group = {
@@ -75,10 +73,7 @@ export default class GlobalStats extends React.Component {
 
     render() {
         let { query, stats } = this.props;
-        let latest = stats[0];
-        let regional = latest.regional;
-        let national = latest.national;
-        let current = regional || national;
+        let type = query.codeRegion ? 'regional' : 'national';
 
         let groupBy = this.getGroupByUnit(query.debut, query.fin);
         return (
@@ -88,7 +83,7 @@ export default class GlobalStats extends React.Component {
                         <div className="title mb-5">
                             <PrettyDate
                                 date={query.debut ? new Date(parseInt(query.debut)) : new Date()}
-                                format={'MMMM YYYY'}
+                                format={'DD/MM/YYYY'}
                                 transform={d => d.charAt(0).toUpperCase() + d.slice(1)}
                             />
                             {query.fin &&
@@ -96,7 +91,7 @@ export default class GlobalStats extends React.Component {
                                 <span className="px-1">-</span>
                                 <PrettyDate
                                     date={query.fin ? new Date(parseInt(query.fin)) : new Date()}
-                                    format={'MMMM YYYY'}
+                                    format={'DD/MM/YYYY'}
                                     transform={d => d.charAt(0).toUpperCase() + d.slice(1)}
                                 />
                             </>
@@ -105,17 +100,17 @@ export default class GlobalStats extends React.Component {
                         <div className="d-flex justify-content-around flex-wrap">
                             <div className="stats">
                                 <div className="name">Total avis déposés</div>
-                                <div className="value">{current.avis.nbAvis}</div>
+                                <div className="value">{diff(stats, type, 'avis.nbAvis')}</div>
                             </div>
                             <div className="stats">
                                 <div className="name">Taux répondants</div>
                                 <div>
                                     <span className="value highlighted">
-                                        {percentage(current.avis.nbAvis, current.avis.nbStagiairesContactes)}
+                                        {percentage(diff(stats, type, 'avis.nbAvis'), diff(stats, type, 'avis.nbStagiairesContactes'))}
                                     </span>
-                                    {regional &&
+                                    {type === 'regional' &&
                                     <span className="value compare">
-                                        {percentage(national.avis.nbAvis, national.avis.nbStagiairesContactes)}*
+                                        {percentage(diff(stats, 'national', 'avis.nbAvis'), diff(stats, 'national', 'avis.nbStagiairesContactes'))}*
                                     </span>
                                     }
                                 </div>
@@ -124,11 +119,11 @@ export default class GlobalStats extends React.Component {
                     </div>
                     <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }}>
                         <HistoryLines
-                            data={[
-                                this.convertToLine('national', stats, groupBy),
-                                ...(regional ? [this.convertToLine('regional', stats, groupBy)] : []),
+                            lines={[
+                                this.convertToLine(stats, 'national', groupBy),
+                                ...(type === 'regional' ? [this.convertToLine(stats, 'regional', groupBy)] : []),
                             ]}
-                            colors={regional ? ['rgba(35, 47, 56, 0.4)', '#F28017'] : ['rgba(35, 47, 56, 0.4)']}
+                            colors={type === 'regional' ? ['rgba(35, 47, 56, 0.4)', '#F28017'] : ['rgba(35, 47, 56, 0.4)']}
                             groupBy={groupBy}
                             format={v => `${v}%`}
                         />

@@ -6,7 +6,7 @@ import { ResponsiveLine } from '@nivo/line';
 export default class HistoryLines extends React.Component {
 
     static propTypes = {
-        data: PropTypes.array.isRequired,
+        lines: PropTypes.array.isRequired,
         colors: PropTypes.array,
         groupBy: PropTypes.string,
         format: PropTypes.func,
@@ -18,11 +18,11 @@ export default class HistoryLines extends React.Component {
 
     render() {
 
-        let { data, groupBy, format, colors } = this.props;
+        let { lines, groupBy, format, colors } = this.props;
 
         return (
             <ResponsiveLine
-                data={data}
+                data={lines}
                 margin={{ top: 10, right: 10, bottom: 120, left: 60 }}
                 xScale={{
                     type: 'time',

@@ -1,21 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { percentage } from '../../../services/statsService';
+import { avg, percentage } from '../../../services/statsService';
 
 export default class FormationStats extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
-        stats: PropTypes.object.isRequired,
+        stats: PropTypes.array.isRequired,
     };
 
     render() {
-        let { stats } = this.props;
-        let latest = stats[0];
-        let regional = latest.regional;
-        let national = latest.national;
-        let current = regional || national;
+        let { query, stats } = this.props;
+        let type = query.codeRegion ? 'regional' : 'national';
 
         return (
             <div className="Stats">
@@ -30,17 +27,17 @@ export default class FormationStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
                             <div className="name">Formations en ligne</div>
-                            <div className="value">{current.api.nbSessions}</div>
+                            <div className="value">{avg(stats, type, 'api.nbSessions')}</div>
                         </div>
                         <div className="stats">
                             <div className="name">Formation avec un avis</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(current.api.nbSessionsAvecAvis, current.api.nbSessions)}
+                                    {percentage(avg(stats, type, 'api.nbSessionsAvecAvis'), avg(stats, type, 'api.nbSessions'))}
                                 </span>
-                                {regional &&
+                                {type === 'regional' &&
                                 <span className="value compare">
-                                    {percentage(national.nbSessionsAvecAvis, national.nbSessions)}*
+                                    {percentage(avg(stats, 'national', 'api.nbSessionsAvecAvis'), avg(stats, 'national', 'api.nbSessions'))}*
                                 </span>
                                 }
                             </div>
@@ -50,7 +47,7 @@ export default class FormationStats extends React.Component {
                 <div className="details">
                     <div className="stats">
                         <div className="name">Nombre d'avis moyen par session</div>
-                        <div className="value">{current.api.nbAvisParSession}</div>
+                        <div className="value">{avg(stats, type, 'api.nbAvisParSession')}</div>
                     </div>
                 </div>
             </div>
