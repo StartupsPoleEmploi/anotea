@@ -1,4 +1,6 @@
-<img src="https://anotea.pole-emploi.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="30%" height="30%" />
+<p>
+<img src="https://anotea.pole-emploi.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="200px" />
+</p>
 
 Anotéa est un service lancé par Pôle emploi permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
 
@@ -20,104 +22,12 @@ Ces sites utilisent deux canaux fournis par Anotéa : l'[api](misc/doc/API.md) e
 
 ![Anotea Diagram](./misc/doc/diagram/anotea-diagram.svg)
 
-## Développement
+## En savoir plus
 
-Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)
-
-Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 12+ soit installé. 
-
-Il est également conseillé d'installer docker 18+ et docker-compose 1.25+
-
-Anotea est composé de deux projets : 
-- `backend` qui contient un serveur node.js et expose des API
-- `ui` qui contient les interfaces graphiques
-
-### Démarrer l'application
-
-Chaque projet se démarre avec les commandes suivantes :
-
-```
-npm install
-npm start
-```
-
-Par défaut les deux projets sont configurés pour prendre en compte automatiquement les modifications du code source.
-
-#### Jeu de données
-
-Vous pouvez créer un jeu de données en local au moyen de la commande suivante:
-
-```
-cd backend
-node src/jobs/data/dataset --drop
-```
-
-Ce script part du principe qu'une base MongoDB est démarrée sur la port 27017 et va générer 
-un ensemble de données permettant à l'application de fonctionner.
-Le sortie console du script vous donnera les instructions pour vous connecter à l'application.
-
-#### Mode développement avancé
-
-Afin d'éviter de devoir lancer les deux projets à la main, il est possible de les démarrer en une seule commande.
-
-Ce script utilise `pm2`, il est donc nécessaire de l'installer auparavant
-
-```
-npm install pm2 -g
-```
-
-puis 
- 
-```
-bash dev.sh
-```
-
-Pour éviter que le script installe les dépendances npm à chaque fois:
-
-```
-SKIP_NPM_INSTALL=true bash dev.sh
-```
-
-Il également possible de démarrer l'application au sein de [containers Docker](misc/doc/DOCKER.md). 
-
-#### Envoyer des emails en local
-
-Certains fonctionnalités envoient des emails et ont donc besoin d'un serveur SMTP.
-Vous pouvez démarrer en local un serveur MailHog (nécessite Docker) :
-
-```
-cd backend
-npm run smtp:start
-```
-
-Si vous avez démarré l'application via Docker un container MailHog est automatiquement lancé. 
-
-
-### Tests
-
-Pour lancer les tests, il faut exécuter la commande
- 
-```
-cd backend
-npm run test
-```
-
-ou 
-
-```
-cd backend
-npm run test:unit && npm run test:integration
-```
-
-Attention, les tests d'intégration partent du principe qu'une base MongoDB est démarrée sur la port 27017.
-
-Une commande permet également de lancer tous les tests en démarrant un MongoDB in-memory sur le port 27018 (nécessite Docker)  :
-
-```
-cd backend
-npm run test:all
-```
+- [Démarrer sur le projet](misc/doc/DEMARRAGE.md) 
+- [Workflow de développement](misc/doc/WORKFLOW.md) 
+- [Architecture technique](misc/doc/ARCHITECTURE.md) 
 
 <p align="center">
-<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="20%" height="20%" />
+<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="100px"  />
 </p>
