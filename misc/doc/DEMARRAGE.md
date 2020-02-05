@@ -1,6 +1,8 @@
 # Démarrer sur le projet
 
-Anotea est composé de deux projets :
+Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 12+ soit installé.
+
+L'application est composée de deux projets :
 
 `backend` qui contient un serveur et des jobs basés sur les technologies suivantes :
 
@@ -9,7 +11,7 @@ Anotea est composé de deux projets :
 - [EJS](https://ejs.co/) pour les templates HTML (website, emails).
 - [Mocha](https://mochajs.org) pour les l'execution des tests.
 
-`ui` qui contient les interfaces graphiques et qui est basée sur les technologies suivantes :
+`ui` qui contient les interfaces graphiques et qui est basé sur les technologies suivantes :
 
 - [React](https://reactjs.org) pour la gestion des interfaces utilisateurs (create-react-app)
 
@@ -52,12 +54,6 @@ cd backend
 npm run smtp:start
 ```
 
-### Docker
-
-La procédure d'installation décrit ci-dessus permet de configurer un environnement de développement.
-
-Il est également possible de démarrer l'application via des [containers Docker](DOCKER.md) ce qui vous permettra d'émuler l'environnement de production.
-
 ## Tests
 
 Pour lancer les tests, il faut exécuter la commande
@@ -82,3 +78,47 @@ Une commande permet de lancer tous les tests en démarrant un MongoDB in-memory 
 cd backend
 npm run test:all
 ```
+## Docker
+
+La procédure d'installation décrit ci-dessus permet de configurer un environnement de développement.
+
+Toutefois en production, l'application est déployée au sein de [containers Docker](ARCHITECTURE.md).
+
+En local, il est aussi possible de reproduire cet environnement via la commande : 
+
+```
+docker-compose up --build
+```
+
+L'application est ensuite accessible à l'url `http://localhost`
+
+Afin d'être au plus près de l'environnement de production (cf. diagramme ci-dessus), 
+le fichier `docker-compose.override.yml` est configuré avec des containers supplémentaires :
+
+- `mailhog`pour émuler le serveur SMTP (`http://localhost:8025/`)
+- `fluentbit`, `kibana` et `elasticsearch` pour émuler la gestion des logs (`http://localhost:5601/`). 
+
+### Exécution des jobs
+
+Pour exécuter un job, il faut lancer la commande :
+
+```sh
+docker build -t anotea_script .
+docker run anotea_script bash -c "node src/jobs/<nom du script>"
+```
+
+### Surcharge des variables
+
+Il est possible de fournir une configuration spécifique dans le fichier `docker-compose.local.yml` :
+
+```sh
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up
+```
+
+Les fichiers seront fusionnés avec la configuration par défaut.
+
+Vous pouvez prendre exemple sur les fichiers `docker-compose.override.yml` et `docker-compose.test.yml`.
+
+Pour information, c'est le mécanisme utilisé pour configurer les différents environnements.
+
+Pour plus d'informations sur le mécanisme de surcharge de docker-compose voir [https://docs.docker.com/compose/extends/](https://docs.docker.com/compose/extends/) 

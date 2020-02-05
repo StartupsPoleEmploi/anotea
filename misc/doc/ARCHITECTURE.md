@@ -1,8 +1,22 @@
 # Architecture technique
 
+En production l'application est démarrée dans des containers Docker.
+
+- Un container `nginx`, reverse proxy qui est le point d'entrée de l'application pour tous les appels http
+- Un container `backend` contenant le serveur node.js
+- Un container `ui` contenant les interfaces graphiques
+- Un container `mongodb`  
+- Un container `fluentbit` pour gérer les logs
+
+![Anotea Docker_Diagram](./diagram/anotea-docker-diagram.svg)
+
+Quand un appel HTTP arrive au niveau du reverse proxy `nginx`, en fonction de l'url demandée l'appel est transmis soit au container `backend` soit au container `ui`. Les règles sont spécifiées [ici](../docker/nginx/app/nginx/conf.d/locations.inc)
+
+## Structure des projets
+
 Anotea est composé de deux projets : `backend` et `ui`.
 
-## Backend
+### Backend
 
 Les rôles du backend sont les suivants :
 
@@ -13,7 +27,7 @@ Les rôles du backend sont les suivants :
 
 Le projet backend est découpé en trois parties : core, http et jobs.
 
-### Core
+#### Core
 
 La partie core `backend/src/core` contient tous les fichiers commun.
 
@@ -35,7 +49,7 @@ execute(async ({ emails }) => {
 });
 ```
 
-### HTTP
+#### HTTP
 
 La partie core `backend/src/http` contient tous les fichiers permettant de créer le serveur HTTP.
 
@@ -46,7 +60,7 @@ Il y a deux types de routes :
 - `site` qui regroupent toutes les routes permettant d'afficher le site web (home) et qui renvoie du HTML.
 - `api` qui regroupent toutes les routes liées aux APIs (`v1`,`backoffice`,`questionnaire`,...) et qui renvoie du json.
 
-### Jobs
+#### Jobs
 
 La partie core `backend/src/jobs` contient tous les fichiers permettant d'executer des traitement sur les données.
 
@@ -76,4 +90,3 @@ Chaque partie est constituée des répertoires suivants :
 - `components` qui regroupe les composants React.
 - `services` que contient les services faisant appellent aux APIs exposées par le backend.
 - `utils` que contient des outils réutilisables
-
