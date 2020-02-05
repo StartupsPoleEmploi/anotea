@@ -33,7 +33,7 @@ let createAvisDTO = (data, options = {}) => {
     }
 
     if (data.reponse && data.status === 'validated' && data.reponse.status === 'validated') {
-        data.reponse = {
+        dto.reponse = {
             texte: data.reponse.text,
         };
     } else {

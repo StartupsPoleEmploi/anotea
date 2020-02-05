@@ -376,6 +376,36 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
+    it('should return get reponse', async () => {
+
+        let app = await startServer();
+        await insertIntoDatabase('avis', newAvis({
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'validated',
+            },
+        }));
+
+        let response = await request(app).get('/api/v1/avis');
+        assert.deepStrictEqual(response.body.avis[0].reponse, {
+            texte: 'Voici notre réponse',
+        });
+    });
+
+    it('should ignore reponse', async () => {
+
+        let app = await startServer();
+        await insertIntoDatabase('avis', newAvis({
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'rejected',
+            },
+        }));
+
+        let response = await request(app).get('/api/v1/avis');
+        assert.ok(!response.body.avis[0].reponse);
+    });
+
     it('should sort avis by date (desc)', async () => {
 
         let app = await startServer();
