@@ -278,6 +278,70 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
     });
 
+    it('can submit a questionnaire with html', async () => {
+
+        let app = await startServer();
+        let db = await getTestDatabase();
+        let date = new Date();
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
+
+        let response = await request(app)
+        .post(`/api/questionnaire/${stagiaire.token}`)
+        .send({
+            avis_accueil: 2,
+            avis_contenu_formation: 2,
+            avis_equipe_formateurs: 1,
+            avis_moyen_materiel: 2,
+            avis_accompagnement: 2,
+            commentaire: {
+                texte: '<div>coucou</div>\n',
+                titre: '<script>alert(\'Il y a une faille XSS\')</script>'
+            },
+        });
+
+        assert.strictEqual(response.statusCode, 200);
+
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
+        assert.deepStrictEqual(result.commentaire, {
+            text: 'coucou',
+            title: '',
+            titleMasked: false,
+        });
+    });
+
+    it('can submit a questionnaire with encoded html', async () => {
+
+        let app = await startServer();
+        let db = await getTestDatabase();
+        let date = new Date();
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
+
+        let response = await request(app)
+        .post(`/api/questionnaire/${stagiaire.token}`)
+        .send({
+            avis_accueil: 2,
+            avis_contenu_formation: 2,
+            avis_equipe_formateurs: 1,
+            avis_moyen_materiel: 2,
+            avis_accompagnement: 2,
+            commentaire: {
+                texte: '&lt;div&gt;coucou&lt;/div&gt;',
+                titre: '&lt;script&gt;alert(\'Il y a une faille XSS\')&lt;/script&gt;'
+            },
+        });
+
+        assert.strictEqual(response.statusCode, 200);
+
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
+        assert.deepStrictEqual(result.commentaire, {
+            text: 'coucou',
+            title: '',
+            titleMasked: false,
+        });
+    });
+
     it('can submit a questionnaire with emoji (:-))', async () => {
 
         let app = await startServer();
