@@ -80,4 +80,5 @@ module.exports = {
         return Promise.all(promises);
     },
     getNbModifiedDocuments: results => results.result.nModified,
+    getNbRemovedDocuments: results => results.result.n,
 };

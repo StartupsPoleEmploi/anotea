@@ -5,7 +5,7 @@ import Panel from '../../common/page/panel/Panel';
 import { getPublicStats } from '../../../services/statsService';
 import Button from '../../../../common/components/Button';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import GlobalStats from './GlobalStats';
+import AvisStats from './AvisStats';
 import PDF, { buildPDF } from '../../common/pdf/PDF';
 import OrganismeStats from './OrganismeStats';
 import CommentairesStats from './CommentairesStats';
@@ -82,20 +82,20 @@ export default class StatsPanel extends React.Component {
                         <div>
                             <div className="row mb-4">
                                 <div className="col-12">
-                                    <GlobalStats query={query} stats={results.stats} />
+                                    <AvisStats query={query} stats={results.stats} />
                                 </div>
                             </div>
                             <div className="row mb-4">
                                 <div className="col-sm-12 col-md-6">
-                                    <OrganismeStats query={query} stats={results.stats} />
-                                    <div className="mt-4">
-                                        <CommentairesStats query={query} stats={results.stats} />
-                                    </div>
+                                    <CommentairesStats query={query} stats={results.stats} />
                                 </div>
                                 <div className="col-sm-12 col-md-6">
-                                    <div className="mt-4 mt-md-0">
-                                        <FormationStats query={query} stats={results.stats} />
-                                    </div>
+                                    <FormationStats query={query} stats={results.stats} />
+                                </div>
+                            </div>
+                            <div className="row mb-4">
+                                <div className="col-12">
+                                    <OrganismeStats query={query} stats={results.stats} />
                                 </div>
                             </div>
                         </div>

@@ -1,10 +1,13 @@
 const _ = require('lodash');
 const { batchCursor } = require('../../../job-utils');
-const { getNbModifiedDocuments } = require('../../../job-utils');
+const { getNbModifiedDocuments, getNbRemovedDocuments } = require('../../../job-utils');
 
 module.exports = async db => {
 
-    await db.collection('statistics').removeMany({ campaign: { $exists: false } });
+    let deleted =
+        getNbRemovedDocuments(await db.collection('statistics').removeMany({ campaign: { $exists: false } })) +
+        getNbRemovedDocuments(await db.collection('statistics').removeOne({ date: new Date('2019-10-15T01:02:08.165Z') })) +
+        getNbRemovedDocuments(await db.collection('statistics').removeMany({ 'avis.nbAvisAvecCommentaire': 0 }));
 
     let renamed = 0;
     let cursor = db.collection('statistics').find();
@@ -77,5 +80,5 @@ module.exports = async db => {
 
     });
 
-    return { renamed };
+    return { renamed, deleted };
 };

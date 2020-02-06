@@ -1,7 +1,60 @@
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
+import { divide } from '../../../utils/number-utils';
+
+export const convertToRatioLine = (stats, type, path1, path2, options = {}) => {
+
+    let values = _.cloneDeep(stats);
+    let getValue = (data, path) => _.get(data, `${type}.${path}`, 0);
+
+    return {
+        id: type.charAt(0).toUpperCase() + type.slice(1),
+        data: values
+        .reverse()
+        .map((current, index) => {
+            //diff
+            let date = current.date;
+            let previous = values[index - 1];
+
+            return {
+                date,
+                [path1]: getValue(current, path1) - getValue(previous, path1),
+                [path2]: getValue(current, path2) - getValue(previous, path2),
+            };
+        })
+        .reduce((acc, bucket) => {
+            //group
+            let selector = moment(bucket.date).startOf(options.groupBy || 'months').format('YYYY-MM-DDTHH:mm:ss.SSS');
+            let group = acc.find(v => v.date === selector);
+            if (!group) {
+                group = {
+                    date: selector,
+                    [path1]: 0,
+                    [path2]: 0,
+                };
+                acc.push(group);
+            }
+
+            group[path1] += bucket[path1];
+            group[path2] += bucket[path2];
+
+            return acc;
+
+        }, [])
+        .filter(b => b[path2] > 0)// Ignore bucket
+        .slice(0, -1)// Drop last bucket
+        .map(bucket => {
+            return {
+                x: bucket.date,
+                y: divide(bucket[path1] * 100, bucket[path2]),
+                tooltip: options.tooltip ? options.tooltip(bucket[path1]) : bucket[path1],
+            };
+        }),
+    };
+};
 
 export default class HistoryLines extends React.Component {
 
@@ -22,7 +75,7 @@ export default class HistoryLines extends React.Component {
         return (
             <ResponsiveLine
                 data={lines}
-                margin={{ top: 10, right: 40, bottom: 120, left: 40 }}
+                margin={{ top: 10, right: 40, bottom: 80, left: 40 }}
                 xScale={{
                     type: 'time',
                     format: '%Y-%m-%dT%H:%M:%S.%L', //parsed by d3-time-format lib
@@ -48,15 +101,10 @@ export default class HistoryLines extends React.Component {
                             }}
                         >
                             {slice.points.map(point => {
+                                let data = point.data;
                                 return (
-                                    <div
-                                        key={point.id}
-                                        style={{
-                                            color: point.serieColor,
-                                            padding: '3px 0',
-                                        }}
-                                    >
-                                        <strong>{point.serieId}</strong> {format(point.data.yFormatted)}
+                                    <div key={point.id} style={{ color: point.serieColor, padding: '3px 0' }}>
+                                        <span>{data.tooltip}</span>
                                     </div>
                                 );
                             })}
@@ -74,7 +122,7 @@ export default class HistoryLines extends React.Component {
                         translateY: 70,
                         itemsSpacing: 10,
                         itemDirection: 'left-to-right',
-                        itemWidth: 170,
+                        itemWidth: 70,
                         itemHeight: 20,
                         itemOpacity: 0.75,
                         symbolSize: 12,

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { avg, percentage } from '../../../services/statsService';
+import { latest } from '../../../services/statsService';
+import { formatNumber, percentage } from '../../../utils/number-utils';
 
 export default class FormationStats extends React.Component {
 
@@ -27,17 +28,17 @@ export default class FormationStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
                             <div className="name">Formations en ligne</div>
-                            <div className="value">{avg(stats, type, 'api.nbSessions')}</div>
+                            <div className="value">{formatNumber(latest(stats, type, 'api.nbSessions'))}</div>
                         </div>
                         <div className="stats">
                             <div className="name">Formation avec un avis</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(avg(stats, type, 'api.nbSessionsAvecAvis'), avg(stats, type, 'api.nbSessions'))}
+                                    {percentage(latest(stats, type, 'api.nbSessionsAvecAvis'), latest(stats, type, 'api.nbSessions'))}%
                                 </span>
                                 {type === 'regional' &&
                                 <span className="value compare">
-                                    {percentage(avg(stats, 'national', 'api.nbSessionsAvecAvis'), avg(stats, 'national', 'api.nbSessions'))}*
+                                    {percentage(latest(stats, 'national', 'api.nbSessionsAvecAvis'), latest(stats, 'national', 'api.nbSessions'))}%*
                                 </span>
                                 }
                             </div>
@@ -47,7 +48,7 @@ export default class FormationStats extends React.Component {
                 <div className="details">
                     <div className="stats">
                         <div className="name">Nombre d'avis moyen par session</div>
-                        <div className="value">{avg(stats, type, 'api.nbAvisParSession')}</div>
+                        <div className="value">{latest(stats, type, 'api.nbAvisParSession')}</div>
                     </div>
                 </div>
             </div>

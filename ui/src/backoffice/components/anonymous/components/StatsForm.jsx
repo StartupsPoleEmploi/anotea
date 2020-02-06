@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../../common/components/Button';
 import _ from 'lodash';
-import moment from 'moment';
-import { Form, Periode, Select } from '../../common/page/form/Form';
+import { Form, Select } from '../../common/page/form/Form';
 import { getRegions } from '../../../services/regionsService';
 import BackofficeContext from '../../../BackofficeContext';
 
@@ -19,10 +18,6 @@ export default class StatsForm extends React.Component {
     constructor() {
         super();
         this.state = {
-            periode: {
-                debut: null,
-                fin: null,
-            },
             regions: {
                 selected: null,
                 loading: true,
@@ -39,31 +34,20 @@ export default class StatsForm extends React.Component {
         .then(results => {
             return this.updateSelectBox('regions', results.find(r => r.codeRegion === query.codeRegion));
         });
-
-        this.setState({
-            periode: {
-                debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
-                fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
-            },
-        });
     }
 
     getParametersFromQuery = () => {
         let { query } = this.props;
 
         return {
-            ...(query.debut ? { debut: parseInt(query.debut) } : {}),
-            ...(query.fin ? { fin: parseInt(query.fin) } : {}),
             ...(query.codeRegion ? { codeRegion: query.codeRegion } : {}),
         };
     };
 
     getParametersFromForm = () => {
-        let { periode, regions } = this.state;
+        let { regions } = this.state;
 
         return {
-            debut: periode.debut ? moment(periode.debut).valueOf() : null,
-            fin: periode.fin ? moment(periode.fin).valueOf() : null,
             codeRegion: _.get(regions, 'selected.codeRegion', null),
         };
     };
@@ -76,14 +60,6 @@ export default class StatsForm extends React.Component {
     isFormSynchronizedWithQuery = () => {
         let data = _(this.getParametersFromForm()).omitBy(_.isNil).value();
         return this.isFormLoading() || _.isEqual(data, this.getParametersFromQuery());
-    };
-
-    updatePeriode = periode => {
-        return new Promise(resolve => {
-            this.setState({
-                periode,
-            }, resolve);
-        });
     };
 
     loadSelectBox = async (type, loader) => {
@@ -121,10 +97,6 @@ export default class StatsForm extends React.Component {
 
     resetForm = () => {
         this.setState({
-            periode: {
-                debut: null,
-                fin: null,
-            },
             regions: {
                 selected: null,
                 ..._.pick(this.state.regions, ['results', 'loading']),
@@ -134,44 +106,29 @@ export default class StatsForm extends React.Component {
 
     render() {
 
-        let { periode, regions } = this.state;
+        let { regions } = this.state;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
         let { theme } = this.context;
 
         return (
-            <Form>
-                <div className="form-row">
-                    <div className="form-group offset-lg-2 col-lg-4">
-                        <label>Regions</label>
-                        <Select
-                            value={regions.selected}
-                            options={regions.results}
-                            loading={regions.loading}
-                            optionKey="codeRegion"
-                            label={option => option.nom}
-                            placeholder={'Toutes les régions'}
-                            trackingId="Regions"
-                            onChange={option => {
-                                return this.updateSelectBox('regions', option);
-                            }}
-                        />
-                    </div>
-                    <div className="form-group col-lg-4">
-                        <label>Période</label>
-                        <Periode
-                            periode={periode}
-                            min={moment('2019-08-01T00:00:00Z').toDate()}
-                            max={moment().subtract(1, 'days').toDate()}
-                            onChange={periode => this.updatePeriode(periode)}
-                        />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group offset-lg-3 col-lg-6 offset-xl-3 col-xl-6 text-center">
-                        <Button size="small" onClick={this.resetForm} className="mr-3">
-                            <i className="fas fa-times mr-2"></i>
-                            Réinitialiser les filtres
-                        </Button>
+            <div className="d-flex justify-content-center">
+                <Form className="a-width-50">
+                    <div className="d-flex justify-content-between align-items-end">
+                        <div className="flex-grow-1 mr-2">
+                            <label>Regions</label>
+                            <Select
+                                value={regions.selected}
+                                options={regions.results}
+                                loading={regions.loading}
+                                optionKey="codeRegion"
+                                label={option => option.nom}
+                                placeholder={'Toutes les régions'}
+                                trackingId="Regions"
+                                onChange={option => {
+                                    return this.updateSelectBox('regions', option);
+                                }}
+                            />
+                        </div>
                         <Button
                             size="large"
                             color={theme.buttonColor}
@@ -182,8 +139,8 @@ export default class StatsForm extends React.Component {
                             Rechercher
                         </Button>
                     </div>
-                </div>
-            </Form>
+                </Form>
+            </div>
         );
     }
 }
