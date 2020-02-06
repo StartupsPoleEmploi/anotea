@@ -13,7 +13,7 @@ Toutes les pull-requests sont automatiquement testés via Travis
 - master [![Build Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)](https://travis-ci.org/StartupsPoleEmploi/anotea)
 - dev [![Build Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=dev)](https://travis-ci.org/StartupsPoleEmploi/anotea)
 
-## Ajout d'un fonctionnalité
+## Ajout d'une fonctionnalité
 
 Pour ajouter une fonctionnalité, il faut créer une pull-request à merger sur la branche de `dev`.
 
@@ -26,11 +26,13 @@ Les conditions pour que la pull-request soit mergée sont les suivantes:
 
 ## Livraison
 
-Une fois que la branche de `dev` regroupe un ensemble cohérent de fonctionnalités, il faut livrer cette branche en production.
+Une fois que la branche de `dev` regroupe un ensemble cohérent de fonctionnalités, il faut livrer cette branche dans le `master`.
 
 Pour se faire, il faut créer une pull-request de la branche `dev` à merger sur la branche `master`.
 
 Par convention nous appelons cette pull-request `Mise en production` (ex: https://github.com/StartupsPoleEmploi/anotea/pull/1039)
+
+Pour information, le merge dans le master ne déclenche pas automatiquement un déploiement en production.
 
 ## Hotfix
 
