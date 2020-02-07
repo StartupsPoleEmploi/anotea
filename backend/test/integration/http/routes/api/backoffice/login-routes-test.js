@@ -197,6 +197,24 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.strictEqual(response.statusCode, 200);
     });
 
+    it('should store last login date', async () => {
+
+        let app = await startServerWithRealAuth();
+        let account = newModerateurAccount({
+            passwordHash: await hashPassword('password'),
+        });
+        await insertIntoDatabase('accounts', account);
+
+        let response = await request(app)
+        .post('/api/backoffice/login')
+        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
+
+        assert.strictEqual(response.statusCode, 200);
+        let db = await getTestDatabase();
+        let res = await db.collection('accounts').findOne({ _id: account._id });
+        assert.ok(res.lastLoginDate);
+
+    });
 
     it('should reject login when credentials are invalid', async () => {
 
