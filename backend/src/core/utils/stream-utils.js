@@ -100,11 +100,13 @@ module.exports = {
         return new Transform({
             objectMode: true,
             transform: function(data, encoding, callback) {
+                let shouldWrap = options.arrayWrapper || options.arrayPropertyName;
                 if (chunksSent === 0) {
-                    if (options.arrayWrapper) {
-                        let value = JSON.stringify(options.arrayWrapper);
+                    if (shouldWrap) {
+                        let value = JSON.stringify(options.arrayWrapper || {});
                         value = value.substring(0, value.length - 1);
-                        value += String(`,"${options.arrayPropertyName}":[`);
+                        let comma = options.arrayWrapper ? ',' : '';
+                        value += String(`${comma}"${options.arrayPropertyName}":[`);
                         this.push(Buffer.from(value));
                     } else {
                         this.push(Buffer.from('['));
@@ -118,10 +120,12 @@ module.exports = {
                 callback();
             },
             flush: function(callback) {
+                let shouldWrap = options.arrayWrapper || options.arrayPropertyName;
+
                 if (chunksSent === 0) {
                     //nothing sent
-                    if (options.arrayWrapper) {
-                        let value = _.cloneDeep(options.arrayWrapper);
+                    if (shouldWrap) {
+                        let value = _.cloneDeep(options.arrayWrapper || {});
                         value[options.arrayPropertyName] = [];
                         this.push(Buffer.from(JSON.stringify(value)));
                     } else {
@@ -130,7 +134,7 @@ module.exports = {
                 } else {
                     //Close json properly
                     this.push(Buffer.from(']'));
-                    if (options.arrayWrapper) {
+                    if (shouldWrap) {
                         this.push(Buffer.from('}'));
                     }
                 }

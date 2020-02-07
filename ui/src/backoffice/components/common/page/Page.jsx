@@ -1,18 +1,17 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import AppContext from '../../../BackofficeContext';
+import BackofficeContext from '../../../BackofficeContext';
 import './Page.scss';
 import WithAnalytics from '../../../../common/components/analytics/WithAnalytics';
 
 const Page = props => {
 
-    let { account } = useContext(AppContext);
-    let profile = account.profile;
+    let { theme } = useContext(BackofficeContext);
 
     return (
         <div className={`Page mb-0 ${props.className || ''}`}>
 
-            <div className={`search-holder ${profile}`}>
+            <div className={`search-holder ${theme.backgroundColor}`}>
 
                 {props.title &&
                 <div className="title-holder">

@@ -1,6 +1,6 @@
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import 'popper.js/dist/popper.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -14,6 +14,7 @@ import { createRouter } from './common/utils/router';
 import Widget from './widget/Widget';
 import GridDisplayer from './common/components/GridDisplayer';
 import './common/styles/global.scss';
+import { Chunk } from './backoffice/components/common/Chunk';
 
 let env = process.env;
 
@@ -28,27 +29,23 @@ Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
 GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
-let StatsChunksLoader = React.lazy(() => import('./stats/Stats'));
 let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));
-
-let getChunk = chunk => {
-    return (
-        <Suspense fallback={<div></div>}>
-            {chunk}
-        </Suspense>
-    );
-};
 
 let app = (
     <Router>
         <Switch>
-            <Redirect exact from="/" to="/admin" />
+            <Redirect exact from="/" to="/backoffice" />
+            <Redirect exact from="/stats" to="/backoffice/stats" />
+            <Redirect from="/admin*" to="/backoffice*" />
         </Switch>
 
         <Route path="/widget" render={() => <Widget />} />
-        <Route path="/questionnaire" render={() => getChunk(<QuestionnaireChunksLoader />)} />
-        <Route path="/stats" render={() => getChunk(<StatsChunksLoader />)} />
-        <Route path="/admin" render={props => getChunk(<BackofficeChunksLoader router={createRouter(props)} />)} />
+        <Route path="/questionnaire" render={() => {
+            return <Chunk name="questionnaire" load={() => (<QuestionnaireChunksLoader />)} />;
+        }} />
+        <Route path="/backoffice" render={props => {
+            return <Chunk name="backoffice" load={() => (<BackofficeChunksLoader router={createRouter(props)} />)} />;
+        }} />
         {false && <GridDisplayer />}
     </Router>
 );

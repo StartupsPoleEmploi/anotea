@@ -7,7 +7,8 @@ process.on('uncaughtException', e => console.log(e));
 const main = async () => {
 
     let components = await createComponents();
-    let app = server(components);
+
+    let app = server(components, { swagger: true });
 
     let httpServer = app.listen(components.configuration.app.port, () => {
         const address = httpServer.address();

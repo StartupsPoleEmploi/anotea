@@ -6,11 +6,11 @@ import InputText from '../common/page/form/InputText';
 import Button from '../../../common/components/Button';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { askNewPassword } from '../../services/passwordService';
-import AppContext from '../../BackofficeContext';
+import BackofficeContext from '../../BackofficeContext';
 
 export default class MotDePasseOubliePage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,
@@ -37,7 +37,7 @@ export default class MotDePasseOubliePage extends React.Component {
                 text: 'Une email vous a été envoyé.'
             });
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.router.goToPage('/admin/login');
+                this.props.router.goToPage('/backoffice/login');
             });
         })
         .catch(() => {
@@ -52,10 +52,10 @@ export default class MotDePasseOubliePage extends React.Component {
                 title={'Votre espace Anotéa'}
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">Mot de passe oublié</div>}
+                                title="Mot de passe oublié"
                                 elements={
                                     <>
                                         <label>Entrez votre identifiant</label>
@@ -89,7 +89,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                         <Button
                                             type="submit"
                                             size="large"
-                                            color="blue"
+                                            color="orange"
                                             disabled={this.state.loading}
                                             onClick={this.onSubmit}
                                         >

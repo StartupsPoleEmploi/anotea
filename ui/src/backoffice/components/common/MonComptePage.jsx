@@ -7,11 +7,11 @@ import Button from '../../../common/components/Button';
 import { isPasswordStrongEnough } from '../../utils/password-utils';
 import _ from 'lodash';
 import { updatePassword } from '../../services/meService';
-import AppContext from '../../BackofficeContext';
+import BackofficeContext from '../../BackofficeContext';
 
 export default class MonComptePage extends React.Component {
 
-    static contextType = AppContext;
+    static contextType = BackofficeContext;
 
     constructor(props) {
         super(props);
@@ -77,11 +77,11 @@ export default class MonComptePage extends React.Component {
 
     render() {
         let { errors } = this.state;
+        let { theme } = this.context;
 
         return <Page
             panel={
                 <Panel
-                    backgroundColor="grey"
                     results={
                         <CenteredForm
                             title="Mise à jour du mot de passe"
@@ -119,6 +119,7 @@ export default class MonComptePage extends React.Component {
                                     <Button
                                         type="submit"
                                         size="large"
+                                        color={theme.buttonColor}
                                         disabled={this.state.loading}
                                         onClick={() => this.onSubmit()}
                                     >

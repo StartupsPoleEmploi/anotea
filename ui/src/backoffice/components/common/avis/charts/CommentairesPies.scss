@@ -1,0 +1,41 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .CommentairesPies {
+
+  .title {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: $font-weight-boldest;
+  }
+
+  .box {
+    @include box();
+
+    .chart {
+      flex: 1 0 300px;
+      padding: 0 2rem;
+
+      &.first, &.second {
+        border-right: solid 1px $color-grey-25;
+      }
+
+      &.last {
+        border-right: unset;
+      }
+
+      .title {
+        font-size: 1.125rem;
+        font-weight: $font-weight-bold;
+      }
+
+      .description {
+        font-size: 0.875rem;
+        padding-bottom: 1rem;
+        opacity: 0.6;
+      }
+    }
+  }
+
+}
+

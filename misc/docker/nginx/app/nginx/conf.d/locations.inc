@@ -1,4 +1,4 @@
- location ~ ^/(admin|questionnaire|widget|stats)(.*)$ {
+ location ~ ^/(admin|backoffice|questionnaire|widget|stats)(.*)$ {
 
     limit_req zone=flood burst=100 nodelay;
 

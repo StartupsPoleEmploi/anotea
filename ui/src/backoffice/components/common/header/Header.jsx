@@ -1,17 +1,16 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import AppContext from '../../../BackofficeContext';
+import BackofficeContext from '../../../BackofficeContext';
 import logo from './logo.svg';
 import './Header.scss';
 
 const Header = ({ items, defaultPath, onLogout }) => {
 
-    let { account } = useContext(AppContext);
-    let profile = account.profile;
+    let { account, theme } = useContext(BackofficeContext);
 
     return (
-        <div className={`Header ${profile}`}>
+        <div className={`Header ${theme.backgroundColor}`}>
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
@@ -22,7 +21,7 @@ const Header = ({ items, defaultPath, onLogout }) => {
 
                             {items}
 
-                            {profile !== 'anonymous' &&
+                            {account.profile !== 'anonymous' &&
                             <button
                                 onClick={onLogout}
                                 className="logout btn btn-outline-light">

@@ -31,7 +31,6 @@ export default class Button extends React.Component {
     }
 
     render() {
-        let { trackClick } = this.context;
         let sizeClass = `a-btn-${this.props.size}`;
         let colorClass = this.props.color ? `a-btn-${this.props.color}` : '';
         let disabledClass = this.props.disabled ? 'a-btn-disabled' : '';
@@ -39,6 +38,7 @@ export default class Button extends React.Component {
         let tooltipClass = this.props.tooltip ? 'Tooltip--holder' : '';
         let classes = `${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${tooltipClass} ${this.props.className || ''}`;
         let noop = () => ({});
+        let { trackClick } = this.context;
 
         let ref = this.reference;
         return (

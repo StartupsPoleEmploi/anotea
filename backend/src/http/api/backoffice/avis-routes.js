@@ -4,6 +4,7 @@ const getAvisCSV = require('./utils/getAvisCSV');
 const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../utils/routes-utils');
 const { objectId } = require('../../utils/validators-utils');
 const getProfile = require('./profiles/getProfile');
+const getAvisStats = require('./utils/getAvisStats');
 
 module.exports = ({ db, middlewares, configuration, logger, workflow, regions }) => {
 
@@ -198,6 +199,19 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
         return res.json(avis);
 
+    }));
+
+    router.get('/api/backoffice/avis/stats', checkAuth, tryAndCatch(async (req, res) => {
+
+        let { validators, queries } = getProfile(db, regions, req.user);
+        let parameters = await Joi.validate(req.query, {
+            ...validators.form(),
+        }, { abortEarly: false });
+
+        let query = await queries.buildAvisQuery(parameters);
+        let results = await getAvisStats(db, query);
+
+        return res.json(results);
     }));
 
     return router;

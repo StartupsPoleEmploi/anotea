@@ -1,0 +1,99 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .Stats {
+
+  .name {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+  }
+
+  .value {
+    font-size: 2rem;
+    font-weight: $font-weight-boldest;
+
+    &.highlighted {
+      color: $color-orange
+    }
+
+    &.compare {
+      font-size: 0.875rem;
+      padding-left: 0.5rem;
+      color: $color-black-60;
+      font-weight: $font-weight-normal;
+    }
+  }
+
+  .asterisque {
+    font-size: 0.75rem;
+    padding-left: 0.25rem;
+    color: $color-black-60;
+  }
+
+  .main {
+    @include box();
+    box-shadow: 0 0 20px 0 rgba(55, 57, 76, 0.1) !important;
+
+    &.with-details {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: none;
+    }
+
+    .title {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: $font-weight-boldest;
+
+      div {
+        display: inline;
+      }
+
+      .description {
+        margin-left: 0.5rem;
+        font-size: 0.875rem;
+        color: $color-black-60;
+        font-weight: $font-weight-normal;
+      }
+    }
+
+    .stats {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      border-right: 1px solid $color-grey-25;
+      flex-grow: 1;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  .details {
+    display: flex;
+    justify-content: space-between;
+
+    .stats {
+      background-color: $color-grey-5;
+      padding: 1rem;
+      border-right: 1px solid $color-white;
+      box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.15);
+      flex-grow: 1;
+
+      &:first-child {
+        border-bottom-left-radius: 8px;
+      }
+
+      &:last-child {
+        border-bottom-right-radius: 8px;
+        border-right: unset;
+      }
+    }
+  }
+
+}

@@ -1,11 +1,12 @@
 import * as Sentry from '@sentry/browser';
+import { log } from '../../backoffice/utils/logger';
 
 let isEnabled;
 
 export const initialize = dsn => {
 
     isEnabled = !!dsn;
-    console.log(`Sentry enabled=${isEnabled}`);
+    log(`Sentry enabled=${isEnabled}`);
 
     if (!isEnabled) {
         return;

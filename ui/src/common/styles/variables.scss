@@ -43,28 +43,24 @@ $color-yellow-60: #F7D383;
 $color-yellow-30: #F6F0E0;
 $color-yellow-10: #FDF7EA;
 
-$shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
+$shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
 
-@mixin profile-background-color() {
-  &.financeur {
+@mixin themes() {
+  &.green {
     background-color: $color-green;
   }
 
-  &.moderateur {
+  &.blue {
     background-color: $color-blue;
   }
 
-  &.organisme {
+  &.black {
     background-color: $color-black;
-  }
-
-  &.anonymous {
-    background-color: $color-blue;
   }
 }
 
-@mixin box() {
-  background-color: $color-white;
+@mixin box($color: $color-white) {
+  background-color: $color;
   padding: 1rem;
   font-size: 1rem;
   border-radius: 8px;

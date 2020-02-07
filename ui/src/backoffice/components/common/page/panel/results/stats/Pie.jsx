@@ -32,7 +32,7 @@ const Pie = ({ data, colors }) => {
                                 isInteractive={true}
                                 enableSlicesLabels={false}
                                 theme={{ fontSize: 12, fontFamily: 'Lato', textColor: '#24303A' }}
-                                colors={colors}
+                                colors={colors || { scheme: 'nivo' }}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
                                 radialLabelsLinkHorizontalLength={5}
@@ -55,7 +55,7 @@ const Pie = ({ data, colors }) => {
 
 Pie.propTypes = {
     data: PropTypes.array.isRequired,
-    colors: PropTypes.array.isRequired,
+    colors: PropTypes.array,
 };
 
 export default Pie;
