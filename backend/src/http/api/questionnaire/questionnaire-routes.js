@@ -79,7 +79,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
         let text = _.get(body, 'commentaire.texte', null);
         let title = _.get(body, 'commentaire.titre', null);
-        let hasCommentaires = title || text;
+        let hasCommentaire = title || text;
 
         let avis = {
             date: new Date(),
@@ -90,14 +90,16 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             refreshKey: stagiaire.refreshKey,
             notes: notes,
             read: false,
-            status: hasCommentaires ? 'none' : 'validated',
+            status: hasCommentaire ? 'none' : 'validated',
             lastStatusUpdate: new Date(),
         };
 
-        if (hasCommentaires) {
+        let sanitizedTitle = sanitize(title);
+        let sanitizedText = sanitize(text);
+        if (hasCommentaire && (sanitize(title) || sanitize(text))) {
             avis.commentaire = {
-                title: sanitize(title),
-                text: sanitize(text),
+                title: sanitizedTitle,
+                text: sanitizedText,
                 titleMasked: false,
             };
         }
