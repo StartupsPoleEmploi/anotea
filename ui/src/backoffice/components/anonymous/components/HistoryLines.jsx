@@ -50,7 +50,7 @@ export const convertToRatioLine = (stats, type, path1, path2, options = {}) => {
             return {
                 x: bucket.date,
                 y: divide(bucket[path1] * 100, bucket[path2]),
-                tooltip: options.tooltip ? options.tooltip(bucket[path1]) : bucket[path1],
+                bucket,
             };
         }),
     };
@@ -63,15 +63,17 @@ export default class HistoryLines extends React.Component {
         colors: PropTypes.array,
         groupBy: PropTypes.string,
         format: PropTypes.func,
+        formatTooltip: PropTypes.func,
     };
 
     static defaultProps = {
         format: v => `${v}`,
+        formatTooltip: b => `${b}`,
     };
 
     render() {
 
-        let { lines, groupBy, format, colors } = this.props;
+        let { lines, groupBy, format, formatTooltip, colors } = this.props;
         return (
             <ResponsiveLine
                 data={lines}
@@ -90,7 +92,7 @@ export default class HistoryLines extends React.Component {
                     tickValues: 5
                 }}
                 curve="monotoneX"
-                enableSlices="x"
+                enableSlices={'x'}
                 sliceTooltip={({ slice }) => {
                     return (
                         <div
@@ -104,7 +106,7 @@ export default class HistoryLines extends React.Component {
                                 let data = point.data;
                                 return (
                                     <div key={point.id} style={{ color: point.serieColor, padding: '3px 0' }}>
-                                        <span>{data.tooltip}</span>
+                                        <span>{formatTooltip(data)}</span>
                                     </div>
                                 );
                             })}

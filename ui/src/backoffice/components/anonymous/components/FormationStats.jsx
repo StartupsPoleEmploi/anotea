@@ -20,7 +20,7 @@ export default class FormationStats extends React.Component {
                 <div className="main with-details d-flex flex-column">
                     <div className="title">
                         <div>
-                            <i className="fas fa-sign-out-alt a-icon"></i>
+                            <i className="fas fa-graduation-cap a-icon"></i>
                             Formations
                         </div>
                         <div className="description">(source Intercarif)</div>
@@ -31,7 +31,7 @@ export default class FormationStats extends React.Component {
                             <div className="value">{formatNumber(latest(stats, type, 'api.nbSessions'))}</div>
                         </div>
                         <div className="stats">
-                            <div className="name">Formation avec un avis</div>
+                            <div className="name">Formations avec un avis</div>
                             <div>
                                 <span className="value highlighted">
                                     {percentage(latest(stats, type, 'api.nbSessionsAvecAvis'), latest(stats, type, 'api.nbSessions'))}%

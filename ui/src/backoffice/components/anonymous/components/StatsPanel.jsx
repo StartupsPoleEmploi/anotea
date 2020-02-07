@@ -5,10 +5,9 @@ import Panel from '../../common/page/panel/Panel';
 import { getPublicStats } from '../../../services/statsService';
 import Button from '../../../../common/components/Button';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import AvisStats from './AvisStats';
+import StagiairesStats from './StagiairesStats';
 import PDF, { buildPDF } from '../../common/pdf/PDF';
-import OrganismeStats from './OrganismeStats';
-import CommentairesStats from './CommentairesStats';
+import AvisStats from './AvisStats';
 import FormationStats from './FormationStats';
 
 export default class StatsPanel extends React.Component {
@@ -80,22 +79,17 @@ export default class StatsPanel extends React.Component {
                     }
                     results={
                         <div>
-                            <div className="row mb-4">
+                            <div className="row mb-5">
                                 <div className="col-12">
-                                    <AvisStats query={query} stats={results.stats} />
+                                    <StagiairesStats query={query} stats={results.stats} />
                                 </div>
                             </div>
-                            <div className="row mb-4">
+                            <div className="row mb-5">
                                 <div className="col-sm-12 col-md-6">
-                                    <CommentairesStats query={query} stats={results.stats} />
+                                    <AvisStats query={query} stats={results.stats} />
                                 </div>
                                 <div className="col-sm-12 col-md-6">
                                     <FormationStats query={query} stats={results.stats} />
-                                </div>
-                            </div>
-                            <div className="row mb-4">
-                                <div className="col-12">
-                                    <OrganismeStats query={query} stats={results.stats} />
                                 </div>
                             </div>
                         </div>
