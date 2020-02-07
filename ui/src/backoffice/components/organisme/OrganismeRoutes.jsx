@@ -14,11 +14,11 @@ export default class OrganismeRoutes extends React.Component {
         let { router } = this.props;
         return (
             <Switch>
-                <Route path={'/admin/organisme/avis'} render={() => {
+                <Route path={'/backoffice/organisme/avis'} render={() => {
                     return <OrganismePage router={router} />;
                 }} />
-                <Route path={'/admin/organisme/mon-compte'} component={MonComptePage} />
-                <Redirect to="/admin/organisme/avis" />
+                <Route path={'/backoffice/organisme/mon-compte'} component={MonComptePage} />
+                <Redirect to="/backoffice/organisme/avis" />
             </Switch>
         );
     }

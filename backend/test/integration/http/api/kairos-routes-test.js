@@ -76,7 +76,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                 }
             }
         });
-        assert.ok(response.body.url.startsWith('http://127.0.0.1:3000/admin/login?origin=kairos&access_token=ey'));
+        assert.ok(response.body.url.startsWith('http://127.0.0.1:3000/backoffice/login?origin=kairos&access_token=ey'));
     });
 
     it('when organisme is unknown, it is created during authentication url generation', async () => {

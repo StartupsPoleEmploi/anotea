@@ -7,7 +7,7 @@ module.exports = (db, regions, mailer) => {
     let render = (account, passwordToken, options = {}) => {
         return mailer.render(__dirname, templateName, {
             account,
-            link: mailer.utils.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`),
+            link: mailer.utils.getPublicUrl(`/backoffice/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`),
             ...options,
         });
     };

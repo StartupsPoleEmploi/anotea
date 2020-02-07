@@ -14,11 +14,11 @@ export default class FinanceurRoutes extends React.Component {
         let { router } = this.props;
         return (
             <Switch>
-                <Route path={'/admin/financeur/avis'} render={() => {
+                <Route path={'/backoffice/financeur/avis'} render={() => {
                     return <FinanceurPage router={router} />;
                 }} />
-                <Route path={'/admin/financeur/mon-compte'} component={MonComptePage} />
-                <Redirect to="/admin/financeur/avis" />
+                <Route path={'/backoffice/financeur/mon-compte'} component={MonComptePage} />
+                <Redirect to="/backoffice/financeur/avis" />
             </Switch>
         );
     }

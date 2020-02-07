@@ -57,17 +57,17 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/admin/financeur/avis/charts')}
-                            onClick={() => this.onTabClicked('/admin/financeur/avis/charts')} />
+                            isActive={() => router.isActive('/backoffice/financeur/avis/charts')}
+                            onClick={() => this.onTabClicked('/backoffice/financeur/avis/charts')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => router.isActive('/admin/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('/admin/financeur/avis/liste', { sortBy: 'date' })} />
+                            isActive={() => router.isActive('/backoffice/financeur/avis/liste')}
+                            onClick={() => this.onTabClicked('/backoffice/financeur/avis/liste', { sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
-                    router.isActive('/admin/financeur/avis/liste') ?
+                    router.isActive('/backoffice/financeur/avis/liste') ?
                         <FinanceurAvisPanel query={query} form={form} onFilterClicked={this.onFilterClicked} /> :
                         <FinanceurAvisChartsPanel query={query} form={form} />
                 }

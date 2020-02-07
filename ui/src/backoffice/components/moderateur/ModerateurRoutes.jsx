@@ -19,24 +19,24 @@ export default class ModerateurRoutes extends React.Component {
 
         return (
             <Switch>
-                <Route path="/admin/moderateur/moderation/avis/stagiaires" render={() => {
+                <Route path="/backoffice/moderateur/moderation/avis/stagiaires" render={() => {
                     return <ModerationAvisPage router={router} />;
                 }} />
-                <Route path="/admin/moderateur/moderation/avis/reponses" render={() => {
+                <Route path="/backoffice/moderateur/moderation/avis/reponses" render={() => {
                     return <ModerationReponsesPage router={router} />;
                 }} />
-                <Route path="/admin/moderateur/emails/stagiaires" render={() => {
+                <Route path="/backoffice/moderateur/emails/stagiaires" render={() => {
                     return <StagiairesEmailsPreviewPage router={router} />;
                 }} />
-                <Route path="/admin/moderateur/emails/organismes" render={() => {
+                <Route path="/backoffice/moderateur/emails/organismes" render={() => {
                     return <OrganismesEmailsPreviewPage router={router} />;
                 }} />
-                <Route path="/admin/moderateur/gestion/organismes" render={() => {
+                <Route path="/backoffice/moderateur/gestion/organismes" render={() => {
                     return <GestionOrganismePage router={router} />;
                 }}
                 />
-                <Route path={'/admin/moderateur/mon-compte'} component={MonComptePage} />
-                <Redirect to="/admin/moderateur/moderation/avis/stagiaires" />
+                <Route path={'/backoffice/moderateur/mon-compte'} component={MonComptePage} />
+                <Redirect to="/backoffice/moderateur/moderation/avis/stagiaires" />
             </Switch>
         );
     }

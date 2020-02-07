@@ -56,20 +56,20 @@ export default class OrganismePage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/admin/organisme/avis/charts')}
-                            onClick={() => this.onTabClicked('/admin/organisme/avis/charts')} />
+                            isActive={() => router.isActive('/backoffice/organisme/avis/charts')}
+                            onClick={() => this.onTabClicked('/backoffice/organisme/avis/charts')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => router.isActive('/admin/organisme/avis/liste')}
-                            onClick={() => this.onTabClicked('/admin/organisme/avis/liste', {
+                            isActive={() => router.isActive('/backoffice/organisme/avis/liste')}
+                            onClick={() => this.onTabClicked('/backoffice/organisme/avis/liste', {
                                 read: false,
                                 sortBy: 'date'
                             })} />
                     </Tabs>
                 }
                 panel={
-                    router.isActive('/admin/organisme/avis/liste') ?
+                    router.isActive('/backoffice/organisme/avis/liste') ?
                         <OrganismeAvisPanel query={router.getQuery()} onFilterClicked={this.onFilterClicked} /> :
                         <OrganismeAvisChartsPanel query={router.getQuery()} />
                 }

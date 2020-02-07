@@ -100,7 +100,7 @@ export default class LoginPage extends React.Component {
                                 buttons={
                                     <div className="d-flex flex-column">
                                         <div className="mot-de-passe-oublie">
-                                            <NavLink to="/admin/mot-de-passe-oublie">
+                                            <NavLink to="/backoffice/mot-de-passe-oublie">
                                                 Mot de passe oublié
                                             </NavLink>
                                         </div>

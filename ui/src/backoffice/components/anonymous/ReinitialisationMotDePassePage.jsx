@@ -73,7 +73,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                         color: 'green',
                     });
 
-                    return this.props.router.goToPage('/admin/login');
+                    return this.props.router.goToPage('/backoffice/login');
                 })
                 .catch(() => {
                     this.setState({ loading: false });

@@ -20,25 +20,25 @@ export default class AnonymousRoutes extends React.Component {
 
         return (
             <Switch>
-                <Route path="/admin/login" render={() => {
+                <Route path="/backoffice/login" render={() => {
                     return <LoginPage router={router} onLogin={this.props.onLogin} />;
                 }} />
-                <Route path="/admin/mot-de-passe-oublie" render={() => {
+                <Route path="/backoffice/mot-de-passe-oublie" render={() => {
                     return <MotDePasseOubliePage router={router} />;
                 }} />
-                <Route path="/admin/reinitialisation-mot-de-passe" render={() => {
+                <Route path="/backoffice/reinitialisation-mot-de-passe" render={() => {
                     return <ReinitialisationMotDePassePage router={router} />;
                 }} />
-                <Route path="/admin/activation-compte" render={() => {
+                <Route path="/backoffice/activation-compte" render={() => {
                     return <ActivationComptePage router={router} onLogin={this.props.onLogin} />;
                 }} />
-                <Route path="/admin/library" render={() => {
+                <Route path="/backoffice/library" render={() => {
                     return <LibraryPage />;
                 }} />
-                <Route path="/admin/stats" render={() => {
+                <Route path="/backoffice/stats" render={() => {
                     return <StatsPage router={router} />;
                 }} />
-                <Redirect to="/admin/login" />
+                <Redirect to="/backoffice/login" />
             </Switch>
         );
     }

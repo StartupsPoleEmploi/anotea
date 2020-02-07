@@ -34,15 +34,16 @@ let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questio
 let app = (
     <Router>
         <Switch>
-            <Redirect exact from="/" to="/admin" />
-            <Redirect exact from="/stats" to="/admin/stats" />
+            <Redirect exact from="/" to="/backoffice" />
+            <Redirect exact from="/stats" to="/backoffice/stats" />
+            <Redirect from="/admin*" to="/backoffice*" />
         </Switch>
 
         <Route path="/widget" render={() => <Widget />} />
         <Route path="/questionnaire" render={() => {
             return <Chunk name="questionnaire" load={() => (<QuestionnaireChunksLoader />)} />;
         }} />
-        <Route path="/admin" render={props => {
+        <Route path="/backoffice" render={props => {
             return <Chunk name="backoffice" load={() => (<BackofficeChunksLoader router={createRouter(props)} />)} />;
         }} />
         {false && <GridDisplayer />}

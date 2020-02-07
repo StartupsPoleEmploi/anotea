@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "1.0.0",
   "description": "Anotea: Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "homepage": "https://anotea.pole-emploi.fr/admin",
+  "homepage": "https://anotea.pole-emploi.fr/backoffice",
   "repository": {
     "type": "git",
     "url": "git@github.com:StartupsPoleEmploi/anotea.git"

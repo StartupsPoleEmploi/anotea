@@ -37,7 +37,7 @@ export default class MotDePasseOubliePage extends React.Component {
                 text: 'Une email vous a été envoyé.'
             });
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.router.goToPage('/admin/login');
+                this.props.router.goToPage('/backoffice/login');
             });
         })
         .catch(() => {

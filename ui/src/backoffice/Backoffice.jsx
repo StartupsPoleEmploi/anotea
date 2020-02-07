@@ -54,7 +54,7 @@ class Backoffice extends Component {
 
     onLogout = () => {
         removeSession();
-        window.location.href = '/admin';//Reload page to flush all react states
+        window.location.href = '/backoffice';//Reload page to flush all react states
     };
 
     onLogin = results => {
@@ -65,7 +65,7 @@ class Backoffice extends Component {
             account: getSession(),
         });
 
-        this.props.router.goToPage('/admin');
+        this.props.router.goToPage('/backoffice');
     };
 
     showGlobalMessage = message => {
@@ -141,7 +141,7 @@ class Backoffice extends Component {
                     <div className="Backoffice">
                         <Header
                             items={header}
-                            defaultPath={`/admin/${account.profile}`}
+                            defaultPath={`/backoffice/${account.profile}`}
                             onLogout={this.onLogout}
                         />
                         {routes}

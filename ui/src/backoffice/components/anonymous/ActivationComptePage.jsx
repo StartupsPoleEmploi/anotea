@@ -116,7 +116,7 @@ export default class ActivationComptePage extends React.Component {
                                                     </div>
                                                     <div className="mt-1">
                                                         Cliquez sur
-                                                        <NavLink to="/admin/mot-de-passe-oublie">
+                                                        <NavLink to="/backoffice/mot-de-passe-oublie">
                                                             Mot de passe oublié,
                                                         </NavLink>
                                                         un email contenant un lien pour modifier votre mot de passe
