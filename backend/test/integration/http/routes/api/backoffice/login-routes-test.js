@@ -2,6 +2,7 @@ const JWT = require('jsonwebtoken');
 const _ = require('lodash');
 const request = require('supertest');
 const assert = require('assert');
+const waitUntil = require('wait-until');
 const { withServer } = require('../../../../../helpers/with-server');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../../helpers/data/dataset');
 let passwords = require('../../../../../../src/core/components/passwords');
@@ -210,10 +211,22 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
-        let db = await getTestDatabase();
-        let res = await db.collection('accounts').findOne({ _id: account._id });
-        assert.ok(res.lastLoginDate);
+        return new Promise(async (resolve, reject) => {
+            let db = await getTestDatabase();
+            waitUntil()
+            .interval(100)
+            .times(10)
+            .condition(() => db.collection('accounts').findOne({ _id: account._id }))
+            .done(async result => {
+                if (!result) {
+                    reject(new Error('The condition was never met.'));
+                }
 
+                let res = await db.collection('accounts').findOne({ _id: account._id });
+                assert.ok(res.lastLoginDate);
+                resolve();
+            });
+        });
     });
 
     it('should reject login when credentials are invalid', async () => {
