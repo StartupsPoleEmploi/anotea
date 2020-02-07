@@ -23,6 +23,12 @@
     }
   }
 
+  .asterisque {
+    font-size: 0.75rem;
+    padding-left: 0.25rem;
+    color: $color-black-60;
+  }
+
   .main {
     @include box();
     box-shadow: 0 0 20px 0 rgba(55, 57, 76, 0.1) !important;

@@ -34,8 +34,12 @@ export default class StagiairesStats extends React.Component {
                         <div className="d-flex justify-content-around flex-wrap">
                             <div className="stats">
                                 <div className="name">Nombre de stagiaires contactés</div>
-                                <div
-                                    className="value">{formatNumber(latest(stats, type, 'avis.nbStagiairesContactes'))}
+                                <div>
+                                    <span className="value">
+                                        {formatNumber(latest(stats, type, 'avis.nbStagiairesContactes'))}
+                                    </span>
+                                    <span className="asterisque">depuis 2018
+                                    </span>
                                 </div>
                             </div>
                             <div className="stats">
@@ -62,7 +66,8 @@ export default class StagiairesStats extends React.Component {
                             formatTooltip={data => {
                                 return (
                                     <div className="d-flex justify-content-between text-left">
-                                        <span className="mr-2">{`Avis : ${formatNumber(data.bucket['avis.nbAvis'])}`}</span>
+                                        <span
+                                            className="mr-2">{`Avis : ${formatNumber(data.bucket['avis.nbAvis'])}`}</span>
                                         <span>{`Stagiaires contactés : ${formatNumber(data.bucket['avis.nbStagiairesContactes'])}`}</span>
                                     </div>
                                 );
