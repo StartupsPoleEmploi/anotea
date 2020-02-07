@@ -23,10 +23,17 @@ Ces sites utilisent deux canaux fournis par Anotéa : l'[api](misc/doc/API.md) e
 ![Anotea Diagram](./misc/doc/diagram/anotea-diagram.svg)
 
 ## En savoir plus
+ 
+- [Worflow de la gestion des avis](misc/doc/WORKFLOW_AVIS.md)
+- [Réconciliation](misc/doc/RECONCILIATION.md) 
+- [API](misc/doc/API.md) 
+- [Widget](misc/doc/WIDGET.md) 
+
+## Développement
 
 - [Démarrer sur le projet](misc/doc/DEMARRAGE.md) 
-- [Workflow de développement](misc/doc/WORKFLOW.md) 
-- [Architecture technique](misc/doc/ARCHITECTURE.md) 
+- [Workflow de développement](misc/doc/WORKFLOW_DEV.md) 
+- [Architecture technique](misc/doc/ARCHITECTURE.md)
 
 <p align="center">
 <img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="100px"  />

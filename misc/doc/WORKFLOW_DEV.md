@@ -1,4 +1,4 @@
-# Worflow
+# Worflow de développement
 
 Le projet se base sur le système de branches Git pour séparer les versions en cours de développement :
 
