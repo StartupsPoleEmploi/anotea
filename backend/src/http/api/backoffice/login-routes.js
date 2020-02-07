@@ -33,6 +33,12 @@ module.exports = ({ db, auth, passwords, regions }) => {
         let region = regions.findRegionByCodeRegion(account.codeRegion);
         logLoginEvent(identifiant, account);
 
+        await db.collection('accounts').updateOne({ _id: account._id }, {
+            $set: {
+                'lastLoginDate': new Date(),
+            }
+        });
+
         return await auth.buildJWT('backoffice', {
             sub: `${identifiant}`,
             id: account._id,
