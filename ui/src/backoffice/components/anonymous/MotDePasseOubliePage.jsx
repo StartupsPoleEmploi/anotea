@@ -61,13 +61,18 @@ export default class MotDePasseOubliePage extends React.Component {
                                         <label>Entrez votre identifiant</label>
                                         <InputText
                                             value={this.state.identifiant}
-                                            placeholder="Adresse email ou siret"
+                                            placeholder="Identifiant"
                                             error={this.state.error}
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                         />
                                         <p className="clarification mt-3">
-                                            L&apos;adresse mail est celle sur laquelle vous avez reçu la
-                                            proposition de création de compte Anotéa,
+                                            Si vous êtes un organisme, vous devez désormais renseigner votre numéro de
+                                            SIRET.
+                                        </p>
+                                        <p className="clarification">
+                                            Vous receverez un email de réinitialisation de mot de passe à
+                                            l&apos;adresse email
+                                            sur laquelle vous avez reçu la proposition de création de compte Anotéa,
                                             si vous ne la connaissez pas,
                                             <a
                                                 className="contactez-nous"
