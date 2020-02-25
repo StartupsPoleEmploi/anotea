@@ -1,5 +1,4 @@
 const Boom = require('boom');
-const ip = require('ip');
 const _ = require('lodash');
 const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
