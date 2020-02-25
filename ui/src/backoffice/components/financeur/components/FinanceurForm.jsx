@@ -6,7 +6,7 @@ import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getSirens } from '../../../services/sirensService';
 import { getFormations } from '../../../services/formationsService';
 import { getDepartements } from '../../../services/departementsService';
-import FINANCEURS from '../../../utils/financeurs';
+import { getFinanceurs } from '../../../services/financeursService';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
 
@@ -76,7 +76,7 @@ export default class FinanceurForm extends React.Component {
         }
 
         if (this.isPoleEmploi()) {
-            this.loadSelectBox('financeurs', () => FINANCEURS)
+            this.loadSelectBox('financeurs', () => getFinanceurs())
             .then(results => {
                 return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
             });

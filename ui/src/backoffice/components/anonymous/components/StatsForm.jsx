@@ -95,15 +95,6 @@ export default class StatsForm extends React.Component {
         });
     };
 
-    resetForm = () => {
-        this.setState({
-            regions: {
-                selected: null,
-                ..._.pick(this.state.regions, ['results', 'loading']),
-            },
-        });
-    };
-
     render() {
 
         let { regions } = this.state;
