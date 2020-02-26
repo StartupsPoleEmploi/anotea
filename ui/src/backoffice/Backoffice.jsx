@@ -89,6 +89,18 @@ class Backoffice extends Component {
                     };
                 },
             },
+            organisme: {
+                theme: {
+                    backgroundColor: 'black',
+                    buttonColor: 'orange',
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<OrganismeHeaderItems />)} />,
+                        routes: <Chunk name="organisme" load={() => (<OrganismeRoutes router={router} />)} />
+                    };
+                },
+            },
             financeur: {
                 theme: {
                     backgroundColor: 'green',
@@ -101,15 +113,15 @@ class Backoffice extends Component {
                     };
                 },
             },
-            organisme: {
+            admin: {
                 theme: {
-                    backgroundColor: 'black',
-                    buttonColor: 'orange',
+                    backgroundColor: 'green',
+                    buttonColor: 'green',
                 },
                 components: () => {
                     return {
-                        header: <Chunk name="header" load={() => (<OrganismeHeaderItems />)} />,
-                        routes: <Chunk name="organisme" load={() => (<OrganismeRoutes router={router} />)} />
+                        header: <Chunk name="header" load={() => (<FinanceurHeaderItems />)} />,
+                        routes: <Chunk name="financeur" load={() => (<FinanceurRoutes router={router} />)} />
                     };
                 },
             },

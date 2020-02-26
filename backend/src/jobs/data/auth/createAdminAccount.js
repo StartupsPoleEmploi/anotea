@@ -7,23 +7,21 @@ const { execute } = require('../../job-utils');
 cli.description('Create new account')
 .option('--identifiant [identifiant]')
 .option('--region [region]')
-.option('--codeFinanceur [codeFinanceur]')
 .option('--password [password]')
 .parse(process.argv);
 
 execute(async ({ db, exit, passwords }) => {
 
-    let { identifiant, password, region, codeFinanceur } = cli;
+    let { identifiant, password } = cli;
 
-    if (!identifiant || !password || !region || !codeFinanceur) {
+    if (!identifiant || !password) {
         return exit('Invalid arguments');
     }
 
     return db.collection('accounts').insertOne({
-        profile: 'financeur',
+        profile: 'admin',
         identifiant,
-        codeRegion: region,
-        codeFinanceur,
+        codeRegion: '11',
         passwordHash: await passwords.hashPassword(cli.password),
         meta: {
             rehashed: true

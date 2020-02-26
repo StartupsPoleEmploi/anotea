@@ -7,6 +7,7 @@ import { getSirens } from '../../../services/sirensService';
 import { getFormations } from '../../../services/formationsService';
 import { getDepartements } from '../../../services/departementsService';
 import { getFinanceurs } from '../../../services/financeursService';
+import { getRegions } from '../../../services/regionsService';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
 
@@ -46,12 +47,22 @@ export default class FinanceurForm extends React.Component {
                 loading: true,
                 results: [],
             },
+            regions: {
+                selected: null,
+                loading: true,
+                results: [],
+            },
         };
     }
 
-    isPoleEmploi() {
+    mustShowFinanceurFilter() {
         let { account } = this.context;
-        return account.codeFinanceur === '4';
+        return account.codeFinanceur === '4' || account.profile === 'admin';
+    }
+
+    mustShowCodeRegionFilter() {
+        let { account } = this.context;
+        return account.profile === 'admin';
     }
 
     async componentDidMount() {
@@ -75,10 +86,17 @@ export default class FinanceurForm extends React.Component {
             });
         }
 
-        if (this.isPoleEmploi()) {
+        if (this.mustShowFinanceurFilter()) {
             this.loadSelectBox('financeurs', () => getFinanceurs())
             .then(results => {
                 return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
+            });
+        }
+
+        if (this.mustShowCodeRegionFilter()) {
+            this.loadSelectBox('regions', () => getRegions())
+            .then(results => {
+                return this.updateSelectBox('regions', results.find(f => f.codeRegion === query.codeRegion));
             });
         }
 
@@ -92,13 +110,14 @@ export default class FinanceurForm extends React.Component {
 
     getParametersFromQuery = () => {
         let { query } = this.props;
-        return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'numeroFormation', 'debut', 'fin']);
+        return _.pick(query, ['codeFinanceur', 'codeRegion', 'departement', 'siren', 'numeroFormation', 'debut', 'fin']);
     };
 
     getFormParameters = () => {
-        let { financeurs, departements, sirens, formations, periode } = this.state;
+        let { financeurs, regions, departements, sirens, formations, periode } = this.state;
         return {
             codeFinanceur: _.get(financeurs, 'selected.code', null),
+            codeRegion: _.get(regions, 'selected.codeRegion', null),
             departement: _.get(departements, 'selected.code', null),
             siren: _.get(sirens, 'selected.siren', null),
             numeroFormation: _.get(formations, 'selected.numeroFormation', null),
@@ -180,11 +199,15 @@ export default class FinanceurForm extends React.Component {
                 selected: null,
                 ..._.pick(this.state.financeurs, ['results', 'loading']),
             },
+            regions: {
+                selected: null,
+                ..._.pick(this.state.regions, ['results', 'loading']),
+            },
         });
     };
 
     render() {
-        let { departements, sirens, formations, financeurs, periode } = this.state;
+        let { departements, sirens, formations, financeurs, regions, periode } = this.state;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
@@ -199,18 +222,36 @@ export default class FinanceurForm extends React.Component {
                         />
                     </div>
                     <div className="form-group col-lg-6 col-xl-3">
-                        <label>Départements</label>
-                        <Select
-                            value={departements.selected}
-                            options={departements.results}
-                            loading={departements.loading}
-                            optionKey="code"
-                            label={option => option.label}
-                            placeholder={'Tous les départements'}
-                            trackingId="Départements"
-                            onChange={option => this.updateSelectBox('departements', option)}
-                        />
+                        {this.mustShowCodeRegionFilter() ?
+                            <>
+                                <label>Regions</label>
+                                <Select
+                                    value={regions.selected}
+                                    options={regions.results}
+                                    loading={regions.loading}
+                                    optionKey="codeRegion"
+                                    label={option => option.nom}
+                                    placeholder={'Toutes les régions'}
+                                    trackingId="Region"
+                                    onChange={option => this.updateSelectBox('regions', option)}
+                                />
+                            </> :
+                            <>
+                                <label>Départements</label>
+                                <Select
+                                    value={departements.selected}
+                                    options={departements.results}
+                                    loading={departements.loading}
+                                    optionKey="code"
+                                    label={option => option.label}
+                                    placeholder={'Tous les départements'}
+                                    trackingId="Départements"
+                                    onChange={option => this.updateSelectBox('departements', option)}
+                                />
+                            </>
+                        }
                     </div>
+
                     <div className="form-group col-lg-6">
                         <label>Organisme de formation</label>
                         <Select
@@ -247,7 +288,7 @@ export default class FinanceurForm extends React.Component {
                     </div>
                     }
                     <div className="form-group col-lg-6">
-                        {this.isPoleEmploi() &&
+                        {this.mustShowFinanceurFilter() &&
                         <>
                             <label>Financeur</label>
                             <Select

@@ -11,10 +11,12 @@ module.exports = (db, regions, user) => {
     return {
         type: 'financeur',
         getUser: () => user,
-        getShield: () => ({
-            'codeRegion': user.codeRegion,
-            'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
-        }),
+        getShield: () => {
+            return {
+                'codeRegion': user.codeRegion,
+                'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
+            };
+        },
         validators: {
             form: () => {
                 return {
