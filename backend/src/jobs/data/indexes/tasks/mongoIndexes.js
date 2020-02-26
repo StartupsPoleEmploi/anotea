@@ -97,7 +97,11 @@ module.exports = {
             db.collection('accounts').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('accounts').createIndex({ 'siret': 1 }, {
                 unique: true,
-                partialFilterExpression: { profile: 'organisme' }
+                partialFilterExpression: { profile: 'organisme' },
+            }),
+            db.collection('accounts').createIndex({ 'identifiant': 1 }, {
+                unique: true,
+                partialFilterExpression: { identifiant: { $exists: true } },
             }),
         ]);
     },
