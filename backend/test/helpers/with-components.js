@@ -3,7 +3,7 @@ const path = require('path');
 const { randomize } = require('./data/dataset');
 const config = require('config');
 const createEmails = require('../../src/core/components/emails/emails');
-const getRegions = require('../../src/core/components/regions');
+const createRegions = require('../../src/core/components/regions');
 const logger = require('./components/fake-logger');
 const fakeMailer = require('./components/fake-mailer');
 const fakePasswords = require('./components/fake-passwords');
@@ -14,7 +14,7 @@ let _componentsHolder = null;
 module.exports = {
     withComponents: callback => {
 
-        let regions = getRegions();
+        let regions = createRegions();
         let datalake = path.join(__dirname, '../../../.data/datalake/test-logs');
         let configuration = Object.assign({}, config, {
             mongodb: {

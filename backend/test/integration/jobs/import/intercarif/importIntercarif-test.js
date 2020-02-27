@@ -5,16 +5,15 @@ const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const importIntercarif = require('../../../../../src/jobs/import/intercarif/tasks/importIntercarif');
 const logger = require('../../../../helpers/components/fake-logger');
 
-describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     let intercarifFile = path.join(__dirname, '../../../../helpers/data', 'intercarif-data-test.xml');
 
     it('should import formation', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
 
-        await importIntercarif(db, logger, intercarifFile, regions);
+        await importIntercarif(db, logger, intercarifFile);
 
         let formation = await db.collection('intercarif').findOne({ '_attributes.numero': 'F_XX_XX' });
         assert.strictEqual(formation.md5.length, 32);
@@ -58,7 +57,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                         ville: 'Montreuil',
                         departement: '93',
                         code_insee_commune: '93100',
-                        code_region: '11',
                         region: '11',
                         pays: 'FR',
                         geolocalisation: {
@@ -113,7 +111,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                             ville: 'Montreuil',
                             departement: '93',
                             code_insee_commune: '93100',
-                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -150,7 +147,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                             ville: 'Montreuil',
                             departement: '93',
                             code_insee_commune: '93100',
-                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -361,7 +357,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                                 ville: 'Paris',
                                 departement: '75',
                                 code_insee_commune: '75019',
-                                code_region: '11',
                                 region: '11',
                                 pays: 'FR',
                                 geolocalisation: {
@@ -401,7 +396,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                             ville: 'Paris',
                             departement: '75',
                             code_insee_commune: '75019',
-                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -438,7 +432,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                                     ville: 'Paris',
                                     departement: '75',
                                     code_insee_commune: '75019',
-                                    code_region: '11',
                                     region: '11',
                                     pays: 'FR',
                                     geolocalisation: {
@@ -647,7 +640,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                                     ville: 'Paris',
                                     departement: '75',
                                     code_insee_commune: '75019',
-                                    code_region: '11',
                                     region: '11',
                                     pays: 'FR',
                                     geolocalisation: {
@@ -695,10 +687,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
     it('should remove all documents when importing formations', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
 
-        await importIntercarif(db, logger, intercarifFile, regions);
-        await importIntercarif(db, logger, intercarifFile, regions);
+        await importIntercarif(db, logger, intercarifFile);
+        await importIntercarif(db, logger, intercarifFile);
 
         let count = await db.collection('intercarif').countDocuments({});
         assert.strictEqual(count, 1);

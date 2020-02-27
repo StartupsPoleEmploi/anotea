@@ -7,7 +7,7 @@ const { pipeline, transformObject, writeObject } = require('../../../../core/uti
 const xmlToJson = require('./utils/xmlToJson');
 const sanitizeJson = require('./utils/sanitizeJson');
 
-module.exports = async (db, logger, file, regions, options = {}) => {
+module.exports = async (db, logger, file, options = {}) => {
 
     let start = moment();
     let total = 0;
@@ -47,7 +47,7 @@ module.exports = async (db, logger, file, regions, options = {}) => {
             },
         }),
         transformObject(xmlElement => xmlToJson(xmlElement)),
-        transformObject(json => sanitizeJson(json, regions)),
+        transformObject(json => sanitizeJson(json)),
         writeObject(json => {
             let timeElapsed = moment().diff(start, 'seconds');
             logger.debug(`New formation inserted (${++total} documents / time elapsed: ${timeElapsed}s)`);

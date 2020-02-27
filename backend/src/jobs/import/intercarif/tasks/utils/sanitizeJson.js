@@ -1,14 +1,6 @@
 const _ = require('lodash');
 const md5 = require('md5');
 
-const getCodeRegion = (regions, codeINSEE) => {
-    try {
-        return regions.findRegionByCodeINSEE(codeINSEE).codeRegion;
-    } catch (err) {
-        return 'XX';
-    }
-};
-
 //According to lheo.xsd theses fields are the only ones with maxOccurs > 1. see http://lheo.gouv.fr/2.2/lheo.xsd
 let excludedProperties = ['extras'];
 const tagsWithMultipleOccurrences = [
@@ -41,7 +33,7 @@ const tagsWithMultipleOccurrences = [
     'organisme_financeur',
 ];
 
-module.exports = (json, regions) => {
+module.exports = json => {
 
     let document = _.cloneDeepWith(json, value => {
         if (value && typeof value === 'object') {
@@ -49,11 +41,6 @@ module.exports = (json, regions) => {
 
                 if (excludedProperties.includes(key)) {
                     delete value[key];
-                    return;
-                }
-
-                if (key === 'region') {
-                    value.code_region = getCodeRegion(regions, value[key]);
                     return;
                 }
 

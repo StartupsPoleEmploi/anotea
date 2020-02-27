@@ -44,7 +44,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
-            code_region: '11',
             periode: {
                 debut: new Date('2017-10-30T00:00:00.000Z'),
                 fin: new Date('2018-06-01T00:00:00.000Z'),

@@ -18,7 +18,6 @@ module.exports = (formation, action, avis) => {
             numero: action.organisme_formateur._attributes ? action.organisme_formateur._attributes.numero : null,
         },
         region: action.lieu_de_formation.coordonnees.adresse.region,
-        code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
         avis,
         score: computeScore(avis),
         formation: {

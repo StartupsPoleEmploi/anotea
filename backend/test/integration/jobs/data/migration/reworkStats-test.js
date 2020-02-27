@@ -216,7 +216,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
                 ]
             },
             regions: {
-                '2': {
+                '84': {
                     api: {
                         nbAvis: 36170,
                         nbAvisRestituables: 24240,

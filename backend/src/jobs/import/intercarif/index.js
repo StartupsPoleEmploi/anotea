@@ -10,7 +10,7 @@ cli.description('Import intercarif and generate all related collections')
 .option('-x, --unpack', 'Handle file as an archive')
 .parse(process.argv);
 
-execute(async ({ logger, db, exit, regions }) => {
+execute(async ({ logger, db, exit }) => {
 
     let { file, unpack } = cli;
 
@@ -19,5 +19,5 @@ execute(async ({ logger, db, exit, regions }) => {
     }
 
     logger.info(`Generating intercarif collection...`);
-    return importIntercarif(db, logger, file, regions, { unpack });
+    return importIntercarif(db, logger, file, { unpack });
 });

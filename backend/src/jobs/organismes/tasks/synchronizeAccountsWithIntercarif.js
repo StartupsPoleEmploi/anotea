@@ -65,13 +65,13 @@ module.exports = async (db, logger) => {
 
     const findCodeRegion = data => {
 
-        let lieu = data.lieux_de_formation.find(lieu => lieu.coordonnees.adresse.code_region !== 'XX');
+        let lieu = data.lieux_de_formation.find(lieu => lieu.coordonnees.adresse.region);
 
         if (!lieu) {
             throw new Error(`Unable to find region for organisme ${data.organisme_formateur.siret_formateur.siret}`);
         }
 
-        return lieu.coordonnees.adresse.code_region;
+        return lieu.coordonnees.adresse.region;
     };
 
     const synchronizeAccount = async data => {
