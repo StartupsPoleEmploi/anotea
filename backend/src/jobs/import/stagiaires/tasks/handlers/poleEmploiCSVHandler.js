@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const moment = require('moment');
-const { buildToken, buildEmail } = require('../utils/utils');
+const { buildToken } = require('../utils/utils');
 const { isConseilRegional } = require('../../../../../core/utils/financeurs');
 const md5 = require('md5');
 

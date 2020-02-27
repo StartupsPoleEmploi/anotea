@@ -19,9 +19,9 @@ execute(async ({ db, exit, passwords }) => {
     }
 
     return db.collection('accounts').insertOne({
+        profile: 'moderateur',
         identifiant,
         codeRegion: region,
-        profile: 'moderateur',
         passwordHash: await passwords.hashPassword(cli.password),
         meta: {
             rehashed: true
