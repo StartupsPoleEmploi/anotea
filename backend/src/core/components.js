@@ -1,7 +1,7 @@
 const config = require('config');
 const auth = require('./components/auth');
 const passwords = require('./components/passwords');
-const getRegions = require('./components/regions');
+const createRegions = require('./components/regions');
 const createLogger = require('./components/logger');
 const sentry = require('./components/sentry');
 const workflow = require('./components/workflow');
@@ -16,7 +16,7 @@ module.exports = async (options = {}) => {
     let configuration = options.configuration || config;
     let logger = options.logger || createLogger('backend', configuration);
     let { client, db } = await database(logger, configuration);
-    let regions = getRegions();
+    let regions = createRegions();
     let mailer = options.mailer || createMailer(configuration, regions);
     let emails = createEmails(db, configuration, regions, mailer);
 

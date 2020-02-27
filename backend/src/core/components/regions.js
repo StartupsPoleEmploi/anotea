@@ -13,7 +13,6 @@ module.exports = () => ({
         return region;
 
     },
-    getRegions: () => regions,
     findActiveRegions: feature => {
         return regions
         .filter(region => region.active === true)
