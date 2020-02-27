@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newOrganismeAccount, newModerateurAccount, newAvis } = require('../../../helpers/data/dataset');
-const logger = require('../../../helpers/components/fake-logger');
-const computeOrganismesScore = require('../../../../src/jobs/organismes/tasks/computeScore');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
+const { newOrganismeAccount, newModerateurAccount, newAvis } = require('../../../../helpers/data/dataset');
+const logger = require('../../../../helpers/components/fake-logger');
+const computeOrganismesScore = require('../../../../../src/jobs/import/organismes/tasks/computeScore');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 

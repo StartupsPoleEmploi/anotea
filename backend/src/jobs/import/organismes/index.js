@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const { execute } = require('../job-utils');
+const { execute } = require('../../job-utils');
 const synchronizeAccountsWithIntercarif = require('./tasks/synchronizeAccountsWithIntercarif');
 const synchronizeAccountsWithKairos = require('./tasks/synchronizeAccountsWithKairos');
 const computeOrganismesScore = require('./tasks/computeScore');
