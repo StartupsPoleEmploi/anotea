@@ -1,7 +1,7 @@
 module.exports = async (db, codeRegion) => {
 
-    let filter = codeRegion ? { codeRegion } : {};
-    let filterSnakeCase = codeRegion ? { code_region: codeRegion } : {};
+    let codeRegionFilter = codeRegion ? { codeRegion } : {};
+    let regionFilter = codeRegion ? { region: codeRegion } : {};
     let avis = db.collection('avis');
     let sessionsReconciliees = db.collection('sessionsReconciliees');
 
@@ -13,19 +13,19 @@ module.exports = async (db, codeRegion) => {
         nbSessionsCertifiantesAvecAvis,
         avisPerSession,
     ] = await Promise.all([
-        avis.countDocuments({ ...filter }),
-        avis.countDocuments({ 'meta.reconciliations.0.reconciliable': true, ...filter }),
-        sessionsReconciliees.countDocuments({ ...filterSnakeCase }),
-        sessionsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 1 }, ...filterSnakeCase }),
+        avis.countDocuments({ ...codeRegionFilter }),
+        avis.countDocuments({ 'meta.reconciliations.0.reconciliable': true, ...codeRegionFilter }),
+        sessionsReconciliees.countDocuments({ ...regionFilter }),
+        sessionsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 1 }, ...regionFilter }),
         sessionsReconciliees.countDocuments({
             'score.nb_avis': { $gte: 1 },
             'formation.certifications.0': { $exists: true },
-            ...filterSnakeCase,
+            ...regionFilter,
         }),
         sessionsReconciliees.aggregate([
             {
                 $match: {
-                    ...filterSnakeCase,
+                    ...regionFilter,
                 }
             },
             {

@@ -44,11 +44,6 @@ module.exports = json => {
                     return;
                 }
 
-                if (key === 'region') {
-                    value.code_region = value[key];
-                    return;
-                }
-
                 if (key === 'siret') {
                     // Sometimes siret are prefixed by 0
                     value[key] = `${parseInt(value[key], 10)}`;

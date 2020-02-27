@@ -16,7 +16,7 @@ const createStagiaire = session => {
         token: randomize('token'),
         campaign: 'dataset',
         importDate: getDateInThePast(),
-        codeRegion: session.code_region,
+        codeRegion: session.region,
         individu: {
             nom: faker.name.lastName(),
             prenom: faker.name.firstName(),

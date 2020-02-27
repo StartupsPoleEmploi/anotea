@@ -109,7 +109,6 @@ module.exports = {
         return Promise.all([
             db.collection('formationsReconciliees').createIndex({ 'numero': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'region': 1 }),
-            db.collection('formationsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'score.nb_avis': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'avis._id': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'meta.import_date': 1 }),
@@ -119,7 +118,6 @@ module.exports = {
         return Promise.all([
             db.collection('actionsReconciliees').createIndex({ 'numero': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'region': 1 }),
-            db.collection('actionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'avis._id': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'meta.import_date': 1 }),
@@ -129,7 +127,6 @@ module.exports = {
         return Promise.all([
             db.collection('sessionsReconciliees').createIndex({ 'numero': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
-            db.collection('sessionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'avis._id': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'meta.import_date': 1 }),

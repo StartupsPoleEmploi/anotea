@@ -8,7 +8,6 @@ module.exports = (formation, action, session, avis) => {
         _id: `${formation._attributes.numero}|${action._attributes.numero}|${session._attributes.numero}`,
         numero: session._attributes.numero,
         region: action.lieu_de_formation.coordonnees.adresse.region,
-        code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
         periode: {
             debut: moment(`${session.periode.debut} -0000`, 'YYYYMMDD Z').toDate(),
             fin: moment(`${session.periode.fin} -0000`, 'YYYYMMDD Z').toDate(),

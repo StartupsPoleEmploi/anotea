@@ -57,7 +57,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                         ville: 'Montreuil',
                         departement: '93',
                         code_insee_commune: '93100',
-                        code_region: '11',
                         region: '11',
                         pays: 'FR',
                         geolocalisation: {
@@ -112,7 +111,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             ville: 'Montreuil',
                             departement: '93',
                             code_insee_commune: '93100',
-                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -149,7 +147,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             ville: 'Montreuil',
                             departement: '93',
                             code_insee_commune: '93100',
-                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -360,7 +357,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                 ville: 'Paris',
                                 departement: '75',
                                 code_insee_commune: '75019',
-                                code_region: '11',
                                 region: '11',
                                 pays: 'FR',
                                 geolocalisation: {
@@ -400,7 +396,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             ville: 'Paris',
                             departement: '75',
                             code_insee_commune: '75019',
-                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -437,7 +432,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                     ville: 'Paris',
                                     departement: '75',
                                     code_insee_commune: '75019',
-                                    code_region: '11',
                                     region: '11',
                                     pays: 'FR',
                                     geolocalisation: {
@@ -646,7 +640,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                     ville: 'Paris',
                                     departement: '75',
                                     code_insee_commune: '75019',
-                                    code_region: '11',
                                     region: '11',
                                     pays: 'FR',
                                     geolocalisation: {

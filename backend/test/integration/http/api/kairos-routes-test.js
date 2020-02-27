@@ -14,7 +14,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             siret,
             raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
-            code_region: '11',
+            codeRegion: '11',
         }));
     };
 
@@ -329,7 +329,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                 siret,
                 raison_sociale: 'Pole Emploi Formation',
                 courriel: 'contact@organisme.fr',
-                code_region: '11',
                 meta: {
                     kairos: {
                         eligible: true,
