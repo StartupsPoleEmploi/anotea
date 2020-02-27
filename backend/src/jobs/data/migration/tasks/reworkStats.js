@@ -2,6 +2,26 @@ const _ = require('lodash');
 const { batchCursor } = require('../../../job-utils');
 const { getNbModifiedDocuments, getNbRemovedDocuments } = require('../../../job-utils');
 
+let regionMapper = {
+    '2': '84',
+    '3': '27',
+    '4': '53',
+    '5': '24',
+    '6': '94',
+    '7': '44',
+    '8': '01',
+    '9': '03',
+    '10': '32',
+    '11': '11',
+    '12': '04',
+    '13': '02',
+    '14': '28',
+    '15': '75',
+    '16': '76',
+    '17': '52',
+    '18': '93',
+};
+
 module.exports = async db => {
 
     let deleted =
@@ -64,10 +84,11 @@ module.exports = async db => {
                 let codeRegion = item.codeRegions[0];
 
                 let filter = item => item.codeRegions.length === 1 && item.codeRegions[0] === codeRegion;
+                let newRegionCode = regionMapper[codeRegion];
 
                 return {
                     ...acc,
-                    [codeRegion]: {
+                    [newRegionCode]: {
                         api: _.omit(stats.api.find(filter), ['codeRegions', 'label']),
                         organismes: _.omit(organismes.find(filter), ['codeRegions', 'label']),
                         avis: _.omit(avis.find(filter), ['codeRegions', 'label']),

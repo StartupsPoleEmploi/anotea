@@ -92,7 +92,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             region: {
                 nom: 'Île-de-France',
                 codeRegion: '11',
-                codeINSEE: '11',
                 conseil_regional: {
                     active: true,
                     import: 'all',

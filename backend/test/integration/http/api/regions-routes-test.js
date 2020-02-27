@@ -13,8 +13,8 @@ describe(__filename, withServer(({ startServer }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.length, 15);
-        assert.deepStrictEqual(response.body.find(r => r.codeRegion === '18'), {
-            codeRegion: '18',
+        assert.deepStrictEqual(response.body.find(r => r.codeRegion === '93'), {
+            codeRegion: '93',
             nom: 'Provence-Alpes-Côte d\'Azur',
             email: 'anoteapepaca.13992@pole-emploi.fr'
         });

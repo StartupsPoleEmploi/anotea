@@ -308,7 +308,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('avis', buildAvis({ codeRegion: '6' })),
+                insertIntoDatabase('avis', buildAvis({ codeRegion: '94' })),
             ]);
 
             let response = await request(app)

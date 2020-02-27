@@ -75,7 +75,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
             insertIntoDatabase('avis', buildAvis({
-                codeRegion: '6',
+                codeRegion: '94',
                 formation: {
                     action: {
                         organisme_formateur: {

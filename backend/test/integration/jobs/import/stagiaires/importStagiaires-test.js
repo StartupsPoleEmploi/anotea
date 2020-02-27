@@ -338,7 +338,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, regions);
 
         let results = await importStagiaires(db, logger, csvFile, handler, {
-            codeRegion: '2'
+            codeRegion: '84'
         });
 
         let doc = await db.collection('stagiaires').findOne();
@@ -359,7 +359,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
-                    codeRegion: '2',
+                    codeRegion: '84',
                     conseil_regional: {
                         active: true,
                     },
@@ -386,7 +386,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
-                    codeRegion: '2',
+                    codeRegion: '84',
                     conseil_regional: {
                         active: true,
                         since: '2018-08-23',
@@ -414,7 +414,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
-                    codeRegion: '2',
+                    codeRegion: '84',
                     conseil_regional: {
                         active: false,
                     },
@@ -441,7 +441,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
-                    codeRegion: '2',
+                    codeRegion: '84',
                     conseil_regional: {
                         active: true,
                         import: 'certifications_only',

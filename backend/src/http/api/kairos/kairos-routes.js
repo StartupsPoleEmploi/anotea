@@ -35,7 +35,7 @@ module.exports = ({ db, auth, middlewares }) => {
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['kairos', 'sso'],
-            codeRegion: codeRegion,
+            codeRegion,
             numero: null,
             lieux_de_formation: [],
         };

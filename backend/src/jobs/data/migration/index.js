@@ -18,5 +18,6 @@ execute(async ({ db, logger }) => {
         ...(await migrate('reworkStats')),
         ...(await migrate('addLieuxDeFormation')),
         ...(await migrate('removeInvalidAccounts')),
+        ...(await migrate('reworkCodeRegion')),
     };
 });

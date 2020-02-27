@@ -3,8 +3,7 @@
     "nom": "Auvergne-Rhône-Alpes",
     "active": true,
     "since": "2018-01-01",
-    "codeRegion": "2",
-    "codeINSEE": "84",
+    "codeRegion": "84",
     "contact": "anotea.69188",
     "departements": [
       {
@@ -79,8 +78,7 @@
     "nom": "Bourgogne-Franche-Comté",
     "active": true,
     "since": "2017-09-01",
-    "codeRegion": "3",
-    "codeINSEE": "27",
+    "codeRegion": "27",
     "contact": "anotea.bfc",
     "departements": [
       {
@@ -140,8 +138,7 @@
     "nom": "Bretagne",
     "active": true,
     "since": "2018-05-01",
-    "codeRegion": "4",
-    "codeINSEE": "53",
+    "codeRegion": "53",
     "contact": "anoteabretagne.35076",
     "departements": [
       {
@@ -182,8 +179,7 @@
     "nom": "Centre-Val de Loire",
     "active": true,
     "since": "2018-09-01",
-    "codeRegion": "5",
-    "codeINSEE": "24",
+    "codeRegion": "24",
     "contact": "formationapplicatifspartenaires.45054",
     "departements": [
       {
@@ -232,8 +228,7 @@
     "nom": "Corse",
     "active": true,
     "since": "2017-09-01",
-    "codeRegion": "6",
-    "codeINSEE": "94",
+    "codeRegion": "94",
     "contact": "anoteacorse.20010",
     "departements": [
       {
@@ -262,8 +257,7 @@
     "nom": "Grand-Est",
     "active": true,
     "since": "2017-07-01",
-    "codeRegion": "7",
-    "codeINSEE": "44",
+    "codeRegion": "44",
     "contact": "anotea.67085",
     "departements": [
       {
@@ -328,8 +322,7 @@
     "nom": "Guadeloupe",
     "active": true,
     "since": "2018-01-01",
-    "codeRegion": "8",
-    "codeINSEE": "01",
+    "codeRegion": "01",
     "contact": "anotea.97110",
     "departements": [
       {
@@ -370,8 +363,7 @@
     "nom": "Guyane",
     "active": false,
     "since": "2019-01-01",
-    "codeRegion": "9",
-    "codeINSEE": "03",
+    "codeRegion": "03",
     "departements": [
       {
         "code": "973",
@@ -399,8 +391,7 @@
     "nom": "Hauts-de-France",
     "active": true,
     "since": "2018-05-27",
-    "codeRegion": "10",
-    "codeINSEE": "32",
+    "codeRegion": "32",
     "contact": "anotea.59212",
     "departements": [
       {
@@ -448,7 +439,6 @@
     "active": true,
     "since": "2016-05-01",
     "codeRegion": "11",
-    "codeINSEE": "11",
     "contact": "anotea-idf",
     "departements": [
       {
@@ -504,16 +494,39 @@
     }
   },
   {
-    "nom": "La Réunion-Mayotte",
+    "nom": "La Réunion",
     "active": false,
     "since": "2019-01-01",
-    "codeRegion": "12",
-    "codeINSEE": "04",
+    "codeRegion": "04",
     "departements": [
       {
         "code": "974",
         "label": "La Réunion"
+      }
+    ],
+    "mailing": {
+      "stagiaires": {
+        "avis": false
       },
+      "organismes": {
+        "accounts": false,
+        "notifications": false
+      }
+    },
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
+    "carif": {
+      "active": false
+    }
+  },
+  {
+    "nom": "Mayotte",
+    "active": false,
+    "since": "2019-01-01",
+    "codeRegion": "06",
+    "departements": [
       {
         "code": "976",
         "label": "Mayotte"
@@ -540,8 +553,7 @@
     "nom": "Martinique",
     "active": true,
     "since": "2018-01-01",
-    "codeRegion": "13",
-    "codeINSEE": "02",
+    "codeRegion": "02",
     "contact": "anotea.97210",
     "departements": [
       {
@@ -570,8 +582,7 @@
     "nom": "Normandie",
     "active": true,
     "since": "2017-09-01",
-    "codeRegion": "14",
-    "codeINSEE": "28",
+    "codeRegion": "28",
     "contact": "anoteanormandie",
     "departements": [
       {
@@ -616,8 +627,7 @@
     "nom": "Nouvelle-Aquitaine",
     "active": true,
     "since": "2018-01-01",
-    "codeRegion": "15",
-    "codeINSEE": "75",
+    "codeRegion": "75",
     "contact": "anotea.33127",
     "departements": [
       {
@@ -690,8 +700,7 @@
     "nom": "Occitanie",
     "active": true,
     "since": "2018-06-01",
-    "codeRegion": "16",
-    "codeINSEE": "76",
+    "codeRegion": "76",
     "contact": "anotea.occitanie",
     "departements": [
       {
@@ -768,8 +777,7 @@
     "nom": "Pays de la Loire",
     "active": true,
     "since": "2017-07-01",
-    "codeRegion": "17",
-    "codeINSEE": "52",
+    "codeRegion": "52",
     "contact": "anotea-pdll.44116",
     "departements": [
       {
@@ -816,8 +824,7 @@
     "nom": "Provence-Alpes-Côte d'Azur",
     "active": true,
     "since": "2017-07-01",
-    "codeRegion": "18",
-    "codeINSEE": "93",
+    "codeRegion": "93",
     "contact": "anoteapepaca.13992",
     "departements": [
       {
