@@ -1,6 +1,6 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
-const { promiseAll } = require('../../job-utils');
+const { promiseAll } = require('../../../job-utils');
 
 module.exports = async (db, logger) => {
 

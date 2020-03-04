@@ -9,7 +9,7 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const { tryAndCatch } = require('../../utils/routes-utils');
 const { createOrganismeFomateurDTO } = require('../v1/utils/dto');
-const getCodeRegionFromKairosRegionName = require('../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
+const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
 
 module.exports = ({ db, auth, middlewares }) => {
 

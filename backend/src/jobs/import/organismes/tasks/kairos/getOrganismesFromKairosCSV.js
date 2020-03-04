@@ -1,6 +1,6 @@
 const fs = require('fs');
 const moment = require('moment');
-const { transformObject, ignoreFirstLine, parseCSV } = require('../../../../core/utils/stream-utils');
+const { transformObject, ignoreFirstLine, parseCSV } = require('../../../../../core/utils/stream-utils');
 const getCodeRegionFromKairosRegionName = require('./getCodeRegionFromKairosRegionName');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');

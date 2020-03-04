@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newOrganismeAccount, newIntercarif } = require('../../../helpers/data/dataset');
-const logger = require('../../../helpers/components/fake-logger');
-const synchronizeAccountsWithIntercarif = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithIntercarif');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
+const { newOrganismeAccount, newIntercarif } = require('../../../../helpers/data/dataset');
+const logger = require('../../../../helpers/components/fake-logger');
+const synchronizeAccountsWithIntercarif = require('../../../../../src/jobs/import/organismes/tasks/synchronizeAccountsWithIntercarif');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 

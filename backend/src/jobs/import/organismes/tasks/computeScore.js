@@ -1,5 +1,5 @@
-const computeScore = require('../../../core/utils/computeScore');
-const { batchCursor } = require('../../job-utils');
+const computeScore = require('../../../../core/utils/computeScore');
+const { batchCursor } = require('../../../job-utils');
 
 module.exports = async (db, logger) => {
 
