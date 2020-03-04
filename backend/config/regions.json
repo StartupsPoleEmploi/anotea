@@ -496,8 +496,9 @@
   {
     "nom": "La Réunion",
     "active": true,
-    "since": "2019-01-01",
+    "since": "2019-02-01",
     "codeRegion": "04",
+    "contact": "anotea.97410",
     "departements": [
       {
         "code": "974",
