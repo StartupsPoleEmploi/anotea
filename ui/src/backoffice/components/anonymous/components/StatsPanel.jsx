@@ -65,18 +65,6 @@ export default class StatsPanel extends React.Component {
             <>
                 <Panel
                     className="StatsPanel"
-                    summary={
-                        <div className="row">
-                            <div className="offset-sm-8 col-sm-4 text-right">
-                                <Button
-                                    size="medium"
-                                    disabled={this.state.showPDFDocument}
-                                    onClick={() => this.generatePDF()}>
-                                    <i className="fas fa-download pr-2"></i>Exporter
-                                </Button>
-                            </div>
-                        </div>
-                    }
                     results={
                         <div>
                             <div className="row mb-5">
