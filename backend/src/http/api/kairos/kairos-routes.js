@@ -9,7 +9,7 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const { tryAndCatch } = require('../../utils/routes-utils');
 const { createOrganismeFomateurDTO } = require('../v1/utils/dto');
-const getCodeRegionFromKairosRegionName = require('../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
+const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
 
 module.exports = ({ db, auth, middlewares }) => {
 
@@ -35,7 +35,7 @@ module.exports = ({ db, auth, middlewares }) => {
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['kairos', 'sso'],
-            codeRegion: codeRegion,
+            codeRegion,
             numero: null,
             lieux_de_formation: [],
         };
@@ -74,7 +74,7 @@ module.exports = ({ db, auth, middlewares }) => {
         let accessToken = await getAccessToken(organisme);
 
         return res.json({
-            url: `${configuration.app.public_hostname}/admin/login?origin=kairos&access_token=${accessToken}`,
+            url: `${configuration.app.public_hostname}/backoffice/login?origin=kairos&access_token=${accessToken}`,
             meta: {
                 created,
                 organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true }),

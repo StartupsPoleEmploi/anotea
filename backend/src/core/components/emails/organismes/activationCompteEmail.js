@@ -6,7 +6,7 @@ module.exports = (db, regions, mailer) => {
     let render = organisme => {
         return mailer.render(__dirname, templateName, {
             organisme,
-            link: utils.getPublicUrl(`/admin/activation-compte?token=${(organisme.token)}`),
+            link: utils.getPublicUrl(`/backoffice/activation-compte?token=${(organisme.token)}`),
         });
     };
 

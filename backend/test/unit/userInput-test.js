@@ -8,7 +8,7 @@ describe('Sanitize user input', function() {
     });
 
     it('should unescape and remove HTML tags', () => {
-        assert.strictEqual(sanitize('&lt;script&gt;alert(\\"xss\\");&lt;/script&gt;'), 'alert(\\"xss\\");');
+        assert.strictEqual(sanitize('&lt;script&gt;alert(\\"xss\\");&lt;/script&gt;'), '');
     });
 
     it('should not alter good data', () => {

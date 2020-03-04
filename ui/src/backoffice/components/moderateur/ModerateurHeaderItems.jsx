@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from '../common/header/Link';
-import { getAvisStats } from '../../services/statsService';
+import { getAvisStats } from '../../services/avisService';
 import Pastille from '../common/Pastille';
 
 export default class ModerateurHeaderItems extends React.Component {
@@ -36,14 +36,14 @@ export default class ModerateurHeaderItems extends React.Component {
         let { router } = this.props;
         let { stats } = this.state;
 
-        let isEmailsPreview = router.isActive('/admin/moderateur/emails');
+        let isEmailsPreview = router.isActive('/backoffice/moderateur/emails');
 
         return (
             <ul className="nav">
                 <li className="nav-item">
                     <Link
                         className="nav-link"
-                        url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none"
+                        url="/backoffice/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none"
                     >
                         <div className="Pastille--holder">
                             Avis
@@ -54,7 +54,7 @@ export default class ModerateurHeaderItems extends React.Component {
                 <li className="nav-item">
                     <Link
                         className="nav-link"
-                        url="/admin/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate"
+                        url="/backoffice/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate"
                     >
                         <div className="Pastille--holder">
                             Réponses
@@ -63,7 +63,7 @@ export default class ModerateurHeaderItems extends React.Component {
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" url="/admin/moderateur/gestion/organismes">
+                    <Link className="nav-link" url="/backoffice/moderateur/gestion/organismes">
                         Organismes
                     </Link>
                 </li>
@@ -79,16 +79,16 @@ export default class ModerateurHeaderItems extends React.Component {
                         Courriels
                     </a>
                     <div className="dropdown-menu">
-                        <Link className="nav-link" url="/admin/moderateur/emails/stagiaires">
+                        <Link className="nav-link" url="/backoffice/moderateur/emails/stagiaires">
                             Stagiaires
                         </Link>
-                        <Link className="nav-link" url="/admin/moderateur/emails/organismes">
+                        <Link className="nav-link" url="/backoffice/moderateur/emails/organismes">
                             Organismes
                         </Link>
                     </div>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" url="/admin/moderateur/mon-compte">
+                    <Link className="nav-link" url="/backoffice/moderateur/mon-compte">
                         Mon compte
                     </Link>
                 </li>

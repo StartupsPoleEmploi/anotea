@@ -6,6 +6,7 @@ module.exports = ({ regions }) => {
     const router = express.Router(); // eslint-disable-line new-cap
 
     router.get('/api/regions', tryAndCatch(async (req, res) => {
+
         let regionList = regions.findActiveRegions().map(region => {
             return {
                 codeRegion: region.codeRegion,
@@ -16,11 +17,6 @@ module.exports = ({ regions }) => {
             return a.nom.localeCompare(b.nom);
         });
 
-        regionList.push({
-            codeRegion: null,
-            nom: 'Autre région',
-            email: 'anotea@anotea.pole-emploi.fr'
-        });
 
         res.json(regionList);
     }));

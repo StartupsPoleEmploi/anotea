@@ -11,7 +11,7 @@ import Avis from '../../common/avis/Avis';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../../../common/components/Loader';
-import { getAvisStats } from '../../../services/statsService';
+import { getAvisStats } from '../../../services/avisService';
 import { ReconciliationWorkflow, Workflow } from '../../common/avis/Workflow';
 
 export default class OrganismeAvisPanel extends React.Component {

@@ -5,7 +5,7 @@ const Boom = require('boom');
 const compression = require('compression');
 const createMiddlewares = require('./utils/middlewares/middlewares');
 
-module.exports = components => {
+module.exports = (components, options = {}) => {
 
     let app = express();
     let { logger, configuration, sentry, auth } = components;
@@ -43,8 +43,6 @@ module.exports = components => {
     app.use(require('./api/v1/actions-routes')(httpComponents));
     app.use(require('./api/v1/sessions-routes')(httpComponents));
     app.use(require('./api/v1/organismes-formateurs-routes')(httpComponents));
-    app.use(require('./api/v1/swagger-routes')(httpComponents));
-    app.use(require('./api/public-stats-routes')(httpComponents));
     app.use(require('./api/regions-routes')(httpComponents));
     app.use(require('./api/kairos/kairos-routes')(httpComponents));
     app.use(require('./api/backoffice/login-routes')(httpComponents));
@@ -52,13 +50,18 @@ module.exports = components => {
     app.use(require('./api/backoffice/activation-routes')(httpComponents));
     app.use(require('./api/backoffice/me-routes')(httpComponents));
     app.use(require('./api/backoffice/avis-routes')(httpComponents));
+    app.use(require('./api/backoffice/stagiaires-routes')(httpComponents));
     app.use(require('./api/backoffice/formations-routes')(httpComponents));
     app.use(require('./api/backoffice/sirens-routes')(httpComponents));
     app.use(require('./api/backoffice/departements-routes')(httpComponents));
+    app.use(require('./api/backoffice/financeurs-routes')(httpComponents));
     app.use(require('./api/backoffice/stats-routes')(httpComponents));
     app.use(require('./api/backoffice/gestion-organismes-routes')(httpComponents));
     app.use(require('./api/backoffice/emails-preview-routes')(httpComponents));
     app.use(require('./api/questionnaire/questionnaire-routes')(httpComponents));
+    if (options.swagger) {
+        app.use(require('./api/v1/swagger-routes')(httpComponents));
+    }
 
     // catch 404
     app.use((req, res) => {

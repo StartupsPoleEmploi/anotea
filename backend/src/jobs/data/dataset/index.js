@@ -7,8 +7,8 @@ const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./tasks/createAccounts');
 const importIntercarif = require('../../import/intercarif/tasks/importIntercarif');
-const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
-const computeOrganismesScore = require('../../organismes/tasks/computeScore');
+const synchronizeOrganismesWithAccounts = require('../../import/organismes/tasks/synchronizeAccountsWithIntercarif');
+const computeOrganismesScore = require('../../import/organismes/tasks/computeScore');
 const resetPasswords = require('../reset/tasks/resetPasswords');
 const createStagiaires = require('./tasks/createStagiaires');
 const createAvis = require('./tasks/createAvis');
@@ -74,7 +74,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
             questionnaire: `http://localhost:3000/questionnaire/${stagiaire.token}`,
             widget: 'http://localhost:3002?format=carrousel&type=session&identifiant=F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             backoffice: {
-                url: 'http://localhost:3000/admin',
+                url: 'http://localhost:3000/backoffice',
                 logins: [
                     { profile: 'moderateur', login: 'moderateur', password },
                     { profile: 'financeur', login: 'financeur', password },

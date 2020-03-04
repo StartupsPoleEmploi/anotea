@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const Joi = require('joi');
 const moment = require('moment');
-const { isPoleEmploi, getCodeFinanceurs } = require('../../../../core/utils/financeurs');
+const { isPoleEmploi, getFinanceurs } = require('../../../../core/utils/financeurs');
 const { arrayOf } = require('../../../utils/validators-utils');
 
 module.exports = (db, regions, user) => {
@@ -11,10 +11,12 @@ module.exports = (db, regions, user) => {
     return {
         type: 'financeur',
         getUser: () => user,
-        getShield: () => ({
-            'codeRegion': user.codeRegion,
-            'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
-        }),
+        getShield: () => {
+            return {
+                'codeRegion': user.codeRegion,
+                'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
+            };
+        },
         validators: {
             form: () => {
                 return {
@@ -24,7 +26,7 @@ module.exports = (db, regions, user) => {
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
                     siren: Joi.string().min(9).max(9),
                     codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
-                        Joi.string().valid(getCodeFinanceurs()) : Joi.any().forbidden(),
+                        Joi.string().valid(getFinanceurs().map(f => f.code)) : Joi.any().forbidden(),
                 };
             },
             filters: () => {

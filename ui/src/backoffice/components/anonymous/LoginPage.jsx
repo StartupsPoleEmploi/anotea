@@ -73,10 +73,10 @@ export default class LoginPage extends React.Component {
                 title={'Votre espace Anotéa'}
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">Connexion</div>}
+                                title="Connexion"
                                 elements={
                                     <>
                                         <label>Identifiant</label>
@@ -100,14 +100,14 @@ export default class LoginPage extends React.Component {
                                 buttons={
                                     <div className="d-flex flex-column">
                                         <div className="mot-de-passe-oublie">
-                                            <NavLink to="/admin/mot-de-passe-oublie">
+                                            <NavLink to="/backoffice/mot-de-passe-oublie">
                                                 Mot de passe oublié
                                             </NavLink>
                                         </div>
                                         <Button
                                             type="submit"
                                             size="large"
-                                            color="blue"
+                                            color="orange"
                                             disabled={this.state.loading}
                                             onClick={this.onSubmit}
                                         >

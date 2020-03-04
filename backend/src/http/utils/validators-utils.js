@@ -10,12 +10,8 @@ const arrayAsString = () => {
     })).arrayAsString();
 };
 
-const arrayOf = (...items) => {
-    return arrayAsString().items(items).single();
-};
-
 module.exports = {
-    arrayOf,
     arrayAsString,
+    arrayOf: (...items) => arrayAsString().items(items).single(),
     objectId: () => Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'Identifiant invalide'),
 };

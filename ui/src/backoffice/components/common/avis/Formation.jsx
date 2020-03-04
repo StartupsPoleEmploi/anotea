@@ -21,8 +21,8 @@ export default class Formation extends React.Component {
                     <span>{formation.intitule}</span><br />
                     <span>
                     {action.lieu_de_formation.ville}
-                        &nbsp;du <PrettyDate date={new Date(action.session.periode.debut)} numeric={true} />
-                        &nbsp;au <PrettyDate date={new Date(action.session.periode.fin)} numeric={true} />
+                        &nbsp;du <PrettyDate date={new Date(action.session.periode.debut)} format={'L'} />
+                        &nbsp;au <PrettyDate date={new Date(action.session.periode.fin)} format={'L'} />
                 </span>
                 </p>
             </div>

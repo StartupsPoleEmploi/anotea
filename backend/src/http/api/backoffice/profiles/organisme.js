@@ -11,7 +11,11 @@ module.exports = (db, regions, user) => {
     return {
         type: 'organisme',
         getUser: () => user,
-        getShield: () => ({ 'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`) }),
+        getShield: () => {
+            return {
+                'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`)
+            };
+        },
         validators: {
             form: () => {
                 return {

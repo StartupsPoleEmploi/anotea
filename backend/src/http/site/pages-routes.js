@@ -7,7 +7,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let utils = {
-        getBackofficeUrl: () => `${(configuration.app.public_hostname)}/admin`,
+        getBackofficeUrl: () => `${(configuration.app.public_hostname)}/backoffice`,
         analytics: configuration.analytics,
 
     };

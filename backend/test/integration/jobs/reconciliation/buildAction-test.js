@@ -43,7 +43,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
-            code_region: '11',
             lieu_de_formation: {
                 code_postal: '75019',
                 ville: 'Paris'

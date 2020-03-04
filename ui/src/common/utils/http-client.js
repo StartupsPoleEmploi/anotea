@@ -28,7 +28,7 @@ const getHeaders = () => {
     return {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        ...(isApplication('admin') ? { 'Authorization': `Bearer ${getToken()}` } : {}),
+        ...(isApplication('backoffice') ? { 'Authorization': `Bearer ${getToken()}` } : {}),
         ...(isApplication('widget') ? {
             'X-Anotea-Widget': getReferrerUrl().origin,
             'X-Anotea-Widget-Referrer': getReferrerUrl(),

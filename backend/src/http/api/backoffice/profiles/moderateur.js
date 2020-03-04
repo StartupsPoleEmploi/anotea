@@ -10,7 +10,11 @@ module.exports = (db, user) => {
     return {
         type: 'moderateur',
         getUser: () => user,
-        getShield: () => ({ codeRegion: user.codeRegion }),
+        getShield: () => {
+            return {
+                codeRegion: user.codeRegion
+            };
+        },
         validators: {
             form: () => {
                 return {

@@ -95,6 +95,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
                 { 'siret': identifiant },
             ]
         });
+
         if (account && await checkPassword(password, account.passwordHash)) {
             await rehashPassword(account, password);
             token = await handleLogin(req.body.identifiant, account);

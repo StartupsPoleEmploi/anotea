@@ -140,7 +140,7 @@ module.exports = {
         return _.merge({
             _id: new ObjectID(),
             token: randomize('token'),
-            campaign: 'test',
+            campaign: 'test-campaign',
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur',
@@ -253,7 +253,6 @@ module.exports = {
                         lignes: [
                             '-'
                         ],
-                        code_region: codeRegion
                     },
                     telfixe: {
                         numtels: [
@@ -308,7 +307,6 @@ module.exports = {
                             lignes: [
                                 '-'
                             ],
-                            code_region: codeRegion
                         },
                         telfixe: {
                             numtels: [
@@ -345,7 +343,6 @@ module.exports = {
                             lignes: [
                                 '-'
                             ],
-                            code_region: codeRegion
                         },
                         telfixe: {
                             numtels: [
@@ -547,7 +544,6 @@ module.exports = {
                             departement: '75',
                             code_insee_commune: '75019',
                             region: codeRegion,
-                            code_region: codeRegion,
                             pays: 'FR',
                             geolocalisation: {
                                 latitude: '48',
@@ -595,7 +591,6 @@ module.exports = {
                         lignes: [
                             '-'
                         ],
-                        code_region: codeRegion
                     }
                 },
                 acces_handicapes: 'Accès handicapé possible',
@@ -632,7 +627,6 @@ module.exports = {
                                 lignes: [
                                     '-'
                                 ],
-                                code_region: codeRegion
                             },
                             telfixe: {
                                 numtels: [
@@ -840,7 +834,6 @@ module.exports = {
                             lignes: [
                                 '-'
                             ],
-                            code_region: codeRegion
                         }
                     },
                     periode_inscription: {

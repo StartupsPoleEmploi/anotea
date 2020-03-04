@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import jwtDecode from 'jwt-decode';
-import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from '../common/utils/http-client';
 import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
@@ -10,12 +9,13 @@ import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
 import AnonymousRoutes from './components/anonymous/AnonymousRoutes';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
-import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './Backoffice.scss';
 import Header from './components/common/header/Header';
-import AppContext from './BackofficeContext';
+import BackofficeContext from './BackofficeContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
 import WithAnalytics from '../common/components/analytics/WithAnalytics';
+import { Chunk } from './components/common/Chunk';
+import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 
 class Backoffice extends Component {
 
@@ -54,7 +54,7 @@ class Backoffice extends Component {
 
     onLogout = () => {
         removeSession();
-        window.location.href = '/admin';//Reload page to flush all react states
+        window.location.href = '/backoffice';//Reload page to flush all react states
     };
 
     onLogin = results => {
@@ -65,7 +65,7 @@ class Backoffice extends Component {
             account: getSession(),
         });
 
-        this.props.router.goToPage('/admin');
+        this.props.router.goToPage('/backoffice');
     };
 
     showGlobalMessage = message => {
@@ -77,54 +77,91 @@ class Backoffice extends Component {
         let { account, message } = this.state;
         let { router } = this.props;
         let backoffices = {
-            moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
-                headerItems: <ModerateurHeaderItems router={router} />,
-                routes: <ModerateurRoutes router={router} />,
-            }),
-            financeur: () => ({
-                defaultPath: '/admin/financeur/avis/stats',
-                headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes router={router} />,
-            }),
-            organisme: () => ({
-                defaultPath: '/admin/organisme/avis/stats',
-                headerItems: <OrganismeHeaderItems />,
-                routes: <OrganismeRoutes router={router} />,
-            }),
-            anonymous: () => ({
-                defaultPath: '/admin/login',
-                headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />,
-            })
+            moderateur: {
+                theme: {
+                    backgroundColor: 'blue',
+                    buttonColor: 'blue',
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<ModerateurHeaderItems router={router} />)} />,
+                        routes: <Chunk name="moderateur" load={() => (<ModerateurRoutes router={router} />)} />
+                    };
+                },
+            },
+            organisme: {
+                theme: {
+                    backgroundColor: 'black',
+                    buttonColor: 'orange',
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<OrganismeHeaderItems />)} />,
+                        routes: <Chunk name="organisme" load={() => (<OrganismeRoutes router={router} />)} />
+                    };
+                },
+            },
+            financeur: {
+                theme: {
+                    backgroundColor: 'green',
+                    buttonColor: 'green',
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<FinanceurHeaderItems />)} />,
+                        routes: <Chunk name="financeur" load={() => (<FinanceurRoutes router={router} />)} />
+                    };
+                },
+            },
+            admin: {
+                theme: {
+                    backgroundColor: 'green',
+                    buttonColor: 'green',
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<FinanceurHeaderItems />)} />,
+                        routes: <Chunk name="financeur" load={() => (<FinanceurRoutes router={router} />)} />
+                    };
+                },
+            },
+            anonymous: {
+                theme: {
+                    backgroundColor: 'black',
+                    buttonColor: 'orange',
+                },
+                components: () => {
+                    return {
+                        header: <div />,
+                        routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />
+                    };
+                },
+            },
         };
 
-        let layout = backoffices[account.profile]();
-        let appContext = {
+        let { theme, components } = backoffices[account.profile];
+        let { header, routes } = components();
+        let context = {
             account,
+            theme,
             showMessage: this.showGlobalMessage,
         };
 
         return (
             <WithAnalytics category={`backoffice/${account.profile}`}>
-                <AppContext.Provider value={appContext}>
+                <BackofficeContext.Provider value={context}>
                     <div className="Backoffice">
-                        <Switch>
-                            <Redirect exact from="/" to={layout.defaultPath} />
-                            <Redirect exact from="/admin" to={layout.defaultPath} />
-                        </Switch>
-
-                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />
-
-                        {layout.routes}
-                        {message &&
-                        <GlobalMessage message={message} onClose={() => {
-                            return this.setState({ message: null });
-                        }}
+                        <Header
+                            items={header}
+                            defaultPath={`/backoffice/${account.profile}`}
+                            onLogout={this.onLogout}
                         />
+                        {routes}
+                        {message &&
+                        <GlobalMessage message={message} onClose={() => this.setState({ message: null })} />
                         }
                     </div>
-                </AppContext.Provider>
+                </BackofficeContext.Provider>
             </WithAnalytics>
         );
     }

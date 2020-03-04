@@ -1,23 +1,48 @@
 const computeOrganismesStats = require('./stats/computeOrganismesStats');
 const computeAvisStats = require('./stats/computeAvisStats');
 const computeApiStats = require('./stats/computeApiStats');
-const computeCampaignStats = require('./stats/computeCampaignStats');
+const computeCampagnesStats = require('./stats/computeCampagnesStats');
 
 module.exports = async (db, regions) => {
 
-    let stats = await Promise.all([
-        computeOrganismesStats(db, regions),
-        computeAvisStats(db, regions),
-        computeApiStats(db, regions),
-        computeCampaignStats(db, regions),
+    let regional = await Promise.all(regions.findActiveRegions().map(async region => {
+        let codeRegion = region.codeRegion;
+
+        let [api, organismes, avis] = await Promise.all([
+            computeApiStats(db, codeRegion),
+            computeOrganismesStats(db, codeRegion),
+            computeAvisStats(db, codeRegion),
+        ]);
+
+        return {
+            codeRegion,
+            api,
+            organismes,
+            avis,
+        };
+    }));
+
+    let [api, organismes, avis, campagnes] = await Promise.all([
+        computeApiStats(db),
+        computeOrganismesStats(db),
+        computeAvisStats(db),
+        computeCampagnesStats(db),
     ]);
 
     await db.collection('statistics').insertOne({
         date: new Date(),
-        organismes: stats[0],
-        avis: stats[1],
-        api: stats[2],
-        campaign: stats[3],
+        national: {
+            api,
+            organismes,
+            avis,
+            campagnes,
+        },
+        regions: regional.reduce((acc, r) => {
+            return {
+                ...acc,
+                [r.codeRegion]: r,
+            };
+        }, {}),
     });
 
     return { computed: true };

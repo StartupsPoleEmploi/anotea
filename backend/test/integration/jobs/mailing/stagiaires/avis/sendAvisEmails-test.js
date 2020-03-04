@@ -187,7 +187,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: id,
-                codeRegion: '18',
+                codeRegion: '93',
                 mailSent: true,
                 unsubscribe: false,
                 mailError: 'smtpError',
@@ -214,7 +214,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: randomize('stagiaire'),
-                codeRegion: '18',
+                codeRegion: '93',
                 mailSent: true,
                 unsubscribe: false,
                 avisCreated: false,
@@ -240,7 +240,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: randomize('stagiaire'),
-                codeRegion: '18',
+                codeRegion: '93',
                 mailSent: true,
                 unsubscribe: false,
                 avisCreated: true,
