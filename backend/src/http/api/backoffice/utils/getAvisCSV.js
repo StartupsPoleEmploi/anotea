@@ -9,6 +9,8 @@ let getStatus = avis => {
         return 'Archivé';
     } else if (avis.status === 'validated') {
         return 'Validé';
+    } else if (avis.status === 'rejected') {
+        return 'Rejeté';
     } else {
         return 'En cours de modération';
     }
