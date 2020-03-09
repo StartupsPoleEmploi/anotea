@@ -66,6 +66,7 @@ module.exports = (db, regions) => {
                 'dc_numeroicsession',
                 'dc_numeroicaction',
                 'liste_financeur',
+                'c_dispositifformation',
             ]
         },
         shouldBeImported: stagiaire => {
@@ -118,6 +119,7 @@ module.exports = (db, regions) => {
                 token: token,
                 codeRegion: region.codeRegion,
                 refreshKey: md5(`${email};${idSession}`),
+                dispositifFinancement: record['c_dispositifformation'],
                 individu: {
                     nom: record['c_nomcorrespondance'],
                     prenom: record['c_prenomcorrespondance'],

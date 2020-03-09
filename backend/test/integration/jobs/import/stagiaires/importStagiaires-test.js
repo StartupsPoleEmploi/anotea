@@ -31,6 +31,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             mailSent: false,
             codeRegion: '11',
             refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744',
+            dispositifFinancement: 'AIF',
             individu: {
                 nom: 'MARTIN',
                 prenom: 'EUGENE',

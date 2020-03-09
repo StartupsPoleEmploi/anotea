@@ -85,6 +85,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 firstRead: date.toJSON()
             },
             codeRegion: '11',
+            dispositifFinancement: 'AIF',
         });
 
         assert.deepStrictEqual(_.omit(response.body.infosRegion, ['stagiaire']), {
@@ -202,7 +203,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 titleMasked: false,
             },
             read: false,
-            status: 'none',
+            status: 'none', 
+            dispositifFinancement: 'AIF',
         });
     });
 
@@ -274,6 +276,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             read: false,
             status: 'validated',
+            dispositifFinancement: 'AIF',
         });
     });
 
