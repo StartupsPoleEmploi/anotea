@@ -203,7 +203,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 titleMasked: false,
             },
             read: false,
-            status: 'none', 
+            status: 'none',
             dispositifFinancement: 'AIF',
         });
     });
