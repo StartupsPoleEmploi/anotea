@@ -36,7 +36,7 @@ export default class ModerateurRoutes extends React.Component {
                 }}
                 />
                 <Route path={'/backoffice/moderateur/mon-compte'} component={MonComptePage} />
-                <Redirect to="/backoffice/moderateur/moderation/avis/stagiaires" />
+                <Redirect to="/backoffice/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none" />
             </Switch>
         );
     }
