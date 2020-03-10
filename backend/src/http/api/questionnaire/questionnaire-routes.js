@@ -77,9 +77,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const buildAvis = (notes, token, body, stagiaire) => {
 
-        let text = _.get(body, 'commentaire.texte', null);
-        let title = _.get(body, 'commentaire.titre', null);
-        let hasCommentaire = title || text;
+        let text = sanitize(_.get(body, 'commentaire.texte', null));
+        let title = sanitize(_.get(body, 'commentaire.titre', null));
+        let hasCommentaire = !!(title || text);
 
         let avis = {
             date: new Date(),
@@ -94,12 +94,10 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             lastStatusUpdate: new Date(),
         };
 
-        let sanitizedTitle = sanitize(title);
-        let sanitizedText = sanitize(text);
-        if (hasCommentaire && (sanitize(title) || sanitize(text))) {
+        if (hasCommentaire) {
             avis.commentaire = {
-                title: sanitizedTitle,
-                text: sanitizedText,
+                title,
+                text,
                 titleMasked: false,
             };
         }
