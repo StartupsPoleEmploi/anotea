@@ -1,7 +1,7 @@
 const express = require('express');
 const YAML = require('yamljs');
 const path = require('path');
-const swaggerUi = require('swagger-ui-express');
+const swagger = require('swagger-ui-express');
 
 module.exports = () => {
 
@@ -9,7 +9,10 @@ module.exports = () => {
     let router = express.Router();
     let apiSpecifications = YAML.load(path.join(__dirname, './v1-swagger.yml'));
 
-    router.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
+    router.use('/api/v1/doc', swagger.serve, (req, res) => {
+        let html = swagger.generateHTML(apiSpecifications);
+        res.send(html);
+    });
 
     return router;
 };
