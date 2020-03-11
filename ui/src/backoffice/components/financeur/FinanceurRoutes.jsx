@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import FinanceurPage from './FinanceurPage';
 import MonComptePage from '../common/MonComptePage';
+import StatsPage from '../anonymous/StatsPage';
 
 export default class FinanceurRoutes extends React.Component {
 
@@ -18,6 +19,9 @@ export default class FinanceurRoutes extends React.Component {
                     return <FinanceurPage router={router} />;
                 }} />
                 <Route path={'/backoffice/financeur/mon-compte'} component={MonComptePage} />
+                <Route path="/backoffice/stats" render={() => {
+                    return <StatsPage router={router} />;
+                }} />
                 <Redirect to="/backoffice/financeur/avis" />
             </Switch>
         );
