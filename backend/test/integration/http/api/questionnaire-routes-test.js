@@ -277,6 +277,36 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
     });
 
+    it('can submit a questionnaire with empty commentaires (same as notes)', async () => {
+
+        let app = await startServer();
+        let db = await getTestDatabase();
+        let date = new Date();
+        let stagiaire = newStagiaire({}, date);
+        await insertIntoDatabase('stagiaires', stagiaire);
+
+        let response = await request(app)
+        .post(`/api/questionnaire/${stagiaire.token}`)
+        .send({
+            avis_accueil: 2,
+            avis_contenu_formation: 2,
+            avis_equipe_formateurs: 1,
+            avis_moyen_materiel: 2,
+            avis_accompagnement: 2,
+            commentaire: {
+                texte: '\u0020',
+                titre: '  ',
+            },
+        });
+
+        assert.strictEqual(response.statusCode, 200);
+
+        let result = await db.collection('avis').findOne({ token: stagiaire.token });
+        assert.deepStrictEqual(result.commentaire, undefined);
+        assert.deepStrictEqual(result.status, 'validated');
+    });
+
+
     it('can submit a questionnaire with html', async () => {
 
         let app = await startServer();
