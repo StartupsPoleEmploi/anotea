@@ -92,6 +92,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             read: false,
             status: hasCommentaire ? 'none' : 'validated',
             lastStatusUpdate: new Date(),
+            dispositifFinancement: stagiaire.dispositifFinancement,
         };
 
         let sanitizedTitle = sanitize(title);

@@ -6,7 +6,7 @@ import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getSirens } from '../../../services/sirensService';
 import { getFormations } from '../../../services/formationsService';
 import { getDepartements } from '../../../services/departementsService';
-import { getFinanceurs } from '../../../services/financeursService';
+import { getFinanceurs, getDispositifs } from '../../../services/financeursService';
 import { getRegions } from '../../../services/regionsService';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
@@ -43,6 +43,11 @@ export default class FinanceurForm extends React.Component {
                 results: [],
             },
             financeurs: {
+                selected: null,
+                loading: false,
+                results: [],
+            },
+            dispositifs: {
                 selected: null,
                 loading: true,
                 results: [],
@@ -91,7 +96,11 @@ export default class FinanceurForm extends React.Component {
             .then(results => {
                 return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
             });
-        }
+            this.loadSelectBox('dispositifs', () => getDispositifs())
+            .then(results => {
+                return this.updateSelectBox('dispositifs', results.find(f => f.code === query.dispositifFinancement));
+            });
+        } 
 
         if (this.mustShowCodeRegionFilter()) {
             this.loadSelectBox('regions', () => getRegions())
@@ -110,13 +119,14 @@ export default class FinanceurForm extends React.Component {
 
     getParametersFromQuery = () => {
         let { query } = this.props;
-        return _.pick(query, ['codeFinanceur', 'codeRegion', 'departement', 'siren', 'numeroFormation', 'debut', 'fin']);
+        return _.pick(query, ['codeFinanceur', 'dispositifFinancement', 'codeRegion', 'departement', 'siren', 'numeroFormation', 'debut', 'fin']);
     };
 
     getFormParameters = () => {
-        let { financeurs, regions, departements, sirens, formations, periode } = this.state;
+        let { financeurs, dispositifs, regions, departements, sirens, formations, periode } = this.state;
         return {
             codeFinanceur: _.get(financeurs, 'selected.code', null),
+            dispositifFinancement: _.get(dispositifs, 'selected.code', null),
             codeRegion: _.get(regions, 'selected.codeRegion', null),
             departement: _.get(departements, 'selected.code', null),
             siren: _.get(sirens, 'selected.siren', null),
@@ -127,8 +137,8 @@ export default class FinanceurForm extends React.Component {
     };
 
     isFormLoading = () => {
-        let { departements, sirens, formations } = this.state;
-        return departements.loading || sirens.loading || formations.loading;
+        let { departements, sirens, formations, financeurs } = this.state;
+        return departements.loading || sirens.loading || formations.loading || financeurs.loading;
     };
 
     isFormSynchronizedWithQuery = () => {
@@ -199,6 +209,10 @@ export default class FinanceurForm extends React.Component {
                 selected: null,
                 ..._.pick(this.state.financeurs, ['results', 'loading']),
             },
+            dispositifs: {
+                selected: null,
+                ..._.pick(this.state.dispositifs, ['results', 'loading']),
+            },
             regions: {
                 selected: null,
                 ..._.pick(this.state.regions, ['results', 'loading']),
@@ -207,7 +221,7 @@ export default class FinanceurForm extends React.Component {
     };
 
     render() {
-        let { departements, sirens, formations, financeurs, regions, periode } = this.state;
+        let { departements, sirens, formations, financeurs, dispositifs, regions, periode } = this.state;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
@@ -287,9 +301,9 @@ export default class FinanceurForm extends React.Component {
                         />
                     </div>
                     }
-                    <div className="form-group col-lg-6">
-                        {this.mustShowFinanceurFilter() &&
-                        <>
+                    {this.mustShowFinanceurFilter() &&
+                    <>
+                        <div className="form-group col-lg-3 col-xl-3">
                             <label>Financeur</label>
                             <Select
                                 value={financeurs.selected}
@@ -301,9 +315,22 @@ export default class FinanceurForm extends React.Component {
                                 trackingId="Financeur"
                                 onChange={option => this.updateSelectBox('financeurs', option)}
                             />
-                        </>
-                        }
-                    </div>
+                        </div>
+                        <div className="form-group col-lg-3 col-xl-3">
+                            <label>Dispositif financement</label>
+                            <Select
+                                value={dispositifs.selected}
+                                options={dispositifs.results}
+                                loading={dispositifs.loading}
+                                optionKey="code"
+                                label={option => option.code}
+                                placeholder={'Tous les dispositifs'}
+                                trackingId="Dispositif"
+                                onChange={option => this.updateSelectBox('dispositifs', option)}
+                            />
+                        </div>
+                    </>
+                    }
                 </div>
                 <div className="form-row justify-content-center">
                     <div className="form-group buttons">

@@ -14,6 +14,7 @@ module.exports = stagiaire => {
         token: Joi.string().required(),
         codeRegion: Joi.string().required(),
         refreshKey: Joi.string().required(),
+        dispositifFinancement: Joi.string(),
         individu: {
             nom: Joi.string().required(),
             prenom: Joi.string().allow('').required(),

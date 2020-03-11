@@ -17,6 +17,7 @@ module.exports = {
             importDate: date,
             avisCreated: false,
             refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
+            dispositifFinancement: 'AIF',
             individu: {
                 nom: 'Dupont',
                 prenom: 'Henri',
@@ -191,6 +192,7 @@ module.exports = {
             lastStatusUpdate: date,
             read: true,
             codeRegion: '11',
+            dispositifFinancement: 'AIF',
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {
