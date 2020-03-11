@@ -7,6 +7,7 @@ import ModerationAvisPage from './moderation-avis/ModerationAvisPage';
 import ModerationReponsesPage from './moderation-avis/ModerationReponsesPage';
 import MonComptePage from '../common/MonComptePage';
 import OrganismesEmailsPreviewPage from './courriels/OrganismesEmailsPreviewPage';
+import StatsPage from '../anonymous/StatsPage';
 
 export default class ModerateurRoutes extends React.Component {
 
@@ -36,7 +37,10 @@ export default class ModerateurRoutes extends React.Component {
                 }}
                 />
                 <Route path={'/backoffice/moderateur/mon-compte'} component={MonComptePage} />
-                <Redirect to="/backoffice/moderateur/moderation/avis/stagiaires" />
+                <Route path="/backoffice/stats" render={() => {
+                    return <StatsPage router={router} />;
+                }} />
+                <Redirect to="/backoffice/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none" />
             </Switch>
         );
     }
