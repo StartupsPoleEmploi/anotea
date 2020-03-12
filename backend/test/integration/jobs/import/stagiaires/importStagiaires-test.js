@@ -301,24 +301,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('cannot import same campaign twice', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = getTestFile('stagiaires-pe.csv');
-        let { regions } = await getComponents();
-        let handler = poleEmploiCSVHandler(db, regions);
-
-        await importStagiaires(db, logger, csvFile, handler);
-        let results = await importStagiaires(db, logger, csvFile, handler);
-
-        assert.deepStrictEqual(results, {
-            invalid: 0,
-            ignored: 0,
-            imported: 0,
-            total: 0,
-        });
-    });
-
     it('should fail to import stagiaire with invalid email', async () => {
 
         let db = await getTestDatabase();

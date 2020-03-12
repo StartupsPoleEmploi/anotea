@@ -42,11 +42,6 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
         invalid: 0,
     };
 
-    if (await db.collection('jobs').findOne({ campaign: campaign.name })) {
-        logger.info(`CSV file ${file} already imported`);
-        return stats;
-    }
-
     await pipeline([
         fs.createReadStream(file),
         ...(options.unpack ? [bz2()] : []),
