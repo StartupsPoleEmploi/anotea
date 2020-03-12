@@ -15,7 +15,5 @@ execute(async ({ db, logger }) => {
     };
 
     return {
-        ...(await migrate('organismeMayotte')),
-        ...(await migrate('fixInvalidAvis')),
     };
 });
