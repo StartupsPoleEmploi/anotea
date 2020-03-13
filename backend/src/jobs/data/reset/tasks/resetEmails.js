@@ -1,27 +1,34 @@
 const moment = require('moment');
-const { getNbModifiedDocuments } = require('../../../job-utils');
+const { getNbModifiedDocuments, batchCursor } = require('../../../job-utils');
 const faker = require('faker');
 
 faker.locale = 'fr';
 
 module.exports = async db => {
-    let [questionnaire, questionnaire6Mois, organisme] = await Promise.all([
-        db.collection('stagiaires').updateMany(
-            {},
-            {
+    let anonymize = async () => {
+        let updated = 0;
+        let cursor = db.collection('stagiaires').find().project({_id:1 });
+        await batchCursor(cursor, async next => {
+            let doc = await next();
+            let res = await db.collection('stagiaires').updateOne({ _id: doc._id }, {
                 $set: {
                     individu: {
                         nom: faker.name.lastName(),
                         prenom: faker.name.firstName(),
-                        email: faker.internet.email(),
+                        email: faker.phone.phoneNumber('###') + faker.internet.email(),
                         telephones: [faker.phone.phoneNumber('06########')],
                         emailValid: true,
                         identifiant_pe: faker.phone.phoneNumber('##########'),
                         identifiant_local: faker.phone.phoneNumber('##########'),
                     },
                 },
-            }
-        ),
+            });
+            updated += getNbModifiedDocuments(res);
+        });
+        return updated;
+    };
+    let [anonymisation, questionnaire, questionnaire6Mois, organisme] = await Promise.all([
+        anonymize(),
         db.collection('stagiaires').updateMany(
             {
                 avisCreated: false,
@@ -64,6 +71,7 @@ module.exports = async db => {
     ]);
 
     return {
+        anonymisation: anonymisation,
         questionnaire: getNbModifiedDocuments(questionnaire),
         questionnaire6Mois: getNbModifiedDocuments(questionnaire6Mois),
         organisme: getNbModifiedDocuments(organisme),
