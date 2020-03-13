@@ -1,8 +1,27 @@
 const moment = require('moment');
 const { getNbModifiedDocuments } = require('../../../job-utils');
+const faker = require('faker');
+
+faker.locale = 'fr';
 
 module.exports = async db => {
     let [questionnaire, questionnaire6Mois, organisme] = await Promise.all([
+        db.collection('stagiaires').updateMany(
+            {},
+            {
+                $set: {
+                    individu: {
+                        nom: faker.name.lastName(),
+                        prenom: faker.name.firstName(),
+                        email: faker.internet.email(),
+                        telephones: [faker.phone.phoneNumber('06########')],
+                        emailValid: true,
+                        identifiant_pe: faker.phone.phoneNumber('##########'),
+                        identifiant_local: faker.phone.phoneNumber('##########'),
+                    },
+                },
+            }
+        ),
         db.collection('stagiaires').updateMany(
             {
                 avisCreated: false,
