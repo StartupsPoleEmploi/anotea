@@ -14,7 +14,5 @@ execute(async ({ db, logger }) => {
         };
     };
 
-    return {
-
-    };
+    return {};
 });

@@ -7,7 +7,8 @@ faker.locale = 'fr';
 module.exports = async db => {
     let anonymize = async () => {
         let updated = 0;
-        let cursor = db.collection('stagiaires').find().project({_id:1 });
+
+        let cursor = db.collection('stagiaires').find().project({ _id: 1 });
         await batchCursor(cursor, async next => {
             let doc = await next();
             let res = await db.collection('stagiaires').updateOne({ _id: doc._id }, {
@@ -27,6 +28,7 @@ module.exports = async db => {
         });
         return updated;
     };
+
     let [anonymisation, questionnaire, questionnaire6Mois, organisme] = await Promise.all([
         anonymize(),
         db.collection('stagiaires').updateMany(
