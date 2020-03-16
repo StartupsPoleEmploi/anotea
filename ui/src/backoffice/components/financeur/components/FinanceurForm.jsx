@@ -6,7 +6,7 @@ import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getSirens } from '../../../services/sirensService';
 import { getFormations } from '../../../services/formationsService';
 import { getDepartements } from '../../../services/departementsService';
-import { getFinanceurs, getDispositifs } from '../../../services/financeursService';
+import { getDispositifs, getFinanceurs } from '../../../services/financeursService';
 import { getRegions } from '../../../services/regionsService';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
@@ -100,7 +100,7 @@ export default class FinanceurForm extends React.Component {
             .then(results => {
                 return this.updateSelectBox('dispositifs', results.find(f => f.code === query.dispositifFinancement));
             });
-        } 
+        }
 
         if (this.mustShowCodeRegionFilter()) {
             this.loadSelectBox('regions', () => getRegions())
