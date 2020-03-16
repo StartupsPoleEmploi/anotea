@@ -6,6 +6,8 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../helpers/with-server');
 const { newAvis, newStagiaire, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 
+let { delay } = require('../../../../../src/jobs/job-utils');
+
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase, logAsOrganisme }) => {
 
     let buildAvis = (custom = {}) => {
@@ -193,6 +195,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
+
+        await delay(1000);
 
         let response = await request(app)
         .get('/api/backoffice/avis?fulltext=NOMATCH')
