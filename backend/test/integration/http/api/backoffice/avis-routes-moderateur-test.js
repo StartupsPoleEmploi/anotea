@@ -160,7 +160,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 0);
     });
 
-    it.only('can search avis by titre (fulltext)', async () => {
+    it('can search avis by titre (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
