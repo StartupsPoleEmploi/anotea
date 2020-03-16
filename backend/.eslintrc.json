@@ -1,6 +1,7 @@
 {
   "extends": [
-    "../.eslintrc.json"
+    "../.eslintrc.json",
+    "plugin:mocha/recommended"
   ],
   "env": {
     "node": true,
@@ -9,5 +10,12 @@
   },
   "parserOptions": {
     "ecmaVersion": 2018
+  },
+  "rules": {
+    "mocha/no-mocha-arrows": "off",
+    "mocha/no-setup-in-describe": "off",
+    "mocha/no-exclusive-tests": "error",
+    "mocha/no-top-level-hooks": "off",
+    "mocha/no-hooks-for-single-case": "off"
   }
 }

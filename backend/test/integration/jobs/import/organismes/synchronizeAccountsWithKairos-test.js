@@ -85,7 +85,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
     });
 
 
-    it('should reject invalid csv file', async () => {
+    it('should reject invalid Kairos csv file', async () => {
 
         let db = await getTestDatabase();
         let invalidFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes-invalid.csv');

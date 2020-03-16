@@ -1,5 +1,3 @@
-/* eslint-disable no-var */
-/* global window, document, navigator, XMLHttpRequest */
 (function() {
 
     window.anotea = window.anotea || {};

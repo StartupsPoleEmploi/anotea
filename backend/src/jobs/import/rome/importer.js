@@ -1,4 +1,4 @@
-module.exports = function(db, logger, configuration) {
+module.exports = function(db, logger) {
 
     const fs = require('fs');
     const moment = require('moment');
@@ -9,13 +9,13 @@ module.exports = function(db, logger, configuration) {
         logger.info('ROME <-> FORMACODE mapping import - launch');
 
         let promises = [];
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             let launchTime = new Date().getTime();
             let parser = parse({ delimiter: ',', quote: '"' });
             let input = fs.createReadStream(file, { encoding: 'utf-8' });
             let count = 0;
             let transformer = transform(async (record, callback) => {
-                let promise = new Promise(async (resolve, reject) => {
+                let promise = new Promise(async resolve => {
                     let formacodes = record[2].split('$').map(item => {
                         let formacodeArr = item.split(' ');
                         let formacode = formacodeArr.pop();
