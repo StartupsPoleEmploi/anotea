@@ -475,7 +475,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can return avis avec commentaires', async () => {
+    it('can return avis sans commentaires', async () => {
 
         let app = await startServer();
         let oid = new ObjectID();

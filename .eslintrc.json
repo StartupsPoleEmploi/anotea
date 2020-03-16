@@ -4,7 +4,7 @@
     "prefer-const": "off",
     "max-len": [
       "warn",
-      160
+      200
     ],
     "quotes": [
       "warn",

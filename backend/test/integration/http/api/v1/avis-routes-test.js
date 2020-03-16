@@ -598,39 +598,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it.skip('should return avis with partial intitulé and same siret/code_postal', async () => {
-
-        let app = await startServer();
-        let intitule = 'fullstack';
-        let siret = '12345678901234';
-        let codePostal = '75000';
-        let oid = new ObjectID();
-
-        await insertIntoDatabase('avis', newAvis({
-            _id: oid,
-            formation: {
-                intitule: 'Développeur fullstack',
-                action: {
-                    lieu_de_formation: {
-                        code_postal: codePostal,
-                    },
-                    organisme_formateur: {
-                        siret,
-                    },
-                },
-            },
-        }));
-
-        let response = await request(app).get(`/api/v1/organisme_formateurs/${siret}/lieu_de_formations/${codePostal}/formations/${intitule}/avis`);
-
-        assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.filter(a => a.id === oid.toString());
-        assert.strictEqual(avis.length, 1);
-        assert.deepStrictEqual(avis[0].formation.intitule, 'Développeur fullstack');
-        assert.deepStrictEqual(avis[0].formation.action.lieu_de_formation.code_postal, codePostal);
-        assert.deepStrictEqual(avis[0].formation.action.organisme_formateur.siret, siret);
-    });
-
     it('can search avis and ignoring those archived', async () => {
 
         let app = await startServer();
