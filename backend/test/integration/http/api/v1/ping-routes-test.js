@@ -40,7 +40,11 @@ describe('/api/ping', withServer(({ startServer }) => {
 
         let response = await request(app)
         .post('/api/v1/ping/authenticated')
-        .set('authorization', buildHMACSignature('esd', '1234', { method: 'POST', path: '/api/v1/ping/authenticated', body }))
+        .set('authorization', buildHMACSignature('esd', '1234', {
+            method: 'POST',
+            path: '/api/v1/ping/authenticated',
+            body
+        }))
         .send(body);
 
         assert.strictEqual(response.statusCode, 200);
@@ -121,7 +125,11 @@ describe('/api/ping', withServer(({ startServer }) => {
 
         let response = await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated', timestamp }));
+        .set('authorization', buildHMACSignature('esd', '1234', {
+            method: 'GET',
+            path: '/api/v1/ping/authenticated',
+            timestamp
+        }));
 
         assert.strictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.body, {

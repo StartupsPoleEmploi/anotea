@@ -5,7 +5,10 @@ const isEmail = require('isemail').validate;
 
 module.exports = (db, user) => {
 
-    const getStagiaire = email => db.collection('stagiaires').findOne({ 'individu.email': email });
+    const getStagiaireTokens = async email => {
+        let stagiaires = await db.collection('stagiaires').find({ 'individu.email': email }).toArray();
+        return stagiaires.map(stag => stag.token);
+    };
 
     return {
         type: 'moderateur',
@@ -48,11 +51,11 @@ module.exports = (db, user) => {
                 } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
-                let stagiaire = fulltextIsEmail ? await getStagiaire(fulltext) : null;
+                let stagiaireTokens = fulltextIsEmail ? await getStagiaireTokens(fulltext) : null;
 
                 return {
                     codeRegion: user.codeRegion,
-                    ...(fulltextIsEmail ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
+                    ...(fulltextIsEmail ? { token: stagiaireTokens.length > 0 ? { $in: stagiaireTokens } : 'unknown' } : {}),
                     ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
