@@ -361,9 +361,10 @@
   },
   {
     "nom": "Guyane",
-    "active": false,
-    "since": "2019-01-01",
+    "active": true,
+    "since": "2019-03-01",
     "codeRegion": "03",
+    "contact": "guyane.anotea",
     "departements": [
       {
         "code": "973",
@@ -372,7 +373,7 @@
     ],
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
