@@ -13,7 +13,7 @@ schemes:
   - http
 
 paths:
-  /kairos/generate-auth-url:
+  /api/kairos/generate-auth-url:
     post:
       description: >
         Permet de générer un lien pour authentifier en SSO un organisme sur le backoffice Anotéa (signin).
@@ -53,7 +53,7 @@ paths:
       tags:
         - Kairos
 
-  /kairos/check-if-organisme-is-eligible:
+  /api/kairos/check-if-organisme-is-eligible:
     get:
       description: >
         Permet de vérifier si un organisme est éligible à la connexion Anotéa
