@@ -37,8 +37,8 @@ export const editAvis = (id, text) => {
     return _put(`/backoffice/avis/${id}/edit`, { text });
 };
 
-export const deleteAvis = (id, options = { sendEmail: false }) => {
-    return _delete(`/backoffice/avis/${id}`, options);
+export const deleteAvis = (id, params = { sendEmail: false }) => {
+    return _delete(`/backoffice/avis/${id}?${queryString.stringify(params)}`);
 };
 
 export const addReponse = (id, text) => {
