@@ -43,7 +43,7 @@ module.exports = (components, options = {}) => {
     app.use(require('./api/v1/actions-routes')(httpComponents));
     app.use(require('./api/v1/sessions-routes')(httpComponents));
     app.use(require('./api/v1/organismes-formateurs-routes')(httpComponents));
-    app.use(require('./api/regions-routes')(httpComponents));
+    app.use(require('./api/backoffice/regions-routes')(httpComponents));
     app.use(require('./api/kairos/kairos-routes')(httpComponents));
     app.use(require('./api/backoffice/login-routes')(httpComponents));
     app.use(require('./api/backoffice/password-routes')(httpComponents));

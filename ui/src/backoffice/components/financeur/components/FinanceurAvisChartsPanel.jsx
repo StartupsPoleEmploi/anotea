@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getAvisStats } from '../../../services/avisService';
 import Panel from '../../common/page/panel/Panel';
-import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
+import BadgeSummary from './BadgeSummary';
 import Loader from '../../../../common/components/Loader';
 import CommentairesPies from '../../common/avis/charts/CommentairesPies';
 import NoteRepartition from '../../common/avis/charts/NoteRepartition';
@@ -11,16 +11,15 @@ import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import Button from '../../../../common/components/Button';
 import NoteExplications from '../../common/avis/charts/NoteExplications';
 import PDF, { buildPDF } from '../../common/pdf/PDF';
-import TextSummary from '../../common/page/panel/summary/TextSummary';
-import BackofficeContext from '../../../BackofficeContext';
+import TextSummary from './TextSummary';
+import FinanceurContext from '../FinanceurContext';
 
 export default class FinanceurAvisChartsPanel extends React.Component {
 
-    static contextType = BackofficeContext;
+    static contextType = FinanceurContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
-        form: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -62,8 +61,11 @@ export default class FinanceurAvisChartsPanel extends React.Component {
     };
 
     getPDFTitle = () => {
-        let { query, form } = this.props;
-        let siren = form.sirens && form.sirens.results.find(f => f.siren === query.siren);
+        let { query } = this.props;
+        let { store } = this.context;
+        console.log(store);
+
+        let siren = store.sirens && store.sirens.find(f => f.siren === query.siren);
         if (siren) {
             return `Résultats pour ${siren.name}`;
         }
@@ -73,7 +75,7 @@ export default class FinanceurAvisChartsPanel extends React.Component {
     render() {
 
         let { account } = this.context;
-        let { query, form } = this.props;
+        let { query } = this.props;
         let stats = this.state.results;
 
         return (
@@ -83,7 +85,7 @@ export default class FinanceurAvisChartsPanel extends React.Component {
                     summary={
                         <div className="row">
                             <div className="col-sm-10">
-                                <BadgeSummary form={form} query={query} ellipsis={30} />
+                                <BadgeSummary query={query} ellipsis={30} />
                             </div>
                             <div className="col-sm-2 text-right">
                                 <Button
@@ -117,7 +119,7 @@ export default class FinanceurAvisChartsPanel extends React.Component {
                 <div ref={this.pdfReference}>
                     <PDF
                         title={this.getPDFTitle()}
-                        summary={<TextSummary form={form} query={query} />}
+                        summary={<TextSummary query={query} />}
                         main={
                             _.isEmpty(stats) ? <EmptyResults /> : (
                                 <>

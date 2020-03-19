@@ -1,11 +1,11 @@
 const express = require('express');
-const { tryAndCatch } = require('../utils/routes-utils');
+const { tryAndCatch } = require('../../utils/routes-utils');
 
 module.exports = ({ regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
-    router.get('/api/regions', tryAndCatch(async (req, res) => {
+    router.get('/api/backoffice/regions', tryAndCatch(async (req, res) => {
 
         let regionList = regions.findActiveRegions().map(region => {
             return {

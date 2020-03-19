@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
-import { getFormations } from '../../../services/formationsService';
 import Button from '../../../../common/components/Button';
 import BackofficeContext from '../../../BackofficeContext';
-import { getDepartements } from '../../../services/departementsService';
 
 export default class OrganismeForm extends React.Component {
 
@@ -47,7 +45,7 @@ export default class OrganismeForm extends React.Component {
         let { account } = this.context;
         let { query } = this.props;
 
-        this.loadSelectBox('departements', () => getDepartements())
+        this.loadSelectBox('departements', () => this.context.getDepartements())
         .then(results => {
             return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
         });
@@ -61,7 +59,7 @@ export default class OrganismeForm extends React.Component {
             return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
         });
 
-        this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || account.siret }))
+        this.loadSelectBox('formations', () => this.context.getFormations({ organisme: query.organisme || account.siret }))
         .then(results => {
             return this.updateSelectBox('formations', results.find(f => f.numeroFormation === query.numeroFormation));
         });
@@ -118,6 +116,7 @@ export default class OrganismeForm extends React.Component {
         });
 
         let results = await loader();
+        console.log(results);
 
         return new Promise(resolve => {
             this.setState({
@@ -186,7 +185,7 @@ export default class OrganismeForm extends React.Component {
                             options={departements.results}
                             loading={departements.loading}
                             optionKey="code"
-                            label={option => option.label}
+                            optionLabel="label"
                             placeholder={'Tous les départements'}
                             trackingId="Départements"
                             onChange={option => this.updateSelectBox('departements', option)}
@@ -199,16 +198,14 @@ export default class OrganismeForm extends React.Component {
                             options={sirens.results}
                             loading={sirens.loading}
                             optionKey="organisme"
-                            label={option => option.name}
+                            optionLabel="name"
                             placeholder={user.raison_sociale || ''}
                             trackingId="Centres"
                             onChange={async option => {
                                 await this.updateSelectBox('sirens', option);
                                 this.loadSelectBox('formations', () => {
                                     let organisme = option ? option.siren : user.siret;
-                                    if (organisme !== query.siren) {
-                                        return getFormations({ organisme });
-                                    }
+                                    return this.context.getFormations({ organisme });
                                 });
                             }}
                         />
@@ -220,7 +217,7 @@ export default class OrganismeForm extends React.Component {
                             options={formations.results}
                             loading={formations.loading}
                             optionKey="numeroFormation"
-                            label={option => option.title}
+                            optionLabel="title"
                             placeholder={'Toutes les formations'}
                             trackingId="Formation"
                             onChange={option => this.updateSelectBox('formations', option)}

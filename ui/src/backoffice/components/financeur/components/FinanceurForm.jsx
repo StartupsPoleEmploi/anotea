@@ -3,17 +3,12 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
-import { getSirens } from '../../../services/sirensService';
-import { getFormations } from '../../../services/formationsService';
-import { getDepartements } from '../../../services/departementsService';
-import { getDispositifs, getFinanceurs } from '../../../services/financeursService';
-import { getRegions } from '../../../services/regionsService';
-import BackofficeContext from '../../../BackofficeContext';
+import FinanceurContext from '../FinanceurContext';
 import Button from '../../../../common/components/Button';
 
 export default class FinanceurForm extends React.Component {
 
-    static contextType = BackofficeContext;
+    static contextType = FinanceurContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -22,42 +17,45 @@ export default class FinanceurForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            periode: {
-                debut: null,
-                fin: null,
-            },
-            departements: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            sirens: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            formations: {
-                selected: null,
-                loading: false,
-                results: [],
-            },
-            financeurs: {
-                selected: null,
-                loading: false,
-                results: [],
-            },
-            dispositifs: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            regions: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
+        this.state = this.initState();
+    }
+
+    initState = () => {
+        return {
+            debut: null,
+            fin: null,
+            departement: null,
+            siren: null,
+            numeroFormation: null,
+            codeFinanceur: null,
+            dispositifFinancement: null,
+            codeRegion: null,
         };
+    };
+
+    componentDidMount() {
+        this.previousContext = this.context;
+    }
+
+    componentDidUpdate() {
+        if (!_.isEqual(this.previousContext.store, this.context.store) && !this.formAlreadyPopulatedFromQuery) {
+            let { query } = this.props;
+            let { store } = this.context;
+
+            this.setState({
+                debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
+                fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
+                departement: _.get(store.departements.find(d => d.code === query.departement), 'code', null),
+                siren: _.get(store.sirens.find(s => s.siren === query.siren), 'siren', null),
+                numeroFormation: _.get(store.formations.find(f => f.numeroFormation === query.numeroFormation), 'numeroFormation', null),
+                codeFinanceur: _.get(store.financeurs.find(f => f.code === query.codeFinanceur), 'code', null),
+                dispositifFinancement: _.get(store.dispositifs.find(d => d.code === query.dispositifFinancement), 'code', null),
+                codeRegion: _.get(store.regions.find(f => f.codeRegion === query.codeRegion), 'codeRegion', null),
+            });
+            this.formAlreadyPopulatedFromQuery = true;
+        }
+
+        this.previousContext = this.context;
     }
 
     mustShowFinanceurFilter() {
@@ -70,290 +68,156 @@ export default class FinanceurForm extends React.Component {
         return account.profile === 'admin';
     }
 
-    async componentDidMount() {
-
-        let { query } = this.props;
-
-        this.loadSelectBox('departements', () => getDepartements())
-        .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
-        });
-
-        this.loadSelectBox('sirens', () => getSirens())
-        .then(results => {
-            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
-        });
-
-        if (query.siren) {
-            this.loadSelectBox('formations', () => getFormations({ organisme: query.siren }))
-            .then(results => {
-                return this.updateSelectBox('formations', results.find(f => f.numeroFormation === query.numeroFormation));
-            });
-        }
-
-        if (this.mustShowFinanceurFilter()) {
-            this.loadSelectBox('financeurs', () => getFinanceurs())
-            .then(results => {
-                return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
-            });
-            this.loadSelectBox('dispositifs', () => getDispositifs())
-            .then(results => {
-                return this.updateSelectBox('dispositifs', results.find(f => f.code === query.dispositifFinancement));
-            });
-        }
-
-        if (this.mustShowCodeRegionFilter()) {
-            this.loadSelectBox('regions', () => getRegions())
-            .then(results => {
-                return this.updateSelectBox('regions', results.find(f => f.codeRegion === query.codeRegion));
-            });
-        }
-
-        this.setState({
-            periode: {
-                debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
-                fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
-            },
-        });
-    }
-
-    getParametersFromQuery = () => {
-        let { query } = this.props;
-        return _.pick(query, ['codeFinanceur', 'dispositifFinancement', 'codeRegion', 'departement', 'siren', 'numeroFormation', 'debut', 'fin']);
-    };
-
-    getFormParameters = () => {
-        let { financeurs, dispositifs, regions, departements, sirens, formations, periode } = this.state;
-        return {
-            codeFinanceur: _.get(financeurs, 'selected.code', null),
-            dispositifFinancement: _.get(dispositifs, 'selected.code', null),
-            codeRegion: _.get(regions, 'selected.codeRegion', null),
-            departement: _.get(departements, 'selected.code', null),
-            siren: _.get(sirens, 'selected.siren', null),
-            numeroFormation: _.get(formations, 'selected.numeroFormation', null),
-            debut: periode.debut ? moment(periode.debut).valueOf() : null,
-            fin: periode.fin ? moment(periode.fin).valueOf() : null,
-        };
-    };
-
-    isFormLoading = () => {
-        let { departements, sirens, formations, financeurs } = this.state;
-        return departements.loading || sirens.loading || formations.loading || financeurs.loading;
-    };
-
     isFormSynchronizedWithQuery = () => {
-        let data = _(this.getFormParameters()).omitBy(_.isNil).value();
-        return this.isFormLoading() || _.isEqual(data, this.getParametersFromQuery());
-    };
-
-    updatePeriode = periode => {
-        return new Promise(resolve => {
-            this.setState({
-                periode,
-            }, resolve);
-        });
-    };
-
-    loadSelectBox = async (type, loader) => {
-        this.setState({
-            [type]: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-        });
-
-        let results = await loader();
-
-        return new Promise(resolve => {
-            this.setState({
-                [type]: {
-                    selected: null,
-                    loading: false,
-                    results,
-                },
-            }, () => resolve(results));
-        });
-    };
-
-    updateSelectBox = (type, selected) => {
-        return new Promise(resolve => {
-            this.setState({
-                [type]: {
-                    ...this.state[type],
-                    selected,
-                },
-            }, resolve);
-        });
+        let { query } = this.props;
+        return this.context.store.loading || _.isEqual(_.pickBy(this.state), query);
     };
 
     resetForm = () => {
-        this.setState({
-            periode: {
-                debut: null,
-                fin: null,
-            },
-            departements: {
-                selected: null,
-                ..._.pick(this.state.departements, ['results', 'loading']),
-            },
-            sirens: {
-                selected: null,
-                ..._.pick(this.state.sirens, ['results', 'loading']),
-            },
-            formations: {
-                selected: null,
-                ..._.pick(this.state.formations, ['results', 'loading']),
-            },
-            financeurs: {
-                selected: null,
-                ..._.pick(this.state.financeurs, ['results', 'loading']),
-            },
-            dispositifs: {
-                selected: null,
-                ..._.pick(this.state.dispositifs, ['results', 'loading']),
-            },
-            regions: {
-                selected: null,
-                ..._.pick(this.state.regions, ['results', 'loading']),
-            },
+        this.setState(this.initState());
+    };
+
+    onSubmit = () => {
+        let { debut, fin } = this.state;
+
+        return this.props.onSubmit({
+            ..._.omitBy(this.state, _.isNil),
+            ...(debut ? { debut: moment(debut).valueOf() } : {}),
+            ...(fin ? { fin: moment(fin).valueOf() } : {}),
         });
     };
 
     render() {
-        let { departements, sirens, formations, financeurs, dispositifs, regions, periode } = this.state;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
+        let { store, actions } = this.context;
 
-        return (
-            <Form>
-                <div className="form-row">
-                    <div className="form-group col-lg-6 col-xl-3">
-                        <label>Période</label>
-                        <Periode
-                            periode={periode}
-                            min={moment('2016-01-01T00:00:00Z').toDate()}
-                            onChange={periode => this.updatePeriode(periode)}
-                        />
-                    </div>
-                    <div className="form-group col-lg-6 col-xl-3">
-                        {this.mustShowCodeRegionFilter() ?
-                            <>
-                                <label>Regions</label>
-                                <Select
-                                    value={regions.selected}
-                                    options={regions.results}
-                                    loading={regions.loading}
-                                    optionKey="codeRegion"
-                                    label={option => option.nom}
-                                    placeholder={'Toutes les régions'}
-                                    trackingId="Region"
-                                    onChange={option => this.updateSelectBox('regions', option)}
-                                />
-                            </> :
-                            <>
-                                <label>Départements</label>
-                                <Select
-                                    value={departements.selected}
-                                    options={departements.results}
-                                    loading={departements.loading}
-                                    optionKey="code"
-                                    label={option => option.label}
-                                    placeholder={'Tous les départements'}
-                                    trackingId="Départements"
-                                    onChange={option => this.updateSelectBox('departements', option)}
-                                />
-                            </>
-                        }
-                    </div>
-
-                    <div className="form-group col-lg-6">
-                        <label>Organisme de formation</label>
-                        <Select
-                            value={sirens.selected}
-                            options={sirens.results}
-                            loading={sirens.loading}
-                            optionKey="siren"
-                            label={option => option.name}
-                            placeholder={'Tous les organismes'}
-                            trackingId="Organisme de formation"
-                            onChange={async option => {
-                                await this.updateSelectBox('sirens', option);
-                                if (option) {
-                                    this.loadSelectBox('formations', () => getFormations({ organisme: option.siren }));
-                                } else {
-                                    await this.updateSelectBox('formations', null);
-                                }
-                            }}
-                        />
-                    </div>
-                    {sirens.selected &&
-                    <div className="form-group col-lg-6 order-xl-last">
-                        <label>Formation</label>
-                        <Select
-                            value={formations.selected}
-                            options={formations.results}
-                            loading={formations.loading}
-                            optionKey="numeroFormation"
-                            label={option => option.title}
-                            placeholder={'Toutes les formations'}
-                            trackingId="Formation"
-                            onChange={option => this.updateSelectBox('formations', option)}
-                        />
-                    </div>
-                    }
-                    {this.mustShowFinanceurFilter() &&
-                    <>
-                        <div className="form-group col-lg-3 col-xl-3">
-                            <label>Financeur</label>
+        return <Form>
+            <div className="form-row">
+                <div className="form-group col-lg-6 col-xl-3">
+                    <label>Période</label>
+                    <Periode
+                        periode={{ debut: this.state.debut, fin: this.state.fin }}
+                        min={moment('2016-01-01T00:00:00Z').toDate()}
+                        onChange={({ debut, fin }) => this.setState({ debut, fin })}
+                    />
+                </div>
+                <div className="form-group col-lg-6 col-xl-3">
+                    {this.mustShowCodeRegionFilter() ?
+                        <>
+                            <label>Regions</label>
                             <Select
-                                value={financeurs.selected}
-                                options={financeurs.results}
-                                loading={financeurs.loading}
-                                optionKey="code"
-                                label={option => option.label}
-                                placeholder={'Tous les financeurs'}
-                                trackingId="Financeur"
-                                onChange={option => this.updateSelectBox('financeurs', option)}
+                                placeholder={'Toutes les régions'}
+                                trackingId="Region"
+                                loading={store.loading}
+                                value={this.state.codeRegion}
+                                options={store.regions}
+                                optionKey="codeRegion"
+                                optionLabel="nom"
+                                onChange={(option = {}) => this.setState({ region: option.codeRegion })}
                             />
-                        </div>
-                        <div className="form-group col-lg-3 col-xl-3">
-                            <label>Dispositif financement</label>
+                        </> :
+                        <>
+                            <label>Départements</label>
                             <Select
-                                value={dispositifs.selected}
-                                options={dispositifs.results}
-                                loading={dispositifs.loading}
+                                placeholder={'Tous les départements'}
+                                trackingId="Départements"
+                                loading={store.loading}
+                                value={this.state.departement}
+                                options={store.departements}
                                 optionKey="code"
-                                label={option => option.code}
-                                placeholder={'Tous les dispositifs'}
-                                trackingId="Dispositif"
-                                onChange={option => this.updateSelectBox('dispositifs', option)}
+                                optionLabel="label"
+                                onChange={(option = {}) => this.setState({ departement: option.code })}
                             />
-                        </div>
-                    </>
+                        </>
                     }
                 </div>
-                <div className="form-row justify-content-center">
-                    <div className="form-group buttons">
-                        <Button
-                            size="small"
-                            onClick={this.resetForm}
-                            className="mr-3"
-                        >
-                            <i className="fas fa-times mr-2"></i>
-                            Réinitialiser les filtres
-                        </Button>
-                        <Button
-                            size="large"
-                            color="green"
-                            style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
-                            onClick={() => this.props.onSubmit(this.getFormParameters())}
-                        >
-                            {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
-                            Rechercher
-                        </Button>
-                    </div>
+
+                <div className="form-group col-lg-6">
+                    <label>Organisme de formation</label>
+                    <Select
+                        placeholder={'Tous les organismes'}
+                        trackingId="Organisme de formation"
+                        loading={store.loading}
+                        value={this.state.siren}
+                        options={store.sirens}
+                        optionKey="siren"
+                        optionLabel="name"
+                        onChange={(option = {}) => {
+                            this.setState({ siren: option.siren, numeroFormation: null }, () => {
+                                actions.loadFormations(option.siren);
+                            });
+                        }}
+                    />
                 </div>
-            </Form>
-        );
+                {this.state.siren &&
+                <div className={`form-group col-lg-6 ${this.mustShowFinanceurFilter() ? '' : 'offset-xl-6'} order-xl-last`}>
+                    <label>Formation</label>
+                    <Select
+                        placeholder={'Toutes les formations'}
+                        trackingId="Formation"
+                        loading={store.loading}
+                        value={this.state.numeroFormation}
+                        options={store.formations}
+                        optionKey="numeroFormation"
+                        optionLabel="title"
+                        onChange={(option = {}) => this.setState({ numeroFormation: option.numeroFormation })}
+                    />
+                </div>
+                }
+                {this.mustShowFinanceurFilter() &&
+                <>
+                    <div className="form-group col-lg-3 col-xl-3">
+                        <label>Financeur</label>
+                        <Select
+                            placeholder={'Tous les financeurs'}
+                            trackingId="Financeur"
+                            loading={store.loading}
+                            value={this.state.codeFinanceur}
+                            options={store.financeurs}
+                            optionKey="code"
+                            optionLabel="label"
+                            onChange={(option = {}) => this.setState({ codeFinanceur: option.code })}
+                        />
+                    </div>
+                    <div className="form-group col-lg-3 col-xl-3">
+                        <label>Dispositif de financement</label>
+                        <Select
+                            placeholder={'Tous les dispositifs'}
+                            trackingId="Dispositif"
+                            loading={store.loading}
+                            value={this.state.dispositifFinancement}
+                            options={store.dispositifs}
+                            optionKey="code"
+                            optionLabel="code"
+                            onChange={(option = {}) => this.setState({ dispositifFinancement: option.code })}
+                        />
+                    </div>
+                </>
+                }
+            </div>
+            <div className="form-row justify-content-center">
+                <div className="form-group buttons">
+                    <Button
+                        size="small"
+                        className="mr-3"
+                        disabled={store.loading}
+                        onClick={this.resetForm}
+                    >
+                        <i className="fas fa-times mr-2"></i>
+                        Réinitialiser les filtres
+                    </Button>
+                    <Button
+                        size="large"
+                        color="green"
+                        style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
+                        disabled={store.loading}
+                        onClick={() => this.onSubmit()}
+                    >
+                        {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
+                        Rechercher
+                    </Button>
+                </div>
+            </div>
+        </Form>;
     }
 }

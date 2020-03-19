@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import ReactSelect, { components } from 'react-windowed-select';
 import CreatableSelect from 'react-select/creatable';
 import AnalyticsContext from '../../../../../common/components/analytics/AnalyticsContext';
@@ -31,28 +30,36 @@ export default class Select extends React.Component {
     static propTypes = {
         value: PropTypes.any,
         options: PropTypes.array.isRequired,
-        optionKey: PropTypes.string,
-        label: PropTypes.func,
-        meta: PropTypes.func,
+        optionKey: PropTypes.string.isRequired,
+        optionLabel: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,
-        placeholder: PropTypes.string.isRequired,
+        placeholder: PropTypes.string,
         loading: PropTypes.bool,
         type: PropTypes.string,
         trackingId: PropTypes.string,
+        meta: PropTypes.func,
     };
 
     static defaultProps = {
         type: 'search',
+        placeholder: '',
+    };
+
+    findOption = value => {
+        let { options, optionKey } = this.props;
+        let option = options.find(o => o[optionKey] === value);
+
+        return option ? this.toReactSelectOption(option) : null;
     };
 
     toReactSelectOption = option => {
-        let { optionKey } = this.props;
-        let value = optionKey ? option[optionKey] : option;
+        let { optionKey, optionLabel, meta } = this.props;
 
+        let value = option[optionKey];
         return {
-            value,
-            ...(this.props.label ? { label: this.props.label(option) } : { label: value }),
-            ...(this.props.meta ? { meta: this.props.meta(option) } : {}),
+            value: value,
+            label: option[optionLabel] || value,
+            ...(meta ? { meta: meta(option) } : {}),
         };
     };
 
@@ -67,7 +74,7 @@ export default class Select extends React.Component {
                 classNamePrefix="Select"
                 isLoading={this.props.loading}
                 components={{ Option }}
-                value={_.isEmpty(this.props.value) ? null : this.toReactSelectOption(this.props.value)}
+                value={this.findOption(this.props.value)}
                 options={this.props.options.map(o => this.toReactSelectOption(o))}
                 placeholder={this.props.options.length === 0 ? '' : this.props.placeholder}
                 isClearable
@@ -76,7 +83,7 @@ export default class Select extends React.Component {
                     trackClick(this.props.trackingId || 'select');
 
                     if (!option) {
-                        return this.props.onChange(null);
+                        return this.props.onChange();
                     }
 
                     let data = this.props.options.find(o => {

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import './BadgeSummary.scss';
+import FinanceurContext from '../FinanceurContext';
 
 const truncate = (input, max) => input.length > max ? `${input.substring(0, max)}...` : input;
 
@@ -27,14 +28,15 @@ Badge.propTypes = {
     ellipsis: PropTypes.number,
 };
 
-const BadgeSummary = ({ form, query, ellipsis }) => {
+const BadgeSummary = ({ query, ellipsis }) => {
 
-    let { departements, sirens, formations, financeurs } = form;
+    let { store } = useContext(FinanceurContext);
+    let { departements, sirens, formations, financeurs } = store;
 
-    let departement = departements && departements.results.find(f => f.code === query.departement);
-    let siren = sirens && sirens.results.find(f => f.siren === query.siren);
-    let formation = formations && formations.results.find(f => f.numeroFormation === query.numeroFormation);
-    let financeur = financeurs && financeurs.results.find(f => f.code === query.codeFinanceur);
+    let departement = departements && departements.find(f => f.code === query.departement);
+    let siren = sirens && sirens.find(f => f.siren === query.siren);
+    let formation = formations && formations.find(f => f.numeroFormation === query.numeroFormation);
+    let financeur = financeurs && financeurs.find(f => f.code === query.codeFinanceur);
     let periode = `${query.debut ? moment(parseInt(query.debut)).format('DD/MM/YYYY') : ''}` +
         `${query.debut && query.fin ? '-' : ''}` +
         `${query.fin ? moment(parseInt(query.fin)).format('DD/MM/YYYY') : ''}`;
@@ -52,7 +54,6 @@ const BadgeSummary = ({ form, query, ellipsis }) => {
 
 BadgeSummary.propTypes = {
     query: PropTypes.object.isRequired,
-    form: PropTypes.object.isRequired,
     ellipsis: PropTypes.number,
 };
 

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $.get('/api/regions', function(data) {
+    $.get('/api/backoffice/regions', function(data) {
         let html = '';
         for (var i = 0; i < data.length; i++) {
             var region = data[i];

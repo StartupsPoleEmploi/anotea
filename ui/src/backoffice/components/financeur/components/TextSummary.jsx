@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import './TextSummary.scss';
+import FinanceurContext from '../FinanceurContext';
 
-const TextSummary = ({ form, query }) => {
+const TextSummary = ({ query }) => {
 
-    let { departements, formations } = form;
+    let { store } = useContext(FinanceurContext);
+    let { departements, formations } = store;
 
-    let departement = departements && departements.results.find(f => f.code === query.departement);
-    let formation = formations && formations.results.find(f => f.idFormation === query.idFormation);
+    let departement = departements && departements.find(f => f.code === query.departement);
+    let formation = formations && formations.find(f => f.idFormation === query.idFormation);
     let debut = query.debut ? moment(parseInt(query.debut)).format('DD/MM/YYYY') : null;
     let fin = moment(query.fin ? parseInt(query.fin) : new Date()).format('DD/MM/YYYY');
 
@@ -25,7 +27,6 @@ const TextSummary = ({ form, query }) => {
 
 TextSummary.propTypes = {
     query: PropTypes.object.isRequired,
-    form: PropTypes.object.isRequired,
 };
 
 export default TextSummary;
