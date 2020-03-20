@@ -398,6 +398,7 @@ module.exports = (db, logger, emails) => {
                 {
                     _id: new ObjectID(id),
                     ...(profile ? profile.getShield() : {}),
+                    commentaire: { $exists: true }
                 },
                 {
                     $set: {

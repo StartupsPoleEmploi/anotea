@@ -382,6 +382,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.strictEqual(response.body.qualification, undefined);
     });
 
+    it('cannot report avis sans commentaire', async () => {
+
+        let app = await startServer();
+        const avis = buildAvis({ read: false, qualification: 'positif' });
+        delete avis.commentaire;
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            insertIntoDatabase('avis', avis),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${avis._id}/report`)
+        .send({ report: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
     it('can not un/report avis of another organisme', async () => {
 
         let app = await startServer();
