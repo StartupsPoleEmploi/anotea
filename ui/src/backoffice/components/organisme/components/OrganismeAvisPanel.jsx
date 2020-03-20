@@ -140,7 +140,7 @@ export default class OrganismeAvisPanel extends React.Component {
                                 return <Avis
                                     avis={avis}
                                     showReponse={true}
-                                    showReponseButtons={!!avis.commentaire}
+                                    showReponseButtons={true}
                                     renderWorkflow={avis => {
                                         return query.statuses === 'reported' ?
                                             <Workflow avis={avis} /> :

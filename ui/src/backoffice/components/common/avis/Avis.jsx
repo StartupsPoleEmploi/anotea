@@ -150,7 +150,9 @@ export default class Avis extends React.Component {
                                     onChange={this.handleChange}
                                 />
                                 <MarkAsReadButton avis={avis} onChange={this.handleChange} />
+                                {avis.commentaire &&
                                 <ReportButton avis={avis} onChange={this.handleChange} />
+                                }
                             </div>
                         </div>
                     }
