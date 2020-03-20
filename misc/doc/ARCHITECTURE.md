@@ -1,4 +1,10 @@
-# Architecture technique
+# Architecture
+
+Le projet est constitué des différentes briques suivantes :
+
+![Anotea Diagram](./diagram/anotea-diagram.svg)
+
+## Architecture technique
 
 En production l'application est démarrée dans des containers Docker.
 
