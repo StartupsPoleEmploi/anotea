@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
-import FinanceurContext from '../FinanceurContext';
+import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
 
 export default class FinanceurForm extends React.Component {
 
-    static contextType = FinanceurContext;
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
+        store: PropTypes.object.isRequired,
+        loadFormations: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
     };
 
@@ -33,14 +35,9 @@ export default class FinanceurForm extends React.Component {
         };
     };
 
-    componentDidMount() {
-        this.previousContext = this.context;
-    }
-
-    componentDidUpdate() {
-        if (!_.isEqual(this.previousContext.store, this.context.store) && !this.formAlreadyPopulatedFromQuery) {
-            let { query } = this.props;
-            let { store } = this.context;
+    componentDidUpdate(previous) {
+        if (!_.isEqual(previous.store, this.props.store) && !this.formAlreadyPopulatedFromQuery) {
+            let { query, store } = this.props;
 
             this.setState({
                 debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
@@ -54,8 +51,6 @@ export default class FinanceurForm extends React.Component {
             });
             this.formAlreadyPopulatedFromQuery = true;
         }
-
-        this.previousContext = this.context;
     }
 
     mustShowFinanceurFilter() {
@@ -69,8 +64,8 @@ export default class FinanceurForm extends React.Component {
     }
 
     isFormSynchronizedWithQuery = () => {
-        let { query } = this.props;
-        return this.context.store.loading || _.isEqual(_.pickBy(this.state), query);
+        let { query, store } = this.props;
+        return store.loading || _.isEqual(_.pickBy(this.state), query);
     };
 
     resetForm = () => {
@@ -89,7 +84,7 @@ export default class FinanceurForm extends React.Component {
 
     render() {
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
-        let { store, actions } = this.context;
+        let { store, loadFormations } = this.props;
 
         return <Form>
             <div className="form-row">
@@ -144,7 +139,7 @@ export default class FinanceurForm extends React.Component {
                         optionLabel="name"
                         onChange={(option = {}) => {
                             this.setState({ siren: option.siren, numeroFormation: null }, () => {
-                                actions.loadFormations(option.siren);
+                                loadFormations(option.siren);
                             });
                         }}
                     />

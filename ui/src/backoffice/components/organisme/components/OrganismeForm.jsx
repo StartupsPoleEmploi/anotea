@@ -12,160 +12,64 @@ export default class OrganismeForm extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
+        store: PropTypes.object.isRequired,
+        loadFormations: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
     };
 
     constructor(props) {
         super(props);
-        this.state = {
-            periode: {
-                debut: null,
-                fin: null,
-            },
-            departements: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            sirens: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            formations: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-        };
+        this.state = this.initState();
     }
 
-    async componentDidMount() {
+    initState = () => {
+        return {
+            debut: null,
+            fin: null,
+            departement: null,
+            siren: null,
+            numeroFormation: null,
+        };
+    };
 
-        let { account } = this.context;
-        let { query } = this.props;
+    componentDidUpdate(previous) {
+        let { query, store } = this.props;
+        if (!_.isEqual(previous.store, store) && !this.formAlreadyPopulatedFromQuery) {
 
-        this.loadSelectBox('departements', () => this.context.getDepartements())
-        .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
-        });
-
-        this.loadSelectBox('sirens', () => {
-            return [
-                { siren: account.siret.substring(0, 9), name: 'Tous les centres' }
-            ];
-        })
-        .then(results => {
-            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
-        });
-
-        this.loadSelectBox('formations', () => this.context.getFormations({ organisme: query.organisme || account.siret }))
-        .then(results => {
-            return this.updateSelectBox('formations', results.find(f => f.numeroFormation === query.numeroFormation));
-        });
-
-        this.setState({
-            periode: {
+            this.setState({
                 debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
                 fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
-            },
-        });
+                departement: _.get(store.departements.find(d => d.code === query.departement), 'code', null),
+                siren: _.get(store.sirens.find(s => s.siren === query.siren), 'siren', null),
+                numeroFormation: _.get(store.formations.find(f => f.numeroFormation === query.numeroFormation), 'numeroFormation', null),
+            });
+            this.formAlreadyPopulatedFromQuery = true;
+        }
     }
 
-    getParametersFromQuery = () => {
-        let { query } = this.props;
-        return _.pick(query, ['departement', 'siren', 'numeroFormation', 'debut', 'fin']);
-    };
-
-    getFormParameters = () => {
-        let { departements, sirens, formations, periode } = this.state;
-        return {
-            departement: _.get(departements, 'selected.code', null),
-            siren: _.get(sirens, 'selected.siren', null),
-            numeroFormation: _.get(formations, 'selected.numeroFormation', null),
-            debut: periode.debut ? moment(periode.debut).valueOf() : null,
-            fin: periode.fin ? moment(periode.fin).valueOf() : null,
-        };
-    };
-
-    isFormLoading = () => {
-        let { departements, sirens, formations } = this.state;
-        return departements.loading || sirens.loading || formations.loading;
-    };
-
     isFormSynchronizedWithQuery = () => {
-        let data = _(this.getFormParameters()).omitBy(_.isNil).value();
-        return this.isFormLoading() || _.isEqual(data, this.getParametersFromQuery());
-    };
-
-    updatePeriode = periode => {
-        return new Promise(resolve => {
-            this.setState({
-                periode,
-            }, resolve);
-        });
-    };
-
-    loadSelectBox = async (type, loader) => {
-        this.setState({
-            [type]: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-        });
-
-        let results = await loader();
-        console.log(results);
-
-        return new Promise(resolve => {
-            this.setState({
-                [type]: {
-                    selected: null,
-                    loading: false,
-                    results,
-                },
-            }, () => resolve(results));
-        });
-    };
-
-    updateSelectBox = (type, selected) => {
-        return new Promise(resolve => {
-            this.setState({
-                [type]: {
-                    ...this.state[type],
-                    selected,
-                },
-            }, resolve);
-        });
+        let { query, store } = this.props;
+        return store.loading || _.isEqual(_.pickBy(this.state), query);
     };
 
     resetForm = () => {
-        this.setState({
-            periode: {
-                debut: null,
-                fin: null,
-            },
-            departements: {
-                selected: null,
-                ..._.pick(this.state.departements, ['results', 'loading']),
-            },
-            sirens: {
-                selected: null,
-                ..._.pick(this.state.sirens, ['results', 'loading']),
-            },
-            formations: {
-                selected: null,
-                ..._.pick(this.state.formations, ['results', 'loading']),
-            },
+        this.setState(this.initState());
+    };
+
+    onSubmit = () => {
+        let { debut, fin } = this.state;
+
+        return this.props.onSubmit({
+            ..._.omitBy(this.state, _.isNil),
+            ...(debut ? { debut: moment(debut).valueOf() } : {}),
+            ...(fin ? { fin: moment(fin).valueOf() } : {}),
         });
     };
 
     render() {
-        let { query } = this.props;
-        let { departements, sirens, formations, periode } = this.state;
-        let user = this.context;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
+        let { store, loadFormations } = this.props;
+        let { account } = this.context;
 
         return (
             <Form>
@@ -173,39 +77,37 @@ export default class OrganismeForm extends React.Component {
                     <div className="form-group col-lg-6 col-xl-3">
                         <label>Période</label>
                         <Periode
-                            periode={periode}
+                            periode={{ debut: this.state.debut, fin: this.state.fin }}
                             min={moment('2016-01-01T00:00:00Z').toDate()}
-                            onChange={periode => this.updatePeriode(periode)}
+                            onChange={({ debut, fin }) => this.setState({ debut, fin })}
                         />
                     </div>
                     <div className="form-group col-lg-6 col-xl-3">
                         <label>Départements</label>
                         <Select
-                            value={departements.selected}
-                            options={departements.results}
-                            loading={departements.loading}
-                            optionKey="code"
-                            optionLabel="label"
                             placeholder={'Tous les départements'}
                             trackingId="Départements"
-                            onChange={option => this.updateSelectBox('departements', option)}
+                            loading={store.loading}
+                            value={this.state.departement}
+                            options={store.departements}
+                            optionKey="code"
+                            optionLabel="label"
+                            onChange={(option = {}) => this.setState({ departement: option.code })}
                         />
                     </div>
                     <div className="form-group col-lg-6">
                         <label>Centres</label>
                         <Select
-                            value={sirens.selected}
-                            options={sirens.results}
-                            loading={sirens.loading}
-                            optionKey="organisme"
-                            optionLabel="name"
-                            placeholder={user.raison_sociale || ''}
+                            placeholder={account.raison_sociale}
                             trackingId="Centres"
-                            onChange={async option => {
-                                await this.updateSelectBox('sirens', option);
-                                this.loadSelectBox('formations', () => {
-                                    let organisme = option ? option.siren : user.siret;
-                                    return this.context.getFormations({ organisme });
+                            value={this.state.siren}
+                            options={store.sirens}
+                            loading={store.loading}
+                            optionKey="siren"
+                            optionLabel="name"
+                            onChange={(option = {}) => {
+                                this.setState({ siren: option.siren, numeroFormation: null }, () => {
+                                    loadFormations(option.siren || account.siret);
                                 });
                             }}
                         />
@@ -213,27 +115,33 @@ export default class OrganismeForm extends React.Component {
                     <div className="form-group offset-lg-6 col-lg-6">
                         <label>Formation</label>
                         <Select
-                            value={formations.selected}
-                            options={formations.results}
-                            loading={formations.loading}
+                            value={this.state.numeroFormation}
+                            options={store.formations}
+                            loading={store.loading}
                             optionKey="numeroFormation"
                             optionLabel="title"
                             placeholder={'Toutes les formations'}
                             trackingId="Formation"
-                            onChange={option => this.updateSelectBox('formations', option)}
+                            onChange={(option = {}) => this.setState({ numeroFormation: option.numeroFormation })}
                         />
                     </div>
                 </div>
                 <div className="form-row justify-content-center">
                     <div className="form-group buttons">
-                        <Button size="small" onClick={this.resetForm} className="mr-3">
+                        <Button
+                            disabled={store.loading}
+                            size="small"
+                            onClick={this.resetForm}
+                            className="mr-3"
+                        >
                             <i className="fas fa-times mr-2"></i>
                             Réinitialiser les filtres
                         </Button>
                         <Button
+                            disabled={store.loading}
                             size="large"
                             color="orange"
-                            onClick={() => this.props.onSubmit(this.getFormParameters())}
+                            onClick={() => this.onSubmit()}
                             style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
                         >
                             {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
