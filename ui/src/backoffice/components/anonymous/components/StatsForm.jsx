@@ -112,7 +112,7 @@ export default class StatsForm extends React.Component {
                                 options={regions.results}
                                 loading={regions.loading}
                                 optionKey="codeRegion"
-                                label={option => option.nom}
+                                optionLabel="nom"
                                 placeholder={'Toutes les régions'}
                                 trackingId="Regions"
                                 onChange={option => {

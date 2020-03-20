@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer }) => {
         let app = await startServer();
 
         let response = await request(app)
-        .get('/api/regions');
+        .get('/api/backoffice/regions');
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.length, 17);

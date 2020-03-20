@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getExportAvisUrl, searchOrganismes } from './gestionOrganismesService';
 import Organisme from './components/Organisme';
-import Summary from '../../common/page/panel/summary/Summary';
+import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import ResultDivider from '../../common/page/panel/results/ResultDivider';
 import './GestionOrganismePage.scss';
@@ -148,7 +148,7 @@ export default class GestionOrganismePage extends React.Component {
                             </Filters>
                         }
                         summary={
-                            <Summary
+                            <PaginationSummary
                                 paginationLabel="organisme(s)"
                                 pagination={results.meta.pagination}
                                 buttons={

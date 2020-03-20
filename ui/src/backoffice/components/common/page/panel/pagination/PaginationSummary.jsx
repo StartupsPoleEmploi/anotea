@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Summary.scss';
+import './PaginationSummary.scss';
 
-export default class Summary extends React.Component {
+export default class PaginationSummary extends React.Component {
 
     static propTypes = {
         title: PropTypes.node,
@@ -15,7 +15,7 @@ export default class Summary extends React.Component {
         let { pagination, paginationLabel, title, buttons } = this.props;
 
         return (
-            <div className="Summary row">
+            <div className="PaginationSummary row">
                 <div className="offset-md-1 col-sm-6">
                     {title || <div />}
                 </div>
