@@ -107,6 +107,7 @@ module.exports = (db, regions) => {
             let token = buildToken(record['c_adresseemail']);
             let email = record['c_adresseemail'].toLowerCase();
             let idSession = record['dn_session_id'];
+            let identifiantLocal = record['c_individulocal'];
 
             return {
                 _id: campaign.name + '/' + token,
@@ -118,7 +119,7 @@ module.exports = (db, regions) => {
                 avisCreated: false,
                 token: token,
                 codeRegion: region.codeRegion,
-                refreshKey: md5(`${email};${idSession}`),
+                refreshKey: md5(`${identifiantLocal};${idSession}`),
                 dispositifFinancement: record['c_dispositifformation'],
                 individu: {
                     nom: record['c_nomcorrespondance'],
@@ -127,7 +128,7 @@ module.exports = (db, regions) => {
                     telephones: removeEmptyValues([record['c_telephone1'], record['c_telephone2']]),
                     emailValid: record['c_validitemail_id'] === 'V',
                     identifiant_pe: record['dn_individu_national'],
-                    identifiant_local: record['c_individulocal']
+                    identifiant_local: identifiantLocal
                 },
                 formation: {
                     numero: record['dc_formation_id'],

@@ -15,5 +15,6 @@ execute(async ({ db, logger }) => {
     };
 
     return {
+        ...(await migrate('addRefreshKey')),
     };
 });
