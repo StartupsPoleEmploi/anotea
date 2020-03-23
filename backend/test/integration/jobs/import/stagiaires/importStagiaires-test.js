@@ -30,7 +30,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             unsubscribe: false,
             mailSent: false,
             codeRegion: '11',
-            refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744',
+            refreshKey: '166580d3eca85596be989a9fb397b980',
             dispositifFinancement: 'AIF',
             individu: {
                 nom: 'MARTIN',
@@ -39,7 +39,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 telephones: ['0611111111'],
                 emailValid: true,
                 identifiant_pe: '1111111111',
-                identifiant_local: '0167942369Z'
+                identifiant_local: '0167942369A'
             },
             formation: {
                 numero: '14_AF_0000044465',
@@ -298,24 +298,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 0,
             imported: 4,
             total: 4,
-        });
-    });
-
-    it('cannot import same campaign twice', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = getTestFile('stagiaires-pe.csv');
-        let { regions } = await getComponents();
-        let handler = poleEmploiCSVHandler(db, regions);
-
-        await importStagiaires(db, logger, csvFile, handler);
-        let results = await importStagiaires(db, logger, csvFile, handler);
-
-        assert.deepStrictEqual(results, {
-            invalid: 0,
-            ignored: 0,
-            imported: 0,
-            total: 0,
         });
     });
 

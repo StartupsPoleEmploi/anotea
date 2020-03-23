@@ -3,9 +3,9 @@ const bz2 = require('unbzip2-stream');
 const md5File = require('md5-file/promise');
 const validateStagiaire = require('./utils/validateStagiaire');
 const shouldBeImported = require('./utils/shouldBeImported');
-const hasNotBeenImported = require('./utils/hasNotBeenImported');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
 const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
+const { getNbModifiedDocuments } = require('../../../job-utils');
 
 module.exports = async (db, logger, file, handler, filters = {}, options = {}) => {
 
@@ -17,7 +17,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
 
     let stats = {
         total: 0,
-        imported: 0,
+        refreshed: 0,
         ignored: 0,
         invalid: 0,
     };
@@ -33,25 +33,37 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                 stats.total++;
                 let stagiaire = await handler.buildStagiaire(record, campaign);
 
-                if (await shouldBeImported(db, handler, filters, stagiaire) && await hasNotBeenImported(db, stagiaire)) {
+                if (await shouldBeImported(db, handler, filters, stagiaire)) {
 
                     await validateStagiaire(stagiaire);
-                    await db.collection('stagiaires').insertOne(stagiaire);
-                    stats.imported++;
-                    logger.debug('New stagiaire inserted');
+                    let [res] = await Promise.all([
+                        db.collection('stagiaires').updateOne({ refreshKey: stagiaire.refreshKey }, {
+                            $set: {
+                                dispositifFinancement: stagiaire.dispositifFinancement,
+                            }
+                        }),
+                        db.collection('avis').updateOne({ refreshKey: stagiaire.refreshKey }, {
+                            $set: {
+                                dispositifFinancement: stagiaire.dispositifFinancement,
+                            }
+                        })
+                    ]);
+
+                    stats.refreshed += getNbModifiedDocuments(res);
+                    logger.debug('Stagiaire refreshed');
                 } else {
                     stats.ignored++;
                     logger.debug('Stagiaire ignored', stagiaire, {});
                 }
             } catch (e) {
                 stats.invalid++;
-                logger.error(`Stagiaire cannot be imported`, record, e);
+                logger.error(`Stagiaire cannot be refreshed`, record, e);
             }
         }, { parallel: 25 })
     ]);
 
     await db.collection('jobs').insertOne({
-        type: 'import-stagiaires',
+        type: 'refresh-stagiaires',
         hash,
         campaign: campaign.name,
         campaignDate: campaign.date,
