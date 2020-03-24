@@ -7,7 +7,7 @@ import FinanceurAvisChartsPanel from './components/FinanceurAvisChartsPanel';
 import FinanceurForm from './components/FinanceurForm';
 import { getDepartements } from '../../services/departementsService';
 import { getSirens } from '../../services/sirensService';
-import { getFinanceurs } from '../../services/financeursService';
+import { getDispositifs, getFinanceurs } from '../../services/financeursService';
 import { getRegions } from '../../services/regionsService';
 import { getFormations } from '../../services/formationsService';
 import { promiseAll } from '../../utils/async-utils';
@@ -46,7 +46,7 @@ export default class FinanceurPage extends React.Component {
         return promiseAll({
             departements: getDepartements(),
             sirens: getSirens(),
-            dispositifs: getSirens(),
+            dispositifs: getDispositifs(),
             financeurs: getFinanceurs(),
             regions: getRegions(),
             formations: query.siren ? getFormations({ organisme: query.siren }) : Promise.resolve([]),
