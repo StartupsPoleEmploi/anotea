@@ -28,7 +28,7 @@ export default class FinanceurAvisChartsPanel extends React.Component {
         this.state = {
             loading: true,
             stats: {},
-            showPDFDocument: true,
+            showPDFDocument: false,
         };
         this.pdfReference = React.createRef();
     }
