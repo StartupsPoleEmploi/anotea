@@ -35,7 +35,7 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
     let handler = require(`./tasks/handlers/${sources[source]}CSVHandler`)(db, regions);
 
-    logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
+    logger.info(`Using source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
     try {
         let stats = refresh ?
             await refreshStagiaires(db, logger, file, handler, filters, { unpack }) :

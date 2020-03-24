@@ -11,7 +11,6 @@ const isFiltered = (filters, stagiaire) => {
 };
 
 const hasOptOut = async (db, stagiaire) => {
-
     let email = stagiaire.individu.email;
     let nbOptOut = await db.collection('optOut').countDocuments({ md5: md5(email) });
     return nbOptOut > 0;
