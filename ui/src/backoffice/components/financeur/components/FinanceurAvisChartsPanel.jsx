@@ -72,16 +72,14 @@ export default class FinanceurAvisChartsPanel extends React.Component {
         let formation = formations && formations.find(f => f.numeroFormation === query.numeroFormation);
         let debut = query.debut ? moment(parseInt(query.debut)).format('DD/MM/YYYY') : null;
         let fin = moment(query.fin ? parseInt(query.fin) : new Date()).format('DD/MM/YYYY');
-        let title = siren ? `Résultats pour ${siren.name}` : 'Résultats pour tous les organismes';
 
         return (
             <PDF
-                title={title}
+                title={siren ? `Résultats pour ${siren.name}` : 'Résultats pour tous les organismes'}
                 summary={
                     <div className="pdf-summary d-flex justify-content-center align-items-center">
                         <span>Formation échues {debut ? `entre le ${debut} et le ${fin}` : `jusqu'au ${fin}`}</span>
                         <span>{departement ? departement.label : 'Tous les départements'}</span>
-                        <span>{siren ? siren.name : 'Toutes les organismes'}</span>
                         <span>{formation ? formation.title : 'Toutes les formations'}</span>
                     </div>
                 }
