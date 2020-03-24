@@ -12,16 +12,16 @@ cli.description('Create new account')
 
 execute(async ({ db, exit, passwords }) => {
 
-    let { identifiant, password } = cli;
+    let { identifiant, password, region } = cli;
 
-    if (!identifiant || !password) {
+    if (!identifiant || !password || !region) {
         return exit('Invalid arguments');
     }
 
     return db.collection('accounts').insertOne({
         profile: 'admin',
         identifiant,
-        codeRegion: '11',
+        codeRegion: region,
         passwordHash: await passwords.hashPassword(cli.password),
         meta: {
             rehashed: true
