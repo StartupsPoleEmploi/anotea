@@ -108,7 +108,7 @@ export default class FinanceurForm extends React.Component {
                                 options={store.regions}
                                 optionKey="codeRegion"
                                 optionLabel="nom"
-                                onChange={(option = {}) => this.setState({ region: option.codeRegion })}
+                                onChange={(option = {}) => this.setState({ codeRegion: option.codeRegion })}
                             />
                         </> :
                         <>

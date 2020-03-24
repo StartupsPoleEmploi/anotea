@@ -21,6 +21,7 @@ export default class FinanceurPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            form: {},
             store: {
                 departements: [],
                 sirens: [],

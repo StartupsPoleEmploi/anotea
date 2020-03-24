@@ -12,9 +12,9 @@ cli.description('Create new account')
 
 execute(async ({ db, exit, passwords }) => {
 
-    let { identifiant, password, region } = cli;
+    let { identifiant, password, region = '11' } = cli;
 
-    if (!identifiant || !password || !region) {
+    if (!identifiant || !password) {
         return exit('Invalid arguments');
     }
 
