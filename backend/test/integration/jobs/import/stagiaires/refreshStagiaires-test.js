@@ -19,7 +19,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         assert.deepStrictEqual(stats, {
             ignored: 0,
-            refreshed: 1,
+            imported: 1,
             invalid: 0,
             total: 1,
         });

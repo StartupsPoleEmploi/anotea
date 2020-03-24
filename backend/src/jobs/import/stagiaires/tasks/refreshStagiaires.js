@@ -17,7 +17,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
 
     let stats = {
         total: 0,
-        refreshed: 0,
+        imported: 0,
         ignored: 0,
         invalid: 0,
     };
@@ -49,15 +49,15 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                         })
                     ]);
 
-                    stats.refreshed += getNbModifiedDocuments(res);
-                    logger.debug('Stagiaire refreshed');
+                    stats.imported += getNbModifiedDocuments(res);
+                    logger.debug('Stagiaire imported');
                 } else {
                     stats.ignored++;
                     logger.debug('Stagiaire ignored', stagiaire, {});
                 }
             } catch (e) {
                 stats.invalid++;
-                logger.error(`Stagiaire cannot be refreshed`, record, e);
+                logger.error(`Stagiaire cannot be imported`, record, e);
             }
         }, { parallel: 25 })
     ]);
