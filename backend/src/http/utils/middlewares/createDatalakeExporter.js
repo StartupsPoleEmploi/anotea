@@ -4,14 +4,14 @@ const moment = require('moment');
 module.exports = (logger, configuration) => {
 
     let stream = rfs(
-        (time, index) => {
+        (time, index) => { // eslint-disable-line no-unused-vars
             let fileNamePrefix = configuration.log.datalake.fileNamePrefix;
 
             if (!time) {
                 return `${fileNamePrefix}.log`;
             }
 
-            return `${fileNamePrefix}-${moment(time).format('YYYY-MM-DD')}-${index}.log`;
+            return `${fileNamePrefix}-${moment(time).format('YYYY-MM-DD')}.log`;
         }, {
             interval: '1d',
             path: configuration.log.datalake.path,
