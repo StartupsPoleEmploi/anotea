@@ -57,7 +57,7 @@ module.exports = {
                     }
 
                     files.forEach(file => {
-                        if (file.startsWith(components.configuration.log.datalake.fileNamePrefix)) {
+                        if (file.startsWith(components.configuration.log.datalake.fileNamePrefix) || file.startsWith(`statsesd_${components.configuration.log.datalake.fileNamePrefix}`)) {
                             let p = path.join(datalake, file);
                             fs.unlinkSync(p);
                             logger.debug(`${p} test file removed`);
