@@ -59,5 +59,6 @@ module.exports = profile => {
         'formacodes': avis => avis.formation.domaine_formation.formacodes.join(','),
         'id session': avis => avis.formation.action.session.id,
         'code financeur': avis => avis.formation.action.organisme_financeurs.map(o => o.code_financeur).join(','),
+        'dispositif de financement': avis => avis.dispositifFinancement,
     };
 };
