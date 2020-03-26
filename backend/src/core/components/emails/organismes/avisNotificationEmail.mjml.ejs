@@ -58,27 +58,7 @@
                 </mj-column>
             </mj-section>
 
-            <mj-section padding-top="0">
-                <mj-column>
-                    <mj-text css-class="text-secondary">
-                        Si vous avez une question
-                    </mj-text>
-
-                    <mj-button
-                            href="mailto:<%= utils.getRegionEmail(region) %>"
-                            background-color="#FDF2E7"
-                            color="#F28017"
-                            font-size="16px"
-                            font-weight="bold"
-                            text-transform="uppercase">
-                        Contacter Anotéa
-                    </mj-button>
-
-                    <%- include('../common/signature.mjml.ejs'); %>
-
-                </mj-column>
-            </mj-section>
-
+            <%- include('../common/contact.mjml.ejs'); %>
 
         </mj-wrapper>
 

@@ -51,15 +51,7 @@
                 </mj-column>
             </mj-section>
 
-            <mj-section padding-top="0">
-                <mj-column>
-                    <%- include('../common/signature.mjml.ejs'); %>
-
-                    <mj-image padding="0" width="1px" alt="tracking"
-                              src="<%= utils.getPublicUrl(`/emails/organismes/${organisme.token}/track`) %>" />
-
-                </mj-column>
-            </mj-section>
+            <%- include('../common/contact.mjml.ejs'); %>
 
         </mj-wrapper>
 
