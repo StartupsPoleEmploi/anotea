@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const moment = require('moment');
+const { isPoleEmploi } = require('../../../../core/utils/financeurs');
 
 let sanitizeNote = note => `${note}`.replace(/\./g, ',');
 let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
@@ -31,7 +32,7 @@ let getQualification = avis => {
     return _.isEmpty(avis.qualification) ? '' : avis.qualification;
 };
 
-module.exports = profile => {
+module.exports = user => {
     return {
         'id': avis => avis._id,
         'note accueil': avis => sanitizeNote(avis.notes.accueil),
@@ -42,7 +43,7 @@ module.exports = profile => {
         'note global': avis => sanitizeNote(avis.notes.global),
         'titre': avis => sanitizeString(_.get(avis, 'commentaire.title', '')),
         'commentaire': avis => sanitizeString(_.get(avis, 'commentaire.text', '')),
-        ...(profile === 'organisme' ? {} : { 'qualification': avis => getQualification(avis) }),
+        ...(user.profile === 'organisme' ? {} : { 'qualification': avis => getQualification(avis) }),
         'statut': avis => getStatus(avis),
         'réponse': avis => sanitizeString(_.get(avis, 'reponse.text', '')),
         'réponse statut': avis => avis.reponse ? getReponseStatus(avis.reponse.status) : '',
@@ -59,6 +60,6 @@ module.exports = profile => {
         'formacodes': avis => avis.formation.domaine_formation.formacodes.join(','),
         'id session': avis => avis.formation.action.session.id,
         'code financeur': avis => avis.formation.action.organisme_financeurs.map(o => o.code_financeur).join(','),
-        'dispositif de financement': avis => avis.dispositifFinancement,
+        ...(isPoleEmploi(user.codeFinanceur) ? { 'dispositif de financement': avis => avis.dispositifFinancement } : {}),
     };
 };
