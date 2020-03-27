@@ -10,7 +10,7 @@ describe(__filename, () => {
             tablet: false,
             desktop: false
         });
-    });
+    }); 
 
     it('should detect tablet', () => {
         // iPad - Opera
