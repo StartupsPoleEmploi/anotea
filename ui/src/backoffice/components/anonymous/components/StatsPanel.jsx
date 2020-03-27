@@ -18,9 +18,7 @@ export default class StatsPanel extends React.Component {
         super();
         this.state = {
             results: {},
-            showPDFDocument: false,
         };
-        this.pdfReference = React.createRef();
     }
 
     componentDidMount() {
