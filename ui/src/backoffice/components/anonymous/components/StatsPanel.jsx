@@ -5,7 +5,6 @@ import Panel from '../../common/page/panel/Panel';
 import { getPublicStats } from '../../../services/statsService';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import StagiairesStats from './StagiairesStats';
-import PDF, { buildPDF } from '../../common/pdf/PDF';
 import AvisStats from './AvisStats';
 import FormationStats from './FormationStats';
 
