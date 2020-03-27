@@ -46,7 +46,7 @@ module.exports = user => {
         ...(user.profile === 'organisme' ? {} : { 'qualification': avis => getQualification(avis) }),
         'statut': avis => getStatus(avis),
         'réponse': avis => sanitizeString(_.get(avis, 'reponse.text', '')),
-        'réponse statut': avis => avis.reponse ? getReponseStatus(avis.reponse.status) : '',
+        'réponse statut': avis => avis.reponse ? getReponseStatus(avis.reponse) : '',
         'id formation': avis => avis.formation.numero,
         'titre formation': avis => avis.formation.intitule,
         'date début': avis => moment(avis.formation.action.session.periode.debut).format('DD/MM/YYYY'),
