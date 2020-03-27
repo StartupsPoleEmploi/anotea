@@ -35,7 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             unsubscribe: false,
             mailSent: false,
             codeRegion: '11',
-            refreshKey: '166580d3eca85596be989a9fb397b980',
+            refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744',
             dispositifFinancement: 'BEN',
             individu: {
                 nom: 'MARTIN',
@@ -44,7 +44,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 telephones: ['0611111111'],
                 emailValid: true,
                 identifiant_pe: '1111111111',
-                identifiant_local: '0167942369A'
+                identifiant_local: '0167942369Z'
             },
             formation: {
                 numero: '14_AF_0000044465',
@@ -89,7 +89,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         await Promise.all([
             await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions)),
-            await insertIntoDatabase('avis', newAvis({ refreshKey: '166580d3eca85596be989a9fb397b980', dispositifFinancement: 'AIF' }))
+            await insertIntoDatabase('avis', newAvis({ refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744', dispositifFinancement: 'AIF' }))
 
         ]);
 
