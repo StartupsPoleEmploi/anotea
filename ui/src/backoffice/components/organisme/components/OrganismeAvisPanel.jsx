@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Filters } from '../../common/page/panel/filters/Filters';
 import Filter from '../../common/page/panel/filters/Filter';
 import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
+import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
 import Button from '../../../../common/components/Button';
 import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
 import AvisResults from '../../common/page/panel/results/AvisResults';
@@ -119,7 +119,7 @@ export default class OrganismeAvisPanel extends React.Component {
                     </Filters>
                 }
                 summary={
-                    <Summary
+                    <PaginationSummary
                         paginationLabel="avis"
                         pagination={results.meta.pagination}
                         buttons={

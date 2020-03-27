@@ -202,7 +202,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let response = await request(app)
         .put(`/api/backoffice/avis/${avis._id}/addReponse`)
         .set('authorization', `Bearer ${token}`)
-        .send({ text: 'Accusantium molestiae quasi enim facilis. Non deserunt autem ut sit est. Earum laudantium est amet soluta sed. Inventore eos nemo sunt sapiente atque ea repudiandae nam. Nihil nihil et consequatur nemo aut deserunt pariatur dolores. Accusantium molestiae quasi enim facilis. Accusantium molestiae quasi enim facilis.' });
+        .send({
+            text: 'Accusantium molestiae quasi enim facilis. Non deserunt autem ut sit est. Earum laudantium est amet soluta sed. ' +
+                'Inventore eos nemo sunt sapiente atque ea repudiandae nam. Nihil nihil et consequatur nemo aut deserunt pariatur dolores. ' +
+                'Accusantium molestiae quasi enim facilis. Accusantium molestiae quasi enim facilis.'
+        });
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
@@ -218,7 +222,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
                     'type': 'string.max',
                     'context': {
                         'limit': 300,
-                        'value': 'Accusantium molestiae quasi enim facilis. Non deserunt autem ut sit est. Earum laudantium est amet soluta sed. Inventore eos nemo sunt sapiente atque ea repudiandae nam. Nihil nihil et consequatur nemo aut deserunt pariatur dolores. Accusantium molestiae quasi enim facilis. Accusantium molestiae quasi enim facilis.',
+                        'value': 'Accusantium molestiae quasi enim facilis. Non deserunt autem ut sit est. Earum laudantium est amet soluta sed. ' +
+                            'Inventore eos nemo sunt sapiente atque ea repudiandae nam. Nihil nihil et consequatur nemo aut deserunt pariatur dolores. ' +
+                            'Accusantium molestiae quasi enim facilis. Accusantium molestiae quasi enim facilis.',
                         'key': 'text',
                         'label': 'text'
                     }

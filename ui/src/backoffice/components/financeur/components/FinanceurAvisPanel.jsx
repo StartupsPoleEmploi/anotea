@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import { Filters } from '../../common/page/panel/filters/Filters';
 import Filter from '../../common/page/panel/filters/Filter';
 import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
+import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
 import Button from '../../../../common/components/Button';
 import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import Avis from '../../common/avis/Avis';
 import Pagination from '../../common/page/panel/pagination/Pagination';
-import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../../../common/components/Loader';
 
@@ -17,7 +16,6 @@ export default class FinanceurAvisPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
-        form: PropTypes.object.isRequired,
         onFilterClicked: PropTypes.func.isRequired,
     };
 
@@ -63,7 +61,7 @@ export default class FinanceurAvisPanel extends React.Component {
     render() {
 
         let { results, message } = this.state;
-        let { query, form, onFilterClicked } = this.props;
+        let { query, onFilterClicked } = this.props;
 
         return (
             <Panel
@@ -115,8 +113,7 @@ export default class FinanceurAvisPanel extends React.Component {
                     </Filters>
                 }
                 summary={
-                    <Summary
-                        title={<BadgeSummary form={form} query={query} />}
+                    <PaginationSummary
                         paginationLabel="avis"
                         pagination={results.meta.pagination}
                         buttons={

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Page from '../common/page/Page';
 import StatsPanel from './components/StatsPanel';
 import StatsForm from './components/StatsForm';
+import { promiseAll } from '../../utils/async-utils';
+import { getRegions } from '../../services/regionsService';
 
 export default class StatsPage extends React.Component {
 
@@ -14,21 +16,31 @@ export default class StatsPage extends React.Component {
         super();
         this.state = {
             form: {},
+            store: {
+                regions: [],
+                loading: true,
+            }
         };
     }
+
+    async componentDidMount() {
+        this.setState({
+            store: await this.loadStore()
+        });
+    }
+
+    loadStore = () => {
+        return promiseAll({
+            regions: getRegions(),
+            loading: false,
+        });
+    };
 
     onSubmit = form => {
         this.setState({ form }, () => {
             this.props.router.refreshCurrentPage({
                 ...this.state.form,
             });
-        });
-    };
-
-    onFilterClicked = parameters => {
-        return this.props.router.refreshCurrentPage({
-            ...this.state.form,
-            ...parameters,
         });
     };
 
@@ -39,8 +51,8 @@ export default class StatsPage extends React.Component {
         return (
             <Page
                 className="StatsPage"
-                form={<StatsForm query={query} onSubmit={this.onSubmit} />}
-                panel={<StatsPanel query={query} onFilterClicked={this.onFilterClicked} />}
+                form={<StatsForm query={query} store={this.state.store} onSubmit={this.onSubmit} />}
+                panel={<StatsPanel query={query} />}
             />
         );
     }

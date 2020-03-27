@@ -4,13 +4,15 @@
 const cli = require('commander');
 const { execute } = require('../../job-utils');
 const importStagiaire = require('./tasks/importStagiaires');
+const refreshStagiaires = require('./tasks/refreshStagiaires');
 
 cli.description('Import des stagiaires')
 .option('--source [name]', 'Source to import (PE or IDF)')
 .option('--file [file]', 'The CSV file to import')
+.option('--refresh', 'Refresh stagiaires instead of importing them')
 .option('--region [codeRegion]', 'Code region to filter')
 .option('--financeur [codeFinanceur]', 'Code financeur to filter')
-.option('-x, --unpack', 'Handle file as an archive')
+.option('--unpack', 'Handle file as an archive')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
@@ -21,7 +23,7 @@ let sources = {
 
 execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
-    let { file, source, region, financeur, unpack } = cli;
+    let { file, source, region, financeur, unpack, refresh } = cli;
     let filters = {
         codeRegion: region,
         codeFinanceur: financeur,
@@ -33,9 +35,11 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
     let handler = require(`./tasks/handlers/${sources[source]}CSVHandler`)(db, regions);
 
-    logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
+    logger.info(`Using source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
     try {
-        let stats = await importStagiaire(db, logger, file, handler, filters, { unpack });
+        let stats = refresh ?
+            await refreshStagiaires(db, logger, file, handler, filters, { unpack }) :
+            await importStagiaire(db, logger, file, handler, filters, { unpack });
 
         if (stats.total > 0) {
             sendSlackNotification({

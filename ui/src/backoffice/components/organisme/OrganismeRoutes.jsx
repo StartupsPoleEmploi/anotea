@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import MonComptePage from '../common/MonComptePage';
 import OrganismePage from './OrganismePage';
+import StatsPage from '../anonymous/StatsPage';
 
 export default class OrganismeRoutes extends React.Component {
 
@@ -18,6 +19,9 @@ export default class OrganismeRoutes extends React.Component {
                     return <OrganismePage router={router} />;
                 }} />
                 <Route path={'/backoffice/organisme/mon-compte'} component={MonComptePage} />
+                <Route path="/backoffice/stats" render={() => {
+                    return <StatsPage router={router} />;
+                }} />
                 <Redirect to="/backoffice/organisme/avis" />
             </Switch>
         );

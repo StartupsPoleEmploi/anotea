@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Panel from '../../common/page/panel/Panel';
 import { getPublicStats } from '../../../services/statsService';
-import Button from '../../../../common/components/Button';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import StagiairesStats from './StagiairesStats';
-import PDF, { buildPDF } from '../../common/pdf/PDF';
 import AvisStats from './AvisStats';
 import FormationStats from './FormationStats';
 
@@ -14,16 +12,13 @@ export default class StatsPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
-        onFilterClicked: PropTypes.func.isRequired,
     };
 
     constructor() {
         super();
         this.state = {
             results: {},
-            showPDFDocument: false,
         };
-        this.pdfReference = React.createRef();
     }
 
     componentDidMount() {
@@ -40,15 +35,6 @@ export default class StatsPanel extends React.Component {
         return new Promise(async resolve => {
             let results = await getPublicStats(this.props.query);
             this.setState({ results }, () => resolve());
-        });
-    };
-
-    generatePDF = () => {
-        this.setState({ showPDFDocument: true }, async () => {
-            window.scrollTo(0, 0);
-            new Promise(resolve => setTimeout(() => resolve(), 250))
-            .then(() => buildPDF(this.pdfReference.current))
-            .then(() => this.setState({ showPDFDocument: false }));
         });
     };
 
@@ -83,18 +69,6 @@ export default class StatsPanel extends React.Component {
                         </div>
                     }
                 />
-                {this.state.showPDFDocument &&
-                <div ref={this.pdfReference}>
-                    <PDF
-                        title={'Statistiques'}
-                        main={
-                            <div>
-                                PDF
-                            </div>
-                        }
-                    />
-                </div>
-                }
             </>
         );
     }

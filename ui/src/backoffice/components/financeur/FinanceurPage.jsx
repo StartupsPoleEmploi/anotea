@@ -2,14 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
-import BackofficeContext from '../../BackofficeContext';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
 import FinanceurAvisChartsPanel from './components/FinanceurAvisChartsPanel';
 import FinanceurForm from './components/FinanceurForm';
+import { getDepartements } from '../../services/departementsService';
+import { getSirens } from '../../services/sirensService';
+import { getDispositifs, getFinanceurs } from '../../services/financeursService';
+import { getRegions } from '../../services/regionsService';
+import { getFormations } from '../../services/formationsService';
+import { promiseAll } from '../../utils/async-utils';
 
 export default class FinanceurPage extends React.Component {
-
-    static contextType = BackofficeContext;
 
     static propTypes = {
         router: PropTypes.object.isRequired,
@@ -19,8 +22,47 @@ export default class FinanceurPage extends React.Component {
         super(props);
         this.state = {
             form: {},
+            store: {
+                departements: [],
+                sirens: [],
+                financeurs: [],
+                dispositifs: [],
+                regions: [],
+                formations: [],
+                loading: true,
+            }
         };
     }
+
+    async componentDidMount() {
+        this.setState({
+            store: await this.loadStore()
+        });
+    }
+
+    loadStore = async () => {
+        let { router } = this.props;
+        let query = router.getQuery();
+
+        return promiseAll({
+            departements: getDepartements(),
+            sirens: getSirens(),
+            dispositifs: getDispositifs(),
+            financeurs: getFinanceurs(),
+            regions: getRegions(),
+            formations: query.siren ? getFormations({ organisme: query.siren }) : Promise.resolve([]),
+            loading: false,
+        });
+    };
+
+    loadFormations = async siren => {
+        this.setState({
+            store: {
+                ...this.state.store,
+                formations: await getFormations({ organisme: siren }),
+            }
+        });
+    };
 
     onSubmit = form => {
         this.setState({ form }, () => {
@@ -30,46 +72,52 @@ export default class FinanceurPage extends React.Component {
         });
     };
 
-    onTabClicked = (path, parameters = {}) => {
+    onTabClicked = path => {
         return this.props.router.goToPage(path, {
             ...this.state.form,
-            ...parameters
         });
     };
 
     onFilterClicked = parameters => {
         return this.props.router.refreshCurrentPage({
-            ...this.state.form,
+            ...(this.state.form || this.props.router.getQuery()),
             ...parameters,
         });
     };
 
     render() {
         let { router } = this.props;
-        let { form } = this.state;
+        let { store } = this.state;
         let query = router.getQuery();
 
         return (
             <Page
-                loading={this.state.loading}
-                form={<FinanceurForm query={query} onSubmit={this.onSubmit} />}
+                form={
+                    <FinanceurForm
+                        query={query}
+                        store={store}
+                        loadFormations={this.loadFormations}
+                        onSubmit={this.onSubmit}
+                    />
+                }
                 tabs={
                     <Tabs>
                         <Tab
                             label="Vue graphique"
                             isActive={() => router.isActive('/backoffice/financeur/avis/charts')}
-                            onClick={() => this.onTabClicked('/backoffice/financeur/avis/charts')} />
-
+                            onClick={() => this.onTabClicked('/backoffice/financeur/avis/charts')}
+                        />
                         <Tab
                             label="Liste des avis"
                             isActive={() => router.isActive('/backoffice/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('/backoffice/financeur/avis/liste', { sortBy: 'date' })} />
+                            onClick={() => this.onTabClicked('/backoffice/financeur/avis/liste', { sortBy: 'date' })}
+                        />
                     </Tabs>
                 }
                 panel={
                     router.isActive('/backoffice/financeur/avis/liste') ?
-                        <FinanceurAvisPanel query={query} form={form} onFilterClicked={this.onFilterClicked} /> :
-                        <FinanceurAvisChartsPanel query={query} form={form} />
+                        <FinanceurAvisPanel query={query} onFilterClicked={this.onFilterClicked} /> :
+                        <FinanceurAvisChartsPanel query={query} store={store} />
                 }
             />
         );

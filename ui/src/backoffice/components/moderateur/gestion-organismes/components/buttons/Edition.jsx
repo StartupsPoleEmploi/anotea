@@ -40,9 +40,8 @@ export default class Edition extends React.Component {
                     value={this.state.selected}
                     options={this.props.organisme.courriels}
                     loading={false}
-                    placeholder={''}
                     optionKey="courriel"
-                    label={option => option.courriel}
+                    optionLabel="courriel"
                     meta={option => option.source}
                     onChange={selected => this.setState({ selected })}
                 />

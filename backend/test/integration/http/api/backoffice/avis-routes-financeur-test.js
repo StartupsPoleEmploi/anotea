@@ -137,6 +137,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body.avis.length, 1);
     });
 
+    it('can search avis by dispositif financement', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            insertIntoDatabase('avis', buildAvis({ dispositifFinancement: 'AIF' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?dispositifFinancement=AIF')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+    });
+
     it('should automatically filter by all code financeurs (PE)', async () => {
 
         let app = await startServer();

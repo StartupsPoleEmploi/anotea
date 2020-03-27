@@ -6,6 +6,8 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../helpers/with-server');
 const { newAvis, newStagiaire, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 
+let { delay } = require('../../../../../src/jobs/job-utils');
+
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase, logAsOrganisme }) => {
 
     let buildAvis = (custom = {}) => {
@@ -111,6 +113,39 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 1);
     });
 
+    it('can search avis by email (fulltext) multimatch', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('stagiaires', newStagiaire({
+                token: '12345',
+                individu: {
+                    email: 'robert-multimatch@domaine.com',
+                },
+            })),
+            insertIntoDatabase('stagiaires', newStagiaire({
+                token: '67891',
+                individu: {
+                    email: 'robert-multimatch@domaine.com',
+                },
+            })),
+            insertIntoDatabase('avis', newAvis({
+                token: '67891',
+            })),
+            insertIntoDatabase('avis', newAvis({
+                token: '12345',
+            })),
+            createIndexes(['avis']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?fulltext=robert-multimatch@domaine.com')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 2);
+    });
+
     it('can search avis by email (no match) (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
@@ -160,6 +195,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
+
+        await delay(1000);
 
         let response = await request(app)
         .get('/api/backoffice/avis?fulltext=NOMATCH')

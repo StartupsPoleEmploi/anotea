@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
+import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import Page from '../../common/page/Page';
 import Panel from '../../common/page/panel/Panel';
@@ -172,7 +172,7 @@ export default class ModerationAvisPage extends React.Component {
                             </Filters>
                         }
                         summary={
-                            <Summary
+                            <PaginationSummary
                                 paginationLabel="avis(s)"
                                 pagination={results.meta.pagination}
                             />

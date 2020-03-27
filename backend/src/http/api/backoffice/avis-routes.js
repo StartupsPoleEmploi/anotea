@@ -23,9 +23,10 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         }, { abortEarly: false });
 
         let query = await queries.buildAvisQuery(parameters);
-        //debugger;
+
         let cursor = db.collection('avis')
         .find(query)
+        .project({ dispositifFinancement: 0 })
         .sort({ [parameters.sortBy || 'date']: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -68,7 +69,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         .stream();
 
         try {
-            await sendCSVStream(stream, res, getAvisCSV(req.user.profile), { encoding: 'UTF-16BE', filename: 'avis.csv' });
+            await sendCSVStream(stream, res, getAvisCSV(req.user), { encoding: 'UTF-16BE', filename: 'avis.csv' });
         } catch (e) {
             //FIXME we must handle errors
             logger.error('Unable to send CSV file', e);

@@ -27,6 +27,8 @@ module.exports = (db, regions, user) => {
                     siren: Joi.string().min(9).max(9),
                     codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
                         Joi.string().valid(getFinanceurs().map(f => f.code)) : Joi.any().forbidden(),
+                    dispositifFinancement: isPoleEmploi(user.codeFinanceur) ?
+                        Joi.string() : Joi.any().forbidden(),
                 };
             },
             filters: () => {
@@ -46,7 +48,7 @@ module.exports = (db, regions, user) => {
         },
         queries: {
             buildStagiaireQuery: async parameters => {
-                let { departement, codeFinanceur, siren, numeroFormation, debut, fin } = parameters;
+                let { departement, codeFinanceur, siren, numeroFormation, debut, fin, dispositifFinancement } = parameters;
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
 
                 return {
@@ -58,12 +60,14 @@ module.exports = (db, regions, user) => {
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
                     ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
+                    ...(dispositifFinancement ? { 'dispositifFinancement': dispositifFinancement } : {}),
                 };
             },
             buildAvisQuery: async parameters => {
                 let {
                     departement, codeFinanceur, siren, numeroFormation, debut, fin,
-                    commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
+                    commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived'],
+                    dispositifFinancement,
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
@@ -79,6 +83,7 @@ module.exports = (db, regions, user) => {
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
+                    ...(dispositifFinancement ? { 'dispositifFinancement': dispositifFinancement } : {}),
                 };
             },
         },

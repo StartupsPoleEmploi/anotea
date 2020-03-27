@@ -8,9 +8,9 @@ cli.description('Import ROME <-> FORMACODE mapping from CSV file')
 .option('-f, --file [file]', 'The CSV file to import')
 .parse(process.argv);
 
-execute(({ logger, db, exit, configuration }) => {
+execute(({ logger, db, exit }) => {
 
-    let romeImporter = require(`./importer`)(db, logger, configuration);
+    let romeImporter = require(`./importer`)(db, logger);
 
     if (!cli.file) {
         return exit('invalid arguments');
