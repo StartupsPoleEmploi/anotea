@@ -79,21 +79,8 @@
                 <% } %>
             </mj-section>
 
-            <mj-section padding-top="0">
-                <mj-column>
-                    <mj-text css-class="text-secondary" padding-bottom="0">
-                        Merci de contribuer à notre service
-                    </mj-text>
+            <%- include('../common/contact.mjml.ejs'); %>
 
-                    <mj-text css-class="text-secondary" padding-top="0">
-                        L'équipe Anotéa.
-                    </mj-text>
-
-                    <mj-image padding="0" width="1px" alt="tracking"
-                              src="<%= utils.getPublicUrl(`/emails/stagiaires/${stagiaire.token}/track`) %>" />
-
-                </mj-column>
-            </mj-section>
         </mj-wrapper>
 
         <%- include('./footer.mjml.ejs', { utils }); %>
