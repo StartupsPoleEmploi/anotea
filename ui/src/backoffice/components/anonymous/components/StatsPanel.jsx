@@ -4,11 +4,16 @@ import _ from 'lodash';
 import Panel from '../../common/page/panel/Panel';
 import { getPublicStats } from '../../../services/statsService';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
+import BackofficeContext from '../../../BackofficeContext';
 import StagiairesStats from './StagiairesStats';
 import AvisStats from './AvisStats';
 import FormationStats from './FormationStats';
+import OrganismeStats from './OrganismeStats';
+import ModerationStats from './ModerationStats';
 
 export default class StatsPanel extends React.Component {
+    
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -31,6 +36,11 @@ export default class StatsPanel extends React.Component {
         }
     }
 
+    mustShowAdminStats() {
+        let { account } = this.context;
+        return account.profile === 'admin';
+    } 
+    
     fetchStats = () => {
         return new Promise(async resolve => {
             let results = await getPublicStats(this.props.query);
@@ -66,6 +76,16 @@ export default class StatsPanel extends React.Component {
                                     <FormationStats query={query} stats={results.stats} />
                                 </div>
                             </div>
+                            { this.mustShowAdminStats() &&
+                            <div className="row mb-5">
+                                <div className="col-sm-12 col-md-6">
+                                    <ModerationStats query={query} stats={results.stats} />
+                                </div>
+                                <div className="col-sm-12 col-md-6">
+                                    <OrganismeStats query={query} stats={results.stats} />
+                                </div>
+                            </div>
+                            }
                         </div>
                     }
                 />
