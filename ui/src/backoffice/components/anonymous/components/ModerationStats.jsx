@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
 import { latest } from '../../../services/statsService';
-import { formatNumber, percentage } from '../../../utils/number-utils';
+import { formatNumber } from '../../../utils/number-utils';
 
 export default class ModerationStats extends React.Component {
 
