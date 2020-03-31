@@ -29,7 +29,7 @@ module.exports = (logger, configuration) => {
                 return `${fileNamePrefix}.log`;
             }
 
-            return `${fileNamePrefix}-${moment(time).format('YYYY-MM-DD')}.log`;
+            return `${fileNamePrefix}_${moment(time).format('YYYY-MM-DD')}.log`;
         }, {
             interval: '1d',
             path: configuration.log.datalake.path,
