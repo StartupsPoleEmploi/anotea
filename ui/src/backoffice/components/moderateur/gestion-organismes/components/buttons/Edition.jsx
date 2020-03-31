@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { updateCourriel } from '../../gestionOrganismesService';
 import Button from '../../../../../../common/components/Button';
 import { Select } from '../../../../common/page/form/Form';
@@ -22,7 +23,7 @@ export default class Edition extends React.Component {
 
     update = async () => {
         if (this.state.selected) {
-            let updated = await updateCourriel(this.props.organisme._id, this.state.selected.courriel);
+            let updated = await updateCourriel(this.props.organisme._id, this.state.selected);
             this.props.onChange(updated, {
                 message: {
                     text: 'L\'adresse mail a été mise à jour',
@@ -33,17 +34,22 @@ export default class Edition extends React.Component {
     };
 
     render() {
+        let selected = this.state.selected;
+        let options = _.uniqBy([...this.props.organisme.courriels, ...(selected ? [{ courriel: selected }] : [])], 'courriel');
+
         return (
             <div className="Edition">
                 <Select
-                    type={'create'}
-                    value={this.state.selected}
-                    options={this.props.organisme.courriels}
+                    type="create"
+                    value={selected}
+                    options={options}
                     loading={false}
                     optionKey="courriel"
                     optionLabel="courriel"
                     meta={option => option.source}
-                    onChange={selected => this.setState({ selected })}
+                    onChange={data => {
+                        this.setState({ selected: data ? data.courriel : null });
+                    }}
                 />
 
                 <div className="py-2 d-flex justify-content-end">
