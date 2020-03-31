@@ -4,15 +4,15 @@ const _ = require('lodash');
 const path = require('path');
 const readline = require('readline');
 const assert = require('assert');
-const buildHMACSignature = require('../../../../../src/jobs/data/auth/utils/buildHMACSignature');
-const { withServer } = require('../../../../helpers/with-server');
+const buildHMACSignature = require('../../../../src/jobs/data/auth/utils/buildHMACSignature');
+const { withServer } = require('../../../helpers/with-server');
 
 describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
     let tests = 0;
-    const getFileContent = async (configuration) => {
-        
-        let datalakeFileName = 'statsesd_' + `${configuration.log.datalake.fileNamePrefix}.log`;
+    const getFileContent = async configuration => {
+
+        let datalakeFileName = `statsesd_${configuration.log.datalake.fileNamePrefix}.log`;
         let datalakeFile = path.join(configuration.log.datalake.path, datalakeFileName);
 
         await new Promise(resolve => {
