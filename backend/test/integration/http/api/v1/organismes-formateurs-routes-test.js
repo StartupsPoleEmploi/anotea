@@ -69,7 +69,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 '@type': 'AggregateRating',
                 'ratingValue': 5.1,
                 'ratingCount': 15,
-                'bestRating': 5.1,
+                'bestRating': 5,
                 'worstRating': 1,
             }
         });

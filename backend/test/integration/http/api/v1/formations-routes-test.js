@@ -207,8 +207,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 '@type': 'AggregateRating',
                 'ratingValue': 2.4,
                 'ratingCount': 1,
-                'bestRating': 2.4,
-                'worstRating': 2.4,
+                'bestRating': 5,
+                'worstRating': 1,
             }
         });
     });
