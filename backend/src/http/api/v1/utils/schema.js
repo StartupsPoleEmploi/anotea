@@ -3,8 +3,8 @@ let getAggregateRating = score => {
         '@type': 'AggregateRating',
         'ratingValue': score.notes.global,
         'ratingCount': score.nb_avis,
-        'bestRating': score.aggregation.global.max,
-        'worstRating': score.aggregation.global.min,
+        'bestRating': 5,
+        'worstRating': 1,
     };
 };
 
