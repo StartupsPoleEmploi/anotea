@@ -41,7 +41,7 @@
     "bootstrap-datepicker": "1.9.0",
     "html2canvas": "1.0.0-rc.5",
     "iframe-resizer": "4.2.9",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "jspdf": "1.5.3",
     "jwt-decode": "2.2.0",
     "lodash": "4.17.15",
