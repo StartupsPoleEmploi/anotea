@@ -1,6 +1,6 @@
 const fs = require('fs');
 const bz2 = require('unbzip2-stream');
-const md5File = require('md5-file/promise');
+const md5File = require('md5-file');
 const validateStagiaire = require('./utils/validateStagiaire');
 const shouldBeImported = require('./utils/shouldBeImported');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
