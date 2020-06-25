@@ -1,7 +1,7 @@
 const md5 = require('md5');
 const _ = require('lodash');
 const assert = require('assert');
-const md5File = require('md5-file/promise');
+const md5File = require('md5-file');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const logger = require('../../../../helpers/components/fake-logger');
 const importStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/importStagiaires');
