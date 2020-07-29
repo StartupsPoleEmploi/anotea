@@ -3,7 +3,7 @@ const moment = require('moment');
 
 module.exports = (logger, configuration) => {
 
-    let streamV1 = rfs(
+    const streamV1 = rfs.createStream(
         (time, index) => {
             let fileNamePrefix = configuration.log.datalake.fileNamePrefix;
 
@@ -20,7 +20,7 @@ module.exports = (logger, configuration) => {
 
     streamV1.on('error', err => logger.error(err, 'Unable to export log to datalake file. Stream closed'));
 
-    let streamV2 = rfs(
+    const streamV2 = rfs.createStream(
         // eslint-disable-next-line no-unused-vars
         (time, index) => {
             let fileNamePrefix = `statsesd_${configuration.log.datalake.fileNamePrefix}`;

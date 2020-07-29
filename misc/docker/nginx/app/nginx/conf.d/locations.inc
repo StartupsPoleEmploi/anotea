@@ -2,6 +2,8 @@
 
     limit_req zone=flood burst=100 nodelay;
 
+    proxy_buffering off;
+
     proxy_pass http://ui/$2;
     proxy_redirect      off;
     proxy_cache         off;
@@ -14,6 +16,8 @@
 location / {
 
     limit_req zone=flood burst=100 nodelay;
+
+    proxy_buffering off;
 
     proxy_pass http://backend:8080;
     proxy_redirect      off;
