@@ -1,3 +1,4 @@
+const objectId = require('mongodb').ObjectId;
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
@@ -144,9 +145,12 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
     }));
 
     router.post('/api/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
+        let { id } = await Joi.validate(req.params, { id: Joi.required() }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
+        let organisme = await db.collection('accounts').findOne({
+            _id: isNaN(id) ? objectId(id) : id,
+            profile: 'organisme',
+        });
         if (organisme) {
             let templateName = organisme.passwordHash ? 'forgottenPasswordEmail' : 'activationCompteEmail';
             let message = emails.getEmailMessageByTemplateName(templateName);
