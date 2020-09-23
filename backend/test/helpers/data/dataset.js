@@ -81,8 +81,8 @@ module.exports = {
     },
     newOrganismeAccount: (custom = {}) => {
         return _.merge({
-            _id: custom._id || parseInt(custom.siret || '6080274100045'),
-            siret: '6080274100045',
+            _id: ((custom.objectId) ? new ObjectId() : (parseInt(custom.siret) || 6080274100045)),
+            siret: (custom.siret) || '6080274100045',
             raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
             courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
