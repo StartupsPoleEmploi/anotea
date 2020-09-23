@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         const idOrganisme = '5f43672078b3c84a55a0c305';
         let organisme = newOrganismeAccount({
-            _id: await objectId('5f43672078b3c84a55a0c305'),
+            _id: await objectId(idOrganisme),
             siret: '11111111111111',
         });
         await insertIntoDatabase('accounts', organisme);
@@ -98,7 +98,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body, {
             organismes: [
                 {
-                    _id: idOrganisme, 
+                    _id: idOrganisme,
                     siret: '11111111111111',
                     raison_sociale: 'Pole Emploi Formation',
                     courriel: 'contact@poleemploi-formation.fr',
@@ -290,17 +290,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.organismes[0].siret, '11111111111111');
     });
 
-    it('can edit email (no duplicates)', async () => {
+    it('can edit email (no duplicates) for int _id', async () => {
 
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
 
-        await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: 1234,
+        const retourInsertion = await insertIntoDatabase('accounts', newOrganismeAccount({
+            objectId: false,
         }));
+        const organisme = retourInsertion.ops[0];
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/1234/updateCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ courriel: 'contact@poleemploi-formation.fr' });
 
@@ -309,5 +310,60 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.courriels, [
             { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
         ]);
+    });
+
+    it('can edit email (no duplicates) for string _id', async () => {
+
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+
+        const monInsert = await insertIntoDatabase('accounts', newOrganismeAccount({
+            objectId: true,
+        }));
+        const organisme = monInsert.ops[0];
+
+        let response = await request(app)
+        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ courriel: 'contact@poleemploi-formation.fr' });
+
+        assert.strictEqual(response.statusCode, 201);
+        assert.deepStrictEqual(response.body.courriel, 'contact@poleemploi-formation.fr');
+        assert.deepStrictEqual(response.body.courriels, [
+            { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
+        ]);
+    });
+
+    it('can resend email password for int _id', async () => {
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let organisme = newOrganismeAccount({
+            siret: '11111111111111',
+        });
+        await insertIntoDatabase('accounts', organisme);
+        
+        let response = await request(app)
+        .post(`/api/backoffice/moderateur/organismes/11111111111111/resendEmailAccount`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'me@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
+    });
+
+    it('can resend email password for ObjectId _id', async () => {
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let organisme = newOrganismeAccount({
+            objectId: true,
+            siret: '11111111111111',
+        });
+        await insertIntoDatabase('accounts', organisme);
+        
+        let response = await request(app)
+        .post(`/api/backoffice/moderateur/organismes/${organisme._id}/resendEmailAccount`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'me@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
     });
 }));
