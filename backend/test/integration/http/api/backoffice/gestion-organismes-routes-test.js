@@ -2,10 +2,11 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/with-server');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
+const objectId = require('mongodb').ObjectId;
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
 
-    it('can search organismes', async () => {
+    it('can search organismes avec id entier', async () => {
 
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
@@ -25,6 +26,79 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             organismes: [
                 {
                     _id: '1234',
+                    siret: '11111111111111',
+                    raison_sociale: 'Pole Emploi Formation',
+                    courriel: 'contact@poleemploi-formation.fr',
+                    courriels: [
+                        { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
+                    ],
+                    creationDate: organisme.creationDate.toJSON(),
+                    mailSentDate: organisme.mailSentDate.toJSON(),
+                    codeRegion: '11',
+                    numero: '14_OF_0000000123',
+                    status: 'active',
+                    lieux_de_formation: [
+                        {
+                            adresse: {
+                                code_postal: '75019',
+                                ville: 'Paris 19e',
+                                region: '11'
+                            }
+                        }
+                    ],
+                    score: {
+                        nb_avis: 15,
+                        notes: {
+                            accueil: 5.1,
+                            contenu_formation: 5.1,
+                            equipe_formateurs: 4.1,
+                            moyen_materiel: 3.1,
+                            accompagnement: 4.1,
+                            global: 5.1,
+                        },
+                        aggregation: {
+                            global: {
+                                max: 5.1,
+                                min: 1,
+                            },
+                        },
+                    },
+                    profile: 'organisme'
+                }
+            ],
+            meta: {
+                pagination: {
+                    page: 0,
+                    itemsPerPage: 2,
+                    itemsOnThisPage: 1,
+                    totalItems: 1,
+                    totalPages: 1
+                }
+            }
+        });
+    });
+
+    it('can search organismes avec id ObjectId', async () => {
+
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        const idOrganisme = '5f43672078b3c84a55a0c305';
+        let organisme = newOrganismeAccount({
+            _id: await objectId(idOrganisme),
+            siret: '11111111111111',
+        });
+        await insertIntoDatabase('accounts', organisme);
+
+        let response = await request(app)
+        .get(`/api/backoffice/moderateur/organismes`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'me@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            organismes: [
+                {
+                    _id: idOrganisme,
                     siret: '11111111111111',
                     raison_sociale: 'Pole Emploi Formation',
                     courriel: 'contact@poleemploi-formation.fr',
@@ -216,17 +290,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.organismes[0].siret, '11111111111111');
     });
 
-    it('can edit email (no duplicates)', async () => {
+    it('can edit email (no duplicates) for int _id', async () => {
 
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
 
-        await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: 1234,
+        const retourInsertion = await insertIntoDatabase('accounts', newOrganismeAccount({
+            objectId: false,
         }));
+        const organisme = retourInsertion.ops[0];
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/1234/updateCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ courriel: 'contact@poleemploi-formation.fr' });
 
@@ -235,5 +310,60 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.courriels, [
             { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
         ]);
+    });
+
+    it('can edit email (no duplicates) for string _id', async () => {
+
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+
+        const monInsert = await insertIntoDatabase('accounts', newOrganismeAccount({
+            objectId: true,
+        }));
+        const organisme = monInsert.ops[0];
+
+        let response = await request(app)
+        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ courriel: 'contact@poleemploi-formation.fr' });
+
+        assert.strictEqual(response.statusCode, 201);
+        assert.deepStrictEqual(response.body.courriel, 'contact@poleemploi-formation.fr');
+        assert.deepStrictEqual(response.body.courriels, [
+            { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
+        ]);
+    });
+
+    it('can resend email password for int _id', async () => {
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let organisme = newOrganismeAccount({
+            siret: '11111111111111',
+        });
+        await insertIntoDatabase('accounts', organisme);
+        
+        let response = await request(app)
+        .post(`/api/backoffice/moderateur/organismes/11111111111111/resendEmailAccount`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'me@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
+    });
+
+    it('can resend email password for ObjectId _id', async () => {
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let organisme = newOrganismeAccount({
+            objectId: true,
+            siret: '11111111111111',
+        });
+        await insertIntoDatabase('accounts', organisme);
+        
+        let response = await request(app)
+        .post(`/api/backoffice/moderateur/organismes/${organisme._id}/resendEmailAccount`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'me@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
     });
 }));

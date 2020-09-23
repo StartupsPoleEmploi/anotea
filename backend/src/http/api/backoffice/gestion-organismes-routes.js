@@ -1,3 +1,4 @@
+const objectId = require('mongodb').ObjectId;
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
@@ -19,6 +20,10 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     const saveEvent = (id, type, source) => {
         db.collection('events').insertOne({ organisationId: id, date: new Date(), type: type, source: source });
+    };
+
+    const recupererIdOrganisme = async idNonModifie => {
+        return isNaN(idNonModifie) ? (await objectId(idNonModifie)) : parseInt(idNonModifie);
     };
 
     router.get('/api/backoffice/moderateur/organismes', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
@@ -110,14 +115,20 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     router.put('/api/backoffice/moderateur/organismes/:id/updateCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
+        let idNonModifie = (await Joi.validate(req.params, { id: Joi.required() }, { abortEarly: false })).id;
+                
+        let bonId = await recupererIdOrganisme(idNonModifie);
+
+        let organisme = await db.collection('accounts').findOne({
+            _id: bonId
+        });
+        
         let { courriel } = await Joi.validate(req.body, { courriel: Joi.string().email().required() }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ _id: id });
         let alreadyExists = !!organisme.courriels.find(v => v.courriel === courriel);
 
         let result = await db.collection('accounts').findOneAndUpdate(
-            { _id: id },
+            { _id: organisme._id },
             {
                 $set: { courriel },
                 ...(alreadyExists ? {} : {
@@ -130,10 +141,10 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
         );
 
         if (!result.value) {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            throw new IdNotFoundError(`Avis with identifier ${organisme._id} not found`);
         }
 
-        saveEvent(id, 'editEmail', {
+        saveEvent(organisme._id, 'editEmail', {
             app: 'moderation',
             profile: 'moderateur',
             user: 'admin',
@@ -144,9 +155,15 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
     }));
 
     router.post('/api/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
+        let idNonModifie = (await Joi.validate(req.params, { id: Joi.required() }, { abortEarly: false })).id;
+            
+        let bonId = await recupererIdOrganisme(idNonModifie);
 
-        let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
+        let organisme = await db.collection('accounts').findOne({
+            _id: bonId,
+            profile: 'organisme',
+        });
+        
         if (organisme) {
             let templateName = organisme.passwordHash ? 'forgottenPasswordEmail' : 'activationCompteEmail';
             let message = emails.getEmailMessageByTemplateName(templateName);

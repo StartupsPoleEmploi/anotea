@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const uuid = require('uuid');
 const moment = require('moment');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 
 const randomize = value => `${value}-${uuid.v4()}`;
 const randomSIRET = () => `${Math.floor(Math.random() * 9000000000) + 1000000000}`;
@@ -81,8 +81,8 @@ module.exports = {
     },
     newOrganismeAccount: (custom = {}) => {
         return _.merge({
-            _id: parseInt(custom.siret || '6080274100045'),
-            siret: '6080274100045',
+            _id: ((custom.objectId) ? new ObjectId() : (parseInt(custom.siret) || 6080274100045)),
+            siret: (custom.siret) || '6080274100045',
             raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
             courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
@@ -139,7 +139,7 @@ module.exports = {
     },
     newAvis: (custom, date = getDateInThePast()) => {
         return _.merge({
-            _id: new ObjectID(),
+            _id: new ObjectId(),
             token: randomize('token'),
             campaign: 'test-campaign',
             formation: {
