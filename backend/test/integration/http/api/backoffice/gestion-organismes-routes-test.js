@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         const idOrganisme = '5f43672078b3c84a55a0c305';
         let organisme = newOrganismeAccount({
-            _id: await objectId('5f43672078b3c84a55a0c305'),
+            _id: await objectId(idOrganisme),
             siret: '11111111111111',
         });
         await insertIntoDatabase('accounts', organisme);
@@ -317,12 +317,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
 
-        await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: await objectId('5e4fa8e2a62695856423a9f7'),
+        const monInsert = await insertIntoDatabase('accounts', newOrganismeAccount({
+            objectId: true,
         }));
+        const organisme = monInsert.ops[0];
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/5e4fa8e2a62695856423a9f7/updateCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ courriel: 'contact@poleemploi-formation.fr' });
 
@@ -353,13 +354,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let organisme = newOrganismeAccount({
-            _id: await objectId('5e4fa8e2a62695856423a9f7'),
+            objectId: true,
             siret: '11111111111111',
         });
         await insertIntoDatabase('accounts', organisme);
         
         let response = await request(app)
-        .post(`/api/backoffice/moderateur/organismes/5e4fa8e2a62695856423a9f7/resendEmailAccount`)
+        .post(`/api/backoffice/moderateur/organismes/${organisme._id}/resendEmailAccount`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'me@pole-emploi.fr' });
 
