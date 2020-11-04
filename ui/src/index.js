@@ -25,8 +25,11 @@ WebFont.load({
 });
 
 //Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
-TagCommander.initialize(env.NODE_ENV === 'production');
-GoogleAnalytics.initialize();
+// Ignore /widget page
+if(window.location.pathname !== "/widget") {
+    TagCommander.initialize(env.NODE_ENV === 'production');
+    GoogleAnalytics.initialize();
+}
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
 let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));

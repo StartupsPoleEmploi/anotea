@@ -24,7 +24,7 @@ const onRouteChanged = callback => {
 
 export const initialize = () => {
     onRouteChanged(url => {
-        if(ga) {
+        if(window.ga) {
             let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
             ga('set', 'page', baseUrl);
             ga('send', 'pageview');
@@ -41,7 +41,7 @@ export const createAnalytics = category => {
                 return;
             }
 
-            if(ga) {
+            if(window.ga) {
                 ga('send', 'event', {
                     hitType: 'event',
                     eventCategory: category,
