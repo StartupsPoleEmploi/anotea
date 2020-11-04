@@ -1,46 +1,47 @@
 <!DOCTYPE HTML>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
-        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
-        <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
-        <link rel="stylesheet" type="text/css" href="/static/css/cgu.css" media="all">
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script id="rgpd" data-analytics="<%= utils.analytics.googleAnalyticsId %>" src="/static/js/rgpd.js"></script>
-    </head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/cgu.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script id="rgpd" data-analytics="<%= utils.analytics.googleAnalyticsId %>" node-env="<%= utils.nodeEnv %>"
+        src="/static/js/rgpd.js"></script>
+</head>
 
-    <body class="cgu">
-        <%- include('./common/header.ejs'); %>
+<body class="cgu">
+    <%- include('./common/header.ejs'); %>
 
-        <div class="main cgu">
-            <div class="header-cgu">
-                <h1><a href="/cgu">Conditions Générales d’Utilisation</a></h1>
-                <h1 class="current">Politique de confidentialité</h1>
-            </div>
-
-            <h1>Charte de protection des données à caractère personnel</h1>
-
-            <h2>Données personnelles</h2>
-
-            <p>
-                Anotéa protège vos données<br />
-                Vos notes et commentaires sont anonymes<br />
-                Votre identité n’est communiquée à personne<br />
-            </p>
-
-            <p>
-                Nous limitons l’usage de vos données au strict besoin de collecte de votre avis, et nous en avons fait
-                la déclaration auprès de la CNIL<br />
-                Vous pouvez à tout moment demander à modifier votre commentaire ou à le supprimer ici (lien vers la page
-                qui oriente vers les boîtes régionales)
-            </p>
+    <div class="main cgu">
+        <div class="header-cgu">
+            <h1><a href="/cgu">Conditions Générales d’Utilisation</a></h1>
+            <h1 class="current">Politique de confidentialité</h1>
         </div>
-        <%- include('./common/footer.ejs'); %>
-    </body>
+
+        <h1>Charte de protection des données à caractère personnel</h1>
+
+        <h2>Données personnelles</h2>
+
+        <p>
+            Anotéa protège vos données<br />
+            Vos notes et commentaires sont anonymes<br />
+            Votre identité n’est communiquée à personne<br />
+        </p>
+
+        <p>
+            Nous limitons l’usage de vos données au strict besoin de collecte de votre avis, et nous en avons fait
+            la déclaration auprès de la CNIL<br />
+            Vous pouvez à tout moment demander à modifier votre commentaire ou à le supprimer ici (lien vers la page
+            qui oriente vers les boîtes régionales)
+        </p>
+    </div>
+    <%- include('./common/footer.ejs'); %>
+</body>
 
 </html>

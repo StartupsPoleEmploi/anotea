@@ -9,7 +9,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
     let utils = {
         getBackofficeUrl: () => `${(configuration.app.public_hostname)}/backoffice`,
         analytics: configuration.analytics,
-
+        nodeEnv: configuration.env,
     };
 
     router.get('/', async (req, res) => {
