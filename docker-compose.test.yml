@@ -1,10 +1,6 @@
 version: '2.4'
 services:
 
-  ui:
-    environment:
-      - NODE_ENV=qa
-
   backend:
     environment:
       - ANOTEA_LOG_TYPE=json

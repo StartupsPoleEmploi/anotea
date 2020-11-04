@@ -21,8 +21,6 @@ services:
     mem_limit: 32m
     depends_on:
       - backend
-    environment:
-      - NODE_ENV=production
     
 
   backend:
