@@ -21,6 +21,7 @@ services:
     mem_limit: 32m
     depends_on:
       - backend
+    
 
   backend:
     image: anotea_backend

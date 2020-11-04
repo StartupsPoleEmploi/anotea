@@ -9,7 +9,6 @@ import queryString from 'query-string';
 import 'iframe-resizer/js/iframeResizer.contentWindow.min';
 import './Widget.scss';
 import WithAnalytics from '../common/components/analytics/WithAnalytics';
-import { sendError } from '../common/utils/sentry';
 
 class Widget extends Component {
 
@@ -74,7 +73,7 @@ class Widget extends Component {
             this.setState({ score });
         } catch (e) {
             if (!e.statusCode || e.statusCode > 404) {
-                sendError(e);
+                // sendError(e);
             }
         }
     }
@@ -87,7 +86,7 @@ class Widget extends Component {
             this.setState({ results });
         } catch (e) {
             if (!e.statusCode || e.statusCode > 404) {
-                sendError(e);
+                // sendError(e);
             }
         }
     }

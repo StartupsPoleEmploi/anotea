@@ -7,7 +7,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './common/utils/moment-fr';
 import WebFont from 'webfontloader';
-import * as Sentry from './common/utils/sentry';
+import * as TagCommander from './common/components/analytics/TagCommander';
 import * as GoogleAnalytics from './common/components/analytics/AnalyticsContext';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { createRouter } from './common/utils/router';
@@ -24,9 +24,12 @@ WebFont.load({
     }
 });
 
-Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
 //Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
-GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
+// Ignore /widget page
+if(window.location.pathname !== "/widget") {
+    TagCommander.initialize(env.NODE_ENV === 'production');
+    GoogleAnalytics.initialize();
+}
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
 let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));
