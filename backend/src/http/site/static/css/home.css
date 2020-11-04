@@ -92,7 +92,7 @@ body {
 .video {
     float: none;
     clear: both;
-    width: 700px;
+    max-width: 700px;
     position: relative;
     padding-bottom: 34.25%;
     padding-top: 25px;
