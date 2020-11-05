@@ -27,7 +27,7 @@ WebFont.load({
 //Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
 // Ignore /widget page
 if(window.location.pathname !== "/widget") {
-    TagCommander.initialize(env.NODE_ENV === 'production');
+    TagCommander.initialize(env.ANOTEA_ENV === 'production');
     GoogleAnalytics.initialize();
 }
 
