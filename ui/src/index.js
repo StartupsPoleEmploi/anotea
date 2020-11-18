@@ -18,6 +18,17 @@ import { Chunk } from './backoffice/components/common/Chunk';
 
 let env = process.env;
 
+let isParentUrlPoleEmploi = () => {
+    const isInIframe = (window.parent !== window);
+    let parentUrl = null;
+
+    if (isInIframe) {
+        parentUrl = document.referrer;
+    }
+
+    return null != parentUrl && (parentUrl.indexOf("pole-emploi.fr") !== -1 || parentUrl.indexOf("pole-emploi.intra") !== -1 || parentUrl.indexOf("pe-qvr.fr") !== -1) && parentUrl.indexOf("labonneformation") === -1;
+}
+
 WebFont.load({
     google: {
         families: ['Lato:400,700,900']
@@ -26,9 +37,11 @@ WebFont.load({
 
 //Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
 // Ignore /widget page
-if(window.location.pathname !== "/widget") {
+if(window.location.pathname !== "/widget" || isParentUrlPoleEmploi()) {
     TagCommander.initialize(env.ANOTEA_ENV === 'production');
     GoogleAnalytics.initialize();
+} else {
+    GoogleAnalytics.initializeWidget();
 }
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
