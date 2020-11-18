@@ -61,7 +61,7 @@
     "mjml": "4.6.3",
     "mobile-detect": "1.4.4",
     "moment": "2.27.0",
-    "mongodb": "3.6.2",
+    "mongodb": "3.5.9",
     "node-uuid": "1.4.8",
     "nodemailer": "6.4.10",
     "nodemailer-html-to-text": "3.1.0",
