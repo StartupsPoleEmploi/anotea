@@ -37,10 +37,12 @@ WebFont.load({
 
 //Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
 // Ignore /widget page
-if(window.location.pathname !== "/widget" || isParentUrlPoleEmploi()) {
+if(window.location.pathname !== "/widget") {
     TagCommander.initialize(env.ANOTEA_ENV === 'production');
     GoogleAnalytics.initialize();
-} else {
+} else if (isParentUrlPoleEmploi()) {
+    GoogleAnalytics.initialize();
+} else {
     GoogleAnalytics.initializeWidget();
 }
 
