@@ -26,7 +26,12 @@ let isParentUrlPoleEmploi = () => {
         parentUrl = document.referrer;
     }
 
-    return null != parentUrl && (parentUrl.indexOf("pole-emploi.fr") !== -1 || parentUrl.indexOf("pole-emploi.intra") !== -1 || parentUrl.indexOf("pe-qvr.fr") !== -1) && parentUrl.indexOf("labonneformation") === -1;
+    return null != parentUrl && (
+            parentUrl.indexOf("pole-emploi.fr") !== -1 
+            || parentUrl.indexOf("pole-emploi.intra") !== -1 
+            || parentUrl.indexOf("pe-qvr.fr") !== -1
+        ) 
+        && parentUrl.indexOf("labonneformation") === -1;
 }
 
 WebFont.load({
@@ -43,7 +48,7 @@ if(window.location.pathname !== "/widget") {
 } else if (isParentUrlPoleEmploi()) {
     GoogleAnalytics.initialize();
 } else {
-    GoogleAnalytics.initializeWidget();
+    GoogleAnalytics.initializeWidget(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });	
 }
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
