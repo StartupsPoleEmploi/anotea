@@ -46,7 +46,7 @@ if(window.location.pathname !== "/widget") {
     TagCommander.initialize(env.ANOTEA_ENV === 'production');
     GoogleAnalytics.initialize();
 } else if (isParentUrlPoleEmploi()) {
-    GoogleAnalytics.initialize();
+    // ne pas activer GA sur les pages PE
 } else {
     GoogleAnalytics.initializeWidget(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });	
 }
