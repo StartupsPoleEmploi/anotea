@@ -3,23 +3,6 @@ const moment = require('moment');
 
 module.exports = (logger, configuration) => {
 
-    const streamV1 = rfs.createStream(
-        (time, index) => {
-            let fileNamePrefix = configuration.log.datalake.fileNamePrefix;
-
-            if (!time) {
-                return `${fileNamePrefix}.log`;
-            }
-
-            return `${fileNamePrefix}-${moment(time).format('YYYY-MM-DD')}-${index}.log`;
-        }, {
-            interval: '1d',
-            path: configuration.log.datalake.path,
-        }
-    );
-
-    streamV1.on('error', err => logger.error(err, 'Unable to export log to datalake file. Stream closed'));
-
     const streamV2 = rfs.createStream(
         // eslint-disable-next-line no-unused-vars
         (time, index) => {
@@ -43,14 +26,6 @@ module.exports = (logger, configuration) => {
             try {
                 let headers = data.request.headers;
 
-                streamV1.write(JSON.stringify({
-                    requestId: data.request.requestId,
-                    date: new Date(),
-                    apiVersion: 'v1',
-                    application: data.application,
-                    widget: !!headers['x-anotea-widget'],
-                    statusCode: data.response.statusCode
-                }) + '\n');
                 const referer = headers['referer'];
                 if (!referer || !referer.startsWith('https://api.emploi-store.fr/')) {
                     streamV2.write(JSON.stringify({
