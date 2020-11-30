@@ -1,6 +1,5 @@
 /* global ga */
 import React from 'react';
-import { log } from '../../../backoffice/utils/logger';
 
 let isEnabled;
 
@@ -23,10 +22,10 @@ const onRouteChanged = callback => {
     });
 };
 
-export const initialize = (trackingId, options = {}) => {
+export const initializeWidget = (trackingId, options = {}) => {
 
     isEnabled = !!trackingId;
-    log(`GoogleAnalytics enabled=${isEnabled}`);
+    console.log(`GoogleAnalytics enabled=${isEnabled}`);
 
     if (!isEnabled) {
         return;
@@ -41,10 +40,7 @@ export const initialize = (trackingId, options = {}) => {
     // @formatter:on
     /* eslint-enable */
 
-    ga('set', 'anonymizeIp', true);
-    ga('create', trackingId, {
-        'cookieExpires': 34190000, // 13 months
-    });
+    ga('create', trackingId, 'auto');
 
     if (options.debug) {
         ga('set', 'sendHitTask', null);
@@ -58,6 +54,16 @@ export const initialize = (trackingId, options = {}) => {
     });
 };
 
+export const initialize = () => {
+    onRouteChanged(url => {
+        if(window.ga) {
+            let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
+            ga('set', 'page', baseUrl);
+            ga('send', 'pageview');
+        }
+    });
+};
+
 export const createAnalytics = category => {
     return {
         category,
@@ -67,11 +73,13 @@ export const createAnalytics = category => {
                 return;
             }
 
-            ga('send', 'event', {
-                hitType: 'event',
-                eventCategory: category,
-                eventAction: action,
-            });
+            if(window.ga) {
+                ga('send', 'event', {
+                    hitType: 'event',
+                    eventCategory: category,
+                    eventAction: action,
+                });
+            }
         }
     };
 };

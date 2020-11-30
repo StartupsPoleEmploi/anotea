@@ -89,15 +89,18 @@ body {
     width: 80%;
 }
 
+.video-wrapper {
+    padding-top: 25px;
+    max-width: 700px;
+    margin: auto;
+}
+
 .video {
     float: none;
     clear: both;
-    width: 700px;
     position: relative;
-    padding-bottom: 34.25%;
-    padding-top: 25px;
+    padding-bottom: 56.25%;
     height: 0;
-    margin: 0 auto;
 }
 
 .video iframe {
@@ -106,8 +109,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    max-width: 700px;
-    max-height: 400px;
 }
 
 .stats {

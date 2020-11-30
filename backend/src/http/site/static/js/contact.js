@@ -6,7 +6,6 @@ $(document).ready(function() {
             var region = data[i];
             html += '<option value="' + region.email + '">' + region.nom + '</option>';
         }
-        html += '<option value="anotea@anotea.pole-emploi.fr">Autre région</option>';
 
         $('#region-select').html(html);
     });

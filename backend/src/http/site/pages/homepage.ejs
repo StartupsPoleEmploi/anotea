@@ -1,120 +1,123 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
-        <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
-        <link rel="stylesheet" type="text/css" href="/static/css/home.css" media="all">
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script id="rgpd" data-analytics="<%= utils.analytics.googleAnalyticsId %>" src="/static/js/rgpd.js"></script>
-    </head>
 
-    <body>
-        <%- include('./common/header.ejs'); %>
+<head>
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
+    <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/home.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script id="rgpd" node-env="<%= utils.nodeEnv %>" src="/static/js/rgpd.js"></script>
+</head>
 
-        <div class="content-intro">
-            <div class="stagiaire">
-                <h2>Vous avez <strong>suivi une formation<br />professionnelle</strong> ?</h2>
-                <p>
-                    En tant que Demandeur d'Emploi, vous avez la possibilité de donner votre avis anonymement afin
-                    d'aider les futurs stagiaires à choisir leur formation.
-                </p>
-                <a class="button" href="/services/stagiaires">En savoir plus <img src="/static/images/arrow.svg" /></a>
-            </div>
-            <div class="organisme">
-                <h2>Vous êtes un <strong>professionnel<br />de la formation</strong> ?</h2>
-                <p>
-                    <strong>Organisme de formation ou financeur</strong>, connectez-vous à votre Espace Anotéa pour
-                    consulter les avis laissés par les stagiaires Demandeurs d'Emploi.
-                </p>
-                <a class="button" href="/services/organismes">En savoir plus <img src="/static/images/arrow.svg" /></a>
-            </div>
-            <img class="illustration" src="/static/images/intro.svg" />
+<body>
+    <%- include('./common/header.ejs'); %>
+
+    <div class=" content-intro">
+        <div class="stagiaire">
+            <h2>Vous avez <strong>suivi une formation<br />professionnelle</strong> ?</h2>
+            <p>
+                En tant que Demandeur d'Emploi, vous avez la possibilité de donner votre avis anonymement afin
+                d'aider les futurs stagiaires à choisir leur formation.
+            </p>
+            <a class="button" href="/services/stagiaires">En savoir plus <img src="/static/images/arrow.svg" /></a>
         </div>
+        <div class="organisme">
+            <h2>Vous êtes un <strong>professionnel<br />de la formation</strong> ?</h2>
+            <p>
+                <strong>Organisme de formation ou financeur</strong>, connectez-vous à votre Espace Anotéa pour
+                consulter les avis laissés par les stagiaires Demandeurs d'Emploi.
+            </p>
+            <a class="button" href="/services/organismes">En savoir plus <img src="/static/images/arrow.svg" /></a>
+        </div>
+        <img class="illustration" src="/static/images/intro.svg" />
+    </div>
 
-        <div class="video-wrapper">
-            <div class="video">
-                <iframe src="https://www.youtube-nocookie.com/embed/PuRV3A50C9g" frameborder="0"
+    <div class="video-wrapper">
+        <div class="video" tag="1001">
+            <!-- <iframe src="https://www.youtube-nocookie.com/embed/PuRV3A50C9g" frameborder="0"
                         align="center"
                         allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-            </div>
+                        allowfullscreen></iframe> -->
+        </div>
+    </div>
+
+    <div class="stats">
+        <h2>Anotéa c'est déjà :</h2>
+
+        <div class="avis">
+            <h3><%= avisCount %><img src="/static/images/Icone_Message.svg" /></h3>
+            <p>Avis recueillis</p>
         </div>
 
-        <div class="stats">
-            <h2>Anotéa c'est déjà :</h2>
-
-            <div class="avis">
-                <h3><%= avisCount %><img src="/static/images/Icone_Message.svg" /></h3>
-                <p>Avis recueillis</p>
-            </div>
-
-            <div class="organismes">
-                <h3><%= organismesCount %> <img src="/static/images/ic_formation.svg" /></h3>
-                <p>Organismes évalués par leurs stagiaires</p>
-            </div>
-
-            <div class="stagiaires">
-                <h3><%= stagiairesCount %> <img src="/static/images/user.png" /></h3>
-                <p>Stagiaires interrogés</p>
-            </div>
+        <div class="organismes">
+            <h3><%= organismesCount %> <img src="/static/images/ic_formation.svg" /></h3>
+            <p>Organismes évalués par leurs stagiaires</p>
         </div>
 
-        <div class="partenaires">
-            <h2>Des partenaires de confiance</h2>
-            <div>
-                <img src="/static/images/partenaires/logo-occitanie.png" />
-                <img src="/static/images/partenaires/logo-hauts-de-france.png" />
-                <img src="/static/images/partenaires/logo-bourgogne-franche-comte.png" />
-                <img src="/static/images/partenaires/logo-bretagne.png" /></a>
-                <a href="https://www.defi-metiers.fr"><img src="/static/images/partenaires/logo_defimetier.png" /></a>
-                <img src="/static/images/partenaires/MaFormation-PE.png" />
-            </div>
-            <div>
-                <img src="/static/images/partenaires/Martinique_Collectivité_Territoriale_logo_2016.png" />
-                <a href="https://www.pole-emploi.fr/candidat/application-mobile-pole-emploi-ma-formation--@/article.jspz?id=676671"><img
-                            src="/static/images/partenaires/logo_MaFormation.png" /></a>
-                <a href="http://www.orientation-paysdelaloire.fr/"><img
-                            src="/static/images/partenaires/logo-pays-de-la-loire.png" /></a>
-                <img src="/static/images/partenaires/logo-ile-de-france.png" />
-            </div>
+        <div class="stagiaires">
+            <h3><%= stagiairesCount %> <img src="/static/images/user.png" /></h3>
+            <p>Stagiaires interrogés</p>
         </div>
+    </div>
 
-        <div class="services">
-            <h1>Pour plus de transparence sur la formation</h1>
-            <ul>
-                <li class="organismes">
-                    <div><img class="icon" src="/static/images/services/Illu_OF(1).svg" /></div>
-                    <h2>Pour les organismes de formation</h2>
-                    <p>Permettre aux Organismes de répondre
-                        aux commentaires des stagiaires
-                        et diffuser ces réponses en ligne</p>
-                    <a href="/services/organismes">En savoir plus<img src="/static/images/arrow-grey.svg" /></a>
-                </li>
-                <li class="financeurs">
-                    <div><img class="icon" src="/static/images/services/Picto_Financeur.svg" /></div>
-                    <h2>Pour les financeurs</h2>
-                    <p>Porter les notes et commentaires à la connaissance
-                        des financeurs publics de formation
-                    </p>
-                    <a href="/services/financeurs">En savoir plus<img src="/static/images/arrow-grey.svg" /></a>
-                </li>
-                <li class="stagiaires last">
-                    <div><img class="icon" src="/static/images/services/Picto_Stagiaire.svg" /></div>
-                    <h2>Pour les anciens et futurs stagiaires</h2>
-                    <p>Guider les futurs stagiaires
-                        dans leur choix de formation
-                        grâce aux avis des anciens stagiaires.</p>
-                    <a href="/services/stagiaires">En savoir plus<img src="/static/images/arrow-grey.svg" /></a>
-                </li>
-            </ul>
+    <div class="partenaires">
+        <h2>Des partenaires de confiance</h2>
+        <div>
+            <img src="/static/images/partenaires/logo-occitanie.png" />
+            <img src="/static/images/partenaires/logo-hauts-de-france.png" />
+            <img src="/static/images/partenaires/logo-bourgogne-franche-comte.png" />
+            <img src="/static/images/partenaires/logo-bretagne.png" /></a>
+            <a href="https://www.defi-metiers.fr"><img src="/static/images/partenaires/logo_defimetier.png" /></a>
+            <img src="/static/images/partenaires/MaFormation-PE.png" />
         </div>
+        <div>
+            <img src="/static/images/partenaires/Martinique_Collectivite_Territoriale_logo_2016.png" />
+            <a
+                href="https://www.pole-emploi.fr/candidat/application-mobile-pole-emploi-ma-formation--@/article.jspz?id=676671"><img
+                    src="/static/images/partenaires/logo_MaFormation.png" /></a>
+            <a href="http://www.orientation-paysdelaloire.fr/"><img
+                    src="/static/images/partenaires/logo-pays-de-la-loire.png" /></a>
+            <img src="/static/images/partenaires/logo-ile-de-france.png" />
+        </div>
+    </div>
 
-        <%- include('./common/contact.ejs'); %>
-        <%- include('./common/footer.ejs'); %>
-    </body>
+    <div class="services">
+        <h1>Pour plus de transparence sur la formation</h1>
+        <ul>
+            <li class="organismes">
+                <div><img class="icon" src="/static/images/services/Illu_OF(1).svg" /></div>
+                <h2>Pour les organismes de formation</h2>
+                <p>Permettre aux Organismes de répondre
+                    aux commentaires des stagiaires
+                    et diffuser ces réponses en ligne</p>
+                <a href="/services/organismes">En savoir plus<img src="/static/images/arrow-grey.svg" /></a>
+            </li>
+            <li class="financeurs">
+                <div><img class="icon" src="/static/images/services/Picto_Financeur.svg" /></div>
+                <h2>Pour les financeurs</h2>
+                <p>Porter les notes et commentaires à la connaissance
+                    des financeurs publics de formation
+                </p>
+                <a href="/services/financeurs">En savoir plus<img src="/static/images/arrow-grey.svg" /></a>
+            </li>
+            <li class="stagiaires last">
+                <div><img class="icon" src="/static/images/services/Picto_Stagiaire.svg" /></div>
+                <h2>Pour les anciens et futurs stagiaires</h2>
+                <p>Guider les futurs stagiaires
+                    dans leur choix de formation
+                    grâce aux avis des anciens stagiaires.</p>
+                <a href="/services/stagiaires">En savoir plus<img src="/static/images/arrow-grey.svg" /></a>
+            </li>
+        </ul>
+    </div>
+
+    <%- include('./common/contact.ejs'); %>
+    <%- include('./common/footer.ejs'); %>
+</body>
+
 </html>

@@ -26,18 +26,21 @@ module.exports = (logger, configuration) => {
             try {
                 let headers = data.request.headers;
 
-                streamV2.write(JSON.stringify({
-                    startup: 'anotea',
-                    requestId: data.request.requestId,
-                    date: new Date(),
-                    remoteIP: headers['x-real-ip'],
-                    httpReferer: headers['referer'],
-                    httpUserAgent: headers['user-agent'],
-                    status: data.response.statusCode,
-                    apiVersion: 'v1',
-                    widget: !!headers['x-anotea-widget'],
-                    application: data.application,
-                }) + '\n');
+                const referer = headers['referer'];
+                if (!referer || !referer.startsWith('https://api.emploi-store.fr/')) {
+                    streamV2.write(JSON.stringify({
+                        startup: 'anotea',
+                        requestId: data.request.requestId,
+                        date: new Date(),
+                        remoteIP: headers['x-real-ip'],
+                        httpReferer: referer,
+                        httpUserAgent: headers['user-agent'],
+                        status: data.response.statusCode,
+                        apiVersion: 'v1',
+                        widget: !!headers['x-anotea-widget'],
+                        application: data.application,
+                    }) + '\n');
+                }
             } catch (e) {
                 logger.error(e, 'Unable to export log to datalake file');
             }
