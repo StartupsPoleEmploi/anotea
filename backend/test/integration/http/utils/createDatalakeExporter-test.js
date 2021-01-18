@@ -12,7 +12,8 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
     let tests = 0;
     const getFileContent = async configuration => {
 
-        let datalakeFile = path.join(configuration.log.datalake.path, `${configuration.log.datalake.fileNamePrefix}.log`);
+        let datalakeFileName = `statsesd_${configuration.log.datalake.fileNamePrefix}.log`;
+        let datalakeFile = path.join(configuration.log.datalake.path, datalakeFileName);
 
         await new Promise(resolve => {
             const timeout = setInterval(() => {
@@ -42,18 +43,24 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated' }));
+        .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated' }))
+        .set('x-real-ip', '192.0.0.1')
+        .set('referer', 'http://www.la-bonne-formation.fr');
 
         let lines = await getFileContent(configuration);
 
         let line = JSON.parse(lines[tests++]);
         assert.ok(line.date);
         assert.ok(line.requestId);
-        assert.deepStrictEqual(_.omit(line, ['date', 'requestId']), {
+        assert.ok(line.httpUserAgent.startsWith('node-superagent'));
+        assert.deepStrictEqual(_.omit(line, ['date', 'requestId', 'httpUserAgent']), {
+            startup: 'anotea',
+            remoteIP: '192.0.0.1',
+            httpReferer: 'http://www.la-bonne-formation.fr',
+            status: 200,
             apiVersion: 'v1',
-            application: 'esd',
-            statusCode: 200,
             widget: false,
+            application: 'esd',
         });
     });
 
@@ -99,8 +106,9 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         let lines = await getFileContent(configuration);
 
+
         let line = JSON.parse(lines[tests++]);
-        assert.strictEqual(line.statusCode, 500);
+        assert.strictEqual(line.status, 500);
     });
 
 }));
