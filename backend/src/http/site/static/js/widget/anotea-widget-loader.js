@@ -77,6 +77,7 @@
             window.anotea.iFrameResizer({
                 heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
                 checkOrigin: false,
+                tolerance: 20,
             }, '.anotea-widget-iframe');
         };
         return script;

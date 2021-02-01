@@ -117,6 +117,7 @@ class Widget extends Component {
                         </WidgetContext.Provider>
                     </div>
                 </div>
+                <div data-iframe-height></div>
             </WithAnalytics>
         );
     }
