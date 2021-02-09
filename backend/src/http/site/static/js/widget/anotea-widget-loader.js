@@ -84,8 +84,7 @@
         return script;
     }
 
-
-    document.addEventListener('DOMContentLoaded', function() {
+    function loadWidget() {
 
         var elements = document.querySelectorAll('.anotea-widget');
         for (var i = 0; i < elements.length; i++) {
@@ -109,6 +108,8 @@
                 element.appendChild(getIframeResizerScript(attributes));
             }
         }
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadWidget);
 })();
 
