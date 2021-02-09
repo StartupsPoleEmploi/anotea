@@ -208,7 +208,7 @@ module.exports = (auth, logger, configuration) => {
         addRateLimit: sentry => new RateLimit({
             keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
             windowMs: 1 * 60 * 1000, // 1 minute
-            max: 120, // 2 requests per seconds
+            max: 400, // 400 requests per minutes
             delayMs: 0, // disabled
             handler: function(req, res) {
                 if (this.headers) {
