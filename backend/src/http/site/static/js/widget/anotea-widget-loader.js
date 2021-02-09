@@ -49,6 +49,7 @@
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.setRequestHeader('accept', 'application/ld+json');
+        request.setRequestHeader('x-anotea-widget', '1');
         request.onload = function() {
             if (request.status >= 200 && request.status < 400) {
                 var script = document.createElement('script');
