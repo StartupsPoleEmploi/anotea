@@ -30,8 +30,7 @@ let isParentUrlPoleEmploi = () => {
             parentUrl.indexOf("pole-emploi.fr") !== -1 
             || parentUrl.indexOf("pole-emploi.intra") !== -1 
             || parentUrl.indexOf("pe-qvr.fr") !== -1
-        ) 
-        && parentUrl.indexOf("labonneformation") === -1;
+        );
 }
 
 WebFont.load({
@@ -42,14 +41,16 @@ WebFont.load({
 
 //Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
 // Ignore /widget page
-if(window.location.pathname !== "/widget") {
+if (window.location.pathname !== "/widget") {
     TagCommander.initialize(env.ANOTEA_ENV === 'production');
     GoogleAnalytics.initialize();
-} else if (isParentUrlPoleEmploi()) {
-    // ne pas activer GA sur les pages PE
-} else {
-    GoogleAnalytics.initializeWidget(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });	
-}
+} else {
+    try {
+        if ((new RegExp('#tag=([0-9,]*)', 'g')).exec(document.location.hash)[1].split(',').some(function (t) { return t === '2001' })) {
+            GoogleAnalytics.initializeWidget(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
+        }
+    } catch (e) { }
+} 
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
 let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));
