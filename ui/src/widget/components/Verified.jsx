@@ -19,7 +19,7 @@ export default class Verified extends Component {
                 <img
                     className="logo"
                     src={logo}
-                    alt="logo Pôle Emploi" />
+                    alt="Pôle Emploi" />
             </div>
         );
     }

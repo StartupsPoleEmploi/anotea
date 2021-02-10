@@ -57,14 +57,14 @@ export default class CarrouselWidget extends Component {
                     <div className="pagination d-flex justify-content-between">
                         <Button
                             size="medium"
-                            className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'} btn`}
                             onClick={() => this.previous()}>
                             Précédent
                         </Button>
 
                         <Button
                             size="medium"
-                            className={`nav ${pagination.page === pagination.total_pages - 1 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page === pagination.total_pages - 1 ? 'invisible' : 'visible'} btn`}
                             onClick={() => this.next()}>
                             Suivant
                         </Button>
