@@ -10,7 +10,8 @@ module.exports = ({ sentry }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let minifyWidgetLoader = async () => {
         let data = await readFile(path.join(__dirname, 'static/js/widget/anotea-widget-loader.js'), 'utf8');
-        let { code, error } = UglifyJS.minify(data.toString());
+        const options = {keep_fnames: true};
+        let { code, error } = UglifyJS.minify(data.toString(), options);
         if (error) {
             sentry.sendError(error);
         }

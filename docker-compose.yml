@@ -8,7 +8,6 @@ services:
       context: misc/docker/nginx
     ports:
       - 80:80
-    mem_limit: 64m
     depends_on:
       - backend
       - ui
