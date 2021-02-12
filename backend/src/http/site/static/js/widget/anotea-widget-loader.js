@@ -42,12 +42,11 @@ function getAggregateRatingScript(attributes, callback) {
         'action': 'actions',
         'session': 'sessions',
     };
-    var url = getAnoteaUrl('/api/v1/' + typeMapping[attributes.type] + '/' + attributes.identifiant, attributes.env);
-
+    var url = getAnoteaUrl('/api/v1/' + typeMapping[attributes.type] + '/' + attributes.identifiant + '?x-anotea-widget=1', attributes.env);
+console.log("mon url", url);
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
     request.setRequestHeader('accept', 'application/ld+json');
-    request.setRequestHeader('x-anotea-widget', '1');
     request.onload = function() {
         if (request.status >= 200 && request.status < 400) {
             var script = document.createElement('script');

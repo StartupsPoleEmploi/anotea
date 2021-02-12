@@ -114,7 +114,7 @@ export default class ListeWidget extends Component {
                                 {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
-                                    className="mr-1"
+                                    className="mr-1 btn"
                                     disabled={pagination.page === 0}
                                     onClick={() => this.page(0)}>
                                     <div className="first">
@@ -125,6 +125,7 @@ export default class ListeWidget extends Component {
                                 }
                                 {pagination.total_items > 1 &&
                                 <Button
+                                    className="btn"
                                     size="medium"
                                     disabled={pagination.page === 0}
                                     onClick={() => this.page(pagination.page - 1)}>
@@ -140,6 +141,7 @@ export default class ListeWidget extends Component {
                                 {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
+                                    className="btn"
                                     disabled={pagination.page === pagination.total_pages - 1}
                                     onClick={() => this.page(pagination.page + 1)}>
                                     <i className="fas fa-chevron-right"></i>
@@ -148,7 +150,7 @@ export default class ListeWidget extends Component {
                                 {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
-                                    className="ml-1"
+                                    className="ml-1 btn"
                                     disabled={pagination.page === pagination.total_pages - 1}
                                     onClick={() => this.page(pagination.total_pages - 1)}>
                                     <div className="last">
@@ -175,7 +177,7 @@ export default class ListeWidget extends Component {
                             </div>
                             <div className="d-flex justify-content-between">
                                 <button
-                                    className={`mr-3 ${this.state.ordre === 'asc' ? 'active' : ''}`}
+                                    className={`mr-3 ${this.state.ordre === 'asc' ? 'active' : ''} btn`}
                                     onClick={() => {
                                         this.setState({ ordre: 'asc' }, () => {
                                             return this.sort();
@@ -186,7 +188,7 @@ export default class ListeWidget extends Component {
                                     <span className="d-none d-md-block">Croissant</span>
                                 </button>
                                 <button
-                                    className={this.state.ordre === 'desc' ? 'active' : ''}
+                                    className={`${this.state.ordre === 'asc' ? 'active' : ''} btn`}
                                     onClick={() => {
                                         this.setState({ ordre: 'desc' }, () => {
                                             return this.sort();
