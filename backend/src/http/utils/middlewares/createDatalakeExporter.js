@@ -25,6 +25,7 @@ module.exports = (logger, configuration) => {
         export: data => {
             try {
                 let headers = data.request.headers;
+                let params = data.request.url.parameters;
 
                 const referer = headers['referer'];
                 if (!referer || !referer.startsWith('https://api.emploi-store.fr/')) {
@@ -37,7 +38,7 @@ module.exports = (logger, configuration) => {
                         httpUserAgent: headers['user-agent'],
                         status: data.response.statusCode,
                         apiVersion: 'v1',
-                        widget: !!headers['x-anotea-widget'],
+                        widget: !!headers['x-anotea-widget'] || !!params['x-anotea-widget'],
                         application: data.application,
                     }) + '\n');
                 }
