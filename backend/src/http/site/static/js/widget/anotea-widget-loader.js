@@ -43,7 +43,7 @@ function getAggregateRatingScript(attributes, callback) {
         'session': 'sessions',
     };
     var url = getAnoteaUrl('/api/v1/' + typeMapping[attributes.type] + '/' + attributes.identifiant + '?x-anotea-widget=1', attributes.env);
-console.log("mon url", url);
+
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
     request.setRequestHeader('accept', 'application/ld+json');
