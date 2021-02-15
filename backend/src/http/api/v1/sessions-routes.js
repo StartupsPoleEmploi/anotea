@@ -33,7 +33,8 @@ module.exports = ({ db, middlewares }) => {
     router.get('/api/v1/sessions/:id', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
-            id: Joi.string().required(),
+            'id': Joi.string().required(),
+            'x-anotea-widget': Joi.string().allow(),
             ...validators.fields(),
             ...validators.notesDecimales(),
         }, { abortEarly: false });
