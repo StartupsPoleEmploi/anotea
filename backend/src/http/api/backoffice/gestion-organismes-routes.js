@@ -79,14 +79,21 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
     router.get('/api/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { status } = await Joi.validate(req.query, {
+        let { status, search } = await Joi.validate(req.query, {
             status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
+            search: Joi.string(),
             token: Joi.string().required(),
         }, { abortEarly: false });
 
         let stream = await db.collection('accounts').find({
             profile: 'organisme',
-            codeRegion,
+            codeRegion: codeRegion,
+            ...(search ? {
+                $or: [
+                    { 'siret': search },
+                    { 'courriel': search },
+                    { 'raison_sociale': new RegExp(search, 'i') }]
+            } : {}),
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         }, { token: 0 }).stream();
 
