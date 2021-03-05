@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-exports */
 const path = require('path');
 const logger = require('./components/fake-logger');
 const importIntercarif = require('../../src/jobs/import/intercarif/tasks/importIntercarif');

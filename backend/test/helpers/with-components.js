@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-exports */
 const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');

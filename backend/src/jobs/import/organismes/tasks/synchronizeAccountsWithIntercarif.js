@@ -88,8 +88,6 @@ module.exports = async (db, logger) => {
                     $setOnInsert: {
                         profile: 'organisme',
                         siret,
-                        raison_sociale: formateur.raison_sociale_formateur,
-                        codeRegion: findCodeRegion(data),
                         courriel: data.courriels.length > 0 ? data.courriels[0].courriel : null,
                         token: uuid.v4(),
                         creationDate: new Date(),
@@ -109,6 +107,8 @@ module.exports = async (db, logger) => {
                                 }
                             };
                         }), ['adresse.code_postal']),
+                        raison_sociale: formateur.raison_sociale_formateur,
+                        codeRegion: findCodeRegion(data),
                     },
                 },
                 { upsert: true }
