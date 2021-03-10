@@ -58,9 +58,8 @@ module.exports = ({ db, auth, middlewares }) => {
     });
 
     router.post('/api/kairos/generate-auth-url', checkAuth, tryAndCatch(async (req, res) => {
-        Boom.unauthorized(`Anotéa is down`);
 
-        /*let parameters = await Joi.validate(req.body, {
+        let parameters = await Joi.validate(req.body, {
             siret: Joi.string().required(),
             raison_sociale: Joi.string().required(),
             courriel: Joi.string().email().required(),
@@ -83,12 +82,26 @@ module.exports = ({ db, auth, middlewares }) => {
                 created,
                 organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true }),
             }
-        });*/
+        });
     }));
 
     router.get('/api/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
+
+        let parameters = await Joi.validate(req.query, {
+            siret: Joi.string().required(),
+        }, { abortEarly: false });
+
+        let organisme = await db.collection('accounts').findOne({ siret: parameters.siret });
+
+        if (!organisme) {
+            throw Boom.badRequest('Numéro de siret invalide');
+        }
+
         return res.json({
-            eligible: false,
+            eligible: !!_.get(organisme, 'meta.kairos.eligible') && _.get(organisme, 'score.nb_avis') > 0,
+            meta: {
+                organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true })
+            }
         });
     }));
 
