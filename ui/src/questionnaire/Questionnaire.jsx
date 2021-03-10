@@ -49,7 +49,10 @@ class Questionnaire extends Component {
         }
 
         return (
-            <WithAnalytics category="questionnaire">
+            <p style={{'text-align': 'center'}}>
+                Suite à l'incendie du site OVH de Strasbourg, le formulaire est temporairement indisponible, vous pouvez ré-essayer demain. Toutes nos excuses pour le dérangement occasioné. 
+            </p>
+            /*<WithAnalytics category="questionnaire">
                 <div className="Questionnaire">
                     {this.state.showRemerciements ?
                         <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
@@ -60,7 +63,7 @@ class Questionnaire extends Component {
                     }
                     <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
                 </div>
-            </WithAnalytics>
+            </WithAnalytics>*/
         );
     }
 }
