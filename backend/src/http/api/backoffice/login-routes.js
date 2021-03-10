@@ -81,8 +81,9 @@ module.exports = ({ db, auth, passwords, regions }) => {
     };
 
     router.post('/api/backoffice/login', tryAndCatch(async (req, res) => {
+        throw Boom.badRequest(`Suite à l'incendie du site OVH de Strasbourg, Anotéa est temporairement indisponible, merci de ré-essayer de vous connecter demain`);
 
-        let { identifiant, password } = await Joi.validate(req.body, {
+        /*let { identifiant, password } = await Joi.validate(req.body, {
             identifiant: Joi.string().lowercase().required(),
             password: Joi.string().required(),
         }, { abortEarly: false });
@@ -105,12 +106,13 @@ module.exports = ({ db, auth, passwords, regions }) => {
             return res.json(token);
         } else {
             throw Boom.badRequest('Identifiant ou mot de passe invalide');
-        }
+        }*/
     }));
 
     router.get('/api/backoffice/login', tryAndCatch(async (req, res) => {
+        throw Boom.badRequest(`Suite à l'incendie du site OVH de Strasbourg, Anotéa est temporairement indisponible, merci de ré-essayer de vous connecter demain`);
 
-        const parameters = await Joi.validate(req.query, {
+        /*const parameters = await Joi.validate(req.query, {
             access_token: Joi.string().required(),
             origin: Joi.string(),
         }, { abortEarly: false });
@@ -137,7 +139,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             return res.json(token);
         } else {
             throw Boom.badRequest('Token invalide');
-        }
+        }*/
     }));
 
     return router;
