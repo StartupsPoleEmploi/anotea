@@ -68,10 +68,7 @@ export default class LoginPage extends React.Component {
             'Si vous êtes un organisme, vous devez désormais vous identifier avec votre numéro de SIRET';
 
         return (
-            <p style={{'text-align': 'center'}}>
-                Suite à l'incendie du site OVH de Strasbourg, Anotéa est temporairement indisponible, vous pouvez ré-essayer de vous connecter demain. Toutes nos excuses pour le dérangement occasioné. 
-            </p>
-            /*<Page
+            <Page
                 className="LoginPage"
                 title={'Votre espace Anotéa'}
                 panel={
@@ -122,7 +119,7 @@ export default class LoginPage extends React.Component {
                         }
                     />
                 }
-            />*/
+            />
         );
     }
 }
