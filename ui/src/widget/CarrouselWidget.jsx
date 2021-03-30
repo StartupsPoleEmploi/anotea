@@ -8,10 +8,14 @@ import Header from './components/Header';
 import Avis from './components/Avis';
 import Button from '../common/components/Button';
 import './CarrouselWidget.scss';
+import WidgetContext from './WidgetContext';
+import SansAvis from './components/SansAvis';
 
 const ITEMS_PAR_PAGE = 1;
 
 export default class CarrouselWidget extends Component {
+
+    static contextType = WidgetContext;
 
     static propTypes = {
         score: PropTypes.object.isRequired,
@@ -80,10 +84,16 @@ export default class CarrouselWidget extends Component {
     };
 
     render() {
+        let context = this.context;
         let { score } = this.props;
 
         if (score.nb_avis === 0) {
-            return <div></div>;
+            if(context['show-if-0-reviews'] === 'true') {
+                return <SansAvis></SansAvis>
+            } else {
+                return <div></div>;
+            }
+            
         }
 
         return (
