@@ -49,6 +49,7 @@ class Widget extends Component {
                 type: 'session',
                 identifiant: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
                 options: 'json-ld',
+                'show-if-0-reviews': false
             };
         }
         return queryString.parse(urlParams);

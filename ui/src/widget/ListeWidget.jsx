@@ -9,6 +9,7 @@ import Avis from './components/Avis';
 import './ListeWidget.scss';
 import Button from '../common/components/Button';
 import WidgetContext from './WidgetContext';
+import SansAvis from './components/SansAvis';
 
 const ITEMS_PAR_PAGE = 2;
 
@@ -82,8 +83,14 @@ export default class ListeWidget extends Component {
         let context = this.context;
         let { score, results } = this.props;
         let { pagination } = results.meta;
+
         if (score.nb_avis === 0) {
-            return <div></div>;
+            if (context['show-if-0-reviews'] === 'true') {
+                return <SansAvis></SansAvis>;
+            } else {
+                return <div></div>;
+            }
+              
         }
 
         return (

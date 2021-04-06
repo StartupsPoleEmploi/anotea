@@ -22,7 +22,8 @@ function getWidgetIframe(attributes) {
         '?format=' + attributes.format +
         '&type=' + attributes.type +
         '&identifiant=' + attributes.identifiant +
-        '&options=' + attributes.options.join(',');
+        '&options=' + attributes.options.join(',') + 
+        '&show-if-0-reviews=' + attributes.showIf0Reviews;
 
     var iframe = document.createElement('iframe');
     iframe.className = 'anotea-widget-iframe';
@@ -92,6 +93,7 @@ function loadWidget() {
             type: element.getAttribute('data-type'),
             identifiant: element.getAttribute('data-identifiant'),
             options: (element.getAttribute('data-options') || '').split(','),
+            showIf0Reviews: element.getAttribute('show-if-0-reviews'),
         };
 
         appendChild('widget', element, getWidgetIframe(attributes));
