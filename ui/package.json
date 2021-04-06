@@ -43,7 +43,7 @@
     "html2canvas": "1.0.0-rc.5",
     "iframe-resizer": "4.2.11",
     "jquery": "3.5.1",
-    "jspdf": "1.5.3",
+    "jspdf": "2.3.1",
     "jwt-decode": "2.2.0",
     "lodash": "4.17.19",
     "moment": "2.27.0",
