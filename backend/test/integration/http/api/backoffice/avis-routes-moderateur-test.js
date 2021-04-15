@@ -21,6 +21,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                     organisme_formateur: {
                         siret: '11111111111111',
                     },
+                    lieu_de_formation: {
+                        code_postal: '75019'
+                    },
                 },
             },
         }, custom));
@@ -156,6 +159,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let response = await request(app)
         .get('/api/backoffice/avis?fulltext=unknown@unknown.com')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
+    it('can search avis by postal code (fulltext)', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('avis', newAvis()),
+            createIndexes(['avis']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?fulltext=75019')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
