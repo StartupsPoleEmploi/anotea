@@ -51,12 +51,14 @@ module.exports = (db, user) => {
                 } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
+                let fulltextIsCodePostal = !isNaN(fulltext || '');
                 let stagiaireTokens = fulltextIsEmail ? await getStagiaireTokens(fulltext) : null;
 
                 return {
                     codeRegion: user.codeRegion,
                     ...(fulltextIsEmail ? { token: stagiaireTokens.length > 0 ? { $in: stagiaireTokens } : 'unknown' } : {}),
-                    ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
+                    ...(fulltext && !fulltextIsEmail && !fulltextIsCodePostal ? { $text: { $search: fulltext } } : {}),
+                    ...(fulltextIsCodePostal ? { 'formation.action.lieu_de_formation.code_postal': { $regex: '^' + fulltext } } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
