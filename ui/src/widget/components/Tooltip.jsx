@@ -39,7 +39,6 @@ export default class Tooltip extends Component {
 
     render() {
 
-        let { tooltipId } = this.tooltipId;
         let { message } = this.props;
 
         return (
