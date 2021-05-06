@@ -20,7 +20,7 @@ export default class Formation extends React.Component {
                 <p>
                     <span>{formation.intitule}</span><br />
                     <span>
-                    {action.lieu_de_formation.ville}
+                    {action.lieu_de_formation.ville} ({action.lieu_de_formation.code_postal})
                         &nbsp;du <PrettyDate date={new Date(action.session.periode.debut)} format={'L'} />
                         &nbsp;au <PrettyDate date={new Date(action.session.periode.fin)} format={'L'} />
                 </span>

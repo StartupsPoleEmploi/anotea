@@ -4,6 +4,11 @@ import './Tooltip.scss';
 
 export default class Tooltip extends Component {
 
+    constructor(props){
+        super(props);
+        this.escFunction = this.escFunction.bind(this);
+    }
+
     static propTypes = {
         message: PropTypes.node.isRequired,
     };
@@ -20,6 +25,18 @@ export default class Tooltip extends Component {
         return this.setState({ show: false });
     };
 
+    escFunction(event){
+      if(event.keyCode === 27) {
+        this.hide();
+      }
+    }
+    componentDidMount(){
+      document.addEventListener("keydown", this.escFunction, false);
+    }
+    componentWillUnmount(){
+      document.removeEventListener("keydown", this.escFunction, false);
+    }
+
     render() {
 
         let { message } = this.props;
@@ -30,6 +47,9 @@ export default class Tooltip extends Component {
                     className="icon"
                     onMouseEnter={() => this.show()}
                     onMouseLeave={() => this.hide()}
+                    onFocus={() => this.show()}
+                    onBlur={() => this.hide()}
+                    tabindex="0"
                 >
                     <i className="far fa-question-circle"></i>
                 </div>
