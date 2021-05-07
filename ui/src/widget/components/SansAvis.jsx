@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 import Verified from '../components/Verified';
 import Propulsed from '../components/Propulsed';
 import Header from '../components/Header';
@@ -29,7 +29,7 @@ export default class SansAvis extends Component {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 
 }

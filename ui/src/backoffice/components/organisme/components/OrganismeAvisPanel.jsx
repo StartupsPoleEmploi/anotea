@@ -1,18 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Filters } from '../../common/page/panel/filters/Filters';
-import Filter from '../../common/page/panel/filters/Filter';
 import _ from 'lodash';
-import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Button from '../../../../common/components/Button';
-import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
-import AvisResults from '../../common/page/panel/results/AvisResults';
-import Avis from '../../common/avis/Avis';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import Panel from '../../common/page/panel/Panel';
 import Loader from '../../../../common/components/Loader';
-import { getAvisStats } from '../../../services/avisService';
+import { getAvisStats, getExportAvisUrl, searchAvis } from '../../../services/avisService';
+import Avis from '../../common/avis/Avis';
 import { ReconciliationWorkflow, Workflow } from '../../common/avis/Workflow';
+import Filter from '../../common/page/panel/filters/Filter';
+import { Filters } from '../../common/page/panel/filters/Filters';
+import Pagination from '../../common/page/panel/pagination/Pagination';
+import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
+import Panel from '../../common/page/panel/Panel';
+import AvisResults from '../../common/page/panel/results/AvisResults';
 
 export default class OrganismeAvisPanel extends React.Component {
 

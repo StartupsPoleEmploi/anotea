@@ -52,7 +52,7 @@ export default class ReportButton extends React.Component {
                 title={`Signaler cet avis`}
                 body={
                     <span>
-                      Signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération
+                      Signaler un avis permet d&apos;alerter le modérateur sur son non-respect potentiel de la charte de modération
                     </span>
                 }
                 onClose={this.handleCancel}

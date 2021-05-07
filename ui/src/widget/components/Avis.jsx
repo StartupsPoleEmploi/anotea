@@ -37,7 +37,7 @@ export default class Avis extends Component {
                 <div className="reponse">
                     <div className="reponse-titre d-flex justify-content-start align-items-center mb-1">
                         <i className="far fa-comment-alt mr-1"></i>
-                        <div className="text-uppercase">Réponse de l'organisme</div>
+                        <div className="text-uppercase">Réponse de l&apos;organisme</div>
                     </div>
                     <div className="reponse-texte">{avis.reponse.texte}</div>
                 </div>

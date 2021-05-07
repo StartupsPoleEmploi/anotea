@@ -47,7 +47,7 @@ export default class FormationStats extends React.Component {
                 </div>
                 <div className="details">
                     <div className="stats">
-                        <div className="name">Nombre d'avis moyen par session</div>
+                        <div className="name">Nombre d&apos;avis moyen par session</div>
                         <div className="value">{latest(stats, type, 'api.nbAvisParSession')}</div>
                     </div>
                 </div>
