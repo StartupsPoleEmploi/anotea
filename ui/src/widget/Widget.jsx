@@ -72,10 +72,25 @@ class Widget extends Component {
         try {
             let score = await getScore(type, identifiant);
             this.setState({ score });
+
+            if (score && score.nb_avis && score.nb_avis > 0) {
+                this.postMessageToParent('avec-avis');
+            } else {
+                this.postMessageToParent('sans-avis');
+            }
         } catch (e) {
+            this.postMessageToParent('sans-avis');
             if (!e.statusCode || e.statusCode > 404) {
                 // sendError(e);
             }
+        }
+    }
+
+    async postMessageToParent(message) {
+        if (window && window.parent) {
+            window.parent.postMessage(message, '*');
+        } else {
+            console.error('0 parent');
         }
     }
 
