@@ -44,7 +44,7 @@ export default class CarrouselWidget extends Component {
         if (pagination.total_items === 0) {
             return (
                 <div className="carrousel empty d-flex justify-content-center">
-                    Il n'y a pas de commentaire sur cette formation pour le moment.
+                    Il n&apos;y a pas de commentaire sur cette formation pour le moment.
                 </div>
             );
         }
@@ -89,7 +89,7 @@ export default class CarrouselWidget extends Component {
 
         if (score.nb_avis === 0) {
             if(context['show-if-0-reviews'] === 'true') {
-                return <SansAvis></SansAvis>
+                return <SansAvis></SansAvis>;
             } else {
                 return <div></div>;
             }

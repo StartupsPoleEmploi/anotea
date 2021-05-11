@@ -27,7 +27,7 @@ const StagiairesStats = ({ stagiaires, avis }) => {
                 </div>
                 <div className="d-flex justify-content-center stats mt-md-3 mt-lg-0">
                     <div className="chart">
-                        <div className="title">Dépôt d'avis</div>
+                        <div className="title">Dépôt d&apos;avis</div>
                         <Pie
                             colors={['#F28017', '#F7B374', '#FDF2E7']}
                             data={[

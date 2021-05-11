@@ -49,7 +49,7 @@ export default class Tooltip extends Component {
                     onMouseLeave={() => this.hide()}
                     onFocus={() => this.show()}
                     onBlur={() => this.hide()}
-                    tabindex="0"
+                    tabIndex="0"
                 >
                     <i className="far fa-question-circle"></i>
                 </div>

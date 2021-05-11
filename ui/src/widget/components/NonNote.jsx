@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 import './NonNote.scss';
 
 export class NonNote extends Component {
@@ -7,13 +7,13 @@ export class NonNote extends Component {
 
     render() {
         return (
-            <div class="NonNote d-flex justify-content-center mb-3">
-                <div class="d-flex flex-column text-center">
+            <div className="NonNote d-flex justify-content-center mb-3">
+                <div className="d-flex flex-column text-center">
                     <div>
-                        <span class="note">Non noté</span>
-                        <span class="star fas fa-star"></span>
+                        <span className="note">Non noté</span>
+                        <span className="star fas fa-star"></span>
                     </div>
-                    <div class="message">Aucun avis n’a encore été déposé sur cette formation</div>
+                    <div className="message">Aucun avis n’a encore été déposé sur cette formation</div>
                 </div>
             </div>
         );

@@ -1,19 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
-import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import Page from '../../common/page/Page';
-import Panel from '../../common/page/panel/Panel';
-import { Filter, Filters } from '../../common/page/panel/filters/Filters';
-import { Form } from '../../common/page/form/Form';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Button from '../../../../common/components/Button';
-import InputText from '../../common/page/form/InputText';
+import { getAvisStats, searchAvis } from '../../../services/avisService';
 import Avis from '../../common/avis/Avis';
-import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from '../../../services/avisService';
-import { getAvisStats } from '../../../services/avisService';
 import { Workflow } from '../../common/avis/Workflow';
+import { Form } from '../../common/page/form/Form';
+import InputText from '../../common/page/form/InputText';
+import Page from '../../common/page/Page';
+import { Filter, Filters } from '../../common/page/panel/filters/Filters';
+import Pagination from '../../common/page/panel/pagination/Pagination';
+import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
+import Panel from '../../common/page/panel/Panel';
+import AvisResults from '../../common/page/panel/results/AvisResults';
 
 export default class ModerationAvisPage extends React.Component {
 

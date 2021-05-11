@@ -26,12 +26,12 @@ let isParentUrlPoleEmploi = () => {
         parentUrl = document.referrer;
     }
 
-    return null != parentUrl && (
-            parentUrl.indexOf("pole-emploi.fr") !== -1 
-            || parentUrl.indexOf("pole-emploi.intra") !== -1 
-            || parentUrl.indexOf("pe-qvr.fr") !== -1
+    return parentUrl !== null && (
+            parentUrl.indexOf("pole-emploi.fr") !== -1 ||
+            parentUrl.indexOf("pole-emploi.intra") !== -1 ||
+            parentUrl.indexOf("pe-qvr.fr") !== -1
         );
-}
+};
 
 WebFont.load({
     google: {
@@ -46,11 +46,13 @@ if (window.location.pathname !== "/widget") {
     GoogleAnalytics.initialize();
 } else {
     try {
-        if ((new RegExp('#tag=([0-9,]*)', 'g')).exec(document.location.hash)[1].split(',').some(function (t) { return t === '2001' })) {
+        if ((new RegExp('#tag=([0-9,]*)', 'g')).exec(document.location.hash)[1].split(',').some(function (t) {
+            return t === '2001';
+        })) {
             GoogleAnalytics.initializeWidget(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
         }
     } catch (e) { }
-} 
+}
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
 let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));

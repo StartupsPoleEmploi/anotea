@@ -57,7 +57,7 @@ export default class ListeWidget extends Component {
         if (meta.pagination.total_items === 0) {
             return (
                 <div className="Liste empty">
-                    Il n'y a pas de commentaire sur cette formation pour le moment.
+                    Il n&apos;y a pas de commentaire sur cette formation pour le moment.
                 </div>
             );
         }

@@ -39,7 +39,7 @@ export default class StatsPanel extends React.Component {
     mustShowAdminStats() {
         let { account } = this.context;
         return account.profile === 'admin';
-    } 
+    }
     
     fetchStats = () => {
         return new Promise(async resolve => {
