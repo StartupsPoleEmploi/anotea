@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Page from '../common/page/Page';
@@ -75,9 +76,14 @@ export default class OrganismePage extends React.Component {
         });
     };
 
+    getQueryFormParameters = () => {
+        let query = this.props.router.getQuery();
+        return _.pick(query, ['debut', 'departement', 'fin', 'numeroFormation', 'siren']);
+    };
+
     onFilterClicked = parameters => {
         return this.props.router.refreshCurrentPage({
-            ...(this.state.form || this.props.router.getQuery()),
+            ...this.getQueryFormParameters(),
             ...parameters,
         });
     };
