@@ -691,7 +691,7 @@
       }
     },
     "conseil_regional": {
-      "active": false,
+      "active": true,
       "import": "all"
     },
     "carif": {
