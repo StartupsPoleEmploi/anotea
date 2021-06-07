@@ -81,7 +81,7 @@ export default class FinanceurPage extends React.Component {
 
     getQueryFormParameters = () => {
         let query = this.props.router.getQuery();
-        return _.pick(query, ['debut', 'departement', 'fin', 'numeroFormation', 'siren']);
+        return _.pick(query, ['debut', 'departement', 'fin', 'numeroFormation', 'siren', 'codeFinanceur', 'dispositifFinancement']);
     };
 
     onFilterClicked = parameters => {
