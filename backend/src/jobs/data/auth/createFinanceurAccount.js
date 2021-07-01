@@ -22,6 +22,7 @@ execute(async ({ db, exit, passwords }) => {
     return db.collection('accounts').insertOne({
         profile: 'financeur',
         identifiant,
+        courriel: identifiant,
         codeRegion: region,
         codeFinanceur,
         passwordHash: await passwords.hashPassword(cli.password),
