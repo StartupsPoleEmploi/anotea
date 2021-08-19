@@ -5,6 +5,7 @@ const md5File = require('md5-file');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const logger = require('../../../../helpers/components/fake-logger');
 const importStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/importStagiaires');
+const countStagiaires = require('../../../../../src/jobs/import/stagiaires/tasks/countStagiaires');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
 
@@ -16,6 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let { regions } = await getComponents();
 
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
+        await countStagiaires(db, logger);
 
         let count = await db.collection('stagiaires').countDocuments();
         assert.strictEqual(count, 4);
@@ -66,6 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     },
                     session: {
                         id: '3565575',
+                        nbStagiaires: 4,
                         numero: 'SE_0000160070',
                         periode: {
                             debut: new Date('2018-05-22T00:00:00.000Z'),

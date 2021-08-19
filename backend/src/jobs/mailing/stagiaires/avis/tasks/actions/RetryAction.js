@@ -7,19 +7,20 @@ class RetryAction {
 
     getQuery() {
         return {
-            mailSent: true,
-            unsubscribe: false,
-            mailError: { $ne: null },
+            'mailSent': true,
+            'unsubscribe': false,
+            'mailError': { $ne: null },
             ...(this.filters.codeRegions ? { codeRegion: { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { campaign: this.filters.campaign } : {}),
-            $or: [
+            '$or': [
                 {
                     mailRetry: { $eq: null }
                 },
                 {
                     mailRetry: { $lt: parseInt(this.configuration.smtp.stagiaires.avisMaxRelaunch) }
                 }
-            ]
+            ],
+            'formation.action.session.nbStagiaires': { $gte: 5 },
         };
     }
 }
