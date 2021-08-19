@@ -32,6 +32,7 @@ module.exports = {
                 'formation.action.session.periode.debut': 1,
                 'formation.action.session.periode.fin': 1,
             }, { name: 'bo-stagiaires-stats' }),
+            db.collection('stagiaires').createIndex({ 'formation.action.session.id': 1 }),
             db.collection('stagiaires').createIndex({ 'formation.action.session.nbStagiaires': 1 }),
         ]);
     },
