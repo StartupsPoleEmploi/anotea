@@ -5,11 +5,13 @@ const cli = require('commander');
 const { execute } = require('../../job-utils');
 const importStagiaire = require('./tasks/importStagiaires');
 const refreshStagiaires = require('./tasks/refreshStagiaires');
+const countStagiaires = require('./tasks/countStagiaires');
 
 cli.description('Import des stagiaires')
 .option('--source [name]', 'Source to import (PE or IDF)')
 .option('--file [file]', 'The CSV file to import')
 .option('--refresh', 'Refresh stagiaires instead of importing them')
+.option('--count', 'Count stagiaires per session')
 .option('--region [codeRegion]', 'Code region to filter')
 .option('--financeur [codeFinanceur]', 'Code financeur to filter')
 .option('--unpack', 'Handle file as an archive')
@@ -23,13 +25,13 @@ let sources = {
 
 execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
-    let { file, source, region, financeur, unpack, refresh } = cli;
+    let { file, source, region, financeur, unpack, refresh, count } = cli;
     let filters = {
         codeRegion: region,
         codeFinanceur: financeur,
     };
 
-    if (!file || !['PE', 'IDF'].includes(source)) {
+    if ((!file || !['PE', 'IDF'].includes(source)) && !count) {
         return exit('Invalid arguments');
     }
 
@@ -37,11 +39,16 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
     logger.info(`Using source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
     try {
-        let stats = refresh ?
-            await refreshStagiaires(db, logger, file, handler, filters, { unpack }) :
-            await importStagiaire(db, logger, file, handler, filters, { unpack });
+        let stats;
+        if (refresh) {
+            stats = await refreshStagiaires(db, logger, file, handler, filters, { unpack });
+        } else if (count) {
+            stats = await countStagiaires(db, logger, filters, { unpack });
+        } else {
+            stats = await importStagiaire(db, logger, file, handler, filters, { unpack });
+        }
 
-        if (stats.total > 0) {
+        if (stats.total && stats.total > 0) {
             sendSlackNotification({
                 text: `[STAGIAIRE] Des nouveaux stagiaires ont été importés : ` +
                     `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,

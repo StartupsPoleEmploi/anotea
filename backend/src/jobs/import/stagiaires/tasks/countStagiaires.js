@@ -1,12 +1,5 @@
 module.exports = async (db, logger, filters = {}) => {
 
-    let stats = {
-        total: 0,
-        imported: 0,
-        ignored: 0,
-        invalid: 0,
-    };
-
     await db.collection('stagiaires').updateMany({
         'formation.action.session.nbStagiaires': null
     }, {
@@ -38,9 +31,8 @@ module.exports = async (db, logger, filters = {}) => {
     await db.collection('jobs').insertOne({
         type: 'count-stagiaires',
         filters,
-        stats: stats,
         date: new Date(),
     });
 
-    return stats;
+    return {};
 };
