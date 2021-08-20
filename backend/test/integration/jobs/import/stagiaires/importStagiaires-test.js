@@ -11,7 +11,7 @@ const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile, insertIntoDatabase }) => {
 
-    it.only('should import stagiaires from csv file', async () => {
+    it('should import stagiaires from csv file', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
