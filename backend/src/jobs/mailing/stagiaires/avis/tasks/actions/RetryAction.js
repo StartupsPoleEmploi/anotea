@@ -20,7 +20,6 @@ class RetryAction {
                     mailRetry: { $lt: parseInt(this.configuration.smtp.stagiaires.avisMaxRelaunch) }
                 }
             ],
-            'formation.action.session.nbStagiaires': { $gte: 5 },
         };
     }
 }
