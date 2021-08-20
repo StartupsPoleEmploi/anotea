@@ -12,6 +12,7 @@ cli.description('Import des stagiaires')
 .option('--file [file]', 'The CSV file to import')
 .option('--refresh', 'Refresh stagiaires instead of importing them')
 .option('--count', 'Count stagiaires per session')
+.option('--all', 'option for count')
 .option('--region [codeRegion]', 'Code region to filter')
 .option('--financeur [codeFinanceur]', 'Code financeur to filter')
 .option('--unpack', 'Handle file as an archive')
@@ -25,10 +26,11 @@ let sources = {
 
 execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
 
-    let { file, source, region, financeur, unpack, refresh, count } = cli;
+    let { file, source, region, financeur, unpack, refresh, count, all } = cli;
     let filters = {
         codeRegion: region,
         codeFinanceur: financeur,
+        all: all
     };
 
     if ((!file || !['PE', 'IDF'].includes(source)) && !count) {

@@ -11,13 +11,14 @@ const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile, insertIntoDatabase }) => {
 
-    it('should import stagiaires from csv file', async () => {
+    it.only('should import stagiaires from csv file', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
 
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
-        await countStagiaires(db, logger);
+        const filters = { all: true };
+        await countStagiaires(db, logger, filters);
 
         let count = await db.collection('stagiaires').countDocuments();
         assert.strictEqual(count, 4);
