@@ -78,7 +78,7 @@ module.exports = ({ db, middlewares }) => {
             {
                 $or: [
                     { _id: parseInt(parameters.id) },
-                    { siret: parseInt(parameters.id) },
+                    { siret: parameters.id },
                 ]
             },
             { projection: buildProjection(parameters.fields) },
@@ -113,7 +113,7 @@ module.exports = ({ db, middlewares }) => {
         let organisme = await db.collection('accounts').findOne({
             $or: [
                 { _id: parseInt(parameters.id) },
-                { siret: parseInt(parameters.id) },
+                { siret: parameters.id },
             ]
         });
 
