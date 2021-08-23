@@ -75,7 +75,12 @@ module.exports = ({ db, middlewares }) => {
         }, { abortEarly: false });
 
         let organisme = await db.collection('accounts').findOne(
-            { _id: parseInt(parameters.id) },
+            {
+                $or: [
+                    { _id: parseInt(parameters.id) },
+                    { siret: parseInt(parameters.id) },
+                ]
+            },
             { projection: buildProjection(parameters.fields) },
         );
 
@@ -105,7 +110,12 @@ module.exports = ({ db, middlewares }) => {
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
 
-        let organisme = await db.collection('accounts').findOne({ _id: parseInt(parameters.id) });
+        let organisme = await db.collection('accounts').findOne({
+            $or: [
+                { _id: parseInt(parameters.id) },
+                { siret: parseInt(parameters.id) },
+            ]
+        });
 
         if (!organisme) {
             throw Boom.notFound('Identifiant inconnu');
