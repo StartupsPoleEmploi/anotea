@@ -69,7 +69,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     },
                     session: {
                         id: '3565575',
-                        nbStagiaires: 4,
+                        nbStagiairesFormes: 4,
                         numero: 'SE_0000160070',
                         periode: {
                             debut: new Date('2018-05-22T00:00:00.000Z'),

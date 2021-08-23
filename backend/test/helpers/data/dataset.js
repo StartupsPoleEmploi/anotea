@@ -58,7 +58,7 @@ module.exports = {
                             debut: date,
                             fin: date,
                         },
-                        nbStagiaires: 5,
+                        nbStagiairesFormes: 5,
                     },
                 },
             },

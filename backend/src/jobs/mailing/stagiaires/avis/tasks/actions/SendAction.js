@@ -15,7 +15,7 @@ class SendAction {
             'formation.action.session.periode.fin': { $lte: new Date() },
             ...(this.filters.codeRegions ? { 'codeRegion': { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { 'campaign': this.filters.campaign } : {}),
-            'formation.action.session.nbStagiaires': { $gte: 5 },
+            'formation.action.session.nbStagiairesFormes': { $gte: 5 },
         };
     }
 }

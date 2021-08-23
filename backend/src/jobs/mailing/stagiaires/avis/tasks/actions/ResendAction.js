@@ -24,7 +24,7 @@ class ResendAction {
                 { mailRetry: { $eq: null } },
                 { mailRetry: { $lt: parseInt(avisMaxRelaunch) } }
             ],
-            'formation.action.session.nbStagiaires': { $gte: 5 },
+            'formation.action.session.nbStagiairesFormes': { $gte: 5 },
         };
     }
 }

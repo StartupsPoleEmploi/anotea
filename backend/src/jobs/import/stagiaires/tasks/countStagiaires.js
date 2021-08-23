@@ -3,9 +3,9 @@ const moment = require('moment');
 module.exports = async (db, logger, filters = {}) => {
 
     await db.collection('stagiaires').updateMany({
-        'formation.action.session.nbStagiaires': null
+        'formation.action.session.nbStagiairesFormes': null
     }, {
-        $set: { 'formation.action.session.nbStagiaires': 0 }
+        $set: { 'formation.action.session.nbStagiairesFormes': 0 }
     });
 
     let cursor;
@@ -13,7 +13,7 @@ module.exports = async (db, logger, filters = {}) => {
         cursor = db.collection('stagiaires').aggregate([
             {
                 $match: {
-                    'formation.action.session.nbStagiaires': { $lt: 5 },
+                    'formation.action.session.nbStagiairesFormes': { $lt: 5 },
                     'sourceIDF': null,
                 }
             },
@@ -27,7 +27,7 @@ module.exports = async (db, logger, filters = {}) => {
         cursor = db.collection('stagiaires').aggregate([
             {
                 $match: {
-                    'formation.action.session.nbStagiaires': { $lt: 5 },
+                    'formation.action.session.nbStagiairesFormes': { $lt: 5 },
                     'sourceIDF': null,
                     'avisCreated': false,
                     'unsubscribe': false,
@@ -53,8 +53,9 @@ module.exports = async (db, logger, filters = {}) => {
                 'formation.action.session.id': idSession
             }, {
                 $set: {
-                    'formation.action.session.nbStagiaires': await db.collection('stagiaires').find({
-                        'formation.action.session.id': idSession
+                    'formation.action.session.nbStagiairesFormes': await db.collection('stagiaires').find({
+                        'formation.action.session.id': idSession,
+                        'formation.action.session.periode.fin': { $lte: new Date() },
                     }).count()
                 }
             });
