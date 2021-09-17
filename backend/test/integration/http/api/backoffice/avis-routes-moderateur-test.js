@@ -174,7 +174,55 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?fulltext=75019')
+        .get('/api/backoffice/avis?fulltext=75011')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+    });
+
+    it('can search avis by postal code (fulltext) (0 result)', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('avis', newAvis()),
+            createIndexes(['avis']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?fulltext=12345')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
+    it('can search avis by SIRET (fulltext)', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('avis', newAvis()),
+            createIndexes(['avis']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?fulltext=11111111111111')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+    });
+
+    it('can search avis by SIRET (fulltext) (0 result)', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('avis', newAvis()),
+            createIndexes(['avis']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?fulltext=10111111111111')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);

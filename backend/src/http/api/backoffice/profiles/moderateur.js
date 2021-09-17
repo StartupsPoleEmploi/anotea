@@ -51,7 +51,7 @@ module.exports = (db, user) => {
                 } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
-                let fulltextIsCodePostal = !isNaN(fulltext || 'a');
+                let fulltextIsCodePostal = !isNaN(fulltext || 'a') && Number(fulltext) <= 99999;
                 let stagiaireTokens = fulltextIsEmail ? await getStagiaireTokens(fulltext) : null;
 
                 return {

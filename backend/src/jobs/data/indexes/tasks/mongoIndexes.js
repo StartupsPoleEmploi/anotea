@@ -74,6 +74,7 @@ module.exports = {
                 'commentaire.title': 'text',
                 'commentaire.text': 'text',
                 'formation.intitule': 'text',
+                'formation.action.organisme_formateur.siret': 'text',
                 'formation.action.organisme_formateur.raison_sociale': 'text',
             }, { name: 'bo-search-fulltext' }),
             db.collection('avis').createIndex({
