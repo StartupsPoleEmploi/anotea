@@ -70,6 +70,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     },
                     session: {
                         id: '2422722',
+                        nbStagiairesFormes: 5,
                         numero: 'SE_XXXXXX',
                         periode: {
                             debut: date.toJSON(),
@@ -180,6 +181,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     },
                     session: {
                         id: '2422722',
+                        nbStagiairesFormes: 5,
                         numero: 'SE_XXXXXX',
                         periode: {
                             debut: date,
@@ -257,6 +259,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     },
                     session: {
                         id: '2422722',
+                        nbStagiairesFormes: 5,
                         numero: 'SE_XXXXXX',
                         periode: {
                             debut: date,

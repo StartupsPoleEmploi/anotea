@@ -58,6 +58,7 @@ module.exports = {
                             debut: date,
                             fin: date,
                         },
+                        nbStagiairesFormes: 5,
                     },
                 },
             },
@@ -68,7 +69,7 @@ module.exports = {
             tracking: {
                 firstRead: date
             },
-            codeRegion: '11'
+            codeRegion: '11',
         }, custom);
     },
     newModerateurAccount: custom => {

@@ -11,19 +11,20 @@ class ResendAction {
         let { avisRelaunchDelay, avisMaxRelaunch } = this.configuration.smtp.stagiaires;
 
         return {
-            mailSent: true,
-            unsubscribe: false,
-            avisCreated: false,
-            $and: [
+            'mailSent': true,
+            'unsubscribe': false,
+            'avisCreated': false,
+            '$and': [
                 { mailSentDate: { $lte: moment().subtract(avisRelaunchDelay, 'days').toDate() } },
                 { mailSentDate: { $gte: moment().subtract(6, 'months').toDate() } },
             ],
             ...(this.filters.codeRegions ? { codeRegion: { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { campaign: this.filters.campaign } : {}),
-            $or: [
+            '$or': [
                 { mailRetry: { $eq: null } },
                 { mailRetry: { $lt: parseInt(avisMaxRelaunch) } }
-            ]
+            ],
+            'formation.action.session.nbStagiairesFormes': { $gte: 5 },
         };
     }
 }
