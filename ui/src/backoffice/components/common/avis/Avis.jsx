@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
+import CommentaireReport from './CommentaireReport';
 import Formation from './Formation';
 import CommentaireEditor from './CommentaireEditor';
 import Notes from './Notes';
@@ -119,6 +120,10 @@ export default class Avis extends React.Component {
                                         onClose={this.toggleCommentairesEditor} /> :
                                     <Commentaire avis={avis} onChange={this.handleChange} />
                                 }
+                            </div>
+
+                            <div className="mb-1">
+                                <CommentaireReport avis={avis} onChange={this.handleChange} />
                             </div>
 
                             <div className="mt-2 d-none d-lg-block">

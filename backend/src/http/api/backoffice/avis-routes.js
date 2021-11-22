@@ -194,12 +194,11 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
-        let { report } = await Joi.validate(req.body, { report: Joi.boolean().required() }, { abortEarly: false });
+        let { report, commentaire } = await Joi.validate(req.body, { report: Joi.boolean().required(), commentaire: Joi.string().allow(null) }, { abortEarly: false });
 
-        let avis = await workflow.report(id, report, { profile });
+        let avis = await workflow.report(id, report, commentaire, { profile });
 
         return res.json(avis);
-
     }));
 
     router.get('/api/backoffice/avis/stats', checkAuth, tryAndCatch(async (req, res) => {

@@ -13,11 +13,12 @@ export default class ReportButton extends React.Component {
 
     state = {
         showModal: false,
+        commentaireReport: null,
     };
 
-    report = async () => {
+    report = async (pCommentaireReport) => {
         this.setState({ showModal: false });
-        let updated = await reportAvis(this.props.avis._id, true);
+        let updated = await reportAvis(this.props.avis._id, true, pCommentaireReport);
         this.props.onChange(updated, {
             message: {
                 type: 'local',
@@ -51,12 +52,23 @@ export default class ReportButton extends React.Component {
             <Modal
                 title={`Signaler cet avis`}
                 body={
-                    <span>
-                      Signaler un avis permet d&apos;alerter le modérateur sur son non-respect potentiel de la charte de modération
-                    </span>
-                }
+                    <div>
+                        <span>
+                            Signaler un avis permet d&apos;alerter le modérateur sur son non-respect potentiel de la charte de modération
+                        </span><br/>
+                        <textarea
+                            name="texte"
+                            className="form-control"
+                            rows="4"
+                            ref={this.reference}
+                            value={this.state.commentaireReport}
+                            onChange={e => this.setState({ commentaireReport: e.target.value })}
+                            placeholder="Commentaire sur le signalement."
+                        />
+                    </div>
+              }
                 onClose={this.handleCancel}
-                onConfirmed={() => this.report()} />
+                onConfirmed={() => this.report(this.state.commentaireReport)} />
         );
     };
 
