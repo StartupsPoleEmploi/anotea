@@ -13,12 +13,12 @@ export default class ReportButton extends React.Component {
 
     state = {
         showModal: false,
-        commentaireReport: null,
+        commentReport: null,
     };
 
-    report = async (pCommentaireReport) => {
+    report = async (pCommentReport) => {
         this.setState({ showModal: false });
-        let updated = await reportAvis(this.props.avis._id, true, pCommentaireReport);
+        let updated = await reportAvis(this.props.avis._id, true, pCommentReport);
         this.props.onChange(updated, {
             message: {
                 type: 'local',
@@ -61,14 +61,14 @@ export default class ReportButton extends React.Component {
                             className="form-control"
                             rows="4"
                             ref={this.reference}
-                            value={this.state.commentaireReport}
-                            onChange={e => this.setState({ commentaireReport: e.target.value })}
+                            value={this.state.commentReport}
+                            onChange={e => this.setState({ commentReport: e.target.value })}
                             placeholder="Commentaire sur le signalement."
                         />
                     </div>
               }
                 onClose={this.handleCancel}
-                onConfirmed={() => this.report(this.state.commentaireReport)} />
+                onConfirmed={() => this.report(this.state.commentReport)} />
         );
     };
 

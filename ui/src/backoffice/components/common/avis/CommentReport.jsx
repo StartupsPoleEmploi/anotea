@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Commentaire.scss';
 
-export default class CommentaireReport extends React.Component {
+export default class CommentReport extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
@@ -10,7 +10,7 @@ export default class CommentaireReport extends React.Component {
 
     render() {
         let avis = this.props.avis;
-        if (!avis.commentaireReport) {
+        if (!avis.commentReport) {
             return ("");
         }
 
@@ -19,7 +19,7 @@ export default class CommentaireReport extends React.Component {
                 <div className="Titre">
                     <span className={`mr-1 title`}>Commentaire de signalement</span>
                 </div>
-                <span className="Commentaire">{avis.commentaireReport}</span>
+                <span className="Commentaire">{avis.commentReport}</span>
             </div>
         );
     }
