@@ -53,8 +53,8 @@ export const markAvisAsRead = (id, read) => {
     return _put(`/backoffice/avis/${id}/read`, { read });
 };
 
-export const reportAvis = (id, report, commentaire) => {
-    return _put(`/backoffice/avis/${id}/report`, { report, commentaire });
+export const reportAvis = (id, report, commentReport) => {
+    return _put(`/backoffice/avis/${id}/report`, { report, commentReport });
 };
 
 export const getAvisStats = (options = {}) => {

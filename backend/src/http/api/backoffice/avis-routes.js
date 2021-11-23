@@ -194,9 +194,9 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
-        let { report, commentaire } = await Joi.validate(req.body, { report: Joi.boolean().required(), commentaire: Joi.string().allow(null) }, { abortEarly: false });
+        let { report, commentReport } = await Joi.validate(req.body, { report: Joi.boolean().required(), commentReport: Joi.string().allow(null) }, { abortEarly: false });
 
-        let avis = await workflow.report(id, report, commentaire, { profile });
+        let avis = await workflow.report(id, report, commentReport, { profile });
 
         return res.json(avis);
     }));
