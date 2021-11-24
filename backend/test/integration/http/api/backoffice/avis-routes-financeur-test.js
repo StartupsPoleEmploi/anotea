@@ -219,4 +219,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body.avis.length, 2);
     });
 
+    it('returns avis without the commentReport field for financeur', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            insertIntoDatabase('avis', buildAvis()),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].commentReport, undefined );
+    });
+
 }));

@@ -713,4 +713,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 404);
     });
+
+
+    it('returns avis with the commentReport field for financeur', async () => {
+        let app = await startServer();
+        let avis = newAvis();
+        avis.commentReport = 'yo';
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('avis', avis),
+            createIndexes(['avis']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].commentReport, 'yo' );
+    });
 }));
+
