@@ -47,6 +47,11 @@ module.exports = (db, regions, user) => {
             },
         },
         queries: {
+            fieldsToExclude: () => {
+                return {
+                    commentReport: 0,
+                };
+            },
             buildStagiaireQuery: async parameters => {
                 let { departement, codeFinanceur, siren, numeroFormation, debut, fin, dispositifFinancement } = parameters;
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;

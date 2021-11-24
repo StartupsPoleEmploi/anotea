@@ -30,6 +30,11 @@ module.exports = (db, regions, user) => {
             },
         },
         queries: {
+            fieldsToExclude: () => {
+                return {
+                    commentReport: 0,
+                };
+            },
             buildStagiaireQuery: async parameters => {
                 let { codeFinanceur, codeRegion } = parameters;
                 return {

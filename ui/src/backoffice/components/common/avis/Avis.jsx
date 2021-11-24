@@ -122,9 +122,11 @@ export default class Avis extends React.Component {
                                 }
                             </div>
 
-                            <div className="mb-1">
-                                <CommentReport avis={avis} onChange={this.handleChange} />
-                            </div>
+                            {avis.commentReport && (showModerationButtons || showReponseButtons) ?
+                                <div className="mb-1">
+                                    <CommentReport avis={avis} onChange={this.handleChange} />
+                                </div> : ""
+                            }
 
                             <div className="mt-2 d-none d-lg-block">
                                 <Notes avis={avis} />
