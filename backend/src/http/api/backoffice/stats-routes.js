@@ -34,12 +34,9 @@ module.exports = ({ db }) => {
             ]
         })
         .sort({ date: -1 })
-        .project({
-            '_id': 0,
-            'national.campagnes': 0,
-        })
         .transformStream({
             transform: ({ date, national, regions }) => {
+                delete national.campagnes;
                 return {
                     date,
                     national,
@@ -47,6 +44,11 @@ module.exports = ({ db }) => {
                 };
             }
         });
+
+        /*
+2021-11-26T16:36:49.988+0000 W  QUERY    [conn4591] Plan executor error during find command: FAILURE, status: OperationFailed: Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit., stats: { stage: "PROJECTION_DEFAULT", nReturned: 0, executionTimeMillisEstimate: 23, works: 568, advanced: 0, needTime: 567, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, transformBy: { _id: 0, national.campagnes: 0 }, inputStage: { stage: "SORT", nReturned: 0, executionTimeMillisEstimate: 23, works: 568, advanced: 0, needTime: 567, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, sortPattern: { date: -1 }, memUsage: 33639696, memLimit: 33554432, inputStage: { stage: "SORT_KEY_GENERATOR", nReturned: 554, executionTimeMillisEstimate: 23, works: 567, advanced: 554, needTime: 13, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, inputStage: { stage: "COLLSCAN", filter: { $and: [ { date: { $lte: new Date(1637944609955) } }, { date: { $gte: new Date(1564617600000) } } ] }, nReturned: 554, executionTimeMillisEstimate: 23, works: 566, advanced: 554, needTime: 12, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, direction: "forward", docsExamined: 565 } } } }
+2021-11-26T16:39:44.092+0000 W  QUERY    [conn4592] Plan executor error during find command: FAILURE, status: OperationFailed: Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit., stats: { stage: "PROJECTION_DEFAULT", nReturned: 0, executionTimeMillisEstimate: 23, works: 568, advanced: 0, needTime: 567, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, transformBy: { _id: 0, national.campagnes: 0 }, inputStage: { stage: "SORT", nReturned: 0, executionTimeMillisEstimate: 23, works: 568, advanced: 0, needTime: 567, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, sortPattern: { date: -1 }, memUsage: 33639696, memLimit: 33554432, inputStage: { stage: "SORT_KEY_GENERATOR", nReturned: 554, executionTimeMillisEstimate: 19, works: 567, advanced: 554, needTime: 13, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, inputStage: { stage: "COLLSCAN", filter: { $and: [ { date: { $lte: new Date(1637944784054) } }, { date: { $gte: new Date(1564617600000) } } ] }, nReturned: 554, executionTimeMillisEstimate: 19, works: 566, advanced: 554, needTime: 12, needYield: 0, saveState: 4, restoreState: 4, isEOF: 0, direction: "forward", docsExamined: 565 } } } }
+        */
 
         return sendArrayAsJsonStream(stream, res, {
             arrayPropertyName: 'stats',
