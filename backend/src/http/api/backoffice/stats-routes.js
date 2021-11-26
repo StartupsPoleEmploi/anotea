@@ -20,10 +20,18 @@ module.exports = ({ db }) => {
 
         let stream = await db.collection('statistics')
         .find({
-            date: {
-                $gte: moment(debut).toDate(),
-                $lte: moment(fin).toDate(),
-            }
+            $and: [
+                {
+                    date: {
+                        $gte: moment(debut).toDate()
+                    }
+                },
+                {
+                    date: {
+                        $lte: moment(fin).toDate(),
+                    }
+                },
+            ]
         })
         .project({
             '_id': 0,
