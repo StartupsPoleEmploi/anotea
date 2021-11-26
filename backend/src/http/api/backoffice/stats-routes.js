@@ -33,11 +33,11 @@ module.exports = ({ db }) => {
                 },
             ]
         })
+        .sort({ date: -1 })
         .project({
             '_id': 0,
             'national.campagnes': 0,
         })
-        .sort({ date: -1 })
         .transformStream({
             transform: ({ date, national, regions }) => {
                 return {
