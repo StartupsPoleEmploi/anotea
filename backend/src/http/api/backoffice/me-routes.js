@@ -21,7 +21,6 @@ module.exports = ({ db, middlewares, passwords }) => {
         let query = user.profile === 'organisme' ? { _id: user.id } : { _id: new ObjectID(user.id) };
         let account = await db.collection('accounts').findOne(query);
         if (await checkPassword(current, account.passwordHash)) {
-
             if (isPasswordStrongEnough(password)) {
                 let passwordHash = await hashPassword(password);
                 await db.collection('accounts').updateOne(query, {
@@ -34,12 +33,10 @@ module.exports = ({ db, middlewares, passwords }) => {
                 return res.json({});
 
             } else {
-                throw Boom.badRequest('Le mot de passe doit contenir au moins une minuscule, ' +
-                    'une majuscule et un chiffre et 6 caractères');
+                throw Boom.badRequest('Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
             }
         }
         throw Boom.badRequest('Le mot de passe n\'est pas correct');
-
     }));
     return router;
 };

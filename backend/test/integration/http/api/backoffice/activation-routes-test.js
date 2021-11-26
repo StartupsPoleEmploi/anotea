@@ -98,7 +98,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
-            message: 'Le mot de passe est invalide (il doit contenir au moins 6 caractères, une majuscule et un caractère spécial)'
+            message: 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.'
         });
     });
 
