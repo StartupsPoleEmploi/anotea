@@ -20,16 +20,24 @@ module.exports = ({ db }) => {
 
         let stream = await db.collection('statistics')
         .find({
-            date: {
-                $gte: moment(debut).toDate(),
-                $lte: moment(fin).toDate(),
-            }
+            $and: [
+                {
+                    date: {
+                        $gte: moment(debut).toDate()
+                    }
+                },
+                {
+                    date: {
+                        $lte: moment(fin).toDate(),
+                    }
+                },
+            ]
         })
+        .sort({ date: -1 })
         .project({
             '_id': 0,
             'national.campagnes': 0,
         })
-        .sort({ date: -1 })
         .transformStream({
             transform: ({ date, national, regions }) => {
                 return {
