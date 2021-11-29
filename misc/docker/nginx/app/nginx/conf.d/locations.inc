@@ -1,5 +1,7 @@
  location ~ ^/(admin|backoffice|questionnaire|widget|stats)(.*)$ {
 
+    server_tokens off always;
+
     limit_req zone=flood burst=100 nodelay;
 
     proxy_buffering off;
@@ -14,6 +16,8 @@
 }
 
 location / {
+
+    server_tokens off always;
 
     limit_req zone=flood burst=100 nodelay;
 
