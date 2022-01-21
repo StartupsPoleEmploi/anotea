@@ -32,6 +32,7 @@ function getWidgetIframe(attributes) {
     iframe.scrolling = 'no';
     iframe.frameBorder = '0';
     iframe.src = getAnoteaUrl(path, attributes.env);
+    iframe.title = `Avis d'anciens stagiaires`;
 
     return iframe;
 }
