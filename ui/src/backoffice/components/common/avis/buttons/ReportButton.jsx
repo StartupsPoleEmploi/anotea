@@ -54,7 +54,8 @@ export default class ReportButton extends React.Component {
                 body={
                     <div>
                         <span>
-                            Signaler un avis permet d&apos;alerter le modérateur sur son non-respect potentiel de la charte de modération
+                            En cliquant sur « signaler », vous considérez que l&apos;avis est contraire aux conditions générales d&apos;utilisation d&apos;Anotéa.
+                            Pour un réexamen de l&apos;avis par le modérateur, merci d&apos;indiquer le motif de ce signalement.
                         </span><br/>
                         <textarea
                             name="texte"
