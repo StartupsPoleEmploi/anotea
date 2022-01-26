@@ -47,7 +47,10 @@ export default class FinanceurPage extends React.Component {
 
         return promiseAll({
             departements: getDepartements(),
-            sirens: getSirens(),
+            sirens: (await getSirens()).map(x => {
+                x.name = `${x.siren} - ${x.name}`;
+                return x;
+            }),
             dispositifs: getDispositifs(),
             financeurs: getFinanceurs(),
             regions: getRegions(),
