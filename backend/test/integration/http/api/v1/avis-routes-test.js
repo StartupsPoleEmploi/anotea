@@ -96,8 +96,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
+            commentReport:'Commentaire chelou = mec chelou.',
             commentaire: {
-                text: 'Formation super géniale.',
+                texte: 'Super formation.',
+                titre: 'Génial'
             },
             meta: {
                 original: {
@@ -115,8 +117,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             id: oid.toString(),
             date: date.toJSON(),
             commentaire: {
-                titre: 'Génial',
-                texte: 'Formation super géniale.',
+                texte: 'Super formation.',
+                titre: 'Génial'
             },
             notes: {
                 accueil: 3,

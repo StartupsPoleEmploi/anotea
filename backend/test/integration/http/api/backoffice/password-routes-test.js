@@ -21,7 +21,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            message: 'mail sent',
+            message: 'Si votre identifiant est correct, vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.',
         });
 
         let { mailer } = await getComponents();
@@ -30,7 +30,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.strictEqual(message.email, 'contactus@poleemploi-formation.fr');
     });
 
-    it('can not ask for a new password with an invalid identifier', async () => {
+    it('can ask for a new password with an invalid identifier but it won\'t send an email.', async () => {
 
         let app = await startServer();
 
@@ -38,12 +38,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .put('/api/backoffice/askNewPassword')
         .send({ identifiant: 'INVALID' });
 
-        assert.strictEqual(response.statusCode, 400);
+        assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            statusCode: 400,
-            error: 'Bad Request',
-            message: 'Identifiant invalide'
+            message: 'Si votre identifiant est correct, vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.',
         });
+
+        let { mailer } = await getComponents();
+        let message = mailer.getLastEmailMessageSent();
+
+        assert.strictEqual(message, undefined );
     });
 
     it('can check if password token exists', async () => {
@@ -82,7 +85,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .put(`/api/backoffice/resetPassword`)
         .send({
             token,
-            password: 'A1234!',
+            password: 'Aze1234!',
         });
         assert.strictEqual(response.statusCode, 200);
 
@@ -95,7 +98,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         //can login with new password
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: '11111111111111', password: 'A1234!' });
+        .send({ identifiant: '11111111111111', password: 'Aze1234!' });
         assert.strictEqual(response.statusCode, 200);
 
         //should flag account as rehashed

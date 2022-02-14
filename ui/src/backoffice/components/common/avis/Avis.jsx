@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
+import CommentReport from './CommentReport';
 import Formation from './Formation';
 import CommentaireEditor from './CommentaireEditor';
 import Notes from './Notes';
@@ -120,6 +121,12 @@ export default class Avis extends React.Component {
                                     <Commentaire avis={avis} onChange={this.handleChange} />
                                 }
                             </div>
+
+                            {avis.commentReport && (showModerationButtons || showReponseButtons) ?
+                                <div className="mb-1">
+                                    <CommentReport avis={avis} onChange={this.handleChange} />
+                                </div> : ""
+                            }
 
                             <div className="mt-2 d-none d-lg-block">
                                 <Notes avis={avis} />

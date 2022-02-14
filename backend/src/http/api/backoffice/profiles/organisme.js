@@ -41,6 +41,7 @@ module.exports = (db, regions, user) => {
             },
         },
         queries: {
+            fieldsToExclude: () => {return {};},
             buildStagiaireQuery: async parameters => {
                 let { departement, numeroFormation, debut, fin, siren = user.siret } = parameters;
 

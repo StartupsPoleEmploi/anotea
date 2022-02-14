@@ -15,14 +15,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`)
         .send({
             current: 'password',
-            password: 'A1234!',
+            password: 'azertY1!',
         });
         assert.strictEqual(response.statusCode, 200);
 
         //can login with new password
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: '11111111111111', password: 'A1234!' });
+        .send({ identifiant: '11111111111111', password: 'azertY1!' });
         assert.strictEqual(response.statusCode, 200);
     });
 
@@ -36,14 +36,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`)
         .send({
             current: 'password',
-            password: 'A1234!',
+            password: 'Azer123!',
         });
         assert.strictEqual(response.statusCode, 200);
 
         //can login with new password
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'A1234!' });
+        .send({ identifiant: 'admin@pole-emploi.fr', password: 'Azer123!' });
         assert.strictEqual(response.statusCode, 200);
     });
 
@@ -58,7 +58,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`)
         .send({
             current: 'INVALID',
-            password: 'A1234!',
+            password: 'Azer123!',
         });
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body.message, 'Le mot de passe n\'est pas correct');
@@ -78,8 +78,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             password: 'weak',
         });
         assert.strictEqual(response.statusCode, 400);
-        assert.deepStrictEqual(response.body.message, 'Le mot de passe doit contenir au moins une minuscule, ' +
-            'une majuscule et un chiffre et 6 caractères');
+        assert.deepStrictEqual(response.body.message, 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
     });
 
 

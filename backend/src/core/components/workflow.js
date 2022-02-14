@@ -390,7 +390,7 @@ module.exports = (db, logger, emails) => {
 
             return result.value;
         },
-        report: async (id, status, options = {}) => {
+        report: async (id, status, commentReport, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'organisme');
 
@@ -403,6 +403,7 @@ module.exports = (db, logger, emails) => {
                 {
                     $set: {
                         'status': status ? 'reported' : 'validated',
+                        'commentReport': commentReport,
                         'read': true,
                         'lastStatusUpdate': new Date(),
                     },

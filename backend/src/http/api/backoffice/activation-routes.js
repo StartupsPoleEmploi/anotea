@@ -41,7 +41,7 @@ module.exports = ({ db, passwords }) => {
 
                     return res.status(201).json({});
                 }
-                throw Boom.badRequest('Le mot de passe est invalide (il doit contenir au moins 6 caractères, une majuscule et un caractère spécial)');
+                throw Boom.badRequest('Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
             }
         }
         throw Boom.badRequest('Numéro de token invalide');

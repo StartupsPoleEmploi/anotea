@@ -39,6 +39,7 @@ module.exports = (db, user) => {
             },
         },
         queries: {
+            fieldsToExclude: () => {return {};},
             buildStagiaireQuery: () => {
                 return {
                     codeRegion: user.codeRegion,

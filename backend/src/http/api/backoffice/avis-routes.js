@@ -26,7 +26,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
         let cursor = db.collection('avis')
         .find(query)
-        .project({ dispositifFinancement: 0 })
+        .project({ dispositifFinancement: 0, ...queries.fieldsToExclude() })
         .sort({ [parameters.sortBy || 'date']: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -194,12 +194,11 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
-        let { report } = await Joi.validate(req.body, { report: Joi.boolean().required() }, { abortEarly: false });
+        let { report, commentReport } = await Joi.validate(req.body, { report: Joi.boolean().required(), commentReport: Joi.string().allow(null,"") }, { abortEarly: false });
 
-        let avis = await workflow.report(id, report, { profile });
+        let avis = await workflow.report(id, report, commentReport, { profile });
 
         return res.json(avis);
-
     }));
 
     router.get('/api/backoffice/avis/stats', checkAuth, tryAndCatch(async (req, res) => {

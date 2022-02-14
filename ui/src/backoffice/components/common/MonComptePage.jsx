@@ -35,7 +35,7 @@ export default class MonComptePage extends React.Component {
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
-                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                    null : 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
             }

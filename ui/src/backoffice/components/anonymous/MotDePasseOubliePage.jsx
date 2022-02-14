@@ -34,7 +34,7 @@ export default class MotDePasseOubliePage extends React.Component {
         askNewPassword(this.state.identifiant)
         .then(() => {
             showMessage({
-                text: 'Une email vous a été envoyé.'
+                text: 'Si vous avez fourni un identifiant correct, un email vous a été envoyé.'
             });
             this.setState({ error: null, identifiant: '', loading: false }, () => {
                 this.props.router.goToPage('/backoffice/login');

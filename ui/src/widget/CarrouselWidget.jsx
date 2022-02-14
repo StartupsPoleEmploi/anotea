@@ -91,7 +91,7 @@ export default class CarrouselWidget extends Component {
             if(context['show-if-0-reviews'] === 'true') {
                 return <SansAvis></SansAvis>;
             } else {
-                return <div></div>;
+                return <div><p className="sr-only">Aucun avis n’a encore été déposé sur cette formation</p></div>;
             }
             
         }

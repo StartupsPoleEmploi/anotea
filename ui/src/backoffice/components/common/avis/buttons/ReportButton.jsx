@@ -13,11 +13,12 @@ export default class ReportButton extends React.Component {
 
     state = {
         showModal: false,
+        commentReport: null,
     };
 
-    report = async () => {
+    report = async (pCommentReport) => {
         this.setState({ showModal: false });
-        let updated = await reportAvis(this.props.avis._id, true);
+        let updated = await reportAvis(this.props.avis._id, true, pCommentReport);
         this.props.onChange(updated, {
             message: {
                 type: 'local',
@@ -51,12 +52,24 @@ export default class ReportButton extends React.Component {
             <Modal
                 title={`Signaler cet avis`}
                 body={
-                    <span>
-                      Signaler un avis permet d&apos;alerter le modérateur sur son non-respect potentiel de la charte de modération
-                    </span>
-                }
+                    <div>
+                        <span>
+                            En cliquant sur « signaler », vous considérez que l&apos;avis est contraire aux conditions générales d&apos;utilisation d&apos;Anotéa.
+                            Pour un réexamen de l&apos;avis par le modérateur, merci d&apos;indiquer le motif de ce signalement.
+                        </span><br/>
+                        <textarea
+                            name="texte"
+                            className="form-control"
+                            rows="4"
+                            ref={this.reference}
+                            value={this.state.commentReport}
+                            onChange={e => this.setState({ commentReport: e.target.value })}
+                            placeholder="Commentaire sur le signalement."
+                        />
+                    </div>
+              }
                 onClose={this.handleCancel}
-                onConfirmed={() => this.report()} />
+                onConfirmed={() => this.report(this.state.commentReport)} />
         );
     };
 

@@ -24,11 +24,9 @@ module.exports = ({ db, emails, passwords }) => {
         if (account) {
             let message = emails.getEmailMessageByTemplateName('forgottenPasswordEmail');
             await message.send(account);
-
-            return res.json({ 'message': 'mail sent' });
         }
 
-        throw Boom.badRequest('Identifiant invalide');
+        return res.json({ 'message': 'Si votre identifiant est correct, vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.' });
     }));
 
     router.get('/api/backoffice/checkIfPasswordTokenExists', async (req, res) => {
