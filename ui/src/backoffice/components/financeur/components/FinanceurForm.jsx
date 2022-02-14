@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
+import InputText from '../../common/page/form/InputText';
 
 export default class FinanceurForm extends React.Component {
 
@@ -27,6 +28,7 @@ export default class FinanceurForm extends React.Component {
             debut: null,
             fin: null,
             departement: null,
+            siret: null,
             siren: null,
             numeroFormation: null,
             codeFinanceur: null,
@@ -43,6 +45,7 @@ export default class FinanceurForm extends React.Component {
                 debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
                 fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
                 departement: _.get(store.departements.find(d => d.code === query.departement), 'code', null),
+                siret: query.siret ? query.siret : '',
                 siren: _.get(store.sirens.find(s => s.siren === query.siren), 'siren', null),
                 numeroFormation: _.get(store.formations.find(f => f.numeroFormation === query.numeroFormation), 'numeroFormation', null),
                 codeFinanceur: _.get(store.financeurs.find(f => f.code === query.codeFinanceur), 'code', null),
@@ -88,7 +91,7 @@ export default class FinanceurForm extends React.Component {
 
         return <Form>
             <div className="form-row">
-                <div className="form-group col-lg-6 col-xl-3">
+                <div className="form-group col-lg-6 col-xl-6">
                     <label>Période</label>
                     <Periode
                         periode={{ debut: this.state.debut, fin: this.state.fin }}
@@ -96,7 +99,7 @@ export default class FinanceurForm extends React.Component {
                         onChange={({ debut, fin }) => this.setState({ debut, fin })}
                     />
                 </div>
-                <div className="form-group col-lg-6 col-xl-3">
+                <div className="form-group col-lg-6 col-xl-6">
                     {this.mustShowCodeRegionFilter() ?
                         <>
                             <label>Regions</label>
@@ -127,11 +130,40 @@ export default class FinanceurForm extends React.Component {
                     }
                 </div>
 
-                <div className="form-group col-lg-6">
-                    <label>Organisme de formation</label>
+                <div className="form-group col-lg-4">
+                    <label>SIRET de l&apos;organisme de formation</label>
+                    <InputText
+                        value={this.state.siret}
+                        placeholder="000000000000000"
+                        icon={<i className="fas fa-search" />}
+                        reset={() => this.setState({ siret: '' })}
+                        onChange={
+                            (event = {}) => {
+                                const nouveauSIRET = event.target.value;
+                                const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
+                                console.error('nouveauSIRET', nouveauSIRET, 'nouveauSIREN', nouveauSIREN);
+                                /*if (nouveauSIREN) {
+                                    loadFormations(nouveauSIREN);
+                                }*/
+                                this.setState({
+                                    siret: nouveauSIRET,
+                                    siren: nouveauSIREN?.siren,
+                                    numeroFormation: null
+                                }, () => {
+                                    if (nouveauSIREN) {
+                                        loadFormations(nouveauSIREN.siren);
+                                    }
+                                });
+                                //console.error(event.target.value);
+                            }
+                        }
+                    />
+                </div>
+                <div className="form-group col-lg-4">
+                    <label>Nom de l&apos;organisme de formation</label>
                     <Select
                         placeholder={'Tous les organismes'}
-                        trackingId="Organisme de formation"
+                        trackingId="Nom de l'organisme de formation"
                         loading={store.loading}
                         value={this.state.siren}
                         options={store.sirens}
@@ -145,7 +177,7 @@ export default class FinanceurForm extends React.Component {
                     />
                 </div>
                 {this.state.siren &&
-                <div className={`form-group col-lg-6 ${this.mustShowFinanceurFilter() ? '' : 'offset-xl-6'} order-xl-last`}>
+                <div className={`form-group col-lg-4  order-xl-last`}>
                     <label>Formation</label>
                     <Select
                         placeholder={'Toutes les formations'}
