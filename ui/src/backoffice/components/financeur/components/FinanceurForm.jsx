@@ -142,9 +142,6 @@ export default class FinanceurForm extends React.Component {
                                 const nouveauSIRET = event.target.value;
                                 const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
                                 console.error('nouveauSIRET', nouveauSIRET, 'nouveauSIREN', nouveauSIREN);
-                                /*if (nouveauSIREN) {
-                                    loadFormations(nouveauSIREN);
-                                }*/
                                 this.setState({
                                     siret: nouveauSIRET,
                                     siren: nouveauSIREN?.siren,
