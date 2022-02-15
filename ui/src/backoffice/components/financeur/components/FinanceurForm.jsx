@@ -154,7 +154,6 @@ export default class FinanceurForm extends React.Component {
                                         loadFormations(nouveauSIREN.siren);
                                     }
                                 });
-                                //console.error(event.target.value);
                             }
                         }
                     />
@@ -177,7 +176,7 @@ export default class FinanceurForm extends React.Component {
                     />
                 </div>
                 {this.state.siren &&
-                <div className={`form-group col-lg-4  order-xl-last`}>
+                <div className={`form-group col-lg-4`}>
                     <label>Formation</label>
                     <Select
                         placeholder={'Toutes les formations'}
@@ -193,7 +192,7 @@ export default class FinanceurForm extends React.Component {
                 }
                 {this.mustShowFinanceurFilter() &&
                 <>
-                    <div className="form-group col-lg-3 col-xl-3">
+                    <div className="form-group col-lg-5 col-xl-5">
                         <label>Financeur</label>
                         <Select
                             placeholder={'Tous les financeurs'}
@@ -206,7 +205,7 @@ export default class FinanceurForm extends React.Component {
                             onChange={(option = {}) => this.setState({ codeFinanceur: option.code })}
                         />
                     </div>
-                    <div className="form-group col-lg-3 col-xl-3">
+                    <div className="form-group col-lg-5 col-xl-5">
                         <label>Dispositif de financement</label>
                         <Select
                             placeholder={'Tous les dispositifs'}
