@@ -16,7 +16,7 @@ Lorsque la formation est terminée, Anotéa envoie par mail un questionnaire à 
 pourqu'il puisse déposer un avis sur la formation (la réponse à ce questionnaire est facultative).
 
 Une fois l'avis déposé et anonymisé, il est [réconcilié](#Réconciliation) afin d'être potentiellement consultable 
-sur tous les sites qui utilisent Anotéa (ex: https://labonneformation.pole-emploi.fr).  
+sur tous les sites qui utilisent Anotéa (ex: https://candidat.pole-emploi.fr/formations/recherche).  
 
 Ces sites utilisent deux canaux fournis par Anotéa : l'[api](misc/doc/API.md) et le [widget](misc/doc/WIDGET.md) 
 
