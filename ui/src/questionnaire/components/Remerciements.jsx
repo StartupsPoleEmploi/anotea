@@ -89,11 +89,11 @@ class Remerciements extends Component {
                                         <a
                                             className="textimage"
                                             href="https://candidat.pole-emploi.fr/formations/recherche"
-                                            title="Visiter labonneformation.fr"
+                                            title="Visiter l'espace de recherche de formation de Pôle Emploi"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src={logoMarianne} alt="labonneformation" height="86px" />
-                                            <img src={peSvg} alt="labonneformation" height="86px" />
+                                            <img src={logoMarianne} height="86px" />
+                                            <img src={peSvg} height="86px" />
                                         </a>
                                     </div>
                                 </section>
