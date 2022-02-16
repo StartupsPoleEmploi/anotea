@@ -6,6 +6,7 @@ import { Form, Periode, Select } from '../../common/page/form/Form';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
 import InputText from '../../common/page/form/InputText';
+import './FinanceurForm.scss';
 
 export default class FinanceurForm extends React.Component {
 
@@ -28,7 +29,7 @@ export default class FinanceurForm extends React.Component {
             debut: null,
             fin: null,
             departement: null,
-            siret: null,
+            siret: '',
             siren: null,
             numeroFormation: null,
             codeFinanceur: null,
@@ -90,8 +91,8 @@ export default class FinanceurForm extends React.Component {
         let { store, loadFormations } = this.props;
 
         return <Form>
-            <div className="form-row">
-                <div className="form-group col-lg-6 col-xl-6">
+            <div className="form-row  FinanceurAvisChartsPanel">
+                <div className="form-group col-lg-6 col-xl-3">
                     <label>Période</label>
                     <Periode
                         periode={{ debut: this.state.debut, fin: this.state.fin }}
@@ -99,7 +100,7 @@ export default class FinanceurForm extends React.Component {
                         onChange={({ debut, fin }) => this.setState({ debut, fin })}
                     />
                 </div>
-                <div className="form-group col-lg-6 col-xl-6">
+                <div className="form-group col-lg-6 col-xl-3">
                     {this.mustShowCodeRegionFilter() ?
                         <>
                             <label>Regions</label>
@@ -129,14 +130,17 @@ export default class FinanceurForm extends React.Component {
                         </>
                     }
                 </div>
+            </div>
 
+            <div className="form-row">
                 <div className="form-group col-lg-4">
                     <label>SIRET de l&apos;organisme de formation</label>
                     <InputText
+                        type="number"
                         value={this.state.siret}
                         placeholder="000000000000000"
                         icon={<i className="fas fa-search" />}
-                        reset={() => this.setState({ siret: '' })}
+                        reset={() => this.setState({ siret: '', siren: null, numeroFormation: null })}
                         onChange={
                             (event = {}) => {
                                 const nouveauSIRET = event.target.value;
@@ -166,7 +170,7 @@ export default class FinanceurForm extends React.Component {
                         optionKey="siren"
                         optionLabel="name"
                         onChange={(option = {}) => {
-                            this.setState({ siren: option.siren, numeroFormation: null }, () => {
+                            this.setState({ siren: option.siren, numeroFormation: null, siret: '' }, () => {
                                 loadFormations(option.siren);
                             });
                         }}
