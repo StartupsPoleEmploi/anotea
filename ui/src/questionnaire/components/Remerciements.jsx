@@ -72,7 +72,7 @@ class Remerciements extends Component {
                                         ci-dessous.
                                     </p>
 
-                                    <div className="liens">
+                                    <div className="liens"><div>
                                         {infosRegion.region.carif.active &&
                                         <a
                                             className="textimage"
@@ -86,6 +86,7 @@ class Remerciements extends Component {
                                                 alt="logo carif" />
                                         </a>
                                         }
+                                        <div>
                                         <a
                                             className="textimage"
                                             href="https://candidat.pole-emploi.fr/formations/recherche"
@@ -95,6 +96,7 @@ class Remerciements extends Component {
                                             <img src={logoMarianne} height="86px" />
                                             <img src={peSvg} height="86px" />
                                         </a>
+                                        </div></div>
                                     </div>
                                 </section>
                             </div>
