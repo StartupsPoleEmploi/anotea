@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Formation from './Formation';
-import labonneformation from '../images/labonneformation.png';
+import peLogoMarianne from '../images/pe-logo-marianne.png';
+import peSvg from '../images/pole-emploi-fr.svg';
+import logoMarianne from '../images/logo2021-marianne.svg';
 import './remerciements.scss';
 
 class Remerciements extends Component {
@@ -86,11 +88,12 @@ class Remerciements extends Component {
                                         }
                                         <a
                                             className="textimage"
-                                            href="https://labonneformation.pole-emploi.fr/"
+                                            href="https://candidat.pole-emploi.fr/formations/recherche"
                                             title="Visiter labonneformation.fr"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src={labonneformation} alt="labonneformation" />
+                                            <img src={logoMarianne} alt="labonneformation" height="86px" />
+                                            <img src={peSvg} alt="labonneformation" height="86px" />
                                         </a>
                                     </div>
                                 </section>
