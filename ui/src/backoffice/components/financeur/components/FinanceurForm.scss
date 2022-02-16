@@ -1,0 +1,20 @@
+@import 'src/common/styles/variables';
+
+.champ-texte {
+  background-color: #F4F4F5;
+  box-shadow: unset;
+  border: 1px solid #F4F4F5;
+  border-radius: 6px;
+  padding: 0.1rem;
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+}
+  

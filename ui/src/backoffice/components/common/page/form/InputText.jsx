@@ -17,7 +17,7 @@ export default class InputText extends React.Component {
 
         return (
             <div className="InputText">
-                <div className="d-flex align-items-stretch">
+                <div className="d-flex align-items-stretch champ-texte">
 
                     {icon &&
                     <div className="icon d-flex align-items-center">

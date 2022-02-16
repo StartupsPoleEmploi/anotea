@@ -25,6 +25,7 @@ module.exports = (db, regions, user) => {
                     numeroFormation: Joi.string(),
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
                     siren: Joi.string().min(9).max(9),
+                    siret: Joi.string(),
                     codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
                         Joi.string().valid(getFinanceurs().map(f => f.code)) : Joi.any().forbidden(),
                     dispositifFinancement: isPoleEmploi(user.codeFinanceur) ?
@@ -53,13 +54,13 @@ module.exports = (db, regions, user) => {
                 };
             },
             buildStagiaireQuery: async parameters => {
-                let { departement, codeFinanceur, siren, numeroFormation, debut, fin, dispositifFinancement } = parameters;
+                let { departement, codeFinanceur, siren, siret, numeroFormation, debut, fin, dispositifFinancement } = parameters;
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
 
                 return {
                     'codeRegion': user.codeRegion,
                     'formation.action.organisme_financeurs.code_financeur': financeur,
-                    ...(siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`) } : {}),
+                    ...(siret || siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`) } : {}),
                     ...(codeFinanceur ? { 'formation.action.organisme_financeurs.code_financeur': codeFinanceur } : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
@@ -70,7 +71,7 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
-                    departement, codeFinanceur, siren, numeroFormation, debut, fin,
+                    departement, codeFinanceur, siren, siret, numeroFormation, debut, fin,
                     commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived'],
                     dispositifFinancement,
                 } = parameters;
@@ -80,7 +81,7 @@ module.exports = (db, regions, user) => {
                 return {
                     'codeRegion': user.codeRegion,
                     'formation.action.organisme_financeurs.code_financeur': financeur,
-                    ...(siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`) } : {}),
+                    ...(siret || siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`) } : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
