@@ -58,6 +58,7 @@ export default class FinanceurPage extends React.Component {
 
     loadFormations = async siren => {
         this.setState({
+            numeroFormation: null,
             store: {
                 ...this.state.store,
                 formations: await getFormations({ organisme: siren }),
