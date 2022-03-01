@@ -1,5 +1,6 @@
 const express = require('express');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
+const getProfile = require('./profiles/getProfile');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -8,11 +9,13 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/backoffice/sirens', checkAuth, tryAndCatch(async (req, res) => {
 
+        
+
         const stream = await db.collection('avis')
         .aggregate([
             {
                 $match: {
-                    codeRegion: req.user.codeRegion,
+                    codeRegion: req.user.profile !== 'admin' ? req.user.codeRegion : {$exists: true},
                 }
             },
             {

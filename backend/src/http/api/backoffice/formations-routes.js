@@ -17,7 +17,7 @@ module.exports = ({ db, middlewares }) => {
         .aggregate([
             {
                 $match: {
-                    'codeRegion': req.user.codeRegion,
+                    codeRegion: req.user.profile !== 'admin' ? req.user.codeRegion : {$exists: true},
                     ...(organisme ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${organisme}`) } : {}),
                 }
             },
