@@ -13,13 +13,17 @@
                     </mj-text>
 
                     <mj-text css-class="text-secondary">
-                        Bonjour <%= stagiaire.individu.prenom %> <%= stagiaire.individu.nom %>,
+                        Bonjour,
                     </mj-text>
 
                     <mj-text css-class="text-secondary">
-                        Nous vous informons que nous allons prendre contact avec
-                        "<%= stagiaire.formation.action.organisme_formateur.raison_sociale %>"
-                        suite au commentaire que vous avez déposé sur "<%= stagiaire.formation.intitule %>".
+                        Suite à votre commentaire déposé pour la formation "<%= stagiaire.formation.intitule %>", nous allons prendre contact avec l’organisme de formation "<%= stagiaire.formation.action.organisme_formateur.raison_sociale %>". 
+                        Nous nous engageons à garantir votre anonymat.
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Si vous le souhaitez, vous pouvez en échanger avec votre conseiller Pôle emploi. <br/>
+                        Si vous l’estimez nécessaire, vous avez également la possibilité de porter plainte auprès du commissariat de police de votre lieu de résidence.
                     </mj-text>
 
                     <%- include('../common/signature.mjml.ejs'); %>

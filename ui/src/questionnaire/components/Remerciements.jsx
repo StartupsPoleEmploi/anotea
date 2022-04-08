@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Formation from './Formation';
-import labonneformation from '../images/labonneformation.png';
+import peLogoMarianne from '../images/pe-logo-marianne.png';
+import peSvg from '../images/pole-emploi-fr.svg';
+import logoMarianne from '../images/logo2021-marianne.svg';
 import './remerciements.scss';
 
 class Remerciements extends Component {
@@ -70,7 +72,7 @@ class Remerciements extends Component {
                                         ci-dessous.
                                     </p>
 
-                                    <div className="liens">
+                                    <div className="liens"><div>
                                         {infosRegion.region.carif.active &&
                                         <a
                                             className="textimage"
@@ -84,14 +86,17 @@ class Remerciements extends Component {
                                                 alt="logo carif" />
                                         </a>
                                         }
+                                        <div>
                                         <a
                                             className="textimage"
-                                            href="https://labonneformation.pole-emploi.fr/"
-                                            title="Visiter labonneformation.fr"
+                                            href="https://candidat.pole-emploi.fr/formations/recherche"
+                                            title="Visiter l'espace de recherche de formation de Pôle Emploi"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src={labonneformation} alt="labonneformation" />
+                                            <img src={logoMarianne} height="86px" />
+                                            <img src={peSvg} height="86px" />
                                         </a>
+                                        </div></div>
                                     </div>
                                 </section>
                             </div>

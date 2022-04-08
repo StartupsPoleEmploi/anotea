@@ -5,6 +5,8 @@ import moment from 'moment';
 import { Form, Periode, Select } from '../../common/page/form/Form';
 import BackofficeContext from '../../../BackofficeContext';
 import Button from '../../../../common/components/Button';
+import InputText from '../../common/page/form/InputText';
+import './FinanceurForm.scss';
 
 export default class FinanceurForm extends React.Component {
 
@@ -27,6 +29,7 @@ export default class FinanceurForm extends React.Component {
             debut: null,
             fin: null,
             departement: null,
+            siret: '',
             siren: null,
             numeroFormation: null,
             codeFinanceur: null,
@@ -43,6 +46,7 @@ export default class FinanceurForm extends React.Component {
                 debut: query.debut ? moment(parseInt(query.debut)).toDate() : null,
                 fin: query.fin ? moment(parseInt(query.fin)).toDate() : null,
                 departement: _.get(store.departements.find(d => d.code === query.departement), 'code', null),
+                siret: query.siret ? query.siret : '',
                 siren: _.get(store.sirens.find(s => s.siren === query.siren), 'siren', null),
                 numeroFormation: _.get(store.formations.find(f => f.numeroFormation === query.numeroFormation), 'numeroFormation', null),
                 codeFinanceur: _.get(store.financeurs.find(f => f.code === query.codeFinanceur), 'code', null),
@@ -87,7 +91,7 @@ export default class FinanceurForm extends React.Component {
         let { store, loadFormations } = this.props;
 
         return <Form>
-            <div className="form-row">
+            <div className="form-row  FinanceurAvisChartsPanel">
                 <div className="form-group col-lg-6 col-xl-3">
                     <label>Période</label>
                     <Periode
@@ -126,26 +130,53 @@ export default class FinanceurForm extends React.Component {
                         </>
                     }
                 </div>
+            </div>
 
-                <div className="form-group col-lg-6">
-                    <label>Organisme de formation</label>
+            <div className="form-row">
+                <div className="form-group col-lg-4">
+                    <label>SIRET de l&apos;organisme de formation</label>
+                    <InputText
+                        type="number"
+                        value={this.state.siret}
+                        placeholder="000000000000000"
+                        icon={<i className="fas fa-search" />}
+                        reset={() => this.setState({ siret: '', siren: null, numeroFormation: null })}
+                        onChange={
+                            (event = {}) => {
+                                const nouveauSIRET = event.target.value;
+                                const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
+                                this.setState({
+                                    siret: nouveauSIRET,
+                                    siren: nouveauSIREN?.siren,
+                                    numeroFormation: null
+                                }, () => {
+                                    if (nouveauSIREN) {
+                                        loadFormations(nouveauSIREN.siren);
+                                    }
+                                });
+                            }
+                        }
+                    />
+                </div>
+                <div className="form-group col-lg-4">
+                    <label>Nom de l&apos;organisme de formation</label>
                     <Select
                         placeholder={'Tous les organismes'}
-                        trackingId="Organisme de formation"
+                        trackingId="Nom de l'organisme de formation"
                         loading={store.loading}
                         value={this.state.siren}
                         options={store.sirens}
                         optionKey="siren"
                         optionLabel="name"
                         onChange={(option = {}) => {
-                            this.setState({ siren: option.siren, numeroFormation: null }, () => {
+                            this.setState({ siren: option.siren, numeroFormation: null, siret: '' }, () => {
                                 loadFormations(option.siren);
                             });
                         }}
                     />
                 </div>
                 {this.state.siren &&
-                <div className={`form-group col-lg-6 ${this.mustShowFinanceurFilter() ? '' : 'offset-xl-6'} order-xl-last`}>
+                <div className={`form-group col-lg-4`}>
                     <label>Formation</label>
                     <Select
                         placeholder={'Toutes les formations'}
@@ -161,7 +192,7 @@ export default class FinanceurForm extends React.Component {
                 }
                 {this.mustShowFinanceurFilter() &&
                 <>
-                    <div className="form-group col-lg-3 col-xl-3">
+                    <div className="form-group col-lg-5 col-xl-5">
                         <label>Financeur</label>
                         <Select
                             placeholder={'Tous les financeurs'}
@@ -174,7 +205,7 @@ export default class FinanceurForm extends React.Component {
                             onChange={(option = {}) => this.setState({ codeFinanceur: option.code })}
                         />
                     </div>
-                    <div className="form-group col-lg-3 col-xl-3">
+                    <div className="form-group col-lg-5 col-xl-5">
                         <label>Dispositif de financement</label>
                         <Select
                             placeholder={'Tous les dispositifs'}
