@@ -18,6 +18,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 _.range(5).map(() => {
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
+                        status: 'archived',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
+                            },
+                        },
+                        commentaire: {
+                            text: 'pas glop'
+                        },
+                    }));
+                })
+            ),
+            ...(
+                _.range(5).map(() => {
+                    return insertIntoDatabase('avis', newAvis({
+                        read: false,
                         status: 'validated',
                         formation: {
                             action: {
@@ -25,6 +43,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                                     siret: '31705038300064',
                                 },
                             },
+                        },
+                        commentaire: {
+                            text: 'ok glop'
                         },
                     }));
                 })
@@ -43,6 +64,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let message = mailer.getLastEmailMessageSent();
         assert.strictEqual(message.email, 'new@organisme.fr');
         assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
+        assert.ok(message.parameters.body.match('.*ok glop.*'));
+        assert.ok(!message.parameters.body.match('.*pas glop.*'));
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
