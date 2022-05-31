@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import logo from '../images/logo-pole-emploi.svg';
+import logoRF from '../images/Republique_Francaise_RVB.png';
+import logoAnotea from '../images/logo-anotea.png';
 import PropTypes from 'prop-types';
 import './Verified.scss';
 
@@ -15,11 +16,12 @@ export default class Verified extends Component {
 
         return (
             <div className={`Verified text-center ${className || ''}`}>
-                <span>vérifiés par</span>
                 <img
                     className="logo"
-                    src={logo}
-                    alt="Pôle Emploi" />
+                    src={logoRF} />
+                <img
+                    className="logo"
+                    src={logoAnotea} />
             </div>
         );
     }

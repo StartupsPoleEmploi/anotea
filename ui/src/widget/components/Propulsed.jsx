@@ -1,12 +1,11 @@
 import React from 'react';
-import logo from '../images/logo-anotea.png';
+import logoPE from '../images/logo-pole-emploi.png';
 import './Propulsed.scss';
 
 export default function Propulsed() {
     return (
         <div className="Propulsed">
-            <span>Propulsé par</span>
-            <img className="logo pl-1" src={logo} alt="Anotea" />
+            <img className="logo pl-1" src={logoPE} />
         </div>
     );
 }
