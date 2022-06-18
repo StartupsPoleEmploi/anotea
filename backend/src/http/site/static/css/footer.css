@@ -18,7 +18,7 @@
 }
 
 .footer .logo {
-    margin: 0px 50px 15px 150px;
+    margin: 15px;
     vertical-align: middle;
     height: 75px;
 }
@@ -47,14 +47,14 @@
     margin-top: -90px;
 }
 
-@media (max-width: 740px) {
+@media (max-width: 1000px) {
     .footer {
         padding: 0;
     }
 
     .footer .logo-mobile {
         display: inherit;
-        margin: 10px 20px 0px 10px;
+        margin: 15px;
     }
 
     .footer .logo-mobile, .footer .logo {
@@ -62,7 +62,7 @@
     }
 
     .footer a {
-        padding: 0px 5px;
+        padding: 5px;
         font-size: 0.9em;
     }
 
@@ -73,7 +73,7 @@
     .footer .logo-pe-mobile {
         display: inherit;
         height: 36px;
-        margin: 10px 0px 0px 10px;
+        margin: 15px;
     }
 
     .footer .menu-footer {

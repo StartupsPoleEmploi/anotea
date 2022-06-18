@@ -31,7 +31,12 @@
 }
 
 .header .logo img {
-    margin: 15px 50px 15px 200px;
+    padding: 15px;
+}
+
+.header .logo {
+    text-decoration: none;
+    margin: 15px;
 }
 
 .header .logo-pe-mobile {
@@ -169,13 +174,8 @@ a.contact {
 
     .header .logo-pe-mobile, .header .logo img {
         height: 36px;
-        margin: inherit;
-        margin-top: 5px;
+        padding: 5px;
         display: inline-block;
-    }
-
-    .header .logo img, .header .logo-pe-mobile {
-        margin-left: 16px;
     }
 
     .header .menu {
