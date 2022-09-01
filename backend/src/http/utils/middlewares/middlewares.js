@@ -7,6 +7,7 @@ const { tryAndCatch, getFullUrl } = require('../routes-utils');
 const createDatalakeExporter = require('./createDatalakeExporter');
 const createResponseRecorder = require('./createResponseRecorder');
 const findApplication = require('./findApplication');
+const Joi = require('joi');
 
 module.exports = (auth, logger, configuration) => {
     return {
@@ -88,6 +89,8 @@ module.exports = (auth, logger, configuration) => {
                 }
 
                 const token = req.query.token || req.headers.authorization.substring(scheme.length);
+                Joi.assert(token, Joi.string().required());
+                
                 return auth.checkJWT(clientKey, token, options)
                 .then(decoded => {
                     req.user = decoded;
