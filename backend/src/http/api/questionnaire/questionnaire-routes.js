@@ -14,17 +14,25 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     let badwords = require('./utils/badwords')(logger, configuration);
 
-    const getStagiaireFromToken = (req, res, next) => {
-        db.collection('stagiaires').findOne({ token: req.params.token })
-        .then(stagiaire => {
-            if (!stagiaire) {
-                res.status(404).send({ error: 'not found' });
-                return;
-            }
+    const getStagiaireFromToken = async (req, res, next) => {
+        try {
+            let { token } = await Joi.validate(req.params, {
+                token: Joi.string().required()
+            }, { abortEarly: false });
+            db.collection('stagiaires').findOne({ token: token })
+            .then(stagiaire => {
+                if (!stagiaire) {
+                    res.status(404).send({ error: 'not found' });
+                    return;
+                }
 
-            req.stagiaire = stagiaire;
-            next();
-        });
+                req.stagiaire = stagiaire;
+                next();
+            });
+        } catch (e) {
+            res.status(404).send({ error: 'not found' });
+            return;
+        }
     };
 
     const saveDeviceData = async (req, res, next) => {

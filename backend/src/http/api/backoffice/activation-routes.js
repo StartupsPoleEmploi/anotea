@@ -9,8 +9,11 @@ module.exports = ({ db, passwords }) => {
     let { hashPassword, isPasswordStrongEnough } = passwords;
 
     router.get('/api/backoffice/activation/:token', tryAndCatch(async (req, res) => {
+        let { token } = await Joi.validate(req.params, {
+            token: Joi.string().required(),
+        }, { abortEarly: false });
 
-        let account = await db.collection('accounts').findOne({ token: req.params.token });
+        let account = await db.collection('accounts').findOne({ token: token });
         if (account) {
             return res.json({
                 nom: account.raison_sociale,
@@ -22,7 +25,9 @@ module.exports = ({ db, passwords }) => {
     }));
 
     router.post('/api/backoffice/activation/:token', tryAndCatch(async (req, res) => {
-        const token = req.params.token;
+        let { token } = await Joi.validate(req.params, {
+            token: Joi.string().required(),
+        }, { abortEarly: false });
 
         let { password } = await Joi.validate(req.body, {
             password: Joi.string().required(),
