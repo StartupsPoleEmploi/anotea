@@ -30,7 +30,7 @@ module.exports = ({ db, emails, passwords }) => {
     }));
 
     router.get('/api/backoffice/checkIfPasswordTokenExists', async (req, res) => {
-        let { token } = Joi.assert(req.query, {
+        let { token } = Joi.validate(req.query, {
             token: Joi.string().required(),
         }, { abortEarly: false });
         let result = await db.collection('forgottenPasswordTokens').findOne({ token: token });
