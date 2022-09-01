@@ -140,10 +140,18 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     router.get('/api/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
-        if (await badwords.isGood(req.query.sentence)) {
-            return res.json({ isGood: true });
+        try {
+            let { sentence } = await Joi.validate(req.query, {
+                sentence: Joi.string().required(),
+            }, { abortEarly: false });
+
+            if (await badwords.isGood(sentence)) {
+                return res.json({ isGood: true });
+            }
+            throw Boom.badRequest('Mot invalide');
+        } catch(err) {
+            throw Boom.badRequest('Mot invalide');
         }
-        throw Boom.badRequest('Mot invalide');
 
     }));
 

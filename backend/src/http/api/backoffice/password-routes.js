@@ -33,7 +33,7 @@ module.exports = ({ db, emails, passwords }) => {
         try {
             let { token } = await Joi.validate(req.query, {
                 token: Joi.string().required(),
-            }, { abortEarly: true });
+            }, { abortEarly: false });
             let result = await db.collection('forgottenPasswordTokens').findOne({ token: token });
 
             if (result) {

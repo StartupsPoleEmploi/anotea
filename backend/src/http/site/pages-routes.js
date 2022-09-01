@@ -25,7 +25,6 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             organismesCount: new Intl.NumberFormat('fr').format(organismesCount),
             stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount),
             data: configuration.front,
-            failed: req.query.failed,
             utils,
         });
     });
@@ -94,13 +93,19 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
 
     router.get('/link/:token', async (req, res) => {
 
-        let stagiaire = await db.collection('stagiaires').findOne({ token: req.params.token });
+        
+        let { goto } = await Joi.validate(req.query, {
+            goto: Joi.string().required(),
+        }, { abortEarly: false });
+        let { token } = await Joi.validate(req.params, {
+            token: Joi.string().required(),
+        }, { abortEarly: false });
+
+        let stagiaire = await db.collection('stagiaires').findOne({ token: token });
         if (!stagiaire) {
             res.status(404).send({ error: 'not found' });
             return;
         }
-
-        const goto = req.query.goto;
 
         const links = ['lbb', 'pe', 'clara'];
 
@@ -112,7 +117,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
         if (!(stagiaire.tracking &&
             stagiaire.tracking.clickLinks &&
             stagiaire.tracking.clickLinks.filter(item => item.goto === goto).length > 0)) {
-            db.collection('stagiaires').updateOne({ token: req.params.token }, {
+            db.collection('stagiaires').updateOne({ token: token }, {
                 $push: {
                     'tracking.clickLinks': {
                         date: new Date(),
