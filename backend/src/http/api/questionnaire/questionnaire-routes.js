@@ -84,16 +84,12 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     const buildAvis = (notes, token, body, stagiaire) => {
-
-        try {
+        
         Joi.assert(body.commentaire, {
             texte: Joi.string().allow(null, ''),
             titre: Joi.string(),
         }, { abortEarly: false });
-    } catch (e) {
-        console.error(e);
-    }
-
+        
         let text = sanitize(_.get(body, 'commentaire.texte', null));
         let title = sanitize(_.get(body, 'commentaire.titre', null));
         let hasCommentaire = !!(title || text);
