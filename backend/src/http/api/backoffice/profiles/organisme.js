@@ -12,6 +12,7 @@ module.exports = (db, regions, user) => {
         type: 'organisme',
         getUser: () => user,
         getShield: () => {
+            Joi.string().required().validate(user.siret);
             return {
                 'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`)
             };

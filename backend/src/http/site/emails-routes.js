@@ -41,42 +41,60 @@ module.exports = ({ db, logger, emails }) => {
     });
 
     router.get('/emails/organismes/:token/track', async (req, res) => {
-        let token = req.params.token;
-        let organisme = await db.collection('accounts').findOne({ token });
-        if (organisme) {
-            let trackingFieldName = organisme.tracking && organisme.tracking.firstRead ? 'lastRead' : 'firstRead';
-            db.collection('accounts').updateOne({ token }, {
-                $set: {
-                    [`tracking.${trackingFieldName}`]: new Date()
-                }
-            });
-        }
+        try {
+            let { token } = await Joi.validate(req.params, {
+                token: Joi.string().required(),
+            }, { abortEarly: false });
 
-        return sendTrackingImage(res);
+
+            let organisme = await db.collection('accounts').findOne({ token });
+            if (organisme) {
+                let trackingFieldName = organisme.tracking && organisme.tracking.firstRead ? 'lastRead' : 'firstRead';
+                db.collection('accounts').updateOne({ token }, {
+                    $set: {
+                        [`tracking.${trackingFieldName}`]: new Date()
+                    }
+                });
+            }
+
+            return sendTrackingImage(res);
+        } catch (e) {
+            return send404(res);
+        }
     });
 
     router.get('/emails/stagiaires/:token/track', async (req, res) => {
-        let token = req.params.token;
-        let stagiaire = await db.collection('stagiaires').findOne({ token });
-        if (stagiaire) {
-            let trackingFieldName = stagiaire.tracking && stagiaire.tracking.firstRead ? 'lastRead' : 'firstRead';
-            db.collection('stagiaires').updateOne({ token }, {
-                $set: {
-                    [`tracking.${trackingFieldName}`]: new Date()
-                }
-            });
-        }
+        try {
+            let { token } = await Joi.validate(req.params, {
+                token: Joi.string().required(),
+            }, { abortEarly: false });
 
-        return sendTrackingImage(res);
+        
+            let stagiaire = await db.collection('stagiaires').findOne({ token });
+            if (stagiaire) {
+                let trackingFieldName = stagiaire.tracking && stagiaire.tracking.firstRead ? 'lastRead' : 'firstRead';
+                db.collection('stagiaires').updateOne({ token }, {
+                    $set: {
+                        [`tracking.${trackingFieldName}`]: new Date()
+                    }
+                });
+            }
+
+            return sendTrackingImage(res);
+        } catch(e) {
+            return res.status(500).send();
+        }
     });
 
     router.get('/emails/stagiaires/:token/unsubscribe', async (req, res) => {
-        let stagiaire = await db.collection('stagiaires').findOne({ token: req.params.token });
-        if (!stagiaire) {
-            return send404(res);
-        }
-
         try {
+            let { token } = await Joi.validate(req.params, {
+                token: Joi.string().required(),
+            }, { abortEarly: false });
+            let stagiaire = await db.collection('stagiaires').findOne({ token: token });
+            if (!stagiaire) {
+                return send404(res);
+            }
             await db.collection('stagiaires').update({ '_id': stagiaire._id }, {
                 $set: {
                     'unsubscribe': true

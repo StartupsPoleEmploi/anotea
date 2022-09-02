@@ -1,4 +1,5 @@
 const express = require('express');
+const Joi = require('joi');
 const { boomify } = require('boom');
 
 module.exports = ({ middlewares }) => {
@@ -14,7 +15,9 @@ module.exports = ({ middlewares }) => {
     router.post('/api/v1/ping/authenticated', checkAuth, (req, res) => res.json({ user: req.user }));
 
     router.get('/api/v1/ping/error', (req, res, next) => {
-        let error = boomify(new Error('ping error'), { statusCode: req.query.statusCode });
+        const statusCode = !isNaN(req.query.statusCode) ? req.query.statusCode : 500;
+        
+        let error = boomify(new Error('ping error'), { statusCode: statusCode });
         next(error);
     });
 

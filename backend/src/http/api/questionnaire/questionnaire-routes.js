@@ -14,17 +14,25 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     let badwords = require('./utils/badwords')(logger, configuration);
 
-    const getStagiaireFromToken = (req, res, next) => {
-        db.collection('stagiaires').findOne({ token: req.params.token })
-        .then(stagiaire => {
-            if (!stagiaire) {
-                res.status(404).send({ error: 'not found' });
-                return;
-            }
+    const getStagiaireFromToken = async (req, res, next) => {
+        try {
+            let { token } = await Joi.validate(req.params, {
+                token: Joi.string().required()
+            }, { abortEarly: false });
+            db.collection('stagiaires').findOne({ token: token })
+            .then(stagiaire => {
+                if (!stagiaire) {
+                    res.status(404).send({ error: 'not found' });
+                    return;
+                }
 
-            req.stagiaire = stagiaire;
-            next();
-        });
+                req.stagiaire = stagiaire;
+                next();
+            });
+        } catch (e) {
+            res.status(404).send({ error: 'not found' });
+            return;
+        }
     };
 
     const saveDeviceData = async (req, res, next) => {
@@ -76,7 +84,12 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     const buildAvis = (notes, token, body, stagiaire) => {
-
+        
+        Joi.assert(body.commentaire, {
+            texte: Joi.string().allow(null, ''),
+            titre: Joi.string(),
+        }, { abortEarly: false });
+        
         let text = sanitize(_.get(body, 'commentaire.texte', null));
         let title = sanitize(_.get(body, 'commentaire.titre', null));
         let hasCommentaire = !!(title || text);
@@ -140,10 +153,18 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     router.get('/api/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
-        if (await badwords.isGood(req.query.sentence)) {
-            return res.json({ isGood: true });
+        try {
+            let { sentence } = await Joi.validate(req.query, {
+                sentence: Joi.string().required(),
+            }, { abortEarly: false });
+
+            if (await badwords.isGood(sentence)) {
+                return res.json({ isGood: true });
+            }
+            throw Boom.badRequest('Mot invalide');
+        } catch(err) {
+            throw Boom.badRequest('Mot invalide');
         }
-        throw Boom.badRequest('Mot invalide');
 
     }));
 

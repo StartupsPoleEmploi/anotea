@@ -9,8 +9,6 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/backoffice/sirens', checkAuth, tryAndCatch(async (req, res) => {
 
-        
-
         const stream = await db.collection('avis')
         .aggregate([
             {

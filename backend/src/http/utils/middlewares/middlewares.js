@@ -7,6 +7,8 @@ const { tryAndCatch, getFullUrl } = require('../routes-utils');
 const createDatalakeExporter = require('./createDatalakeExporter');
 const createResponseRecorder = require('./createResponseRecorder');
 const findApplication = require('./findApplication');
+const Joi = require('joi');
+const { BadDataError } = require('../../../core/errors');
 
 module.exports = (auth, logger, configuration) => {
     return {
@@ -88,8 +90,30 @@ module.exports = (auth, logger, configuration) => {
                 }
 
                 const token = req.query.token || req.headers.authorization.substring(scheme.length);
+                Joi.assert(token, Joi.string().required());
+                
                 return auth.checkJWT(clientKey, token, options)
                 .then(decoded => {
+                    try {
+                        Joi.assert(decoded, {
+                            id: [
+                                Joi.string(),
+                                Joi.number()
+                            ],
+                            profile: Joi.string(),
+                            region: Joi.string(),
+                            codeRegion: Joi.string(),
+                            codeFinanceur: Joi.string(),
+                            siret: Joi.string(),
+                            raison_sociale: Joi.string(),
+                            iat: Joi.number(),
+                            exp: Joi.number(),
+                            sub: Joi.string(),
+                        });
+                    } catch (e) {
+                        console.error("toto", e);
+                        throw new BadDataError("user mal encodé");
+                    }
                     req.user = decoded;
                     next();
                 })
@@ -97,7 +121,6 @@ module.exports = (auth, logger, configuration) => {
                     if (options.onInvalidToken) {
                         return options.onInvalidToken(e);
                     }
-
                     logger.error(`Unable to read token from authorization header for request ${req.method}/${req.url} `, e);
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(401).send({ error: true });

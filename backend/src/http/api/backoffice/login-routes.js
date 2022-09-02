@@ -98,7 +98,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
 
         if (account && await checkPassword(password, account.passwordHash)) {
             await rehashPassword(account, password);
-            token = await handleLogin(req.body.identifiant, account);
+            token = await handleLogin(identifiant, account);
         }
 
         if (token) {
