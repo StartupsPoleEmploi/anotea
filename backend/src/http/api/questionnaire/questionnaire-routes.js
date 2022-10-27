@@ -87,7 +87,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         
         Joi.assert(body.commentaire, {
             texte: Joi.string().allow(null, ''),
-            titre: Joi.string(),
+            titre: Joi.string().allow(null, ''),
         }, { abortEarly: false });
         
         let text = sanitize(_.get(body, 'commentaire.texte', null));
