@@ -18,10 +18,16 @@ module.exports = async (db, logger) => {
                 'formation.action.organisme_formateur.siret': organisme.siret,
                 'status': { $in: ['validated', 'rejected'] },
             }).toArray();
+            const score = computeScore(avis);
+            const nbAvisResponsable =  db.collection('avis').count({
+                'formation.action.organisme_responsable.siret': organisme.siret,
+                'status': { $in: ['validated', 'rejected'] },
+            });
 
             await db.collection('accounts').updateOne({ _id: organisme._id }, {
                 $set: {
-                    score: computeScore(avis),
+                    score: score,
+                    nbAvisResponsable: nbAvisResponsable,
                 },
             });
             stats.updated++;
