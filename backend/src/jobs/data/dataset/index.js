@@ -80,6 +80,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
                     { profile: 'financeur', login: 'financeur', password },
                     { profile: 'admin', login: 'admin', password },
                     { profile: 'organisme', login: '22222222222222', password },
+                    { profile: 'organisme', login: '11111111111111', password },
                 ]
             },
         },
