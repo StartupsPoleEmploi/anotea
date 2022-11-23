@@ -35,6 +35,7 @@ const createStagiaire = session => {
                 lieu_de_formation: formation.action.lieu_de_formation,
                 organisme_financeurs: formation.action.organisme_financeurs,
                 organisme_formateur: formation.action.organisme_formateur,
+                organisme_responsable: formation.action.organisme_formateur,
                 session: {
                     numero: session.numero,
                     periode: session.periode,

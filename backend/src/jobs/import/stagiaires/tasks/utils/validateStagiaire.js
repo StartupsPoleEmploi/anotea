@@ -46,6 +46,11 @@ module.exports = stagiaire => {
                     raison_sociale: Joi.string().required(),
                     label: Joi.string().allow('').required(),
                     siret: Joi.string().min(9).max(15).required(),
+                },
+                organisme_responsable: {
+                    raison_sociale: Joi.string().required(),
+                    label: Joi.string().allow('').required(),
+                    siret: Joi.string().min(9).max(15).required(),
                     numero: Joi.string().allow(null).required(),
                 },
                 session: {

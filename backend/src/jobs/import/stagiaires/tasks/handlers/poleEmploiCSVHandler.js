@@ -159,6 +159,11 @@ module.exports = (db, regions) => {
                         },
                         organisme_financeurs: buildCodeFinanceur(record['liste_financeur']),
                         organisme_formateur: {
+                            raison_sociale: record['dc_raisonsocialeformateur'] ? record['dc_raisonsocialeformateur'] : record['dc_raisonsociale'],
+                            label: record['dc_lblorganismeformateur'] ? record['dc_lblorganismeformateur'] : record['dc_lblorganisme'],
+                            siret: record['dc_siretformateur'] ? record['dc_siretformateur'] : record['dc_siret'],
+                        },
+                        organisme_responsable: {
                             raison_sociale: record['dc_raisonsociale'],
                             label: record['dc_lblorganisme'],
                             siret: record['dc_siret'],
