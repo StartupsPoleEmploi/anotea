@@ -13,7 +13,7 @@ module.exports = async (db, logger, filters = {}) => {
         cursor = db.collection('stagiaires').aggregate([
             {
                 $match: {
-                    'formation.action.session.nbStagiairesFormes': { $lt: 1 },
+                    'formation.action.session.nbStagiairesFormes': { $lt: 5 },
                     'sourceIDF': null,
                 }
             },
@@ -27,7 +27,7 @@ module.exports = async (db, logger, filters = {}) => {
         cursor = db.collection('stagiaires').aggregate([
             {
                 $match: {
-                    'formation.action.session.nbStagiairesFormes': { $lt: 1 },
+                    'formation.action.session.nbStagiairesFormes': { $lt: 5 },
                     'sourceIDF': null,
                     'avisCreated': false,
                     'unsubscribe': false,
