@@ -50,6 +50,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             contact_formation: {
                 coordonnefs: {
                     civilite: 'Madame',
+                    courriel: "anotea.pe@gmail.com",
                     nom: 'Martin',
                     prenom: 'Henri',
                     adresse: {
@@ -77,7 +78,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             '06 22 22 22 22'
                         ]
                     },
-                    courriel: 'anotea.pe@gmail.com',
                     web: {
                         urlwebs: [
                             'https://anotea.pole-emploi.fr'
@@ -121,6 +121,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                 '-'
                             ]
                         },
+                        courriel: "responsable@tata.com",
                         telfixe: {
                             numtels: [
                                 '11 11'

@@ -19,7 +19,7 @@ module.exports = async (db, logger) => {
                 'status': { $in: ['validated', 'rejected'] },
             }).toArray();
             const score = computeScore(avis);
-            const nbAvisResponsable =  db.collection('avis').count({
+            const nbAvisResponsable = await db.collection('avis').countDocuments({
                 'formation.action.organisme_responsable.siret': organisme.siret,
                 'status': { $in: ['validated', 'rejected'] },
             });

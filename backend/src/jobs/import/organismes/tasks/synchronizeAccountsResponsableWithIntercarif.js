@@ -22,7 +22,12 @@ module.exports = async (db, logger) => {
 
             if (organisme_formation_responsable.siret_organisme_formation.siret !== '0') {
                 let siret = organisme_formation_responsable.siret_organisme_formation.siret;
-                let hasCourriel = !!organisme_formation_responsable?.coordonnees_organisme?.coordonnees?.courriel;
+                let hasCourriel = undefined;
+                if (organisme_formation_responsable 
+                    && organisme_formation_responsable.coordonnees_organisme 
+                    && organisme_formation_responsable.coordonnees_organisme.coordonnees 
+                    && organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel)
+                    hasCourriel = !!(organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel);
                 let previous = accumulator[siret];
 
                 if (previous) {
@@ -56,7 +61,11 @@ module.exports = async (db, logger) => {
     };
 
     const findCodeRegionResponsable = organisme_formation_responsable => {
-        if (!organisme_formation_responsable?.coordonnees_organisme?.coordonnees?.adresse?.region) {
+        if (!organisme_formation_responsable 
+            || !organisme_formation_responsable.coordonnees_organisme 
+            || !organisme_formation_responsable.coordonnees_organisme.coordonnees
+            || !organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse
+            || !organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region) {
             throw new Error(`Unable to find region for organisme ${organisme_formation_responsable.siret_organisme_formation.siret}`);
         }
 
