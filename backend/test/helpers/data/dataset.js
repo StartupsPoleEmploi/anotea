@@ -296,6 +296,7 @@ module.exports = {
                 raison_sociale: 'Centre de formation Anotéa',
                 coordonnees_organisme: {
                     coordonnees: {
+                        courriel: "responsableCoordonnees@anotea.pole-emploi.fr",
                         adresse: {
                             codepostal: lieuDeFormation,
                             ville: 'Montreuil',

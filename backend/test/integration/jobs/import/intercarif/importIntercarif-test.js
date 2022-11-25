@@ -121,7 +121,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                 '-'
                             ]
                         },
-                        courriel: "responsable@tata.com",
+                        courriel: "responsable@anotea.pole-emploi.fr",
                         telfixe: {
                             numtels: [
                                 '11 11'
