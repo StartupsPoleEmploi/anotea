@@ -4,6 +4,7 @@ const md5File = require('md5-file');
 const validateStagiaire = require('./utils/validateStagiaire');
 const shouldBeImported = require('./utils/shouldBeImported');
 const hasNotBeenImported = require('./utils/hasNotBeenImported');
+const organismeResponsableAbsent = require('./utils/organismeResponsableAbsent');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
 const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
 
@@ -33,12 +34,26 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                 stats.total++;
                 let stagiaire = await handler.buildStagiaire(record, campaign);
 
-                if (await shouldBeImported(db, handler, filters, stagiaire) && await hasNotBeenImported(db, stagiaire)) {
+                const shouldStagiarieBeImported = await shouldBeImported(db, handler, filters, stagiaire) ;
+                const hasNotStagiarieBeenImported = await hasNotBeenImported(db, stagiaire) ;
 
+                if (shouldStagiarieBeImported && hasNotStagiarieBeenImported) {
                     await validateStagiaire(stagiaire);
                     await db.collection('stagiaires').insertOne(stagiaire);
                     stats.imported++;
                     logger.debug('New stagiaire inserted');
+                } else if (shouldStagiarieBeImported && await organismeResponsableAbsent(db, stagiaire)) {
+                    await validateStagiaire(stagiaire);
+                    await db.collection('stagiaires').updateOne(
+                        {refreshKey: stagiaire.refreshKey},
+                        {
+                            $set: {
+                                "formation.action.organisme_responsable": stagiaire.formation.action.organisme_responsable
+                            }
+                        }
+                    );
+                    stats.imported++;
+                    logger.debug('Organisme responsable updated');
                 } else {
                     stats.ignored++;
                     logger.debug('Stagiaire ignored', stagiaire, {});

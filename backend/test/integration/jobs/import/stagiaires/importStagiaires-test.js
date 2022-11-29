@@ -113,15 +113,38 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.strictEqual(count, 0);
     });
 
-    it('should ignore stagiaire already imported in another campaign', async () => {
+    it('should not ignore stagiaire already imported in another campaign without organimse responsable (once)', async () => {
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
 
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
-        let results = await importStagiaires(db, logger, getTestFile('stagiaires-pe-doublons.csv'), handler);
+        await db.collection('stagiaires').updateOne(
+            { "individu.email": "email_1@pe.com" }, 
+            { $unset: {"formation.action.organisme_responsable": 1 } }
+        );
+        const stagiaire0 = await db.collection('stagiaires').findOne({ "individu.email": "email_1@pe.com" });
+        assert.strictEqual(stagiaire0.individu.email, "email_1@pe.com");
+        assert.ok(!(stagiaire0.formation.action.organisme_responsable));
+
+        const results = await importStagiaires(db, logger, getTestFile('stagiaires-pe-doublons.csv'), handler);
+        const stagiaire = await db.collection('stagiaires').findOne({ "individu.email": "email_1@pe.com" });
+        assert.strictEqual(stagiaire.individu.email, "email_1@pe.com");
+        assert.ok(stagiaire.formation.action.organisme_responsable);
 
         assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 0,
+            imported: 1,
+            total: 1,
+        });
+
+        const resultsBis = await importStagiaires(db, logger, getTestFile('stagiaires-pe-doublons.csv'), handler);
+        const stagiaireBis = await db.collection('stagiaires').findOne({ "individu.email": "email_1@pe.com" });
+        assert.strictEqual(stagiaireBis.individu.email, "email_1@pe.com");
+        assert.ok(stagiaireBis.formation.action.organisme_responsable);
+
+        assert.deepStrictEqual(resultsBis, {
             invalid: 0,
             ignored: 1,
             imported: 0,
