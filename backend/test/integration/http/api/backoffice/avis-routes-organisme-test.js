@@ -99,7 +99,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111222222' } } } })),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111111111' } } } })),
         ]);
 
@@ -110,6 +110,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111111111');
+    });
+    
+    it('can search avis organisme responsable with siret', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111211111' } } } })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?siren=11111111111111')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111122222');
     });
 
     it('can search avis with siren', async () => {
