@@ -93,7 +93,7 @@ export default class OrganismeAvisPanel extends React.Component {
                         <Filter
                             label="Signalés"
                             isActive={() => query.statuses === 'reported'}
-                            onClick={() => onFilterClicked({ 
+                            onClick={() => onFilterClicked({
                                 dispensateur: 'true',
                                 responsable: 'false',
                                 statuses: 'reported', sortBy: 'lastStatusUpdate'
@@ -138,7 +138,7 @@ export default class OrganismeAvisPanel extends React.Component {
                             onClick={() => onFilterClicked({
                                 dispensateur: 'true',
                                 responsable: 'true',
-                                sortBy: 'date' 
+                                sortBy: 'date'
                             })} />
 
                     </Filters>
