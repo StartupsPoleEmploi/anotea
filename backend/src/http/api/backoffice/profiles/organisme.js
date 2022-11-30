@@ -25,6 +25,8 @@ module.exports = (db, regions, user) => {
                     numeroFormation: Joi.string(),
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
                     siren: Joi.string().regex(new RegExp(`^${user.siret.substring(0, 9)}`), 'siren'),
+                    dispensateur: Joi.boolean(),
+                    responsable: Joi.boolean(),
                 };
             },
             filters: () => {
@@ -44,10 +46,11 @@ module.exports = (db, regions, user) => {
         queries: {
             fieldsToExclude: () => {return {};},
             buildStagiaireQuery: async parameters => {
-                let { departement, numeroFormation, debut, fin, siren = user.siret } = parameters;
+                let { departement, numeroFormation, debut, fin, dispensateur = true, responsable = false } = parameters;
 
                 return {
-                    'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`),
+                    ...(dispensateur ? {'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`)} : {}),
+                    ...(responsable ? {'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(user.siret)}`)} : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
@@ -56,13 +59,19 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
-                    departement, numeroFormation, debut, fin, siren = user.siret,
-                    reponseStatuses, read, statuses = ['validated', 'reported']
+                    departement, numeroFormation, debut, fin,
+                    reponseStatuses, read, statuses = ['validated', 'reported'],
+                    dispensateur = true, responsable = false
                 } = parameters;
 
 
                 return {
-                    'formation.action.organisme_formateur.siret': new RegExp(`^${siren}`),
+                    ...(dispensateur && responsable ? { $or: [
+                        {'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`)},
+                        {'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(user.siret)}`)},
+                    ]} : {}),
+                    ...(!responsable ? {'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`)} : {}),
+                    ...(!dispensateur && responsable ? {'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(user.siret)}`)} : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),

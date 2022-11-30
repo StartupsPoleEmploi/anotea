@@ -84,18 +84,28 @@ export default class OrganismeAvisPanel extends React.Component {
                             label="Nouveaux"
                             isActive={() => query.read === 'false'}
                             getNbElements={() => stats.total - stats.nbRead}
-                            onClick={() => onFilterClicked({ read: false, sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({
+                                dispensateur: 'true',
+                                responsable: 'false',
+                                read: false, sortBy: 'date'
+                            })} />
 
                         <Filter
                             label="Signalés"
                             isActive={() => query.statuses === 'reported'}
-                            onClick={() => onFilterClicked({ statuses: 'reported', sortBy: 'lastStatusUpdate' })}
+                            onClick={() => onFilterClicked({ 
+                                dispensateur: 'true',
+                                responsable: 'false',
+                                statuses: 'reported', sortBy: 'lastStatusUpdate'
+                            })}
                         />
 
                         <Filter
                             label="Répondus"
                             isActive={() => query.reponseStatuses === 'none,validated'}
                             onClick={() => onFilterClicked({
+                                dispensateur: 'true',
+                                responsable: 'false',
                                 reponseStatuses: 'none,validated',
                                 sortBy: 'reponse.lastStatusUpdate'
                             })}
@@ -105,15 +115,31 @@ export default class OrganismeAvisPanel extends React.Component {
                             label="Réponses rejetées"
                             isActive={() => query.reponseStatuses === 'rejected'}
                             onClick={() => onFilterClicked({
+                                dispensateur: 'true',
+                                responsable: 'false',
                                 reponseStatuses: 'rejected',
                                 sortBy: 'reponse.lastStatusUpdate'
                             })}
                         />
 
                         <Filter
+                            label="Organismes dispensateurs"
+                            isActive={() => query.dispensateur === 'false' && query.responsable === 'true'}
+                            onClick={() => onFilterClicked({
+                                dispensateur: 'false',
+                                responsable: 'true',
+                                sortBy: 'reponse.lastStatusUpdate'
+                            })}
+                        />
+
+                        <Filter
                             label="Tous"
-                            isActive={() => !query.read && !query.reponseStatuses && !query.reported}
-                            onClick={() => onFilterClicked({ sortBy: 'date' })} />
+                            isActive={() => !query.read && !query.reponseStatuses && !query.reported && query.dispensateur !== 'false' && query.responsable !== 'false' }
+                            onClick={() => onFilterClicked({
+                                dispensateur: 'true',
+                                responsable: 'true',
+                                sortBy: 'date' 
+                            })} />
 
                     </Filters>
                 }

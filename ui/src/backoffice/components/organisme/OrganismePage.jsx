@@ -65,6 +65,8 @@ export default class OrganismePage extends React.Component {
     onSubmit = form => {
         this.setState({ form }, () => {
             this.props.router.refreshCurrentPage({
+                dispensateur: 'true',
+                responsable: this.props.router.isActive('/backoffice/organisme/avis/liste'),
                 ...this.state.form,
             });
         });
@@ -72,6 +74,8 @@ export default class OrganismePage extends React.Component {
 
     onTabClicked = path => {
         return this.props.router.goToPage(path, {
+            dispensateur: 'true',
+            responsable: path.indexOf('liste') === -1 ? 'false' : 'true',
             ...this.state.form,
         });
     };
@@ -109,12 +113,17 @@ export default class OrganismePage extends React.Component {
                         <Tab
                             label="Vue graphique"
                             isActive={() => router.isActive('/backoffice/organisme/avis/charts')}
-                            onClick={() => this.onTabClicked('/backoffice/organisme/avis/charts')} />
+                            onClick={() => this.onTabClicked('/backoffice/organisme/avis/charts', {
+                                dispensateur: 'true',
+                                responsable: 'false',
+                            })} />
 
                         <Tab
                             label="Liste des avis"
                             isActive={() => router.isActive('/backoffice/organisme/avis/liste')}
                             onClick={() => this.onTabClicked('/backoffice/organisme/avis/liste', {
+                                dispensateur: 'true',
+                                responsable: 'true',
                                 read: false,
                                 sortBy: 'date'
                             })} />

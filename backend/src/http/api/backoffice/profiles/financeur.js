@@ -60,7 +60,10 @@ module.exports = (db, regions, user) => {
                 return {
                     'codeRegion': user.codeRegion,
                     'formation.action.organisme_financeurs.code_financeur': financeur,
-                    ...(siret || siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`) } : {}),
+                    ...(siret || siren ? { $or: [
+                        {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
+                        {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
+                    ]} : {}),
                     ...(codeFinanceur ? { 'formation.action.organisme_financeurs.code_financeur': codeFinanceur } : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
@@ -81,7 +84,10 @@ module.exports = (db, regions, user) => {
                 return {
                     'codeRegion': user.codeRegion,
                     'formation.action.organisme_financeurs.code_financeur': financeur,
-                    ...(siret || siren ? { 'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`) } : {}),
+                    ...(siret || siren ? { $or: [
+                        {'formation.action.organisme_formateur.siret': new RegExp(`^^${siret || siren}`)},
+                        {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
+                    ]} : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
