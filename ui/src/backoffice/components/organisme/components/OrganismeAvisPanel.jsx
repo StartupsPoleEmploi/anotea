@@ -12,8 +12,11 @@ import Pagination from '../../common/page/panel/pagination/Pagination';
 import PaginationSummary from '../../common/page/panel/pagination/PaginationSummary';
 import Panel from '../../common/page/panel/Panel';
 import AvisResults from '../../common/page/panel/results/AvisResults';
+import BackofficeContext from '../../../BackofficeContext';
 
 export default class OrganismeAvisPanel extends React.Component {
+
+    static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -75,7 +78,7 @@ export default class OrganismeAvisPanel extends React.Component {
 
         let { stats, results, message } = this.state;
         let { query, onFilterClicked } = this.props;
-
+        
         return (
             <Panel
                 filters={
@@ -162,15 +165,16 @@ export default class OrganismeAvisPanel extends React.Component {
                             results={results}
                             message={message}
                             renderAvis={avis => {
+                                const compteConnecteEstLeSirenFormateur = avis.formation.action.organisme_formateur.siret && this.context.account.siret
+                                    && avis.formation.action.organisme_formateur.siret.substring(0, 9) === this.context.account.siret.substring(0, 9);
                                 return <Avis
                                     avis={avis}
-                                    showReponse={true}
-                                    showReponseButtons={true}
+                                    showReponse={compteConnecteEstLeSirenFormateur}
+                                    showReponseButtons={compteConnecteEstLeSirenFormateur}
                                     renderWorkflow={avis => {
                                         return query.statuses === 'reported' ?
                                             <Workflow avis={avis} /> :
                                             <ReconciliationWorkflow avis={avis} />;
-
                                     }}
                                     onChange={() => {
                                         return Promise.all([
