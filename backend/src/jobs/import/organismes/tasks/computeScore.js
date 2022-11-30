@@ -1,5 +1,6 @@
 const computeScore = require('../../../../core/utils/computeScore');
 const { batchCursor } = require('../../../job-utils');
+const asSiren = require('../../../../core/utils/asSiren');
 
 module.exports = async (db, logger) => {
 
@@ -20,7 +21,12 @@ module.exports = async (db, logger) => {
             }).toArray();
             const score = computeScore(avis);
             const nbAvisResponsable = await db.collection('avis').countDocuments({
-                'formation.action.organisme_responsable.siret': organisme.siret,
+                'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(organisme.siret)}`),
+                'status': { $in: ['validated', 'rejected'] },
+            });
+            const nbAvisResponsablePasFormateur = await db.collection('avis').countDocuments({
+                'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(organisme.siret)}`),
+                'formation.action.organisme_formateur.siret': { $not : new RegExp(`^${asSiren(organisme.siret)}`)},
                 'status': { $in: ['validated', 'rejected'] },
             });
 
@@ -28,6 +34,7 @@ module.exports = async (db, logger) => {
                 $set: {
                     score: score,
                     nbAvisResponsable: nbAvisResponsable,
+                    nbAvisResponsablePasFormateur: nbAvisResponsablePasFormateur,
                 },
             });
             stats.updated++;

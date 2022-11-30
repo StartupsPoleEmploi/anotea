@@ -15,6 +15,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                         organisme_formateur: {
                             siret: '11111111111111',
                         },
+                        organisme_responsable: {
+                            siret: '222222222',
+                        },
                     },
                 },
             })),
@@ -23,6 +26,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     action: {
                         organisme_formateur: {
                             siret: '22222222222222',
+                        },
+                        organisme_responsable: {
+                            siret: '222222222',
                         },
                     },
                 },
@@ -40,6 +46,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     action: {
                         organisme_formateur: {
                             siret: '22222222222222',
+                        },
+                        organisme_responsable: {
+                            siret: '11111111111111',
                         },
                     },
                 },
@@ -90,6 +99,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             updated: 1,
             invalid: 0,
         });
+        assert.strictEqual(doc.nbAvisResponsable, 2);
+        assert.strictEqual(doc.nbAvisResponsablePasFormateur, 1);
         assert.deepStrictEqual(doc.score, {
             nb_avis: 3,
             notes: {
