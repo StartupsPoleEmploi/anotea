@@ -37,6 +37,7 @@ module.exports = async (db, logger) => {
             await db.collection('accounts').updateOne({ _id: organisme._id }, {
                 $set: {
                     score: score,
+                    nbAvisSirenFormateur: nbAvisSirenFormateur,
                     nbAvisResponsable: nbAvisResponsable,
                     nbAvisResponsablePasFormateur: nbAvisResponsablePasFormateur,
                 },
