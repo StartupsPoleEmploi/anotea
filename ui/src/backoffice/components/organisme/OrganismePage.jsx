@@ -41,7 +41,7 @@ export default class OrganismePage extends React.Component {
     loadStore = async () => {
         let { router } = this.props;
         let { account } = this.context;
-        console.error(account);
+        
         let query = router.getQuery();
 
         return promiseAll({
@@ -124,7 +124,7 @@ export default class OrganismePage extends React.Component {
                 }
                 tabs={
                     <Tabs>
-                        { 
+                        {
                             formateur && <Tab
                             label="Vue graphique"
                             isActive={() => !router.isActive('/backoffice/organisme/avis/liste')}
@@ -136,7 +136,7 @@ export default class OrganismePage extends React.Component {
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => router.isActive('/backoffice/organisme/avis/liste') || ! formateur}
+                            isActive={() => router.isActive('/backoffice/organisme/avis/liste') || !formateur}
                             onClick={() => this.onTabClicked('/backoffice/organisme/avis/liste', {
                                 dispensateur: 'true',
                                 responsable: 'true',
