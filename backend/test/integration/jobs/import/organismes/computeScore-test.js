@@ -100,6 +100,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             invalid: 0,
         });
         assert.strictEqual(doc.nbAvisResponsable, 2);
+        assert.strictEqual(doc.nbAvisSirenFormateur, 3),
         assert.strictEqual(doc.nbAvisResponsablePasFormateur, 1);
         assert.deepStrictEqual(doc.score, {
             nb_avis: 3,
