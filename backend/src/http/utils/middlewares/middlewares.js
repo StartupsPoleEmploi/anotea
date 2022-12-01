@@ -106,12 +106,14 @@ module.exports = (auth, logger, configuration) => {
                             codeFinanceur: Joi.string(),
                             siret: Joi.string(),
                             raison_sociale: Joi.string(),
+                            nbAvisFormateur: Joi.number().allow(null),
+                            nbAvisResponsable: Joi.number().allow(null),
+                            nbAvisResponsablePasFormateur: Joi.number().allow(null),
                             iat: Joi.number(),
                             exp: Joi.number(),
                             sub: Joi.string(),
                         });
                     } catch (e) {
-                        console.error("toto", e);
                         throw new BadDataError("user mal encodé");
                     }
                     req.user = decoded;

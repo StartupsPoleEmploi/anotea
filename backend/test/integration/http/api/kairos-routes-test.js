@@ -141,6 +141,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             raison_sociale: 'Pole Emploi Formation',
             sub: siret,
             siret: siret,
+            nbAvisFormateur: 15,
             codeRegion: '11',
             region: 'Île-de-France',
         });
