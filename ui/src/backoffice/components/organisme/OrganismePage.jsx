@@ -65,7 +65,7 @@ export default class OrganismePage extends React.Component {
     };
 
     onSubmit = form => {
-        const formateur = this.context.account.nbAvisFormateur && this.context.account.nbAvisFormateur > 0;
+        const formateur = this.context.account.nbAvisSirenFormateur && this.context.account.nbAvisSirenFormateur > 0;
         if (formateur)
             this.setState({ form }, () => {
                 this.props.router.refreshCurrentPage({
@@ -109,7 +109,7 @@ export default class OrganismePage extends React.Component {
         let { store } = this.state;
         let query = router.getQuery();
 
-        const formateur = this.context.account.nbAvisFormateur && this.context.account.nbAvisFormateur > 0;
+        const formateur = this.context.account.nbAvisSirenFormateur && this.context.account.nbAvisSirenFormateur > 0;
 
         return (
             <Page

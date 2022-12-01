@@ -49,7 +49,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             ...(profile === 'organisme' ? { 
                 siret: account.siret,
                 raison_sociale: account.raison_sociale,
-                nbAvisFormateur: account.score ? account.score.nb_avis : 1,
+                nbAvisSirenFormateur: account.nbAvisSirenFormateur,
                 nbAvisResponsable: account.nbAvisResponsable,
                 nbAvisResponsablePasFormateur: account.nbAvisResponsablePasFormateur,
             } : {}),

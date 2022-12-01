@@ -106,7 +106,7 @@ module.exports = (auth, logger, configuration) => {
                             codeFinanceur: Joi.string(),
                             siret: Joi.string(),
                             raison_sociale: Joi.string(),
-                            nbAvisFormateur: Joi.number().allow(null),
+                            nbAvisSirenFormateur: Joi.number().allow(null),
                             nbAvisResponsable: Joi.number().allow(null),
                             nbAvisResponsablePasFormateur: Joi.number().allow(null),
                             iat: Joi.number(),

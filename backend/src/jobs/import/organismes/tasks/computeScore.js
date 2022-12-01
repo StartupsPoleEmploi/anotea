@@ -20,6 +20,10 @@ module.exports = async (db, logger) => {
                 'status': { $in: ['validated', 'rejected'] },
             }).toArray();
             const score = computeScore(avis);
+            const nbAvisSirenFormateur = await db.collection('avis').countDocuments({
+                'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(organisme.siret)}`),
+                'status': { $in: ['validated', 'rejected'] },
+            });
             const nbAvisResponsable = await db.collection('avis').countDocuments({
                 'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(organisme.siret)}`),
                 'status': { $in: ['validated', 'rejected'] },

@@ -79,7 +79,7 @@ export default class OrganismeAvisPanel extends React.Component {
         let { stats, results, message } = this.state;
         let { query, onFilterClicked } = this.props;
 
-        const formateur = this.context.account.nbAvisFormateur && this.context.account.nbAvisFormateur > 0;
+        const formateur = this.context.account.nbAvisSirenFormateur && this.context.account.nbAvisSirenFormateur > 0;
         const responsableSansEtreFormateur = this.context.account.nbAvisResponsablePasFormateur && this.context.account.nbAvisResponsablePasFormateur > 0;
         
         return (
