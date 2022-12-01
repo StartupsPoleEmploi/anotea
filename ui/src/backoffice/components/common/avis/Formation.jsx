@@ -18,8 +18,8 @@ export default class Formation extends React.Component {
             <div className="Formation">
                 <p className="name">{action.organisme_formateur.raison_sociale}&nbsp;&ndash; {action.organisme_formateur.siret}</p>
                 { action?.organisme_formateur?.siret && action?.organisme_responsable?.siret &&
-                    action.organisme_formateur.siret.substring(0, 9) !== action.organisme_responsable.siret.substring(0, 9)
-                  && <p className="name">{action.organisme_responsable.raison_sociale}&nbsp;&ndash; {action.organisme_responsable.siret}</p> }
+                    action.organisme_formateur.siret.substring(0, 9) !== action.organisme_responsable.siret.substring(0, 9) &&
+                        <p className="name">{action.organisme_responsable.raison_sociale}&nbsp;&ndash; {action.organisme_responsable.siret}</p> }
                 <p>
                     <span>{formation.intitule}</span><br />
                     <span>{formation.numero}</span><br />
