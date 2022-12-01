@@ -78,12 +78,15 @@ export default class OrganismeAvisPanel extends React.Component {
 
         let { stats, results, message } = this.state;
         let { query, onFilterClicked } = this.props;
+
+        const formateur = this.context.account.nbAvisFormateur && this.context.account.nbAvisFormateur > 0;
+        const responsableSansEtreFormateur = this.context.account.nbAvisResponsablePasFormateur && this.context.account.nbAvisResponsablePasFormateur > 0;
         
         return (
             <Panel
                 filters={
                     <Filters>
-                        <Filter
+                        {formateur && <Filter
                             label="Nouveaux"
                             isActive={() => query.read === 'false'}
                             getNbElements={() => stats.total - stats.nbRead}
@@ -91,9 +94,9 @@ export default class OrganismeAvisPanel extends React.Component {
                                 dispensateur: 'true',
                                 responsable: 'false',
                                 read: false, sortBy: 'date'
-                            })} />
-
-                        <Filter
+                            })} />}
+                        
+                        {formateur && <Filter
                             label="Signalés"
                             isActive={() => query.statuses === 'reported'}
                             onClick={() => onFilterClicked({
@@ -101,9 +104,9 @@ export default class OrganismeAvisPanel extends React.Component {
                                 responsable: 'false',
                                 statuses: 'reported', sortBy: 'lastStatusUpdate'
                             })}
-                        />
-
-                        <Filter
+                        />}
+                        
+                        {formateur && <Filter
                             label="Répondus"
                             isActive={() => query.reponseStatuses === 'none,validated'}
                             onClick={() => onFilterClicked({
@@ -112,9 +115,9 @@ export default class OrganismeAvisPanel extends React.Component {
                                 reponseStatuses: 'none,validated',
                                 sortBy: 'reponse.lastStatusUpdate'
                             })}
-                        />
+                        />}
 
-                        <Filter
+                        {formateur && <Filter
                             label="Réponses rejetées"
                             isActive={() => query.reponseStatuses === 'rejected'}
                             onClick={() => onFilterClicked({
@@ -123,17 +126,17 @@ export default class OrganismeAvisPanel extends React.Component {
                                 reponseStatuses: 'rejected',
                                 sortBy: 'reponse.lastStatusUpdate'
                             })}
-                        />
+                        />}
 
-                        <Filter
+                        {responsableSansEtreFormateur && <Filter
                             label="Organismes dispensateurs"
                             isActive={() => query.dispensateur === 'false' && query.responsable === 'true'}
                             onClick={() => onFilterClicked({
                                 dispensateur: 'false',
                                 responsable: 'true',
-                                sortBy: 'reponse.lastStatusUpdate'
+                                sortBy: 'date'
                             })}
-                        />
+                        />}
 
                         <Filter
                             label="Tous"

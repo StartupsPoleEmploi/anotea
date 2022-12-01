@@ -35,11 +35,13 @@ export default class OrganismePage extends React.Component {
         this.setState({
             store: await this.loadStore()
         });
+        this.onSubmit();
     }
 
     loadStore = async () => {
         let { router } = this.props;
         let { account } = this.context;
+        console.error(account);
         let query = router.getQuery();
 
         return promiseAll({
@@ -63,13 +65,23 @@ export default class OrganismePage extends React.Component {
     };
 
     onSubmit = form => {
-        this.setState({ form }, () => {
-            this.props.router.refreshCurrentPage({
-                dispensateur: 'true',
-                responsable: this.props.router.isActive('/backoffice/organisme/avis/liste'),
-                ...this.state.form,
+        const formateur = this.context.account.nbAvisFormateur && this.context.account.nbAvisFormateur > 0;
+        if (formateur)
+            this.setState({ form }, () => {
+                this.props.router.refreshCurrentPage({
+                    dispensateur: 'true',
+                    responsable: this.props.router.isActive('/backoffice/organisme/avis/liste'),
+                    ...this.state.form,
+                });
             });
-        });
+        else
+            this.setState({ form }, () => {
+                this.props.router.goToPage('/backoffice/organisme/avis/liste', {
+                    dispensateur: 'true',
+                    responsable: 'true',
+                    ...this.state.form,
+                });
+            });
     };
 
     onTabClicked = path => {
@@ -97,6 +109,8 @@ export default class OrganismePage extends React.Component {
         let { store } = this.state;
         let query = router.getQuery();
 
+        const formateur = this.context.account.nbAvisFormateur && this.context.account.nbAvisFormateur > 0;
+
         return (
             <Page
                 loading={this.state.loading}
@@ -110,17 +124,19 @@ export default class OrganismePage extends React.Component {
                 }
                 tabs={
                     <Tabs>
-                        <Tab
+                        { 
+                            formateur && <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/backoffice/organisme/avis/charts')}
+                            isActive={() => !router.isActive('/backoffice/organisme/avis/liste')}
                             onClick={() => this.onTabClicked('/backoffice/organisme/avis/charts', {
                                 dispensateur: 'true',
                                 responsable: 'false',
                             })} />
+                        }
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => router.isActive('/backoffice/organisme/avis/liste')}
+                            isActive={() => router.isActive('/backoffice/organisme/avis/liste') || ! formateur}
                             onClick={() => this.onTabClicked('/backoffice/organisme/avis/liste', {
                                 dispensateur: 'true',
                                 responsable: 'true',
