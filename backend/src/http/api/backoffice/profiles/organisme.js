@@ -71,7 +71,10 @@ module.exports = (db, regions, user) => {
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(user.siret)}`)},
                     ]} : {}),
                     ...(!responsable ? {'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(user.siret)}`)} : {}),
-                    ...(!dispensateur && responsable ? {'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(user.siret)}`)} : {}),
+                    ...(!dispensateur && responsable ? {
+                        'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(user.siret)}`),
+                        'formation.action.organisme_formateur.siret': { $not : new RegExp(`^${asSiren(user.siret)}`)},
+                    } : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
