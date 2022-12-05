@@ -34,15 +34,15 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                 stats.total++;
                 let stagiaire = await handler.buildStagiaire(record, campaign);
 
-                const shouldStagiarieBeImported = await shouldBeImported(db, handler, filters, stagiaire) ;
-                const hasNotStagiarieBeenImported = await hasNotBeenImported(db, stagiaire) ;
+                const shouldStagiaireBeImported = await shouldBeImported(db, handler, filters, stagiaire) ;
+                const hasNotStagiaireBeenImported = await hasNotBeenImported(db, stagiaire) ;
 
-                if (shouldStagiarieBeImported && hasNotStagiarieBeenImported) {
+                if (shouldStagiaireBeImported && hasNotStagiaireBeenImported) {
                     await validateStagiaire(stagiaire);
                     await db.collection('stagiaires').insertOne(stagiaire);
                     stats.imported++;
                     logger.debug('New stagiaire inserted');
-                } else if (shouldStagiarieBeImported && await organismeResponsableAbsent(db, stagiaire)) {
+                } else if (shouldStagiaireBeImported && await organismeResponsableAbsent(db, stagiaire)) {
                     await validateStagiaire(stagiaire);
                     await db.collection('stagiaires').updateOne(
                         {refreshKey: stagiaire.refreshKey},
