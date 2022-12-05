@@ -35,7 +35,7 @@ module.exports = async (db, logger) => {
             });
             const nbAvisResponsablePasFormateurSiretExact = await db.collection('avis').countDocuments({
                 'formation.action.organisme_responsable.siret': organisme.siret,
-                'formation.action.organisme_formateur.siret': { $not : new RegExp(`^${asSiren(organisme.siret)}`)},
+                'formation.action.organisme_formateur.siret': { $ne : organisme.siret },
                 'status': { $in: ['validated', 'rejected'] },
             });
 

@@ -109,6 +109,7 @@ module.exports = (auth, logger, configuration) => {
                             nbAvisSirenFormateur: Joi.number().allow(null),
                             nbAvisResponsable: Joi.number().allow(null),
                             nbAvisResponsablePasFormateur: Joi.number().allow(null),
+                            nbAvisResponsablePasFormateurSiretExact: Joi.number().allow(null),
                             iat: Joi.number(),
                             exp: Joi.number(),
                             sub: Joi.string(),
