@@ -20,7 +20,7 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
 
     let { type = 'send', siret, region, responsable = false, limit = 1, delay = 100 } = cli;
 
-    logger.info('Sending activation email to new organismes...');
+    logger.info(`Sending activation email to new organismes ${responsable ? "responsables" : "formateurs"}...`);
 
     let ActionClass = require(`./tasks/actions/${_.capitalize(type)}Action`);
     let action = new ActionClass(configuration, {
@@ -38,7 +38,7 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
 
         if (stats.total > 0) {
             sendSlackNotification({
-                text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes :  ` +
+                text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes ${responsable ? "responsables" : "formateurs"} :  ` +
                     `${stats.sent} envoyés / ${stats.error} erreurs`,
             });
         }
@@ -46,7 +46,7 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
         return stats;
     } catch (stats) {
         sendSlackNotification({
-            text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de création de compte aux organismes : ` +
+            text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de création de compte aux organismes ${responsable ? "responsables" : "formateurs"} : ` +
                 `${stats.sent} envoyés / ${stats.error} erreurs`,
         })
         ;
