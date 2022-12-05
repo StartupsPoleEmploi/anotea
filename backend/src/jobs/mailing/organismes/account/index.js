@@ -9,6 +9,7 @@ const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 cli.description('Send new account emails')
 .option('--siret [siret]', 'Siret of a specific organisme')
 .option('--region [region]', 'Limit emailing to the region')
+.option('--responsable', 'if present, send notification to organismes responsable instead')
 .option('--type [type]', 'resend,send (default: send))', capitalizeFirstLetter)
 .option('--limit [limit]', 'limit the number of emails sent (default: 1)', parseInt)
 .option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 100)', parseInt)
@@ -17,7 +18,7 @@ cli.description('Send new account emails')
 
 execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
-    let { type = 'send', siret, region, limit = 1, delay = 100 } = cli;
+    let { type = 'send', siret, region, responsable = false, limit = 1, delay = 100 } = cli;
 
     logger.info('Sending activation email to new organismes...');
 
@@ -25,6 +26,7 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
     let action = new ActionClass(configuration, {
         codeRegions: region ? [region] :
             regions.findActiveRegions('mailing.organismes.accounts').map(region => region.codeRegion),
+        responsable: responsable,
     });
 
     try {

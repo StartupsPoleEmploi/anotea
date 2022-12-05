@@ -12,7 +12,7 @@ class SendAction {
             'passwordHash': null,
             'mailSentDate': null,
             'sources': { $ne: null },
-            'score.nb_avis': { $gte: 1 },
+            ...(this.filters.responsable ? { 'nbAvisResponsablePasFormateurSiretExact': { $gte: 1 } } : { 'score.nb_avis': { $gte: 1 } }),
             ...(this.filters.codeRegions ? { 'codeRegion': { $in: this.filters.codeRegions } } : {}),
         };
     }
