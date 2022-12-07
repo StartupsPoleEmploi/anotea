@@ -35,7 +35,7 @@ Filter.propTypes = {
     onClick: PropTypes.func.isRequired,
     getNbElements: PropTypes.func,
     isDisabled: PropTypes.func,
-    tooltipResponsable: PropTypes.func,
+    isTooltipResponsable: PropTypes.func,
 };
 
 export default Filter;
