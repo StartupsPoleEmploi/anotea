@@ -5,7 +5,7 @@ import Pastille from '../../../Pastille';
 import AnalyticsContext from '../../../../../../common/components/analytics/AnalyticsContext';
 import Tooltip from './Tooltip';
 
-const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false,  isTooltipResponsable = () => false }) => {
+const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false, isTooltipResponsable = () => false }) => {
 
     let { trackClick } = React.useContext(AnalyticsContext);
 
