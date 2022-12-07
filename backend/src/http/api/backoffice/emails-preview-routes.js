@@ -57,9 +57,14 @@ module.exports = ({ emails, middlewares }) => {
             templateName: Joi.string().required(),
         }, { abortEarly: false });
 
-        let message = emails.getEmailMessageByTemplateName(templateName);
+        const previewResponsable = templateName === 'activationCompteEmailResponsable';
+        const templateNameReformule = previewResponsable ? 'activationCompteEmail': templateName;
+        let message = emails.getEmailMessageByTemplateName(templateNameReformule);
 
-        let preview = getPreviewData(req.user);
+        let preview = getPreviewData({ 
+            ...req.user,
+            ...(previewResponsable ? { organisme: { score: { nb_avis: 1 } } } : {}),
+        });
         let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);
 
         return sendHTML(res, html);
