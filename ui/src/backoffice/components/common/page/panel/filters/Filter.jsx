@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Filter.scss';
 import Pastille from '../../../Pastille';
 import AnalyticsContext from '../../../../../../common/components/analytics/AnalyticsContext';
-import Tooltip from './Tooltip';
+import TooltipFilter from './TooltipFilter';
 
 const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false, isTooltipResponsable = () => false }) => {
 
@@ -22,7 +22,7 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
             >
                 <div className="Pastille--holder">
                     {label}
-                    {isTooltipResponsable() && <Tooltip message="Vous avez accès dans cette rubrique aux avis publiés sur des formations dispensées par des organismes de formation avec lesquels vous travaillez en tant qu’organisme responsable. " />}
+                    {isTooltipResponsable() && <TooltipFilter message="Vous avez accès dans cette rubrique aux avis publiés sur des formations dispensées par des organismes de formation avec lesquels vous travaillez en tant qu’organisme responsable. " />}
                     {getNbElements() > 0 ? <Pastille value={getNbElements()} /> : <span />}
                 </div>
             </a>

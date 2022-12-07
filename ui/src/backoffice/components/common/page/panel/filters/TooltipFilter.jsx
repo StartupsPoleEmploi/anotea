@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './Tooltip.scss';
+import './TooltipFilter.scss';
 
-export default class Tooltip extends Component {
+export default class TooltipFilter extends Component {
 
     constructor(props){
         super(props);
@@ -42,7 +42,7 @@ export default class Tooltip extends Component {
         let { message } = this.props;
 
         return (
-            <div className="Tooltip">
+            <div className="Tooltip TooltipFilter">
                 <span
                     className="icon"
                     onMouseEnter={() => this.show()}
