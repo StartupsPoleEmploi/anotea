@@ -8,13 +8,13 @@ module.exports = ({ emails, middlewares }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
 
-    let getPreviewData = (user, previewResponsable = false) => {
+    let getPreviewData = (user, previewResponsableParam = false) => {
         return {
             organisme: {
                 siret: '123456789000000',
                 token: 'token-organisme',
                 codeRegion: user.codeRegion,
-                score: { nb_avis: !previewResponsable? 1 : 0 }
+                score: { nb_avis: !previewResponsableParam? 1 : 0 },
             },
             stagiaire: {
                 token: 'token-stagiaire',
@@ -62,7 +62,7 @@ module.exports = ({ emails, middlewares }) => {
         const templateNameReformule = previewResponsable ? 'activationCompteEmail': templateName;
         let message = emails.getEmailMessageByTemplateName(templateNameReformule);
 
-        let preview = getPreviewData(req.user, previewResponsable = true);
+        let preview = getPreviewData(req.user, previewResponsableParam = previewResponsable);
         let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);
 
         return sendHTML(res, html);
