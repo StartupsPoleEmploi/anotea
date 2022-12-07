@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import './Filter.scss';
 import Pastille from '../../../Pastille';
 import AnalyticsContext from '../../../../../../common/components/analytics/AnalyticsContext';
+import Tooltip from './Tooltip';
 
-const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
+const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false,  isTooltipResponsable = () => false }) => {
 
     let { trackClick } = React.useContext(AnalyticsContext);
 
@@ -21,6 +22,7 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
             >
                 <div className="Pastille--holder">
                     {label}
+                    {isTooltipResponsable() && <Tooltip message="Vous avez accès dans cette rubrique aux avis publiés sur des formations dispensées par des organismes de formation avec lesquels vous travaillez en tant qu’organisme responsable. " />}
                     {getNbElements() > 0 ? <Pastille value={getNbElements()} /> : <span />}
                 </div>
             </a>
@@ -33,6 +35,7 @@ Filter.propTypes = {
     onClick: PropTypes.func.isRequired,
     getNbElements: PropTypes.func,
     isDisabled: PropTypes.func,
+    tooltipResponsable: PropTypes.func,
 };
 
 export default Filter;

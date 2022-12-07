@@ -18,6 +18,7 @@
     &:hover, &:focus {
       cursor: pointer;
       font-weight: $font-weight-bold;
+      opacity: 1;
     }
 
     .nav-link {

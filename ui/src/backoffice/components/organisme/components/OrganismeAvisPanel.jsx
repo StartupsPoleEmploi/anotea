@@ -131,6 +131,7 @@ export default class OrganismeAvisPanel extends React.Component {
                         {responsableSansEtreFormateur && <Filter
                             label="Organismes dispensateurs"
                             isActive={() => query.dispensateur === 'false' && query.responsable === 'true'}
+                            isTooltipResponsable={() => true}
                             onClick={() => onFilterClicked({
                                 dispensateur: 'false',
                                 responsable: 'true',
