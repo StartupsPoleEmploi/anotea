@@ -3,7 +3,6 @@ const auth = require('./components/auth');
 const passwords = require('./components/passwords');
 const createRegions = require('./components/regions');
 const createLogger = require('./components/logger');
-const sentry = require('./components/sentry');
 const workflow = require('./components/workflow');
 const database = require('./components/database');
 const communes = require('./components/communes');
@@ -27,7 +26,6 @@ module.exports = async (options = {}) => {
         client,
         regions,
         emails,
-        sentry: sentry(logger, configuration),
         auth: auth(configuration),
         passwords: passwords(configuration),
         workflow: workflow(db, logger, emails),

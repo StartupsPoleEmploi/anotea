@@ -231,7 +231,7 @@ module.exports = (auth, logger, configuration) => {
                 next();
             }
         },
-        addRateLimit: sentry => new RateLimit({
+        addRateLimit: () => new RateLimit({
             keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
             windowMs: 1 * 60 * 1000, // 1 minute
             max: 1000, // 400 requests per minutes
@@ -240,8 +240,6 @@ module.exports = (auth, logger, configuration) => {
                 if (this.headers) {
                     res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
                 }
-
-                sentry.sendError(Boom.tooManyRequests(this.message), { req: req });
 
                 res.format({
                     html: () => {

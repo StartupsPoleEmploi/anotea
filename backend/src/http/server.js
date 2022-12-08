@@ -8,7 +8,7 @@ const createMiddlewares = require('./utils/middlewares/middlewares');
 module.exports = (components, options = {}) => {
 
     let app = express();
-    let { logger, configuration, sentry, auth } = components;
+    let { logger, configuration, auth } = components;
     let middlewares = createMiddlewares(auth, logger, configuration);
     let httpComponents = Object.assign({}, components, {
         middlewares: middlewares,
@@ -36,7 +36,7 @@ module.exports = (components, options = {}) => {
     app.set('views', path.join(__dirname, 'site', 'pages'));
 
     //Api
-    app.use('/api', middlewares.addRateLimit(sentry));
+    app.use('/api', middlewares.addRateLimit());
     app.use(require('./api/v1/ping-routes')(httpComponents));
     app.use(require('./api/v1/avis-routes')(httpComponents));
     app.use(require('./api/v1/formations-routes')(httpComponents));
@@ -85,9 +85,6 @@ module.exports = (components, options = {}) => {
             }
         }
 
-        if (error.output.statusCode > 404) {
-            sentry.sendError(rawError, { req: req });
-        }
         return res.status(error.output.statusCode).send(error.output.payload);
     });
 

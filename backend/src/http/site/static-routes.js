@@ -5,16 +5,13 @@ const { promisify } = require('util');
 const fs = require('fs');
 const readFile = promisify(fs.readFile);
 
-module.exports = ({ sentry }) => {
+module.exports = () => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let minifyWidgetLoader = async () => {
         let data = await readFile(path.join(__dirname, 'static/js/widget/anotea-widget-loader.js'), 'utf8');
         const options = {keep_fnames: true};
         let { code, error } = UglifyJS.minify(data.toString(), options);
-        if (error) {
-            sentry.sendError(error);
-        }
         return code;
     };
     let minifiedWidgetLoader = minifyWidgetLoader();
