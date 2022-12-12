@@ -78,6 +78,8 @@ module.exports = {
                 'formation.intitule': 'text',
                 'formation.action.organisme_formateur.siret': 'text',
                 'formation.action.organisme_formateur.raison_sociale': 'text',
+                'formation.action.organisme_responsable.siret': 'text',
+                'formation.action.organisme_responsable.raison_sociale': 'text',
             }, { name: 'bo-search-fulltext' }),
             db.collection('avis').createIndex({
                 'codeRegion': 1,
