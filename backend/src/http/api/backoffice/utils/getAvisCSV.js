@@ -51,12 +51,30 @@ module.exports = user => {
         'titre formation': avis => avis.formation.intitule,
         'date début': avis => moment(avis.formation.action.session.periode.debut).format('DD/MM/YYYY'),
         'date de fin prévue': avis => moment(avis.formation.action.session.periode.fin).format('DD/MM/YYYY'),
-        'siret organisme': avis => avis.formation.action.organisme_formateur.siret,
-        'libellé organisme': avis => avis.formation.action.organisme_formateur.label,
-        'nom organisme': avis => avis.formation.action.organisme_formateur.raison_sociale,
-        'siret organisme responsable': avis => avis.formation.action.organisme_responsable.siret,
-        'libellé organisme responsable': avis => avis.formation.action.organisme_responsable.label,
-        'nom organisme responsable': avis => avis.formation.action.organisme_responsable.raison_sociale,
+        'siret organisme dispensateur': avis => avis.formation.action.organisme_formateur.siret,
+        'libellé organisme dispensateur': avis => avis.formation.action.organisme_formateur.label,
+        'raison sociale organisme dispensateur': avis => avis.formation.action.organisme_formateur.raison_sociale,
+        'siret organisme responsable': avis => {
+            if (avis.formation.action.organisme_responsable) {
+                return avis.formation.action.organisme_responsable.siret;
+            } else {
+                return "";
+            }
+        },
+        'libellé organisme responsable': avis => {
+            if (avis.formation.action.organisme_responsable) {
+                return avis.formation.action.organisme_responsable.label;
+            } else {
+                return "";
+            }
+        },
+        'raison sociale organisme responsable': avis => {
+            if (avis.formation.action.organisme_responsable) {
+                return avis.formation.action.organisme_responsable.raison_sociale;
+            } else {
+                return "";
+            }
+        },
         'code postal': avis => avis.formation.action.lieu_de_formation.code_postal,
         'ville': avis => avis.formation.action.lieu_de_formation.ville,
         'certifInfos': avis => avis.formation.certifications.map(c => c.certif_info).join(','),
