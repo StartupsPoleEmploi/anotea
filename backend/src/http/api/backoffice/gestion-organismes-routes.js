@@ -108,7 +108,17 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             await sendCSVStream(stream, res, {
                 'Siret': organisme => organisme.siret,
                 'Nom': organisme => organisme.raison_sociale,
-                'Type': organisme => {isResponsable(organisme) && isFormateur(organisme) ? 'Dispensateur et responsable' : isFormateur(organisme) ? 'Dispensateur' : isResponsable(organisme) ? 'Responsable' : `Pas encore d'avis`},
+                'Type': organisme => {
+                    if (isResponsable(organisme) && isFormateur(organisme)) {
+                        return 'Dispensateur et responsable';
+                    } else if (isFormateur) {
+                        return 'Dispensateur';
+                    } else if (isResponsable(organisme)) {
+                        return 'Responsable';
+                    } else {
+                        return `Pas encore d'avis`;
+                    }
+                },
                 'Email': organisme => organisme.courriel,
                 'Nombre d\'Avis': organisme => (organisme.score.nb_avis ? organisme.score.nb_avis : 0) + (organisme.nbAvisResponsablePasFormateurSiretExact ? organisme.nbAvisResponsablePasFormateurSiretExact : 0),
                 'Kairos': organisme => isKairos(organisme),
