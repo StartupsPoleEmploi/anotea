@@ -166,8 +166,12 @@ export default class GestionOrganismePage extends React.Component {
                                 <>
                                     {
                                         <div className="row">
-                                            <div className="col-sm-3 offset-md-1">
+                                            <div className="col-sm-2 offset-md-1">
                                                 <p className="column-title d-none d-sm-block">Nom et SIRET</p>
+                                            </div>
+
+                                            <div className="col-2">
+                                                <p className="column-title d-none d-sm-block">Type</p>
                                             </div>
 
                                             <div className="col-2">

@@ -28,12 +28,29 @@ export default class Organisme extends React.Component {
         let { organisme, onChange } = this.props;
 
         let isInactive = organisme.status === 'inactive';
+        /*
+        nbAvisResponsable: 10
+        nbAvisResponsablePasFormateur: 10
+        nbAvisResponsablePasFormateurSiretExact: 10
+        nbAvisSirenFormateur: 0
+        */
+        let isResponsable = organisme.nbAvisResponsablePasFormateurSiretExact > 0;
+        let isFormateur = organisme.score?.nb_avis > 0;
 
         return (
             <div className="Organisme row">
-                <div className="col-sm-3 offset-md-1">
+                <div className="col-sm-2 offset-md-1">
                     <p className="raison-sociale">{organisme.raison_sociale}</p>
                     <p className="siret">{organisme.siret}</p>
+                </div>
+
+                <div className="col-2">
+                    <p className="type">
+                        {(isResponsable && isFormateur) ? 'Dispensateur et responsable' : ''}
+                        {(!isResponsable && isFormateur) ? 'Dispensateur' : ''}
+                        {(isResponsable && !isFormateur) ? 'Responsable' : ''}
+                        {(!isResponsable && !isFormateur) ? `Pas encore d'avis` : ''}
+                    </p>
                 </div>
 
                 <div className="col-2">
@@ -43,7 +60,7 @@ export default class Organisme extends React.Component {
                 </div>
 
                 <div className="col-1">
-                    <p className="score">{organisme.score.nb_avis}</p>
+                    <p className="score">{(organisme.score?.nb_avis ? organisme.score.nb_avis : 0) + (organisme.nbAvisResponsablePasFormateurSiretExact ? organisme.nbAvisResponsablePasFormateurSiretExact : 0)}</p>
                 </div>
 
                 {this.state.showEdition &&
