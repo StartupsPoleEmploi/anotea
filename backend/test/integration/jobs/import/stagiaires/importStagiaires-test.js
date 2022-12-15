@@ -21,7 +21,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await countStagiaires(db, logger, filters);
 
         let count = await db.collection('stagiaires').countDocuments();
-        assert.strictEqual(count, 4);
+        assert.strictEqual(count, 5);
         let results = await db.collection('stagiaires').find({ 'individu.nom': 'MARTIN' }).toArray();
         assert.ok(results[0]._id);
         assert.ok(results[0].importDate);
@@ -84,6 +84,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 },
             },
         });
+        let results_siret_0 = await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray();
+        assert.strictEqual("82436343601230", results_siret_0[0].formation.action.organisme_formateur.siret);
+        assert.strictEqual("ANOTEA 0", results_siret_0[0].formation.action.organisme_formateur.raison_sociale);
     });
 
     it('should fail to import stagiaire when codeRegion can not be found', async () => {
@@ -191,8 +194,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 1,
-            imported: 3,
-            total: 4,
+            imported: 4,
+            total: 5,
         });
     });
 
@@ -289,9 +292,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             filters: {},
             stats: {
                 ignored: 0,
-                imported: 4,
+                imported: 5,
                 invalid: 0,
-                total: 4,
+                total: 5,
             }
         });
     });
@@ -334,8 +337,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 0,
-            imported: 4,
-            total: 4,
+            imported: 5,
+            total: 5,
         });
     });
 
@@ -367,9 +370,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(doc.individu.email, 'email_4@pe.com');
         assert.deepStrictEqual(results, {
             invalid: 0,
-            ignored: 3,
+            ignored: 4,
             imported: 1,
-            total: 4,
+            total: 5,
         });
     });
 
