@@ -6,7 +6,7 @@ export default function OrganismeHeaderItems() {
     return (
         <ul className="nav">
             <li className="nav-item">
-                <Link className="nav-link" url="/backoffice/organisme/avis">
+                <Link className="nav-link" url="/backoffice/organisme/avis/liste?dispensateur=true&amp;responsable=true">
                     Avis stagiaires
                 </Link>
             </li>

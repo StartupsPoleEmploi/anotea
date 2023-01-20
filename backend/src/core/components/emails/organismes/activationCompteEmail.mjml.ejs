@@ -19,10 +19,18 @@
                         de les publier sur différents sites qui exposent l’offre de formation.
                     </mj-text>
 
-                    <mj-text css-class="text-secondary text-highlighted">
-                        Avec Anotéa, vous avez accès à toutes les notes et avis publiés sur vos formations et vous
-                        avez la possibilité d’y répondre. Votre réponse sera publiée avec l’avis.
-                    </mj-text>
+                    <% if (organisme.score && organisme.score.nb_avis && organisme.score.nb_avis > 0) { %>
+                        <mj-text css-class="text-secondary text-highlighted">
+                            Avec Anotéa, vous avez accès aux avis publiés sur vos formations et vous
+                            avez la possibilité d’y répondre. Votre réponse sera publiée avec l’avis.
+                        </mj-text>
+                    <% } else{ %>
+                        <mj-text css-class="text-secondary text-highlighted">
+                            Avec Anotéa, vous avez accès aux avis publiés sur des formations 
+                            dispensées par des organismes de formation avec lesquels vous travaillez 
+                            en tant qu’organisme responsable.
+                        </mj-text>
+                    <% } %>
                 </mj-column>
             </mj-section>
 

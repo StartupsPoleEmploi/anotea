@@ -67,6 +67,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                         raison_sociale: 'ANOTEA ACCES FORMATION',
                         label: 'ANOTEA FORMATION',
                         siret: '82436343601230',
+                    },
+                    organisme_responsable: {
+                        raison_sociale: 'ANOTEA ACCES FORMATION',
+                        label: 'ANOTEA FORMATION',
+                        siret: '82436343601230',
                         numero: '14000000000000008098',
                     },
                     session: {

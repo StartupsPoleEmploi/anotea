@@ -21,6 +21,10 @@ export default class OrganismeAvisChartsPanel extends React.Component {
             loading: true,
             avis: {},
             stagiaires: {},
+            query: {
+                dispensateur: 'true',
+                responsable: 'true',
+            }
         };
     }
 

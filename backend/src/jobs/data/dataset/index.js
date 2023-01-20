@@ -8,6 +8,7 @@ const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./tasks/createAccounts');
 const importIntercarif = require('../../import/intercarif/tasks/importIntercarif');
 const synchronizeOrganismesWithAccounts = require('../../import/organismes/tasks/synchronizeAccountsWithIntercarif');
+const synchronizeAccountsResponsableWithIntercarif = require('../../import/organismes/tasks/synchronizeAccountsResponsableWithIntercarif');
 const computeOrganismesScore = require('../../import/organismes/tasks/computeScore');
 const resetPasswords = require('../reset/tasks/resetPasswords');
 const createStagiaires = require('./tasks/createStagiaires');
@@ -46,7 +47,10 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
     await createAvis(db, options);
 
     logger.info(`Creating organismes....`);
-    await synchronizeOrganismesWithAccounts(db, logger, regions);
+    logger.info(`stats: ${JSON.stringify(await synchronizeOrganismesWithAccounts(db, logger, regions))}`);
+    logger.info(`Creating organismes responsables....`);
+    logger.info(`stats: ${JSON.stringify(await synchronizeAccountsResponsableWithIntercarif(db, logger, regions))}`);
+    logger.info(`Computing organismes score....`);
     await computeOrganismesScore(db, logger);
 
     logger.info(`Creating accounts....`);
@@ -80,6 +84,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
                     { profile: 'financeur', login: 'financeur', password },
                     { profile: 'admin', login: 'admin', password },
                     { profile: 'organisme', login: '22222222222222', password },
+                    { profile: 'organisme', login: '11111111111111', password },
                 ]
             },
         },

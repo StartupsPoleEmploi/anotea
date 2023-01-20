@@ -106,12 +106,15 @@ module.exports = (auth, logger, configuration) => {
                             codeFinanceur: Joi.string(),
                             siret: Joi.string(),
                             raison_sociale: Joi.string(),
+                            nbAvisSirenFormateur: Joi.number().allow(null),
+                            nbAvisResponsable: Joi.number().allow(null),
+                            nbAvisResponsablePasFormateur: Joi.number().allow(null),
+                            nbAvisResponsablePasFormateurSiretExact: Joi.number().allow(null),
                             iat: Joi.number(),
                             exp: Joi.number(),
                             sub: Joi.string(),
                         });
                     } catch (e) {
-                        console.error("toto", e);
                         throw new BadDataError("user mal encodé");
                     }
                     req.user = decoded;
@@ -228,7 +231,7 @@ module.exports = (auth, logger, configuration) => {
                 next();
             }
         },
-        addRateLimit: sentry => new RateLimit({
+        addRateLimit: () => new RateLimit({
             keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
             windowMs: 1 * 60 * 1000, // 1 minute
             max: 1000, // 400 requests per minutes
@@ -237,8 +240,6 @@ module.exports = (auth, logger, configuration) => {
                 if (this.headers) {
                     res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
                 }
-
-                sentry.sendError(Boom.tooManyRequests(this.message), { req: req });
 
                 res.format({
                     html: () => {

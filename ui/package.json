@@ -37,7 +37,6 @@
     "@nivo/core": "0.69.0",
     "@nivo/line": "0.69.1",
     "@nivo/pie": "0.69.0",
-    "@sentry/browser": "5.30.0",
     "bootstrap": "4.6.0",
     "bootstrap-datepicker": "1.9.0",
     "html2canvas": "1.0.0-rc.7",

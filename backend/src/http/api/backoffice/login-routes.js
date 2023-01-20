@@ -39,15 +39,23 @@ module.exports = ({ db, auth, passwords, regions }) => {
             }
         });
 
-        return await auth.buildJWT('backoffice', {
+        const retourstring = await auth.buildJWT('backoffice', {
             sub: `${identifiant}`,
             id: account._id,
             profile,
             region: region.nom,
             codeRegion: account.codeRegion,
             ...(profile === 'financeur' ? { codeFinanceur: account.codeFinanceur } : {}),
-            ...(profile === 'organisme' ? { siret: account.siret, raison_sociale: account.raison_sociale } : {}),
+            ...(profile === 'organisme' ? { 
+                siret: account.siret,
+                raison_sociale: account.raison_sociale,
+                nbAvisSirenFormateur: account.nbAvisSirenFormateur,
+                nbAvisResponsable: account.nbAvisResponsable,
+                nbAvisResponsablePasFormateur: account.nbAvisResponsablePasFormateur,
+            } : {}),
         });
+
+        return retourstring;
     };
 
     const invalidateAuthToken = async (id, token) => {

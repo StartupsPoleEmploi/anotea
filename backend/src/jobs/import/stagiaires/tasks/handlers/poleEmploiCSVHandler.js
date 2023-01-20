@@ -26,6 +26,9 @@ module.exports = (db, regions) => {
     };
 
     const removeEmptyValues = array => array.filter(n => !_.isEmpty(n));
+    const siretValide = siret => {
+        return siret && !siret.match("^0{0,14}$");
+    }
 
     return {
         name: 'Pôle Emploi',
@@ -159,6 +162,11 @@ module.exports = (db, regions) => {
                         },
                         organisme_financeurs: buildCodeFinanceur(record['liste_financeur']),
                         organisme_formateur: {
+                            raison_sociale: record['dc_raisonsocialeformateur'] ? record['dc_raisonsocialeformateur'] : record['dc_raisonsociale'],
+                            label: record['dc_lblorganismeformateur'] ? record['dc_lblorganismeformateur'] : record['dc_lblorganisme'],
+                            siret: siretValide(record['dc_siretformateur']) ? record['dc_siretformateur'] : record['dc_siret'],
+                        },
+                        organisme_responsable: {
                             raison_sociale: record['dc_raisonsociale'],
                             label: record['dc_lblorganisme'],
                             siret: record['dc_siret'],

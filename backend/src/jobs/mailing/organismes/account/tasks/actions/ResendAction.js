@@ -12,7 +12,7 @@ class ResendAction {
 
         return {
             'profile': 'organisme',
-            'score.nb_avis': { $gte: 1 },
+            ...(this.filters.responsable ? { 'nbAvisResponsablePasFormateurSiretExact': { $gte: 1 } } : { 'score.nb_avis': { $gte: 1 } }),
             '$and': [
                 { mailSentDate: { $ne: null } },
                 { mailSentDate: { $lte: moment().subtract(delay, 'days').toDate() } },

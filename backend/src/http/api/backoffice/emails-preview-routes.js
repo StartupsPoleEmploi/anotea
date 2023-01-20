@@ -8,12 +8,13 @@ module.exports = ({ emails, middlewares }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
 
-    let getPreviewData = user => {
+    let getPreviewData = (user, previewResponsableParam = false) => {
         return {
             organisme: {
                 siret: '123456789000000',
                 token: 'token-organisme',
                 codeRegion: user.codeRegion,
+                score: { nb_avis: !previewResponsableParam? 1 : 0 },
             },
             stagiaire: {
                 token: 'token-stagiaire',
@@ -57,9 +58,11 @@ module.exports = ({ emails, middlewares }) => {
             templateName: Joi.string().required(),
         }, { abortEarly: false });
 
-        let message = emails.getEmailMessageByTemplateName(templateName);
+        const previewResponsable = templateName === 'activationCompteEmailResponsable';
+        const templateNameReformule = previewResponsable ? 'activationCompteEmail': templateName;
+        let message = emails.getEmailMessageByTemplateName(templateNameReformule);
 
-        let preview = getPreviewData(req.user);
+        let preview = getPreviewData(req.user, previewResponsableParam = previewResponsable);
         let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);
 
         return sendHTML(res, html);

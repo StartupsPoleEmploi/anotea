@@ -75,7 +75,7 @@ module.exports = {
                         region: 'Ile-de-France',
 
                     });
-
+                    
                     return response.body.url;
                 }
             }));

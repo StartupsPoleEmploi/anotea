@@ -28,9 +28,14 @@ export default class OrganismesEmailsPreviewPage extends Component {
                         filters={
                             <Filters>
                                 <Filter
-                                    label="Activation compte"
+                                    label="Activation compte dispensateur"
                                     isActive={() => query.templateName === 'activationCompteEmail' || !query.templateName}
                                     onClick={() => this.onFilterClicked({ templateName: 'activationCompteEmail' })}
+                                />
+                                <Filter
+                                    label="Activation compte responsable"
+                                    isActive={() => query.templateName === 'activationCompteEmailResponsable'}
+                                    onClick={() => this.onFilterClicked({ templateName: 'activationCompteEmailResponsable' })}
                                 />
                                 <Filter
                                     label="Notification nouveaux avis"

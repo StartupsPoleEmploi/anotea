@@ -1,5 +1,6 @@
 const computeScore = require('../../../../core/utils/computeScore');
 const { batchCursor } = require('../../../job-utils');
+const asSiren = require('../../../../core/utils/asSiren');
 
 module.exports = async (db, logger) => {
 
@@ -18,10 +19,33 @@ module.exports = async (db, logger) => {
                 'formation.action.organisme_formateur.siret': organisme.siret,
                 'status': { $in: ['validated', 'rejected'] },
             }).toArray();
+            const score = computeScore(avis);
+            const nbAvisSirenFormateur = await db.collection('avis').countDocuments({
+                'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(organisme.siret)}`),
+                'status': { $in: ['validated', 'rejected'] },
+            });
+            const nbAvisResponsable = await db.collection('avis').countDocuments({
+                'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(organisme.siret)}`),
+                'status': { $in: ['validated', 'rejected'] },
+            });
+            const nbAvisResponsablePasFormateur = await db.collection('avis').countDocuments({
+                'formation.action.organisme_responsable.siret': new RegExp(`^${asSiren(organisme.siret)}`),
+                'formation.action.organisme_formateur.siret': { $not : new RegExp(`^${asSiren(organisme.siret)}`)},
+                'status': { $in: ['validated', 'rejected'] },
+            });
+            const nbAvisResponsablePasFormateurSiretExact = await db.collection('avis').countDocuments({
+                'formation.action.organisme_responsable.siret': organisme.siret,
+                'formation.action.organisme_formateur.siret': { $ne : organisme.siret },
+                'status': { $in: ['validated', 'rejected'] },
+            });
 
             await db.collection('accounts').updateOne({ _id: organisme._id }, {
                 $set: {
-                    score: computeScore(avis),
+                    score: score,
+                    nbAvisSirenFormateur: nbAvisSirenFormateur,
+                    nbAvisResponsable: nbAvisResponsable,
+                    nbAvisResponsablePasFormateur: nbAvisResponsablePasFormateur,
+                    nbAvisResponsablePasFormateurSiretExact: nbAvisResponsablePasFormateurSiretExact,
                 },
             });
             stats.updated++;

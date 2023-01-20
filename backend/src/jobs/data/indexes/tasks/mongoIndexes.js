@@ -56,6 +56,8 @@ module.exports = {
             db.collection('avis').createIndex({ 'formation.action.lieu_de_formation.code_postal': 1 }),
             db.collection('avis').createIndex({ 'formation.action.organisme_formateur.siret': 1 }),
             db.collection('avis').createIndex({ 'formation.action.organisme_formateur.raison_sociale': 1 }),
+            db.collection('avis').createIndex({ 'formation.action.organisme_responsable.siret': 1 }),
+            db.collection('avis').createIndex({ 'formation.action.organisme_responsable.raison_sociale': 1 }),
             db.collection('avis').createIndex({ 'formation.certifications': 1 }),
             db.collection('avis').createIndex({ 'reponse.lastStatusUpdate': 1 }),
             db.collection('avis').createIndex({ 'reponse.status': 1 }),
@@ -76,6 +78,8 @@ module.exports = {
                 'formation.intitule': 'text',
                 'formation.action.organisme_formateur.siret': 'text',
                 'formation.action.organisme_formateur.raison_sociale': 'text',
+                'formation.action.organisme_responsable.siret': 'text',
+                'formation.action.organisme_responsable.raison_sociale': 'text',
             }, { name: 'bo-search-fulltext' }),
             db.collection('avis').createIndex({
                 'codeRegion': 1,

@@ -4,7 +4,7 @@ const Joi = require('joi');
 const externalLinks = require('../utils/externalLinks');
 const { getFullUrl } = require('../utils/routes-utils');
 
-module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
+module.exports = ({ db, configuration, communes, peconnect }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let utils = {
@@ -78,7 +78,6 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { 'tracking.peConnectSucceed': new Date() } });
             return res.redirect(`${configuration.app.public_hostname}/questionnaire/${stagiaire.token}`);
         } catch (e) {
-            sentry.sendError(e);
             return res.status(500).render('errors/error');
         }
     });

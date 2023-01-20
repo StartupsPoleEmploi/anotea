@@ -518,12 +518,13 @@
 <organisme-formation-responsable numero="OR_XX_XXX">
 <numero-activite>24930181111</numero-activite>
 <SIRET-organisme-formation>
-<SIRET>11111111111111</SIRET>
+<SIRET>011111111111111</SIRET>
 </SIRET-organisme-formation>
 <nom-organisme>Anotea Formation</nom-organisme>
 <raison-sociale>Centre de formation Anotéa</raison-sociale>
 <coordonnees-organisme>
 <coordonnees>
+<courriel>responsable@anotea.pole-emploi.fr</courriel>
 <adresse>
 <ligne>-</ligne>
 <codepostal>93100</codepostal>

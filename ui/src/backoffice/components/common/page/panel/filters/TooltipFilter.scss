@@ -1,0 +1,34 @@
+@import "src/common/styles/variables";
+
+.TooltipFilter {
+  display: inline;
+  padding-left: 0.25rem;
+
+  .icon {
+    font-size: 0.875rem;
+
+    i {
+      font-size: 1.0rem;
+      color: $color-black-80;
+      top: -10px;
+      cursor: pointer;
+      vertical-align:top;
+    }
+  }
+
+  .box {
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+    bottom: -15px;
+    left: 0;
+
+    .message {
+      padding: 5px 10px;
+      line-height: 18px;
+      font-size: 0.875rem;
+      color: $color-black-80;
+      background-color: $color-grey-5;
+    }
+  }
+}

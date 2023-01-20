@@ -101,13 +101,26 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             let kairos = organisme.sources.find(s => s === 'kairos');
             return kairos === 'kairos' ? 'oui' : 'non';
         };
+        let isResponsable = organisme => organisme.nbAvisResponsablePasFormateurSiretExact > 0;
+        let isFormateur = organisme => organisme.score.nb_avis > 0;
 
         try {
             await sendCSVStream(stream, res, {
                 'Siret': organisme => organisme.siret,
                 'Nom': organisme => organisme.raison_sociale,
+                'Type': organisme => {
+                    if (isResponsable(organisme) && isFormateur(organisme)) {
+                        return 'Dispensateur et responsable';
+                    } else if (isFormateur) {
+                        return 'Dispensateur';
+                    } else if (isResponsable(organisme)) {
+                        return 'Responsable';
+                    } else {
+                        return `Pas encore d'avis`;
+                    }
+                },
                 'Email': organisme => organisme.courriel,
-                'Nombre d\'Avis': organisme => organisme.score.nb_avis,
+                'Nombre d\'Avis': organisme => (organisme.score.nb_avis ? organisme.score.nb_avis : 0) + (organisme.nbAvisResponsablePasFormateurSiretExact ? organisme.nbAvisResponsablePasFormateurSiretExact : 0),
                 'Kairos': organisme => isKairos(organisme),
                 'Lieux de formation': organisme => {
                     return organisme.lieux_de_formation.map(l => `${l.adresse.code_postal}/${l.adresse.ville}`).join(',');

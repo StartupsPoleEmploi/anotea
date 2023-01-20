@@ -5,6 +5,7 @@ const cli = require('commander');
 const { execute } = require('../../job-utils');
 const synchronizeAccountsWithIntercarif = require('./tasks/synchronizeAccountsWithIntercarif');
 const synchronizeAccountsWithKairos = require('./tasks/synchronizeAccountsWithKairos');
+const synchronizeAccountsResponsableWithIntercarif = require('./tasks/synchronizeAccountsResponsableWithIntercarif');
 const computeOrganismesScore = require('./tasks/computeScore');
 
 cli
@@ -18,6 +19,9 @@ execute(async ({ logger, db }) => {
 
     logger.info('Synchronizing organismes from Intercarif...');
     stats.intercarif = await synchronizeAccountsWithIntercarif(db, logger);
+
+    logger.info('Synchronizing organismes responsables from Intercarif...');
+    stats.responsables = await synchronizeAccountsResponsableWithIntercarif(db, logger);
 
     if (cli.kairos) {
         logger.info('Synchronizing organismes from Kairos...');
