@@ -7,7 +7,7 @@ const isFiltered = (filters, stagiaire) => {
     if (filters.codeFinanceur) {
         return stagiaire.formation.action.organisme_financeurs.map(o => o.code_financeur).includes(filters.codeFinanceur);
     }
-    return true;
+    return stagiaire.individu && stagiaire.individu.email;
 };
 
 const hasOptOut = async (db, stagiaire) => {
