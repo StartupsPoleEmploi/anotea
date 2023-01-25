@@ -15,6 +15,7 @@ execute(async ({ db, logger }) => {
     };
 
     return {
-        //...(await migrate('fixInvalidStats')),
+        ...(await migrate('fixDoublons')),
+        //...(await migrate('fixSiretsAnciensStagiaires')),
     };
 });
