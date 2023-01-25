@@ -7,7 +7,7 @@ const fixSiretsAnciensStagiaires = require('../../../../../src/jobs/data/migrati
 
 describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
-    it('should fixSiretsAnciensStagiaires', async () => {
+    it.only('should fixSiretsAnciensStagiaires', async () => {
         let db = await getTestDatabase();
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
@@ -18,10 +18,9 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
                     identifiant_pe: "123456789"
                 },
                 formation: {
+                    numero: "numero_formation",
                     action: {
-                        session: {
-                            id: "213456"
-                        },
+                        numero: "numero_action",
                         organisme_responsable: {
                             siret: "12345678901234"
                         }
@@ -36,10 +35,9 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
                     identifiant_pe: "423456789"
                 },
                 formation: {
+                    numero: "numero_formation",
                     action: {
-                        session: {
-                            id: "213456"
-                        }
+                        numero: "numero_action",
                     }
                 }
             })),

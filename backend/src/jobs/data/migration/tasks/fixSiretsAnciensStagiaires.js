@@ -10,6 +10,7 @@ module.exports = async (db) => {
     });
     await batchCursor(cursor, async next => {
         const stagiaire = await next();
+        if (!stagiaire.formation.numero || !stagiaire.formation.action.numero) return;
         let res = await db.collection('stagiaires').updateMany({
             "formation.action.organisme_responsable": {$exists: 0},
             "formation.numero": stagiaire.formation.numero,
