@@ -44,6 +44,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                                 },
                             }
                         },
+                        { $sort : { date : -1 } },
                         {
                             $group: {
                                 _id: null,
