@@ -18,6 +18,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 _.range(5).map(() => {
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
+                        date: new Date("2023-01-02T16:00:00Z"),
                         status: 'archived',
                         formation: {
                             action: {
@@ -33,9 +34,29 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 })
             ),
             ...(
-                _.range(5).map(() => {
+                _.range(1).map(() => {
                     return insertIntoDatabase('avis', newAvis({
                         read: false,
+                        date: new Date("2016-05-18T16:00:00Z"),
+                        status: 'validated',
+                        formation: {
+                            action: {
+                                organisme_formateur: {
+                                    siret: '31705038300064',
+                                },
+                            },
+                        },
+                        commentaire: {
+                            text: '========== pas glop la date =========='
+                        },
+                    }));
+                })
+            ),
+            ...(
+                _.range(4).map(() => {
+                    return insertIntoDatabase('avis', newAvis({
+                        read: false,
+                        date: new Date("2023-01-01T16:00:00Z"),
                         status: 'validated',
                         formation: {
                             action: {
