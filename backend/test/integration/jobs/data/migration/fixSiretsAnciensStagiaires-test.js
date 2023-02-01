@@ -7,7 +7,7 @@ const fixSiretsAnciensStagiaires = require('../../../../../src/jobs/data/migrati
 
 describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
-    it.only('should fixSiretsAnciensStagiaires', async () => {
+    it('should fixSiretsAnciensStagiaires', async () => {
         let db = await getTestDatabase();
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
