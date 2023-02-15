@@ -65,6 +65,11 @@ module.exports = {
             db.collection('avis').createIndex({ 'meta.reconciliations': 1 }),
             db.collection('avis').createIndex({ 'formation.action.session.periode.debut': 1 }),
             db.collection('avis').createIndex({ 'formation.action.session.periode.fin': 1 }),
+            db.collection('avis').createIndex({ 
+                'formation.action.organisme_formateur.siret': 1,
+                'status': 1,
+                'formation.action.organisme_formateur.siret': 1,
+            }),
             db.collection('avis').createIndex({
                 'formation.action.lieu_de_formation.ville': 1,
                 'formation.action.lieu_de_formation.code_postal': 1,
