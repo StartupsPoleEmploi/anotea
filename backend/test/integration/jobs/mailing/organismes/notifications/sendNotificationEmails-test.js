@@ -7,7 +7,7 @@ const { newAvis, newOrganismeAccount } = require('../../../../../helpers/data/da
 const logger = require('../../../../../helpers/components/fake-logger');
 const sendNotificationEmails = require('../../../../../../src/jobs/mailing/organismes/notifications/tasks/sendNotificationEmails');
 
-describe.only(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createEmailMocks }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createEmailMocks }) => {
 
     it('should send email notification to organisme when it as at least 5 not yet read comments', async () => {
 

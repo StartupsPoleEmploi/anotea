@@ -32,7 +32,6 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                     from: 'avis',
                     let: {
                         siret: '$organisme.siret',
-                        local_time: { $subtract: [ '$date', 10800000 ]} 
                     },
                     pipeline: [
                         {
@@ -45,7 +44,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                                 },
                             }
                         },
-                        { $sort : { "local_time" : -1 } },
+                        { $sort : { date : -1 } },
                         {
                             $group: {
                                 _id: null,
