@@ -38,7 +38,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
         let cursor = db.collection('accounts')
         .find({
             profile: 'organisme',
-            ...(!search ? { codeRegion: codeRegion } : {} ),
+            codeRegion: codeRegion,
             ...(search ? {
                 $or: [
                     { 'siret': search },
