@@ -119,6 +119,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111211111' } } } })),
+            insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111111111' } } } })),
         ]);
 
         let response = await request(app)
@@ -127,7 +128,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111122222');
+        assert.strictEqual(response.body.avis[0].formation.action.organisme_formateur.siret, '11111111111111');
     });
 
     it('can search avis with siren', async () => {
