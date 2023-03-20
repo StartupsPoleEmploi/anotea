@@ -4,7 +4,7 @@ const { withServer } = require('../../../../helpers/with-server');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const objectId = require('mongodb').ObjectId;
 
-describe.only(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
 
     it('can search organismes avec id entier', async () => {
 
