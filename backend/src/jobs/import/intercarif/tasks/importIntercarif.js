@@ -28,7 +28,13 @@ module.exports = async (db, logger, file, options = {}) => {
                     if (line.startsWith('<formation')) {
                         xml = line;
                     } else {
+                        try {
                         xml += line;
+                        }
+                        catch (e) {
+                            console.error("xml déjà trop rempli", xml);
+                            console.error("nouvelle ligne trop longue", line);
+                        }
                     }
 
                     if (line.startsWith('</formation')) {
