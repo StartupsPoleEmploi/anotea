@@ -25,19 +25,19 @@ module.exports = async (db, logger, file, options = {}) => {
             transform: function(chunk, encoding, callback) {
                 try {
                     let line = chunk.toString();
-                    if (line.startsWith('<formation')) {
+                    if (line.trim().startsWith('<formation')) {
                         xml = line;
                     } else {
                         try {
                         xml += line;
                         }
                         catch (e) {
-                            console.error("xml déjà trop rempli", xml);
+                            console.error("xml déjà trop rempli", xml.substring(0, 10000));
                             console.error("nouvelle ligne trop longue", line);
                         }
                     }
 
-                    if (line.startsWith('</formation')) {
+                    if (line.trim().startsWith('</formation')) {
                         partial = false;
                     }
 
