@@ -5,7 +5,12 @@ const getDepartement = codePostal => codePostal.substring(0, 2);
 module.exports = async (db, intercarif, action) => {
 
     let adresse = action.lieu_de_formation.coordonnees.adresse;
-    let siret = action.organisme_formateur.siret_formateur.siret;
+    let siret;
+    if (action.organisme_formateur) {
+        siret = action.organisme_formateur.siret_formateur.siret;
+    } else {
+        siret = action.organisme_formation_responsable.siret_organisme_formation.siret;
+    }
 
     let avis = await db.collection('avis').find({
         'formation.action.organisme_formateur.siret': new RegExp(`^${asSiren(siret)}`),
