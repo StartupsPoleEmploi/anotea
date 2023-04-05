@@ -22,7 +22,7 @@ module.exports = async (db, logger) => {
 
             intercarif.actions
             .filter(action => {
-                return action.lieu_de_formation.coordonnees.adresse && action.organisme_formateur.siret_formateur.siret !== '0';
+                return action.lieu_de_formation.coordonnees.adresse  && action.organisme_formateur && action.organisme_formateur.siret_formateur.siret !== '0';
             })
             .forEach(action => {
                 let siret = action.organisme_formateur.siret_formateur.siret;
