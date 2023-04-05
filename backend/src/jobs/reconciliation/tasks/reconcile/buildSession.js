@@ -53,7 +53,7 @@ module.exports = (formation, action, session, avis) => {
             },
             reconciliation: {
                 //TODO must be converted into an array in v2
-                organisme_formateur: action.organisme_formateur.siret_formateur.siret,
+                organisme_formateur: action.organisme_formateur ? action.organisme_formateur.siret_formateur.siret : formation.organisme_formation_responsable.siret_organisme_formation.siret,
                 lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
                 certifinfos: formation._meta.certifinfos,
                 formacodes: formation._meta.formacodes,

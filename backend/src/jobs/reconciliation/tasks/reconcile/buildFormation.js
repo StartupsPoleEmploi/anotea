@@ -5,7 +5,7 @@ module.exports = (formation, avis) => {
     let sirets = formation.actions.reduce((acc, action) => {
         return [
             ...acc,
-            action.organisme_formateur.siret_formateur.siret,
+            action.organisme_formateur ? action.organisme_formateur.siret_formateur.siret : formation.organisme_formation_responsable.siret_organisme_formation.siret,
         ];
     }, []);
 
