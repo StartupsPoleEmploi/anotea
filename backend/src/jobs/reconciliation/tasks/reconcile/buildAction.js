@@ -13,9 +13,9 @@ module.exports = (formation, action, avis) => {
         organisme_financeurs: action.organisme_financeurs ?
             action.organisme_financeurs.map(of => _.pick(of, ['code_financeur'])) : [],
         organisme_formateur: {
-            raison_sociale: action.organisme_formateur.raison_sociale_formateur,
-            siret: action.organisme_formateur.siret_formateur.siret,
-            numero: action.organisme_formateur._attributes ? action.organisme_formateur._attributes.numero : null,
+            raison_sociale: action.organisme_formateur ? action.organisme_formateur.raison_sociale_formateur : formation.organisme_formation_responsable.raison_sociale,
+            siret: action.organisme_formateur ? action.organisme_formateur.siret_formateur.siret : formation.organisme_formation_responsable.siret_organisme_formation.siret,
+            numero: action.organisme_formateur ? (action.organisme_formateur._attributes ? action.organisme_formateur._attributes.numero : null) : formation.organisme_formation_responsable._attributes.numero,
         },
         region: action.lieu_de_formation.coordonnees.adresse.region,
         avis,
@@ -46,7 +46,7 @@ module.exports = (formation, action, avis) => {
             },
             reconciliation: {
                 //TODO must be converted into an array in v2
-                organisme_formateur: action.organisme_formateur.siret_formateur.siret,
+                organisme_formateur: action.organisme_formateur ? action.organisme_formateur.siret_formateur.siret : formation.organisme_formation_responsable.siret_organisme_formation.siret,
                 lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
                 certifinfos: formation._meta.certifinfos,
                 formacodes: formation._meta.formacodes,

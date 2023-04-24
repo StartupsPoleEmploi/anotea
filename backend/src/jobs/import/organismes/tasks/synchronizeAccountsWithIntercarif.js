@@ -22,7 +22,7 @@ module.exports = async (db, logger) => {
 
             intercarif.actions
             .filter(action => {
-                return action.lieu_de_formation.coordonnees.adresse && action.organisme_formateur.siret_formateur.siret !== '0';
+                return action.lieu_de_formation.coordonnees.adresse  && action.organisme_formateur && action.organisme_formateur.siret_formateur && action.organisme_formateur.siret_formateur.siret !== '0';
             })
             .forEach(action => {
                 let siret = action.organisme_formateur.siret_formateur.siret;
@@ -69,6 +69,27 @@ module.exports = async (db, logger) => {
 
         if (!lieu) {
             throw new Error(`Unable to find region for organisme ${data.organisme_formateur.siret_formateur.siret}`);
+        }
+
+        switch (lieu) {
+            case '26': lieu = '27'; break;
+            case '43': lieu = '27'; break;
+            case '23': lieu = '28'; break;
+            case '25': lieu = '28'; break;
+            case '22': lieu = '32'; break;
+            case '31': lieu = '32'; break;
+            case '21': lieu = '44'; break;
+            case '41': lieu = '44'; break;
+            case '42': lieu = '44'; break;
+            case '54': lieu = '75'; break;
+            case '72': lieu = '75'; break;
+            case '74': lieu = '75'; break;
+            case '73': lieu = '76'; break;
+            case '91': lieu = '76'; break;
+            case '82': lieu = '84'; break;
+            case '83': lieu = '84'; break;
+            case '93': lieu = '93'; break;
+            case '94': lieu = '94'; break;
         }
 
         return lieu.coordonnees.adresse.region;

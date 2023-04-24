@@ -9,7 +9,7 @@ module.exports = async (db, intercarif, action) => {
     if (action.organisme_formateur) {
         siret = action.organisme_formateur.siret_formateur.siret;
     } else {
-        siret = action.organisme_formation_responsable.siret_organisme_formation.siret;
+        siret = intercarif.organisme_formation_responsable.siret_organisme_formation.siret;
     }
 
     let avis = await db.collection('avis').find({
