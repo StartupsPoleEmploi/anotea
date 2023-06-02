@@ -153,5 +153,5 @@ module.exports = async (db, logger) => {
     let organismes = await getOrganismesFromIntercarif();
     await promiseAll(organismes, organisme => synchronizeAccount(organisme), { batchSize: 50 });
 
-    return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
+    return stats.invalid < 1000 ? Promise.resolve(stats) : Promise.reject(stats);
 };
