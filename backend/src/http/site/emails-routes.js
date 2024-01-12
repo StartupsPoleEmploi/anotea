@@ -10,13 +10,6 @@ module.exports = ({ db, logger, emails }) => {
         return res.status(404).render('errors/404');
     };
 
-    let sendTrackingImage = res => {
-        // serving a white 1x1 GIF
-        let buf = new Buffer(35);
-        buf.write('R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=', 'base64');
-        return res.send(buf, { 'Content-Type': 'image/gif' }, 200);
-    };
-
     router.get('/emails/:type/:token/templates/:templateName', async (req, res) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.params, req.query), {
@@ -38,52 +31,6 @@ module.exports = ({ db, logger, emails }) => {
         let html = await message.render(doc, avis);
 
         return sendHTML(res, html);
-    });
-
-    router.get('/emails/organismes/:token/track', async (req, res) => {
-        try {
-            let { token } = await Joi.validate(req.params, {
-                token: Joi.string().required(),
-            }, { abortEarly: false });
-
-
-            let organisme = await db.collection('accounts').findOne({ token });
-            if (organisme) {
-                let trackingFieldName = organisme.tracking && organisme.tracking.firstRead ? 'lastRead' : 'firstRead';
-                db.collection('accounts').updateOne({ token }, {
-                    $set: {
-                        [`tracking.${trackingFieldName}`]: new Date()
-                    }
-                });
-            }
-
-            return sendTrackingImage(res);
-        } catch (e) {
-            return send404(res);
-        }
-    });
-
-    router.get('/emails/stagiaires/:token/track', async (req, res) => {
-        try {
-            let { token } = await Joi.validate(req.params, {
-                token: Joi.string().required(),
-            }, { abortEarly: false });
-
-        
-            let stagiaire = await db.collection('stagiaires').findOne({ token });
-            if (stagiaire) {
-                let trackingFieldName = stagiaire.tracking && stagiaire.tracking.firstRead ? 'lastRead' : 'firstRead';
-                db.collection('stagiaires').updateOne({ token }, {
-                    $set: {
-                        [`tracking.${trackingFieldName}`]: new Date()
-                    }
-                });
-            }
-
-            return sendTrackingImage(res);
-        } catch(e) {
-            return res.status(500).send();
-        }
     });
 
     router.get('/emails/stagiaires/:token/unsubscribe', async (req, res) => {
