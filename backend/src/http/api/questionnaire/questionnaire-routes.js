@@ -210,7 +210,10 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             throw new BadDataError();
         }
 
-        return res.send({ stagiaire, infosRegion: await getInfosRegion(stagiaire) });
+        return res.send({
+            stagiaire: { formation: stagiaire.formation, token: stagiaire.token },
+            infosRegion: await getInfosRegion(stagiaire)
+        });
     }));
 
     return router;
