@@ -29,7 +29,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
                 req.stagiaire = stagiaire;
                 next();
             });
-        } catch (e) {
+        } catch (e) {
             res.status(404).send({ error: 'not found' });
             return;
         }
@@ -146,7 +146,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
         return {
-            stagiaire,
             region,
             showLinks: await externalLinks(db, communes).getLink(stagiaire, 'pe') !== null && !formationTooOld
         };
@@ -162,7 +161,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
                 return res.json({ isGood: true });
             }
             throw Boom.badRequest('Mot invalide');
-        } catch(err) {
+        } catch (err) {
             throw Boom.badRequest('Mot invalide');
         }
 
@@ -177,7 +176,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         }
 
         let infosRegion = await getInfosRegion(stagiaire);
-        return res.send({ stagiaire, infosRegion, submitted: stagiaire.avisCreated });
+        return res.send({
+            stagiaire: { formation: stagiaire.formation, token: stagiaire.token },
+            infosRegion,
+            submitted: stagiaire.avisCreated
+        });
     }));
 
     router.post('/api/questionnaire/:token', getStagiaireFromToken, tryAndCatch(async (req, res) => {
@@ -207,7 +210,10 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             throw new BadDataError();
         }
 
-        return res.send({ stagiaire, infosRegion: await getInfosRegion(stagiaire) });
+        return res.send({
+            stagiaire: { formation: stagiaire.formation, token: stagiaire.token },
+            infosRegion: await getInfosRegion(stagiaire)
+        });
     }));
 
     return router;
