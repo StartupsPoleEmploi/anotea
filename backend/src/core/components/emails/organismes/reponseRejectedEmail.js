@@ -19,7 +19,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'Pôle Emploi - Votre réponse n\'a pas été prise en compte',
+                    subject: 'France Travail - Votre réponse n\'a pas été prise en compte',
                     body: await render(organisme, avis),
                 },
             );

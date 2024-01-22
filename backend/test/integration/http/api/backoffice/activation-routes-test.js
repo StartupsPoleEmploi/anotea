@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            nom: 'Pole Emploi Formation',
+            nom: 'France Travail Formation',
             identifiant: '11111111111111',
             status: 'inactive',
         });

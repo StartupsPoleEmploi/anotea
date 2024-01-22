@@ -2,14 +2,14 @@
 <img src="https://anotea.francetravail.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="200px" />
 </p>
  
-Anotéa est un service lancé par Pôle emploi permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
+Anotéa est un service lancé par France Travail permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
 
 Seules les personnes ayant effectué la formation reçoivent un questionnaire à compléter. 
 Vous êtes donc certains que les avis que vous consultez sont fiables.
 
 ## Comment cela fonctionne-t-il ?
 
-Dans le cadre de sa recherche d'emploi, une personne peut suivre une formation financée par Pôle Emploi et/ou par 
+Dans le cadre de sa recherche d'emploi, une personne peut suivre une formation financée par France Travail et/ou par 
 la région dans laquelle il habite.
 
 Lorsque la formation est terminée, Anotéa envoie par mail un questionnaire à cette personne — qu'on appelle stagiaire —  

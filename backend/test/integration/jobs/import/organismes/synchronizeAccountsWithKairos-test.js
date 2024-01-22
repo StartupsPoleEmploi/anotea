@@ -29,7 +29,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             sources: ['kairos'],
             profile: 'organisme',
             codeRegion: '32',
-            raison_sociale: 'Pole Emploi Formation Nord',
+            raison_sociale: 'France Travail Formation Nord',
             lieux_de_formation: [],
         });
     });

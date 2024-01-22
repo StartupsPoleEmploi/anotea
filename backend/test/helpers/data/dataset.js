@@ -47,7 +47,7 @@ module.exports = {
                     }],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
-                        label: 'Pole Emploi Formation',
+                        label: 'France Travail Formation',
                         siret: '11111111111111',
                         numero: '14_OF_XXXXXXXXXX',
                     },
@@ -84,7 +84,7 @@ module.exports = {
         return _.merge({
             _id: ((custom.objectId) ? new ObjectId() : (parseInt(custom.siret) || 6080274100045)),
             siret: (custom.siret) || '6080274100045',
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             courriel: 'contact@poleemploi-formation.fr',
             courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
@@ -161,7 +161,7 @@ module.exports = {
                     }],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
-                        label: 'Pole Emploi Formation',
+                        label: 'France Travail Formation',
                         siret: '11111111111111',
                         numero: '14_OF_XXXXXXXXXX',
                     },

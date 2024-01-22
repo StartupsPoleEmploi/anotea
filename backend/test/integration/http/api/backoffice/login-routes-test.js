@@ -71,7 +71,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.ok(decodedToken.exp);
         assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             siret: '6080274100045',
             sub: '6080274100045',
             codeRegion: '11',
@@ -102,7 +102,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.ok(decodedToken.exp);
         assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             siret: '6080274100045',
             sub: '6080274100045',
             codeRegion: '11',

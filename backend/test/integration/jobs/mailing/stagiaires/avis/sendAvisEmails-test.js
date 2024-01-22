@@ -41,7 +41,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         });
         let emailMessagesSent = mailer.getEmailMessagesSent();
         assert.strictEqual(emailMessagesSent.length, 1);
-        assert.strictEqual(emailMessagesSent[0].parameters.subject, 'Pôle Emploi vous demande votre avis sur votre formation');
+        assert.strictEqual(emailMessagesSent[0].parameters.subject, 'France Travail vous demande votre avis sur votre formation');
         assert.deepStrictEqual(mailer.getEmailAddresses(), [email]);
     });
 

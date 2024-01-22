@@ -20,7 +20,7 @@ class Footer extends Component {
                 <div className="row align-items-center">
                     <div className="col-sm-12 offset-md-1 col-md-10 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <img className="logo" src={logoRF} width="25%" />
-                        <img className="logo" src={logoPE} alt="Pôle Emploi" width="25%" />
+                        <img className="logo" src={logoPE} alt="France Travail" width="25%" />
                         {infosRegion.region.conseil_regional.active &&
                         <img
                             className="logo"

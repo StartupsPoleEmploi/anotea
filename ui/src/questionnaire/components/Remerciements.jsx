@@ -90,7 +90,7 @@ class Remerciements extends Component {
                                         <a
                                             className="textimage"
                                             href="https://candidat.francetravail.fr/formations/recherche"
-                                            title="Visiter l'espace de recherche de formation de Pôle Emploi"
+                                            title="Visiter l'espace de recherche de formation de France Travail"
                                             target="_blank"
                                             rel="noopener noreferrer">
                                             <img src={logoMarianne} height="86px" />

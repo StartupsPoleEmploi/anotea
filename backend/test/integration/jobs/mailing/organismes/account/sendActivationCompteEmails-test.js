@@ -38,7 +38,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let message = mailer.getEmailMessagesSent().pop();
 
         assert.strictEqual(message.email, 'new@organisme.fr');
-        assert.strictEqual(message.parameters.subject, 'Pôle Emploi vous donne accès aux avis de vos stagiaires');
+        assert.strictEqual(message.parameters.subject, 'France Travail vous donne accès aux avis de vos stagiaires');
     });
 
     it('should send emails', async () => {
@@ -56,7 +56,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         });
         assert.deepStrictEqual(mailer.getEmailAddresses(), ['new@organisme.fr']);
         let message = mailer.getEmailMessagesSent().pop();
-        assert.strictEqual(message.parameters.subject, 'Pôle Emploi vous donne accès aux avis de vos stagiaires');
+        assert.strictEqual(message.parameters.subject, 'France Travail vous donne accès aux avis de vos stagiaires');
     });
 
     it('should update organisme when mailer succeed', async () => {

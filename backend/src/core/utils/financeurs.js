@@ -2,7 +2,7 @@ const financeurs = [
     { code: '0', label: `Autre` },
     { code: '2', label: `Conseil régional` },
     { code: '3', label: `Fonds Européens - FSE` },
-    { code: '4', label: `Pôle Emploi` },
+    { code: '4', label: `France Travail` },
     { code: '5', label: `Entreprise` },
     { code: '7', label: `AGEFIPH` },
     { code: '9', label: `Collectivité territoriale - Commune` },
