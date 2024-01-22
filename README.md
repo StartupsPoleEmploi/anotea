@@ -1,5 +1,5 @@
 <p>
-<img src="https://anotea.pole-emploi.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="200px" />
+<img src="https://anotea.francetravail.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="200px" />
 </p>
  
 Anotéa est un service lancé par Pôle emploi permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
@@ -16,7 +16,7 @@ Lorsque la formation est terminée, Anotéa envoie par mail un questionnaire à 
 pourqu'il puisse déposer un avis sur la formation (la réponse à ce questionnaire est facultative).
 
 Une fois l'avis déposé et anonymisé, il est [réconcilié](#Réconciliation) afin d'être potentiellement consultable 
-sur tous les sites qui utilisent Anotéa (ex: https://candidat.pole-emploi.fr/formations/recherche).  
+sur tous les sites qui utilisent Anotéa (ex: https://candidat.francetravail.fr/formations/recherche).  
 
 Ces sites utilisent deux canaux fournis par Anotéa : l'[api](misc/doc/API.md) et le [widget](misc/doc/WIDGET.md) 
 
@@ -63,5 +63,5 @@ Ce diagramme décrit les étapes de collecte et de modération d'un avis dans An
 
 
 <p align="center">
-<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="100px"  />
+<img src="https://anotea.francetravail.fr/static/images/logo-pole-emploi.svg" width="100px"  />
 </p>

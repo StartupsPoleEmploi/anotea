@@ -21,8 +21,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.ok(doc.token);
         assert.deepStrictEqual(_.omit(doc, ['_id', 'creationDate', 'updateDate', 'token']), {
             siret: '11111111111111',
-            courriel: 'responsable@anotea.pole-emploi.fr',
-            courriels: [{ courriel: 'responsable@anotea.pole-emploi.fr', source: 'intercarif' }],
+            courriel: 'responsable@anotea.francetravail.fr',
+            courriels: [{ courriel: 'responsable@anotea.francetravail.fr', source: 'intercarif' }],
             sources: ['intercarif'],
             profile: 'organisme',
             codeRegion: '11',
@@ -46,10 +46,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepStrictEqual(_.omit(doc, ['_id', 'creationDate', 'updateDate', 'token']), {
             siret: '11111111111111',
             codeRegion: '11',
-            courriel: "responsableCoordonnees@anotea.pole-emploi.fr",
+            courriel: "responsableCoordonnees@anotea.francetravail.fr",
             courriels: [
                 {
-                    courriel: "responsableCoordonnees@anotea.pole-emploi.fr",
+                    courriel: "responsableCoordonnees@anotea.francetravail.fr",
                     source: "intercarif"
                 }
             ],
@@ -91,7 +91,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             courriel: 'OLD@formateur.com',
             courriels: [
                 { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
-                { courriel: 'responsable@anotea.pole-emploi.fr', source: 'intercarif' },
+                { courriel: 'responsable@anotea.francetravail.fr', source: 'intercarif' },
             ],
             sources: ['intercarif'],
             codeRegion: '11',

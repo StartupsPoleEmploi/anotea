@@ -2,7 +2,7 @@
   "name": "anotea",
   "version": "1.0.0",
   "description": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "homepage": "https://anotea.pole-emploi.fr",
+  "homepage": "https://anotea.francetravail.fr",
   "repository": {
     "type": "git",
     "url": "git@github.com:StartupsPoleEmploi/anotea.git"
@@ -12,7 +12,7 @@
   "contributors": [
     "Loïc Guillois <loic@fitlab.fr>",
     "Benoît Guérout <bguerout@yonoma.com>",
-    "Nabil Choukri <nabil.choukri@pole-emploi.fr>"
+    "Nabil Choukri"
   ],
   "main": "index.js",
   "scripts": {

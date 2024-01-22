@@ -212,8 +212,8 @@ module.exports = {
                 numero: numeroFormation,
                 datecrea: '20010503',
                 datemaj: '20171213',
-                file: 'https://anotea.pole-emploi.fr',
-                href: 'https://anotea.pole-emploi.fr'
+                file: 'https://anotea.francetravail.fr',
+                href: 'https://anotea.francetravail.fr'
             },
             domaine_formation: {
                 code_formacodes: [
@@ -270,7 +270,7 @@ module.exports = {
                     courriel: 'anotea.pe@gmail.com',
                     web: {
                         urlwebs: [
-                            'https://anotea.pole-emploi.fr'
+                            'https://anotea.francetravail.fr'
                         ]
                     }
                 }
@@ -281,7 +281,7 @@ module.exports = {
             code_niveau_sortie: '4',
             url_formation: {
                 urlwebs: [
-                    'https://anotea.pole-emploi.fr'
+                    'https://anotea.francetravail.fr'
                 ]
             },
             organisme_formation_responsable: {
@@ -296,7 +296,7 @@ module.exports = {
                 raison_sociale: 'Centre de formation Anotéa',
                 coordonnees_organisme: {
                     coordonnees: {
-                        courriel: "responsableCoordonnees@anotea.pole-emploi.fr",
+                        courriel: "responsableCoordonnees@anotea.francetravail.fr",
                         adresse: {
                             codepostal: lieuDeFormation,
                             ville: 'Montreuil',
@@ -324,7 +324,7 @@ module.exports = {
                         },
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                'https://anotea.francetravail.fr'
                             ]
                         }
                     }
@@ -361,7 +361,7 @@ module.exports = {
                         courriel: 'anotea.pe+responsable@gmail.com',
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                'https://anotea.francetravail.fr'
                             ]
                         }
                     }
@@ -569,7 +569,7 @@ module.exports = {
                         },
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                'https://anotea.francetravail.fr'
                             ]
                         }
                     }
@@ -577,7 +577,7 @@ module.exports = {
                 modalites_entrees_sorties: '0',
                 url_action: {
                     urlwebs: [
-                        'https://anotea.pole-emploi.fr'
+                        'https://anotea.francetravail.fr'
                     ]
                 },
                 adresse_information: {
@@ -645,7 +645,7 @@ module.exports = {
                             courriel: 'anotea.pe+paris@gmail.com',
                             web: {
                                 urlwebs: [
-                                    'https://anotea.pole-emploi.fr'
+                                    'https://anotea.francetravail.fr'
                                 ]
                             }
                         }

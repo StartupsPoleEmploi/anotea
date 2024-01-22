@@ -1,6 +1,6 @@
 module.exports = (db, communes) => {
 
-    const staticLinks = [{ goto: 'clara', url: 'https://clara.pole-emploi.fr' }];
+    const staticLinks = [{ goto: 'clara', url: 'https://clara.francetravail.fr' }];
 
     const getLink = async (stagiaire, goto) => {
 
@@ -32,9 +32,9 @@ module.exports = (db, communes) => {
 
         if (romeList.length > 0) {
             if (goto === 'lbb') {
-                return `https://labonneboite.pole-emploi.fr/entreprises/commune/${inseeCode}/rome/${rome}?d=${distance}`;
+                return `https://labonneboite.francetravail.fr/entreprises/commune/${inseeCode}/rome/${rome}?d=${distance}`;
             } else {
-                return `https://candidat.pole-emploi.fr/offres/recherche?lieux=${inseeCode}&motsCles=${romeList.join(',')}&offresPartenaires=true&rayon=${distance}&tri=0`;
+                return `https://candidat.francetravail.fr/offres/recherche?lieux=${inseeCode}&motsCles=${romeList.join(',')}&offresPartenaires=true&rayon=${distance}&tri=0`;
             }
         } else {
             return null;
