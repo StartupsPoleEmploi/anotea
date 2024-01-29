@@ -63,5 +63,5 @@ Ce diagramme décrit les étapes de collecte et de modération d'un avis dans An
 
 
 <p align="center">
-<img src="https://anotea.francetravail.fr/static/images/logo-pole-emploi.svg" width="100px"  />
+<img src="https://anotea.francetravail.fr/static/images/logo-france-travail-marianne.svg" width="100px"  />
 </p>

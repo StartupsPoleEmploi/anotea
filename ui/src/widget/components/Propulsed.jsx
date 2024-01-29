@@ -1,5 +1,5 @@
 import React from 'react';
-import logoPE from '../images/logo-pole-emploi.png';
+import logoPE from '../images/logo-logo-france-travail.svg';
 import './Propulsed.scss';
 
 export default function Propulsed() {
