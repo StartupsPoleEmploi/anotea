@@ -1,12 +1,12 @@
 <% const showConseilRegional = region.conseil_regional.active; %>
 <mj-section padding-top="0" padding-left="0" padding-bottom="0" border-radius="5px" background-color="#fff">
     <mj-group>
-        <mj-column vertical-align="middle" width="20%">
+        <mj-column vertical-align="middle" width="15%">
             <mj-image align="left" padding-left="10px" width="70px" 
                       src="<%= utils.getPublicUrl('/static/images/Republique_Francaise_RVB.png') %>" />
         </mj-column>
-        <mj-column vertical-align="middle" width="20%">
-            <mj-image align="left" padding-left="10px" width="70px" alt="Logo Anotéa"
+        <mj-column vertical-align="middle" width="25%">
+            <mj-image align="left" padding-left="10px" width="132px" alt="Logo Anotéa"
                       src="<%= utils.getPublicUrl('/static/images/logo_Anotea_Horizontal_baseline.png') %>" />
         </mj-column>
         <mj-column vertical-align="middle" width="20%">
@@ -16,7 +16,7 @@
         </mj-column>
         <% if (showConseilRegional) { %>
             <mj-column vertical-align="middle" width="20%" border-right="1px solid #F4F4F5">
-                <mj-image padding-right="5px" width="70px" alt="Logo France Travail"
+                <mj-image padding-right="5px" width="110px" alt="Logo France Travail"
                           src="<%= utils.getPublicUrl('/static/images/logo-ft-horizontal.svg') %>" />
             </mj-column>
             <mj-column vertical-align="middle" width="20%">
@@ -25,7 +25,7 @@
             </mj-column>
         <% } else{ %>
             <mj-column vertical-align="middle" width="40%">
-                <mj-image width="80px" align="right" alt="Logo France Travail"
+                <mj-image width="110px" align="right" alt="Logo France Travail"
                           src="<%= utils.getPublicUrl('/static/images/logo-ft-horizontal.svg') %>" />
             </mj-column>
         <% } %>
