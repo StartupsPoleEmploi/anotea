@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Formation from './Formation';
-import peLogoMarianne from '../images/pe-logo-marianne.png';
-import peSvg from '../images/pole-emploi-fr.svg';
+import peSvg from '../images/logo-ft-horizontal.svg';
 import logoMarianne from '../images/logo2021-marianne.svg';
 import './remerciements.scss';
 

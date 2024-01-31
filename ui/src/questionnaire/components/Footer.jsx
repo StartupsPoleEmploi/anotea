@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import logoRF from '../images/logo2021-marianne.svg';
-import logoPE from '../images/logo-logo-france-travail.svg';
+import logoPE from '../images/logo-ft-horizontal.svg';
 import './footer.scss';
 
 class Footer extends Component {

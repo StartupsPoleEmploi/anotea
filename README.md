@@ -1,5 +1,6 @@
 <p>
-<img src="https://anotea.francetravail.fr/static/images/logo_Anotea_Horizontal_baseline.png" width="200px" />
+<img src="backend/src/http/site/static/images/logo-france-travail-marianne.svg" width="280px" />
+<img src="backend/src/http/site/static/images/logo_Anotea_Horizontal_baseline.png" width="200px" />
 </p>
  
 Anotéa est un service lancé par France Travail permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
