@@ -27,6 +27,8 @@ let isParentUrlPoleEmploi = () => {
 
     return parentUrl !== null && (
             parentUrl.indexOf("francetravail.fr") !== -1 ||
+            parentUrl.indexOf("francetravail.intra") !== -1 || 
+            parentUrl.indexOf("ft-qvr.fr") !== -1 ||
             parentUrl.indexOf("pole-emploi.fr") !== -1 ||
             parentUrl.indexOf("pole-emploi.intra") !== -1 ||
             parentUrl.indexOf("pe-qvr.fr") !== -1
