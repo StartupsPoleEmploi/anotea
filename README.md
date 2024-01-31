@@ -1,5 +1,4 @@
 <p>
-<img src="backend/src/http/site/static/images/logo-france-travail-marianne.svg" width="280px" />
 <img src="backend/src/http/site/static/images/logo_Anotea_Horizontal_baseline.png" width="200px" />
 </p>
  
@@ -64,5 +63,5 @@ Ce diagramme décrit les étapes de collecte et de modération d'un avis dans An
 
 
 <p align="center">
-<img src="https://anotea.francetravail.fr/static/images/logo-france-travail-marianne.svg" width="100px"  />
+<img src="backend/src/http/site/static/images/logo-france-travail-marianne.svg" width="280px" />
 </p>
