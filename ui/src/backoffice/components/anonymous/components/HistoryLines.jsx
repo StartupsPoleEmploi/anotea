@@ -74,7 +74,7 @@ export default class HistoryLines extends React.Component {
     render() {
 
         let { lines, groupBy, format, formatTooltip, colors } = this.props;
-        const isJanuary = (value) => moment(value).month() === 1;
+        const isJanvierOuJuillet = (value) => moment(value).month() % 6 === 0;
         return (
             <ResponsiveLine
                 data={lines}
