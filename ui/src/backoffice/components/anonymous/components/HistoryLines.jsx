@@ -85,7 +85,7 @@ export default class HistoryLines extends React.Component {
                     //precision: 'day',
                 }}
                 axisBottom={{
-                    format: v => groupBy === 'month' ? (isJanuary(v) ? moment(v).format('MM/YY') : "") : moment(v).format('YYYY-MM-DD'),
+                    format: v => groupBy === 'month' ? (isJanvierOuJuillet(v) ? moment(v).format('MM/YY') : "") : moment(v).format('YYYY-MM-DD'),
                     tickValues: `every 1 ${groupBy || 'week'}s`
                 }}
                 axisLeft={{
