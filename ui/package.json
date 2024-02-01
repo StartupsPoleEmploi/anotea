@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "1.0.0",
   "description": "Anotea: Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "homepage": "https://anotea.francetravail.fr/backoffice",
+  "homepage": "https://anotea.pole-emploi.fr/backoffice",
   "repository": {
     "type": "git",
     "url": "git@github.com:StartupsPoleEmploi/anotea.git"
@@ -46,7 +46,6 @@
     "jwt-decode": "2.2.0",
     "lodash": ">=4.17.21",
     "moment": "2.29.1",
-    "node-sass": "7.0.3",
     "numeral": "2.0.6",
     "popper.js": "1.16.1",
     "query-string": "6.14.1",
@@ -61,7 +60,8 @@
     "webfontloader": "1.6.28"
   },
   "devDependencies": {
-    "eslint-plugin-react": "7.20.0"
+    "eslint-plugin-react": "7.20.0",
+    "node-sass": "4.14.1"
   },
   "proxy": "http://localhost:8080/"
 }
