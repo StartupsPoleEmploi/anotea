@@ -70,7 +70,7 @@ module.exports = ({ db, configuration, communes, peconnect }) => {
             .limit(1)
             .toArray();
 
-            if (results.length === 0) {
+            if (!results || results.length === 0) {
                 return res.render('errors/formationNotFound');
             }
 
