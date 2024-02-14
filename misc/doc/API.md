@@ -6,7 +6,7 @@ Anotea expose plusieurs API web :
 
 L'API publique groupe tous les services permettant de consulter les avis déposés par les stagiaires.
 
-Elle est disponible sur l'Emploi Store Dev (https://www.emploi-store-dev.fr/portail-developpeur/catalogueapi)
+Elle est disponible sur l'Emploi Store Dev (https://francetravail.io/data/api/anotea)
 
 La documentation Swagger est disponible à l'url suivante https://anotea.francetravail.fr/api/v1/doc
 

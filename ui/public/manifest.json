@@ -3,7 +3,7 @@
   "name": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "static/images/favicon.ico",
       "sizes": "32x32",
       "type": "image/png"
     }
