@@ -18,7 +18,7 @@ securityDefinitions:
     name: Authorization
     description: |
       Pour plus d'informations voir :
-      https://github.com/StartupsPoleEmploi/anotea/blob/master/API.md#Authentification
+      https://github.com/StartupsPoleEmploi/anotea/blob/master/misc/doc/API.md
 responses:
   AvisResponse:
     description: La liste des avis
