@@ -16,7 +16,7 @@ const Header = ({ items, defaultPath, onLogout }) => {
                     <div className="col-sm-12">
                         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
                             <NavLink to={defaultPath}>
-                                <img src={logo} className="logo" alt="logo" />
+                                <img src={logo} className="logo" alt="Anotéa" />
                             </NavLink>
 
                             {items}

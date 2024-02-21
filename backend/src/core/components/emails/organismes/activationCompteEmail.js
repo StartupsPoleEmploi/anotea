@@ -42,7 +42,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'Pôle Emploi vous donne accès aux avis de vos stagiaires',
+                    subject: 'France Travail vous donne accès aux avis de vos stagiaires',
                     body: await render(organisme),
                 },
             )

@@ -33,7 +33,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
         let links = await externalLinks(db, communes).getLink(stagiaire, 'lbb');
-        assert.strictEqual(links, 'https://labonneboite.pole-emploi.fr/entreprises/commune/84080/rome/A1101?d=30');
+        assert.strictEqual(links, 'https://labonneboite.francetravail.fr/entreprises/commune/84080/rome/A1101?d=30');
     });
 
     it('should get La Bonne Boite link with a formation having a postal code with an INSEE mapping', async () => {
@@ -57,10 +57,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
         let links = await externalLinks(db, communes).getLink(stagiaire, 'lbb');
-        assert.strictEqual(links, 'https://labonneboite.pole-emploi.fr/entreprises/commune/84080/rome/A1101?d=30');
+        assert.strictEqual(links, 'https://labonneboite.francetravail.fr/entreprises/commune/84080/rome/A1101?d=30');
     });
 
-    it('should get Offres Pôle Emploi link with a formation having a postal code without INSEE mapping', async () => {
+    it('should get Offres France Travail link with a formation having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
@@ -81,10 +81,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
         let links = await externalLinks(db, communes).getLink(stagiaire, 'pe');
-        assert.strictEqual(links, 'https://candidat.pole-emploi.fr/offres/recherche?lieux=84080&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+        assert.strictEqual(links, 'https://candidat.francetravail.fr/offres/recherche?lieux=84080&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
     });
 
-    it('should get Offres Pôle Emploi link with a formation having a postal code with an INSEE mapping', async () => {
+    it('should get Offres France Travail link with a formation having a postal code with an INSEE mapping', async () => {
         let db = await getTestDatabase();
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
@@ -106,7 +106,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
         let links = await externalLinks(db, communes).getLink(stagiaire, 'pe');
         assert.strictEqual(links,
-            'https://candidat.pole-emploi.fr/offres/recherche?lieux=84080&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+            'https://candidat.francetravail.fr/offres/recherche?lieux=84080&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
     });
 
     it('should get Clara link', async () => {
@@ -126,10 +126,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         });
 
         let links = await externalLinks(db, communes).getLink(stagiaire, 'clara');
-        assert.strictEqual(links, 'https://clara.pole-emploi.fr');
+        assert.strictEqual(links, 'https://clara.francetravail.fr');
     });
 
-    it('should get null link when trying to get Offres Pôle Emploi link when formation has no formacode', async () => {
+    it('should get null link when trying to get Offres France Travail link when formation has no formacode', async () => {
         let db = await getTestDatabase();
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({

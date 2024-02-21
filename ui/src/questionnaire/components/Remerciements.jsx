@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Formation from './Formation';
-import peLogoMarianne from '../images/pe-logo-marianne.png';
-import peSvg from '../images/pole-emploi-fr.svg';
-import logoMarianne from '../images/logo2021-marianne.svg';
+import logo from '../images/Bloc_Marque_RF_France_Travail_RVB_Horizontal_Coul_Positif.svg';
 import './remerciements.scss';
 
 class Remerciements extends Component {
@@ -89,12 +87,11 @@ class Remerciements extends Component {
                                         <div>
                                         <a
                                             className="textimage"
-                                            href="https://candidat.pole-emploi.fr/formations/recherche"
-                                            title="Visiter l'espace de recherche de formation de Pôle Emploi"
+                                            href="https://candidat.francetravail.fr/formations/recherche"
+                                            title="Visiter l'espace de recherche de formation de France Travail"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src={logoMarianne} height="86px" />
-                                            <img src={peSvg} height="86px" />
+                                            <img src={logo} height="86px" />
                                         </a>
                                         </div></div>
                                     </div>

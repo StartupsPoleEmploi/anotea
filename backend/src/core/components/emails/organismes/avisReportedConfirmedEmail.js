@@ -17,7 +17,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'Pôle Emploi - Avis signalé dans votre Espace Anotéa',
+                    subject: 'France Travail - Avis signalé dans votre Espace Anotéa',
                     body: await render(organisme, avis),
                 },
             );

@@ -49,7 +49,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 stagiaire.individu.email,
                 {
-                    subject: 'Pôle Emploi vous demande votre avis sur votre formation',
+                    subject: 'France Travail vous demande votre avis sur votre formation',
                     body: await render(stagiaire),
                 },
                 {

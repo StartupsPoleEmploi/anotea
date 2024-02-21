@@ -98,7 +98,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                                 code_financeur: '10',
                             }],
                             organisme_formateur: {
-                                label: 'Pole Emploi Formation',
+                                label: 'France Travail Formation',
                                 raison_sociale: 'INSTITUT DE FORMATION',
                                 siret: '22222222222222',
                                 numero: '14_OF_XXXXXXXXXX'

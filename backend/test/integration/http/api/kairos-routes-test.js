@@ -12,7 +12,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     const insertOrganisme = async siret => {
         return insertIntoDatabase('accounts', newOrganismeAccount({
             siret,
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             courriel: 'contact@organisme.fr',
             codeRegion: '11',
         }));
@@ -21,7 +21,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     const createPayload = siret => {
         return {
             siret: siret,
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             courriel: 'contact@organisme.fr',
             region: 'Ile-de-France',
         };
@@ -46,7 +46,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             organisme: {
                 id: parseInt(siret),
                 siret,
-                raison_sociale: 'Pole Emploi Formation',
+                raison_sociale: 'France Travail Formation',
                 numero: '14_OF_0000000123',
                 lieux_de_formation: [
                     {
@@ -99,7 +99,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepStrictEqual(_.omit(organisme, ['token', 'creationDate']), {
             _id: parseInt(siret),
             siret,
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             courriel: 'contact@organisme.fr',
             courriels: [{ courriel: 'contact@organisme.fr', source: 'kairos' }],
             sources: ['kairos', 'sso'],
@@ -138,7 +138,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.ok(decodedToken.exp);
         assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             sub: siret,
             siret: siret,
             codeRegion: '11',
@@ -327,7 +327,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             insertIntoDatabase('accounts', newOrganismeAccount({
                 id: parseInt(siret),
                 siret,
-                raison_sociale: 'Pole Emploi Formation',
+                raison_sociale: 'France Travail Formation',
                 courriel: 'contact@organisme.fr',
                 meta: {
                     kairos: {
@@ -347,7 +347,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             meta: {
                 organisme: {
                     id: parseInt(siret),
-                    raison_sociale: 'Pole Emploi Formation',
+                    raison_sociale: 'France Travail Formation',
                     siret: siret,
                     numero: '14_OF_0000000123',
                     lieux_de_formation: [

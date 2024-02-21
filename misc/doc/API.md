@@ -6,9 +6,9 @@ Anotea expose plusieurs API web :
 
 L'API publique groupe tous les services permettant de consulter les avis déposés par les stagiaires.
 
-Elle est disponible sur l'Emploi Store Dev (https://www.emploi-store-dev.fr/portail-developpeur/catalogueapi)
+Elle est disponible sur l'Emploi Store Dev (https://francetravail.io/data/api/anotea)
 
-La documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/v1/doc
+La documentation Swagger est disponible à l'url suivante https://anotea.francetravail.fr/api/v1/doc
 
 ### Authentification
 
@@ -39,7 +39,7 @@ Exemple d'appel:
 
 ```sh
 curl -X GET \
-https://anotea.pole-emploi.fr/api/v1/ping/authenticated \
+https://anotea.francetravail.fr/api/v1/ping/authenticated \
 -H 'Authorization: ANOTEA-HMAC-SHA256 admin:1532004499293:217e41887152c459e34bd7070ab1ac8da572c1cf6107cafbbd0217d4b87db1a4'
 ```
 
@@ -47,7 +47,7 @@ https://anotea.pole-emploi.fr/api/v1/ping/authenticated \
 
 Cette API permet aux utilisateurs de l'application Kairos de se connecter automatiquement à Anotéa.
 
-Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/kairos/doc
+Le documentation Swagger est disponible à l'url suivante https://anotea.francetravail.fr/api/kairos/doc
 
 Le processus d'authentification est le suivant :
 

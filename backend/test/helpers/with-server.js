@@ -70,7 +70,7 @@ module.exports = {
                     .set('authorization', `Bearer ${jwt.access_token}`)
                     .send({
                         siret: '22222222222222',
-                        raison_sociale: 'Pole Emploi Formation',
+                        raison_sociale: 'France Travail Formation',
                         courriel: 'contact@organisme.fr',
                         region: 'Ile-de-France',
 

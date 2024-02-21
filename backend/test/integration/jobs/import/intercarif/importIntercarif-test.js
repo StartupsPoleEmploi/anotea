@@ -22,8 +22,8 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                 numero: 'F_XX_XX',
                 datecrea: '20010503',
                 datemaj: '20171213',
-                file: 'https://anotea.pole-emploi.fr',
-                href: 'https://anotea.pole-emploi.fr'
+                file: 'https://anotea.francetravail.fr',
+                href: 'https://anotea.francetravail.fr'
             },
             domaine_formation: {
                 code_formacodes: [
@@ -80,7 +80,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                     },
                     web: {
                         urlwebs: [
-                            'https://anotea.pole-emploi.fr'
+                            'https://anotea.francetravail.fr'
                         ]
                     }
                 }
@@ -91,7 +91,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             code_niveau_sortie: '4',
             url_formation: {
                 urlwebs: [
-                    'https://anotea.pole-emploi.fr'
+                    'https://anotea.francetravail.fr'
                 ]
             },
             organisme_formation_responsable: {
@@ -121,7 +121,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                 '-'
                             ]
                         },
-                        courriel: "responsable@anotea.pole-emploi.fr",
+                        courriel: "responsable@anotea.francetravail.fr",
                         telfixe: {
                             numtels: [
                                 '11 11'
@@ -134,7 +134,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                         },
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                'https://anotea.francetravail.fr'
                             ]
                         }
                     }
@@ -171,7 +171,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                         courriel: 'anotea.pe+responsable@gmail.com',
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                'https://anotea.francetravail.fr'
                             ]
                         }
                     }
@@ -380,7 +380,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             },
                             web: {
                                 urlwebs: [
-                                    'https://anotea.pole-emploi.fr'
+                                    'https://anotea.francetravail.fr'
                                 ]
                             }
                         }
@@ -388,7 +388,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                     modalites_entrees_sorties: '0',
                     url_action: {
                         urlwebs: [
-                            'https://anotea.pole-emploi.fr'
+                            'https://anotea.francetravail.fr'
                         ]
                     },
                     adresse_information: {
@@ -456,7 +456,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                 courriel: 'anotea.pe+paris@gmail.com',
                                 web: {
                                     urlwebs: [
-                                        'https://anotea.pole-emploi.fr'
+                                        'https://anotea.francetravail.fr'
                                     ]
                                 }
                             }

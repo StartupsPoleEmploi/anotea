@@ -45,7 +45,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'Pôle Emploi - Aidez-nous à améliorer Anotéa',
+                    subject: 'France Travail - Aidez-nous à améliorer Anotéa',
                     body: await render(organisme),
                 },
             )

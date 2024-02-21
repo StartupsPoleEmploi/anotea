@@ -4,14 +4,14 @@ Le widget Anotea permet d’intégrer et de promouvoir facilement les avis des s
 
 Il existe en trois formats (`score`, `carrousel`, `liste` ) et supporte tous les navigateurs modernes (Firefox 32+, Chrome 37+, Opera 30+, Safari OS X, Internet Explorer 11+).
 
-Vous pouvez consulter des exemples d'intégration du widget à l'url suivante [https://anotea.pole-emploi.fr/doc/widget](https://anotea.pole-emploi.fr/doc/widget)
+Vous pouvez consulter des exemples d'intégration du widget à l'url suivante [https://anotea.francetravail.fr/doc/widget](https://anotea.francetravail.fr/doc/widget)
 
 ## Configuration du widget
 
 Insérez la balise suivante de préférence dans la balise `<head>` de votre document HTML.
 
 ```html
-<script src="https://anotea.pole-emploi.fr/static/js/widget/anotea-widget-loader.min.js"></script>
+<script src="https://anotea.francetravail.fr/static/js/widget/anotea-widget-loader.min.js"></script>
 ```
 
 Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:

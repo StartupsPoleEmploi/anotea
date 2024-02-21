@@ -31,7 +31,7 @@ module.exports = (db, regions) => {
     }
 
     return {
-        name: 'Pôle Emploi',
+        name: 'France Travail',
         csvOptions: {
             delimiter: '|',
             columns: [

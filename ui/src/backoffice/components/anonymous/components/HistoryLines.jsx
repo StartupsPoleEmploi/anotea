@@ -74,6 +74,7 @@ export default class HistoryLines extends React.Component {
     render() {
 
         let { lines, groupBy, format, formatTooltip, colors } = this.props;
+        const isJanvierOuJuillet = (value) => moment(value).month() % 6 === 0;
         return (
             <ResponsiveLine
                 data={lines}
@@ -84,7 +85,7 @@ export default class HistoryLines extends React.Component {
                     //precision: 'day',
                 }}
                 axisBottom={{
-                    format: v => groupBy === 'month' ? moment(v).format('MM/YY') : moment(v).format('YYYY-MM-DD'),
+                    format: v => groupBy === 'month' ? (isJanvierOuJuillet(v) ? moment(v).format('MM/YY') : "") : moment(v).format('YYYY-MM-DD'),
                     tickValues: `every 1 ${groupBy || 'week'}s`
                 }}
                 axisLeft={{

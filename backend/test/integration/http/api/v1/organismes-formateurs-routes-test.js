@@ -21,7 +21,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             id: 22222222222222,
             siret: '22222222222222',
             numero: '14_OF_0000000123',
-            raison_sociale: 'Pole Emploi Formation',
+            raison_sociale: 'France Travail Formation',
             lieux_de_formation: [
                 {
                     adresse: {
@@ -64,7 +64,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(response.body, {
             '@context': 'http://schema.org',
             '@type': 'Organization',
-            'name': 'Pole Emploi Formation',
+            'name': 'France Travail Formation',
             'aggregateRating': {
                 '@type': 'AggregateRating',
                 'ratingValue': 5.1,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><lheo xmlns="http://www.lheo.org/2.2"><offres>
-<formation numero="F_XX_XX" datecrea="20010503" datemaj="20171213" file="https://anotea.pole-emploi.fr" href="https://anotea.pole-emploi.fr">
+<formation numero="F_XX_XX" datecrea="20010503" datemaj="20171213" file="https://anotea.francetravail.fr" href="https://anotea.francetravail.fr">
 <domaine-formation>
 <code-FORMACODE ref="V12" tag="principal">22403</code-FORMACODE>
 <code-NSF>233</code-NSF>
@@ -36,7 +36,7 @@
 </portable>
 <courriel>anotea.pe@gmail.com</courriel>
 <web>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </web>
 </coordonneFs>
 </contact-formation>
@@ -49,7 +49,7 @@
 </certification>
 <code-niveau-sortie>4</code-niveau-sortie>
 <url-formation>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </url-formation>
 <action numero="AC_XX_XXXXXX" datecrea="20010503" datemaj="20171213">
 <rythme-formation>Continu temps plein, Modulaire</rythme-formation>
@@ -82,13 +82,13 @@
 <numtel>01 11 22 33 44</numtel>
 </fax>
 <web>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </web>
 </coordonnees>
 </lieu-de-formation>
 <modalites-entrees-sorties>0</modalites-entrees-sorties>
 <url-action>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </url-action>
 <session numero="SE_XXXXXX" datecrea="20010503" datemaj="20171213">
 <periode>
@@ -459,7 +459,7 @@
 </fax>
 <courriel>anotea.pe+paris@gmail.com</courriel>
 <web>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </web>
 </coordonnees>
 </contact-formateur>
@@ -524,7 +524,7 @@
 <raison-sociale>Centre de formation Anotéa</raison-sociale>
 <coordonnees-organisme>
 <coordonnees>
-<courriel>responsable@anotea.pole-emploi.fr</courriel>
+<courriel>responsable@anotea.francetravail.fr</courriel>
 <adresse>
 <ligne>-</ligne>
 <codepostal>93100</codepostal>
@@ -545,7 +545,7 @@
 <numtel>01 11 22 33 44</numtel>
 </fax>
 <web>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </web>
 </coordonnees>
 </coordonnees-organisme>
@@ -574,7 +574,7 @@
 </fax>
 <courriel>anotea.pe+responsable@gmail.com</courriel>
 <web>
-<urlweb>https://anotea.pole-emploi.fr</urlweb>
+<urlweb>https://anotea.francetravail.fr</urlweb>
 </web>
 </coordonnees>
 </contact-organisme>

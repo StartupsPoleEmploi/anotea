@@ -27,7 +27,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 {
                     _id: '1234',
                     siret: '11111111111111',
-                    raison_sociale: 'Pole Emploi Formation',
+                    raison_sociale: 'France Travail Formation',
                     courriel: 'contact@poleemploi-formation.fr',
                     courriels: [
                         { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
@@ -100,7 +100,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 {
                     _id: idOrganisme,
                     siret: '11111111111111',
-                    raison_sociale: 'Pole Emploi Formation',
+                    raison_sociale: 'France Travail Formation',
                     courriel: 'contact@poleemploi-formation.fr',
                     courriels: [
                         { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
@@ -249,7 +249,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 33333333333333,
-                raison_sociale: 'Pole Emploi',
+                raison_sociale: 'France Travail',
             })),
         ]);
 

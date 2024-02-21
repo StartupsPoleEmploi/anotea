@@ -3,12 +3,12 @@ window.anotea = window.anotea || {};
 var getAnoteaUrl = function(path, env) {
     var location = window.location.href;
 
-    if (env === 'recette' || location.indexOf('https://anotea.beta.pole-emploi.fr') !== -1) {
-        return 'https://anotea.beta.pole-emploi.fr' + path;
+    if (env === 'recette' || location.indexOf('https://anotea.beta.francetravail.fr') !== -1) {
+        return 'https://anotea.beta.francetravail.fr' + path;
     } else if (env === 'dev' || location.indexOf('load_anotea_widget_iframe_from_localhost=true') !== -1) {
         return 'http://localhost:3000' + path;
     }
-    return 'https://anotea.pole-emploi.fr' + path;
+    return 'https://anotea.francetravail.fr' + path;
 };
 
 var appendChild = function(name, element, attach) {

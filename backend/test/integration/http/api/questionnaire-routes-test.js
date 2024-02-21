@@ -64,7 +64,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     }],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
-                        label: 'Pole Emploi Formation',
+                        label: 'France Travail Formation',
                         siret: '11111111111111',
                         numero: '14_OF_XXXXXXXXXX',
                     },
@@ -175,7 +175,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     }],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
-                        label: 'Pole Emploi Formation',
+                        label: 'France Travail Formation',
                         siret: '11111111111111',
                         numero: '14_OF_XXXXXXXXXX',
                     },
@@ -253,7 +253,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     }],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
-                        label: 'Pole Emploi Formation',
+                        label: 'France Travail Formation',
                         siret: '11111111111111',
                         numero: '14_OF_XXXXXXXXXX',
                     },

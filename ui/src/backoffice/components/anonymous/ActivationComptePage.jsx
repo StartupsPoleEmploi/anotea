@@ -144,10 +144,10 @@ export default class ActivationComptePage extends React.Component {
                                                 />
                                                 <p className="clarification mt-3">
                                                     Vous souhaitez en savoir plus sur le service Anotéa : consultez
-                                                    <a href="http://anotea.pole-emploi.fr" target="blank">
-                                                        http://anotea.pole-emploi.fr
+                                                    <a href="http://anotea.francetravail.fr" target="blank">
+                                                        http://anotea.francetravail.fr
                                                     </a> et sa
-                                                    <a href="http://anotea.pole-emploi.fr/faq" target="blank">
+                                                    <a href="http://anotea.francetravail.fr/faq" target="blank">
                                                         Foire aux Questions
                                                     </a>.
                                                 </p>

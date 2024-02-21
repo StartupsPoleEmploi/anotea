@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logoRF from '../images/Republique_Francaise_RVB.png';
-import logoAnotea from '../images/logo-anotea.png';
+import logoAnotea from '../images/logo_Anotea_Horizontal_baseline.png';
 import PropTypes from 'prop-types';
 import './Verified.scss';
 
@@ -20,7 +20,7 @@ export default class Verified extends Component {
                     className="logo"
                     src={logoRF} />
                 <img
-                    className="logo"
+                    className="logo logo-anotea"
                     src={logoAnotea} />
             </div>
         );

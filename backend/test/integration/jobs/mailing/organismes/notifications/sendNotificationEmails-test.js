@@ -63,7 +63,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
 
         let message = mailer.getLastEmailMessageSent();
         assert.strictEqual(message.email, 'new@organisme.fr');
-        assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
+        assert.strictEqual(message.parameters.subject, 'France Travail - Vous avez 5 nouveaux avis stagiaires');
         assert.ok(message.parameters.body.match('.*ok glop.*'));
         assert.ok(!message.parameters.body.match('.*pas glop.*'));
         assert.deepStrictEqual(results, {
@@ -110,7 +110,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
 
         let message = mailer.getLastEmailMessageSent();
         assert.deepStrictEqual(message.email, 'new@organisme.fr');
-        assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
+        assert.strictEqual(message.parameters.subject, 'France Travail - Vous avez 5 nouveaux avis stagiaires');
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
