@@ -8,7 +8,7 @@ var getAnoteaUrl = function(path, env) {
     } else if (env === 'dev' || location.indexOf('load_anotea_widget_iframe_from_localhost=true') !== -1) {
         return 'http://localhost:3000' + path;
     }
-    return 'https://anotea.francetravail.fr' + path;
+    return 'https://anotea.pole-emploi.fr' + path;
 };
 
 var appendChild = function(name, element, attach) {
