@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
-import logo from './logo-financeur.png';
+import logo from './logo-financeur.svg';
 import moment from 'moment';
 import './PDF.scss';
 
