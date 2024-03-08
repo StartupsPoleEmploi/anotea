@@ -5,13 +5,14 @@ module.exports = (db, configuration) => {
 
     let clientId = configuration.peconnect.client_id;
     let issuerUrl = configuration.peconnect.issuer_url;
+    let endpoint = configuration.peconnect.endpoint;
     let callbackUrl = configuration.peconnect.callback_url;
 
     let issuer = new Issuer({
         issuer: issuerUrl,
         jwks_uri: `https://entreprise.francetravail.fr/connexion/oauth2/connect/jwk_uri`,
-        authorization_endpoint: `${issuerUrl}/authorize`,
-        token_endpoint: `${issuerUrl}/access_token?realm=/individu`,
+        authorization_endpoint: `${endpoint}/authorize`,
+        token_endpoint: `${endpoint}/access_token?realm=/individu`,
         token_endpoint_auth_methods_supported: 'client_secret_post',
         userinfo_endpoint: configuration.peconnect.api_url,
     });
@@ -54,7 +55,13 @@ module.exports = (db, configuration) => {
                 throw new BadDataError('Unable to find PE connect token');
             }
 
-            let tokenSet = await client.callback(callbackUrl, params, { state: auth.state, nonce: auth.nonce });
+            let tokenSet;
+            try {
+                tokenSet = await client.callback(callbackUrl, params, { state: auth.state, nonce: auth.nonce });
+            } catch (e) {
+                console.error('getUserInfo', e);
+                throw e;
+            }
 
             return await client.userinfo(tokenSet.access_token);
         },
