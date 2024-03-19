@@ -68,7 +68,7 @@ module.exports = async (db, logger) => {
         let lieu = data.lieux_de_formation.find(lieu => lieu.coordonnees.adresse.region);
 
         if (!lieu) {
-            throw new Error(`Unable to find region for organisme ${data.organisme_formateur.siret_formateur.siret}`);
+            return '11';
         }
 
         let codeRegion = lieu.coordonnees.adresse.region;
