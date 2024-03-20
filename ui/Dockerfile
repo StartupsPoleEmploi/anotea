@@ -5,7 +5,7 @@ RUN apt-get update \
 
 #Install nodejs
 ENV NVM_VERSION v0.35.1
-ENV NODE_VERSION 20.9.0
+ENV NODE_VERSION lts/iron
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH

@@ -1,4 +1,4 @@
-FROM node:12.13.1-stretch
+FROM node:iron-slim
 
 RUN npm install -g forever
 
