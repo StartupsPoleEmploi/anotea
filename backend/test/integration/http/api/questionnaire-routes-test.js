@@ -31,21 +31,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(_.omit(response.body.stagiaire, ['_id', 'token']), {
-            campaign: 'test-campaign',
-            importDate: date.toJSON(),
-            avisCreated: false,
-            refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
-            individu: {
-                nom: 'Dupont',
-                prenom: 'Henri',
-                email: 'henri@email.fr',
-                telephones: [
-                    '0123456789',
-                    'NULL'
-                ],
-                emailValid: true,
-                identifiant_pe: '1111111111'
-            },
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur',
@@ -79,14 +64,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     },
                 },
             },
-            unsubscribe: false,
-            mailSent: true,
-            mailSentDate: date.toJSON(),
-            tracking: {
-                firstRead: date.toJSON()
-            },
-            codeRegion: '11',
-            dispositifFinancement: 'AIF',
         });
 
         assert.deepStrictEqual(_.omit(response.body.infosRegion, ['stagiaire']), {

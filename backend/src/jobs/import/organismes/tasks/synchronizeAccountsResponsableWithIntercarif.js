@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable max-statements-per-line */
 const uuid = require('node-uuid');
 const _ = require('lodash');
 const { promiseAll } = require('../../../job-utils');
@@ -8,6 +10,41 @@ module.exports = async (db, logger) => {
         total: 0,
         updated: 0,
         invalid: 0,
+    };
+
+    const findCodeRegionResponsable = organisme_formation_responsable => {
+        if (!organisme_formation_responsable ||
+            !organisme_formation_responsable.coordonnees_organisme ||
+            !organisme_formation_responsable.coordonnees_organisme.coordonnees ||
+            !organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse ||
+            !organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region) {
+            return '11';
+        }
+
+        let lieu = organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region;
+        switch (lieu) {
+            case '26': lieu = '27'; break;
+            case '43': lieu = '27'; break;
+            case '23': lieu = '28'; break;
+            case '25': lieu = '28'; break;
+            case '22': lieu = '32'; break;
+            case '31': lieu = '32'; break;
+            case '21': lieu = '44'; break;
+            case '41': lieu = '44'; break;
+            case '42': lieu = '44'; break;
+            case '54': lieu = '75'; break;
+            case '72': lieu = '75'; break;
+            case '74': lieu = '75'; break;
+            case '73': lieu = '76'; break;
+            case '91': lieu = '76'; break;
+            case '82': lieu = '84'; break;
+            case '83': lieu = '84'; break;
+            case '93': lieu = '93'; break;
+            case '94': lieu = '94'; break;
+            default: break;
+        }
+
+        return lieu;
     };
 
     const getOrganismesFromIntercarif = async () => {
@@ -25,9 +62,9 @@ module.exports = async (db, logger) => {
                 && organisme_formation_responsable.siret_organisme_formation.siret !== '0') {
                 let siret = organisme_formation_responsable.siret_organisme_formation.siret;
                 let hasCourriel = undefined;
-                if (organisme_formation_responsable 
-                    && organisme_formation_responsable.coordonnees_organisme 
-                    && organisme_formation_responsable.coordonnees_organisme.coordonnees 
+                if (organisme_formation_responsable
+                    && organisme_formation_responsable.coordonnees_organisme
+                    && organisme_formation_responsable.coordonnees_organisme.coordonnees
                     && organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel)
                     hasCourriel = !!(organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel);
 
@@ -61,40 +98,6 @@ module.exports = async (db, logger) => {
             }
         }
         return Object.values(accumulator);
-    };
-
-    const findCodeRegionResponsable = organisme_formation_responsable => {
-        if (!organisme_formation_responsable 
-            || !organisme_formation_responsable.coordonnees_organisme 
-            || !organisme_formation_responsable.coordonnees_organisme.coordonnees
-            || !organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse
-            || !organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region) {
-            throw new Error(`Unable to find region for organisme ${organisme_formation_responsable.siret_organisme_formation.siret}`);
-        }
-
-        let lieu = organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region;
-        switch (lieu) {
-            case '26': lieu = '27'; break;
-            case '43': lieu = '27'; break;
-            case '23': lieu = '28'; break;
-            case '25': lieu = '28'; break;
-            case '22': lieu = '32'; break;
-            case '31': lieu = '32'; break;
-            case '21': lieu = '44'; break;
-            case '41': lieu = '44'; break;
-            case '42': lieu = '44'; break;
-            case '54': lieu = '75'; break;
-            case '72': lieu = '75'; break;
-            case '74': lieu = '75'; break;
-            case '73': lieu = '76'; break;
-            case '91': lieu = '76'; break;
-            case '82': lieu = '84'; break;
-            case '83': lieu = '84'; break;
-            case '93': lieu = '93'; break;
-            case '94': lieu = '94'; break;
-        }
-
-        return lieu;
     };
 
     const synchronizeAccount = async data => {

@@ -22,8 +22,9 @@
     "client_id": "client_id",
     "client_secret": "client_secret",
     "callback_url": "http://127.0.0.1:8080/peconnect/callback",
-    "issuer_url": "https://authentification-candidat.pole-emploi.fr:443/connexion/oauth2",
-    "api_url": "https://api.emploi-store.fr/partenaire/peconnect-individu/v1/userinfo",
+    "issuer_url": "https://authentification-candidat.francetravail.fr/connexion/oauth2/realms/root/realms/individu",
+    "endpoint":   "https://authentification-candidat.francetravail.fr/connexion/oauth2",
+    "api_url": "https://api.francetravail.io/partenaire/peconnect-individu/v1/userinfo",
     "timeout": 1000
   },
   "sentry": {

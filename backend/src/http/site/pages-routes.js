@@ -78,6 +78,7 @@ module.exports = ({ db, configuration, communes, peconnect }) => {
             db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { 'tracking.peConnectSucceed': new Date() } });
             return res.redirect(`${configuration.app.public_hostname}/questionnaire/${stagiaire.token}`);
         } catch (e) {
+            console.error(e);
             return res.status(500).render('errors/error');
         }
     });
