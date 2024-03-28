@@ -10,7 +10,7 @@ module.exports = (db, configuration) => {
 
     let issuer = new Issuer({
         issuer: issuerUrl,
-        jwks_uri: `https://entreprise.francetravail.fr/connexion/oauth2/connect/jwk_uri`,
+        jwks_uri: `${endpoint}/connect/jwk_uri`,
         authorization_endpoint: `${endpoint}/authorize`,
         token_endpoint: `${endpoint}/access_token?realm=/individu`,
         token_endpoint_auth_methods_supported: 'client_secret_post',
