@@ -87,7 +87,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body.avis[0].qualification, 'positif');
 
         response = await request(app)
-        .get('/api/backoffice/avis?qualification=négatif')
+        .get('/api/backoffice/avis?qualification=n%C3%A9gatif')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
