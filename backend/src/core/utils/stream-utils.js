@@ -143,17 +143,17 @@ module.exports = {
         });
     },
     parseCSV: parse,
-    transformObjectIntoCSV: columns => {
+    transformObjectIntoCSV: row => {
         let lines = 0;
         return new Transform({
             objectMode: true,
             transform: function(chunk, encoding, callback) {
                 try {
                     if (lines++ === 0) {
-                        this.push(`${Object.keys(columns).join(';')}\n`);
+                        this.push(`${Object.keys(row).join(';')}\n`);
                     }
 
-                    let line = Object.keys(columns).map(key => columns[key](chunk)).join(';');
+                    let line = Object.keys(row).map(key => row[key](chunk ? chunk.replaceAll(';', ',').replaceAll('"', '\'') : '')).join(';');
                     this.push(`${line}\n`);
                     callback();
                 } catch (e) {
