@@ -81,7 +81,7 @@ class Remerciements extends Component {
                                                 src={
                                                     process.env.PUBLIC_URL +
                                                     `/images/regions/carif-${stagiaire.codeRegion}.png`}
-                                                alt="logo carif" />
+                                                alt="défi métiers" />
                                         </a>
                                         }
                                         <div>
