@@ -42,7 +42,7 @@
     "byline": "5.0.0",
     "commander": "5.1.0",
     "compression": "1.7.4",
-    "config": "3.3.9",
+    "config": "3.3.11",
     "csv-parse": "4.10.1",
     "deep-object-diff": "^1.1.9",
     "ejs": "3.1.9",
@@ -74,7 +74,7 @@
     "unbzip2-stream": "1.4.3",
     "underscore.string": "3.3.6",
     "uuid": "8.3.2",
-    "xml2js": "0.4.23",
+    "xml2js": "0.6.2",
     "yamljs": "0.3.0"
   },
   "devDependencies": {
