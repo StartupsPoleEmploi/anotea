@@ -64,7 +64,7 @@ export default class OrganismesEmailsPreviewPage extends Component {
                                 <div className="col-md-6">
                                     <iframe
                                         title="Prévisualisation de l´email organismes"
-                                        lang='fr'
+                                        lang="fr"
                                         src={getEmailPreviewUrl('organismes', query.templateName || 'activationCompteEmail')}>
                                     </iframe>
                                 </div>
