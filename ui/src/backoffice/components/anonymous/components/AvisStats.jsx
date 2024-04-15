@@ -41,11 +41,19 @@ export default class AvisStats extends React.Component {
                                 <span className="value highlighted">
                                     {percentage(latest(stats, type, 'avis.nbAvisAvecCommentaire'), latest(stats, type, 'avis.nbAvis'))}%
                                 </span>
-                                {type === 'regional' &&
-                                <span className="value compare">
-                                    {percentage(latest(stats, 'national', 'avis.nbAvisAvecCommentaire'), latest(stats, 'national', 'avis.nbAvis'))}%*
-                                </span>
-                                }
+                                {type !== 'regional' && (
+                                    <span className="sr-only">National</span>
+                                )}
+
+                                {type === 'regional' && (
+                                    <>
+                                        <span className="sr-only">Regional </span>
+                                        <span className="value compare">
+                                            {percentage(latest(stats, 'national', 'avis.nbAvisAvecCommentaire'), latest(stats, 'national', 'avis.nbAvis'))}%*
+                                        </span>
+                                        <span className="sr-only">National</span>
+                                    </>
+                                )}
                             </div>
 
                         </div>

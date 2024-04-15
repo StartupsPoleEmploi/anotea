@@ -36,11 +36,19 @@ export default class FormationStats extends React.Component {
                                 <span className="value highlighted">
                                     {percentage(latest(stats, type, 'api.nbSessionsAvecAvis'), latest(stats, type, 'api.nbSessions'))}%
                                 </span>
-                                {type === 'regional' &&
-                                <span className="value compare">
-                                    {percentage(latest(stats, 'national', 'api.nbSessionsAvecAvis'), latest(stats, 'national', 'api.nbSessions'))}%*
-                                </span>
-                                }
+                                {type !== 'regional' && (
+                                    <span className="sr-only">National</span>
+                                )}
+
+                                {type === 'regional' && (
+                                    <>
+                                        <span className="sr-only">Regional </span>
+                                        <span className="value compare">
+                                            {percentage(latest(stats, 'national', 'api.nbSessionsAvecAvis'), latest(stats, 'national', 'api.nbSessions'))}%*
+                                        </span>
+                                        <span className="sr-only">National</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

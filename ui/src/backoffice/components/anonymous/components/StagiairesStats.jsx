@@ -9,11 +9,12 @@ export default class StagiairesStats extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
+        store: PropTypes.object.isRequired,
         stats: PropTypes.array.isRequired,
     };
 
     render() {
-        let { query, stats } = this.props;
+        let { query, store, stats } = this.props;
         let type = query.codeRegion ? 'regional' : 'national';
         let groupBy = 'month';
         let lines = [
@@ -43,17 +44,22 @@ export default class StagiairesStats extends React.Component {
                                 </div>
                             </div>
                             <div className="stats">
-                                <div className="name">Taux répondants</div>
-                                <div>
-                                    <span className="value highlighted">
-                                        {percentage(diff(stats, type, 'avis.nbAvis'), diff(stats, type, 'avis.nbStagiairesContactes'))}%
-                                    </span>
-                                    {type === 'regional' &&
-                                    <span className="value compare">
-                                        {percentage(diff(stats, 'national', 'avis.nbAvis'), diff(stats, 'national', 'avis.nbStagiairesContactes'))}%*
-                                    </span>
-                                    }
-                                </div>
+                                <span className="value highlighted">
+                                    {percentage(diff(stats, type, 'avis.nbAvis'), diff(stats, type, 'avis.nbStagiairesContactes'))}%
+                                </span>
+                                {type !== 'regional' && (
+                                    <span className="sr-only">National</span>
+                                )}
+
+                                {type === 'regional' && (
+                                    <>
+                                        <span >Regional {store.regions.find((element) => element.codeRegion === query.codeRegion)?.nom}</span>
+                                        <span className="value compare">
+                                            {percentage(diff(stats, 'national', 'avis.nbAvis'), diff(stats, 'national', 'avis.nbStagiairesContactes'))}%*
+                                        </span>
+                                        <span className="sr-only">National</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
