@@ -71,10 +71,10 @@ export default class StatsPanel extends React.Component {
                             </div>
                             <div className="row mb-5">
                                 <div className="col-sm-12 col-md-6">
-                                    <AvisStats query={query} stats={results.stats} />
+                                    <AvisStats query={query} stats={results.stats} store={store} />
                                 </div>
                                 <div className="col-sm-12 col-md-6">
-                                    <FormationStats query={query} stats={results.stats} />
+                                    <FormationStats query={query} stats={results.stats} store={store} />
                                 </div>
                             </div>
                             { this.mustShowAdminStats() &&

@@ -44,6 +44,7 @@ export default class StagiairesStats extends React.Component {
                                 </div>
                             </div>
                             <div className="stats">
+                                <div className="name">Taux répondants</div>
                                 <span className="value highlighted">
                                     {percentage(diff(stats, type, 'avis.nbAvis'), diff(stats, type, 'avis.nbStagiairesContactes'))}%
                                 </span>
@@ -53,7 +54,7 @@ export default class StagiairesStats extends React.Component {
 
                                 {type === 'regional' && (
                                     <>
-                                        <span >Regional {store.regions.find((element) => element.codeRegion === query.codeRegion)?.nom}</span>
+                                        <span className="sr-only">Region {store.regions.find((element) => element.codeRegion === query.codeRegion)?.nom}</span>
                                         <span className="value compare">
                                             {percentage(diff(stats, 'national', 'avis.nbAvis'), diff(stats, 'national', 'avis.nbStagiairesContactes'))}%*
                                         </span>

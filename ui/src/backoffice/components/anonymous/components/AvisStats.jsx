@@ -8,11 +8,12 @@ export default class AvisStats extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
+        store: PropTypes.object.isRequired,
         stats: PropTypes.array.isRequired,
     };
 
     render() {
-        let { query, stats } = this.props;
+        let { query, store, stats } = this.props;
         let type = query.codeRegion ? 'regional' : 'national';
 
         return (
@@ -47,7 +48,7 @@ export default class AvisStats extends React.Component {
 
                                 {type === 'regional' && (
                                     <>
-                                        <span className="sr-only">Regional </span>
+                                        <span className="sr-only">Region {store.regions.find((element) => element.codeRegion === query.codeRegion)?.nom}</span>
                                         <span className="value compare">
                                             {percentage(latest(stats, 'national', 'avis.nbAvisAvecCommentaire'), latest(stats, 'national', 'avis.nbAvis'))}%*
                                         </span>
