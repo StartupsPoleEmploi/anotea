@@ -26,10 +26,17 @@ export default class Titre extends React.Component {
         }
         return (
             <div className="Titre">
-                <span className={`mr-1 title ${avis.commentaire.titleMasked ? 'masked' : ''}`}>{avis.commentaire.title}</span>
-                {showModerationButtons &&
-                <i className={`far ${avis.commentaire.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
-                }
+                
+                {showModerationButtons && (
+                    <>
+                        <span className={`sr-only ${avis.commentaire.titleMasked ? '' : 'titre-masque'}`}>titre masqué</span>
+                        <span className={`mr-1 title ${avis.commentaire.titleMasked ? 'masked' : ''}`}>{avis.commentaire.title}</span>
+                        <button type="button" className="button-eye" onClick={this.toggle}>
+                            <span className="sr-only">{avis.commentaire.titleMasked ? "Afficher le titre" : "Masquer le titre"}</span>
+                            <i className={`far sr ${avis.commentaire.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} />
+                        </button>
+                    </>
+                )}
             </div>
         );
     }
