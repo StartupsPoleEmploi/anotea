@@ -39,7 +39,7 @@ export default class Organisme extends React.Component {
 
         return (
             <div className="Organisme row">
-                <div className="col-sm-2 offset-md-1">
+                <div className="col-sm-2 offset-md-1 style-col">
                     <p className="raison-sociale">{organisme.raison_sociale}</p>
                     <p className="siret">{organisme.siret}</p>
                 </div>

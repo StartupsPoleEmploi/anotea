@@ -64,4 +64,16 @@
       margin-bottom: 0.7rem;
     }
   }
+
+  .style-col{
+    max-width: 16.66667%;
+    flex: 0 0 16.66667%;
+  }
+
+  @media only screen and (max-width: 770px) {
+    .style-col{
+      max-width: 24.66667%;
+      flex: 3 0 18.66667%;
+    }
+  }
 }
