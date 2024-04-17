@@ -49,7 +49,7 @@ export default class StagiairesEmailsPreviewPage extends Component {
                                 <div className="col-md-6">
 
                                     <iframe
-                                        title="Prévisualisation de l'email Avis stagiaires"
+                                        title="Prévisualisation du courriel avis stagiaires"
                                         lang="fr"
                                         src={getEmailPreviewUrl('stagiaires', query.templateName || 'avisStagiaireEmail')}>
                                     </iframe>
