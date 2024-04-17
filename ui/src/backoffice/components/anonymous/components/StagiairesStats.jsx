@@ -63,24 +63,24 @@ export default class StagiairesStats extends React.Component {
                                 )}
                             </div>
                         </div>
-                    </div>
-                    <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }}>
-                        <HistoryLines
-                            lines={lines}
-                            colors={type === 'regional' ? ['rgba(35, 47, 56, 0.4)', '#F28017'] : ['#F28017']}
-                            groupBy={groupBy}
-                            format={v => `${v}%`}
-                            formatTooltip={data => {
-                                return (
-                                    <div className="d-flex justify-content-between text-left">
-                                        <span
-                                            className="mr-2">{`Avis : ${formatNumber(data.bucket['avis.nbAvis'])}`}</span>
-                                        <span>{`Stagiaires contactés : ${formatNumber(data.bucket['avis.nbStagiairesContactes'])}`}</span>
-                                    </div>
-                                );
-                            }}
-                        />
-                    </div>
+                    </div>   
+                </div>
+                <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }}>
+                    <HistoryLines
+                        lines={lines}
+                        colors={type === 'regional' ? ['rgba(35, 47, 56, 0.4)', '#F28017'] : ['#F28017']}
+                        groupBy={groupBy}
+                        format={v => `${v}%`}
+                        formatTooltip={data => {
+                            return (
+                                <div className="d-flex justify-content-between text-left">
+                                    <span
+                                        className="mr-2">{`Avis : ${formatNumber(data.bucket['avis.nbAvis'])}`}</span>
+                                    <span>{`Stagiaires contactés : ${formatNumber(data.bucket['avis.nbStagiairesContactes'])}`}</span>
+                                </div>
+                            );
+                        }}
+                    />
                 </div>
             </div>
         );
