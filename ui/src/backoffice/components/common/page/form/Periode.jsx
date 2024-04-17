@@ -34,6 +34,7 @@ export default class Periode extends React.Component {
         return (
             <div className="Periode d-flex justify-content-around align-items-center">
                 <i className="fas fa-map-marker-alt pl-1"></i>
+                <span className="sr-only">de</span>
                 <Date
                     value={periode.debut}
                     min={min}
