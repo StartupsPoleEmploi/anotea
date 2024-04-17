@@ -63,7 +63,7 @@ export default class StagiairesStats extends React.Component {
                                 )}
                             </div>
                         </div>
-                    </div>   
+                    </div>
                 </div>
                 <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }}>
                     <HistoryLines
