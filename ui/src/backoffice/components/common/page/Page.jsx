@@ -9,7 +9,7 @@ const Page = props => {
     let { theme } = useContext(BackofficeContext);
 
     return (
-        <div className={`Page mb-0 ${props.className || ''}`}>
+        <main id="contents" role="main" className={`Page mb-0 ${props.className || ''}`}>
 
             <div className={`search-holder ${theme.backgroundColor}`}>
 
@@ -45,7 +45,7 @@ const Page = props => {
             <div className="panel-holder">
                 {props.panel}
             </div>
-        </div>
+        </main>
     );
 };
 

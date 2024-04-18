@@ -76,7 +76,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                             si vous ne la connaissez pas,
                                             <a
                                                 className="contactez-nous"
-                                                style="text-decoration-line: underline;"
+                                                style={{"text-decoration-line": "underline;"}}
                                                 href="mailto:anotea@pole-emploi.fr">
                                                 contactez-nous
                                             </a>.

@@ -10,7 +10,10 @@ const Header = ({ items, defaultPath, onLogout }) => {
     let { account, theme } = useContext(BackofficeContext);
 
     return (
-        <div className={`Header ${theme.backgroundColor}`}>
+        <header role="banner" className={`Header ${theme.backgroundColor}`}>
+            <div class="skip-link-group">
+                <a href="#contents" class="skip-link sr-only sr-only-focusable">Accéder au contenu principal</a>
+            </div>
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
@@ -22,17 +25,17 @@ const Header = ({ items, defaultPath, onLogout }) => {
                             {items}
 
                             {account.profile !== 'anonymous' &&
-                            <button
-                                onClick={onLogout}
-                                className="logout btn btn-outline-light">
-                                <span>SE DECONNECTER</span>
-                            </button>
+                                <button
+                                    onClick={onLogout}
+                                    className="logout btn btn-outline-light">
+                                    <span>SE DECONNECTER</span>
+                                </button>
                             }
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
     );
 };
 
