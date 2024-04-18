@@ -85,6 +85,7 @@ export default class LoginPage extends React.Component {
                                             placeholder="Entrez votre SIRET"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                             error={this.state.error ? errorMessage : ''}
+                                            autoComplete="username"
                                         />
 
                                         <label className="mt-3">Mot de passe</label>
@@ -94,6 +95,7 @@ export default class LoginPage extends React.Component {
                                             placeholder="Entrez votre mot de passe "
                                             onChange={event => this.setState({ password: event.target.value })}
                                             error={this.state.error ? ' ' : ''}
+                                            autoComplete="current-password"
                                         />
                                     </>
                                 }

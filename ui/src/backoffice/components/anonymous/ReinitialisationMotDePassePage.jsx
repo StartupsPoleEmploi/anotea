@@ -107,6 +107,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             placeholder="Mot de passe"
                                             error={errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
+                                            autoComplete="new-password"
                                         />
 
                                         <label className="mt-3">Confirmer le nouveau mot de passe</label>
@@ -116,6 +117,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             placeholder="Mot de passe"
                                             error={errors.isNotSamePassword}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
+                                            autoComplete="new-password"
                                         />
                                     </>
                                 }

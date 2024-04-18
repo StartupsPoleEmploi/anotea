@@ -64,6 +64,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                             placeholder="Identifiant"
                                             error={this.state.error}
                                             onChange={event => this.setState({ identifiant: event.target.value })}
+                                            autoComplete="username"
                                         />
                                         <p className="clarification mt-3">
                                             Si vous êtes un organisme, vous devez désormais renseigner votre numéro de
