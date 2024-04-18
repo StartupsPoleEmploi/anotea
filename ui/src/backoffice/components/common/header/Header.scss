@@ -97,4 +97,21 @@
     font-weight: $font-weight-bold;
     letter-spacing: 1px;
   }
+
+  .skip-link-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .skip-link:focus {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    padding: 0.375rem;
+    background: #414042;
+    color: #ffffff;
+  }
 }
