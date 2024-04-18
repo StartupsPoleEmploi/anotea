@@ -17,16 +17,17 @@
     padding: 0;
 }
 
-.login > div {
+.login>div {
     float: left;
 }
 
-.login > * {
+.login>* {
     display: inline-block;
     height: 40px;
 }
 
-.logo, .admin {
+.logo,
+.admin {
     outline: none;
 }
 
@@ -44,7 +45,8 @@
     vertical-align: middle;
 }
 
-.header .logo-pe, .logo img {
+.header .logo-pe,
+.logo img {
     display: inline-block;
     height: 75px;
     vertical-align: middle;
@@ -84,7 +86,8 @@
     padding-bottom: 25px;
 }
 
-a.admin, a.contact {
+a.admin,
+a.contact {
     line-height: 107px;
 }
 
@@ -168,11 +171,13 @@ a.contact {
         display: none;
     }
 
-    .header .logo-pe-mobile, .header .logo img {
+    .header .logo-pe-mobile,
+    .header .logo img {
         display: inline-block;
     }
 
-    .header .logo-pe-mobile, .header .logo img {
+    .header .logo-pe-mobile,
+    .header .logo img {
         height: 36px;
         padding: 5px;
         display: inline-block;
@@ -194,8 +199,23 @@ a.contact {
         width: 24px;
     }
 
-    .header .admin, .header .menu span, .header .menu .icon-close, .header .menu .icon-open {
+    .header .admin,
+    .header .menu .icon-close,
+    .header .menu .icon-open {
         display: none;
+    }
+
+    .header .menu span{
+        border: 0 !important;
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        -webkit-clip-path: inset(50%) !important;
+        clip-path: inset(50%) !important;
+        height: 1px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        position: absolute !important;
+        width: 1px !important;
+        white-space: nowrap !important;
     }
 
     .header .menu .content {

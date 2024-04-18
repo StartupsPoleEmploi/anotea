@@ -91,7 +91,7 @@ class Remerciements extends Component {
                                             title="Visiter l'espace de recherche de formation de France Travail"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src={logo} height="86px" />
+                                            <img src={logo} height="86px" alt="République française - liberté égalité fraternité France travail"/>
                                         </a>
                                         </div></div>
                                     </div>
