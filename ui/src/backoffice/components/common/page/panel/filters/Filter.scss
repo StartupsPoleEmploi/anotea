@@ -4,11 +4,10 @@
 
   &.nav-item {
 
-    opacity: 0.6;
     position: relative;
 
     &.active {
-      opacity: 1;
+      text-decoration: underline;
 
       &:hover, &:focus {
         font-weight: $font-weight-normal;
@@ -18,7 +17,6 @@
     &:hover, &:focus {
       cursor: pointer;
       font-weight: $font-weight-bold;
-      opacity: 1;
     }
 
     .nav-link {

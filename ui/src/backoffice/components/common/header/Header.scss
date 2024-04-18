@@ -62,14 +62,13 @@
     .nav-link {
       color: $color-white;
       display: inline-block;
-      opacity: 0.6;
       white-space: nowrap;
       padding: 0.5rem 1rem 0.5rem 1rem;
 
       &.active {
         color: $color-white;
         font-weight: $font-weight-bold;
-        opacity: 1;
+        text-decoration: underline;
       }
 
       &:hover,
