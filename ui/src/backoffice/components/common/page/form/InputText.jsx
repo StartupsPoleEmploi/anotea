@@ -11,10 +11,16 @@ export default class InputText extends React.Component {
         reset: PropTypes.func,
         error: PropTypes.string,
         autoComplete: PropTypes.string,
+        inputRef: PropTypes.object,
     };
 
+    constructor(props) {
+        super(props);
+        this.inputRef = React.createRef();
+    }
+
     render() {
-        let { icon, reset, error } = this.props;
+        let { icon, reset, error, inputRef } = this.props;
 
         return (
             <div className="InputText">
@@ -30,6 +36,7 @@ export default class InputText extends React.Component {
                         type="text"
                         autocomplete={this.autoComplete?this.autoComplete:null}
                         className={`${this.icon ? 'with-icon' : ''} ${this.reset ? 'with-reset' : ''} ${this.error ? 'with-error' : ''}`}
+                        ref={inputRef || this.inputRef}
                         {..._.omit(this.props, ['icon', 'reset', 'error'])}
                     />
 

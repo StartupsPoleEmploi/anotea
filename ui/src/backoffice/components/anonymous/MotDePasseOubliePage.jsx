@@ -7,6 +7,8 @@ import Button from '../../../common/components/Button';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { askNewPassword } from '../../services/passwordService';
 import BackofficeContext from '../../BackofficeContext';
+import './LoginPage.scss';
+
 
 export default class MotDePasseOubliePage extends React.Component {
 
@@ -18,6 +20,7 @@ export default class MotDePasseOubliePage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             loading: false,
             identifiant: '',
@@ -41,7 +44,12 @@ export default class MotDePasseOubliePage extends React.Component {
             });
         })
         .catch(() => {
-            this.setState({ error: 'Une erreur est survenue', loading: false });
+            this.setState({ error: 'Une erreur est survenue', loading: false },()=>{
+                if (this.inputRef.current && this.inputRef.current.focus) {
+                    this.inputRef.current.focus();
+                }
+            }
+        );
         });
     };
 
@@ -49,6 +57,7 @@ export default class MotDePasseOubliePage extends React.Component {
 
         return (
             <Page
+                className="MotDePasseOubliePage"
                 title={'Votre espace Anotéa'}
                 panel={
                     <Panel
@@ -65,6 +74,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                             error={this.state.error}
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                             autoComplete="username"
+                                            inputRef={this.inputRef}
                                         />
                                         <p className="clarification mt-3">
                                             Si vous êtes un organisme, vous devez désormais renseigner votre numéro de
