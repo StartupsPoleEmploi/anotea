@@ -19,6 +19,7 @@ export default class LoginPage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             loginWithAccessToken: false,
             loading: false,
@@ -42,7 +43,13 @@ export default class LoginPage extends React.Component {
 
         login(this.state.identifiant, this.state.password)
         .then(data => this.props.onLogin(data))
-        .catch(() => this.setState({ error: true, loading: false }));
+        .catch(() => {
+            this.setState({ error: true, loading: false }, ()=>{
+                if (this.inputRef.current && this.inputRef.current.focus) {
+                    this.inputRef.current.focus();
+                }
+            });
+        });
     };
 
     handleAccessToken = data => {
@@ -87,6 +94,7 @@ export default class LoginPage extends React.Component {
                                             error={this.state.error ? errorMessage : ''}
                                             autoComplete="username"
                                             className="placeholder-opaque"
+                                            inputRef={this.inputRef}
                                         />
 
                                         <label className="mt-3">Mot de passe</label>
