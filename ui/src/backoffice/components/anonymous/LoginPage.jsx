@@ -86,6 +86,7 @@ export default class LoginPage extends React.Component {
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                             error={this.state.error ? errorMessage : ''}
                                             autoComplete="username"
+                                            className="placeholder-opaque"
                                         />
 
                                         <label className="mt-3">Mot de passe</label>
@@ -96,13 +97,14 @@ export default class LoginPage extends React.Component {
                                             onChange={event => this.setState({ password: event.target.value })}
                                             error={this.state.error ? ' ' : ''}
                                             autoComplete="current-password"
+                                            className="placeholder-opaque"
                                         />
                                     </>
                                 }
                                 buttons={
                                     <div className="d-flex flex-column">
                                         <div className="mot-de-passe-oublie">
-                                            <NavLink to="/backoffice/mot-de-passe-oublie">
+                                            <NavLink to="/backoffice/mot-de-passe-oublie" style={{ color: "#0175E4" }} >
                                                 Mot de passe oublié
                                             </NavLink>
                                         </div>
