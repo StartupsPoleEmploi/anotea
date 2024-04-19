@@ -75,7 +75,7 @@
     }
   },
   {
-    "nom": "Bourgogne-Franche-Comté",
+    "nom": "Région Bourgogne-Franche-Comté",
     "active": true,
     "since": "2017-09-01",
     "codeRegion": "27",
@@ -130,12 +130,12 @@
     },
     "carif": {
       "active": true,
-      "nom": "Emfor",
+      "nom": "Emfor Bourgogne-Franche-Comté",
       "url": "http://www.emfor-bfc.org/"
     }
   },
   {
-    "nom": "Bretagne",
+    "nom": "Région Bretagne",
     "active": true,
     "since": "2018-05-01",
     "codeRegion": "53",
@@ -389,7 +389,7 @@
     }
   },
   {
-    "nom": "Hauts-de-France",
+    "nom": "Région Hauts-de-France",
     "active": true,
     "since": "2018-05-27",
     "codeRegion": "32",
@@ -431,7 +431,7 @@
     },
     "carif": {
       "active": true,
-      "nom": "C2RP",
+      "nom": "C2RP Orientation Formation Emploi Carif-Oref Hauts-de-France",
       "url": "http://www.c2rp.fr/"
     }
   },
@@ -577,7 +577,8 @@
       "import": "all"
     },
     "carif": {
-      "active": false
+      "active": false,
+      "nom": "Collectivité Territoriale de Martinique"
     }
   },
   {
@@ -700,7 +701,7 @@
     }
   },
   {
-    "nom": "Occitanie",
+    "nom": "La region Occitanie Pyrénées - Méditerranée",
     "active": true,
     "since": "2018-06-01",
     "codeRegion": "76",
@@ -777,7 +778,7 @@
     }
   },
   {
-    "nom": "Pays de la Loire",
+    "nom": "Région Pays de la Loire",
     "active": true,
     "since": "2017-07-01",
     "codeRegion": "52",
@@ -819,7 +820,7 @@
     },
     "carif": {
       "active": true,
-      "nom": "Orientation Pays de la Loire",
+      "nom": "Choisir mon metier en Pays de la Loire",
       "url": "http://www.orientation-paysdelaloire.fr/"
     }
   },
