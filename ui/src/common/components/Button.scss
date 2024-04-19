@@ -20,6 +20,8 @@
 
     &:focus {
       outline: 0;
+      border: 2px solid black;
+      border-radius: 5px 5px 5px 5px;
     }
 
     &:hover, &.a-btn-hover {
@@ -45,6 +47,8 @@
 
     &:focus {
       outline: 0;
+      border: 2px solid black;
+      border-radius: 5px 5px 5px 5px;
     }
 
     &.a-btn-disabled {
@@ -72,6 +76,8 @@
 
     &:focus {
       outline: 0;
+      border: 2px solid black;
+      border-radius: 5px 5px 5px 5px;
     }
 
     &:hover, &.a-btn-hover {
