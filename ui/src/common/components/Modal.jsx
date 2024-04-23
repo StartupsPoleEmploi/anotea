@@ -32,6 +32,8 @@ export default class Modal extends React.Component {
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleTabKey);
+        let body = document.getElementsByTagName('body')[0];
+        body.classList.remove('modal-open');
     }
 
     handleTabKey = e => {
