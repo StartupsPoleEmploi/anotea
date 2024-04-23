@@ -10,11 +10,11 @@ const AvisResults = ({ results, renderAvis }) => {
             {
                 results.meta.pagination.totalItems === 0 ?
                     <EmptyResults /> :
-                    results.avis.map(avis => {
+                    results.avis.map((avis, index) => {
                         return (
-                            <div key={avis._id}>
+                            <div key={avis._id} index={index}>
                                 <WithAnalytics category="avis">
-                                    {renderAvis(avis)}
+                                    {renderAvis(avis, index)}
                                     <ResultDivider />
                                 </WithAnalytics>
                             </div>

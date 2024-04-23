@@ -7,6 +7,7 @@ export default class ValidateReponseButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -24,10 +25,15 @@ export default class ValidateReponseButton extends React.Component {
 
     render() {
         let isValidated = this.props.avis.reponse.status === 'validated';
+        let buttonText = (
+            <span className="sr-only">
+                Valider le commentaire {this.props.index}
+            </span>
+        );
         return (
             <div className="PublishReponseButton">
                 <Button size="large" color="green" disabled={isValidated} onClick={this.onClick}>
-                    <i className="far fa-check-circle a-icon" />
+                    {buttonText}<i className="far fa-check-circle a-icon" />
                 </Button>
             </div>
         );

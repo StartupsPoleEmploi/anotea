@@ -19,6 +19,7 @@ export default class Notes extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -47,7 +48,8 @@ export default class Notes extends React.Component {
         let { avis } = this.props;
         let buttonText = (
             <span className="text">
-                Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
+                Détails des notes <span className="sr-only">du commentaire {this.props.index}</span>
+                <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
             </span>
         );
 

@@ -7,6 +7,7 @@ export default class RejectReponseButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -25,12 +26,17 @@ export default class RejectReponseButton extends React.Component {
     };
 
     render() {
+        let buttonText = (
+            <span className="sr-only">
+                Rejetés le commentaire {this.props.index}
+            </span>
+        );
         return (
             <div className="RejectReponseButton">
                 <Button
                     size="large" color="red" onClick={this.onClick} className="RejectReponseButton"
                     disabled={this.props.avis.reponse.status === 'rejected'}>
-                    <i className="far fa-times-circle" />
+                    {buttonText}<i className="far fa-times-circle" />
                 </Button>
             </div>
         );

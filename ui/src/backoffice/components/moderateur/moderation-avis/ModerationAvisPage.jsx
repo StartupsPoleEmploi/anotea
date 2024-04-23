@@ -179,10 +179,11 @@ export default class ModerationAvisPage extends React.Component {
                         results={
                             <AvisResults
                                 results={results}
-                                renderAvis={avis => {
+                                renderAvis={(avis, index) => {
                                     return (
                                         <Avis
                                             avis={avis}
+                                            index={index}
                                             showModerationButtons={true}
                                             renderWorkflow={avis => {
                                                 return <Workflow avis={avis} showStatus={query.statuses !== 'none'} />;

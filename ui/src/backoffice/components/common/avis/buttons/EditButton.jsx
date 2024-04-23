@@ -9,6 +9,7 @@ export default class EditButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
         onEdit: PropTypes.func.isRequired,
     };
@@ -72,6 +73,11 @@ export default class EditButton extends React.Component {
     };
 
     render() {
+        let buttonText = (
+            <span className="sr-only">
+                éditer le commentaire {this.props.index}
+            </span>
+        );
         return (
             <div className="EditButton">
                 {this.state.showModal === 'resend' && this.getResendModal()}
@@ -80,7 +86,7 @@ export default class EditButton extends React.Component {
                     header="Edition"
                     button={
                         <Button size="large" color="blue" toggable={true}>
-                            <i className="fa fa-pencil-alt" />
+                            {buttonText}<i className="fa fa-pencil-alt" />
                         </Button>
                     }
                     items={
