@@ -20,6 +20,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             loading: false,
             password: '',
@@ -62,6 +63,9 @@ export default class ReinitialisationMotDePassePage extends React.Component {
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
+            if (this.inputRef.current && this.inputRef.current.focus) {
+                this.inputRef.current.focus();
+            }
             if (isFormValid) {
                 let { forgottenPasswordToken } = this.props.router.getQuery();
 
@@ -108,6 +112,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             error={errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
                                             autoComplete="new-password"
+                                            inputRef={this.inputRef}
                                         />
 
                                         <label className="mt-3">Confirmer le nouveau mot de passe</label>

@@ -98,6 +98,7 @@ export default class MonComptePage extends React.Component {
                                         placeholder="Mot de passe"
                                         onChange={event => this.setState({ current: event.target.value })}
                                         autoComplete="current-password"
+                                        inputRef={this.inputRef}
                                     />
 
                                     <label className="mt-3">Nouveau mot de passe</label>
@@ -108,7 +109,6 @@ export default class MonComptePage extends React.Component {
                                         error={errors.passwordNotStrongEnough}
                                         onChange={event => this.setState({ password: event.target.value })}
                                         autoComplete="new-password"
-                                        inputRef={this.inputRef}
                                     />
 
                                     <label className="mt-3">Confirmer le nouveau mot de passe</label>
