@@ -8,6 +8,7 @@ export default class EditButton extends React.Component {
 
     static propTypes = {
         organisme: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
         onEdit: PropTypes.func.isRequired,
     };
@@ -22,13 +23,18 @@ export default class EditButton extends React.Component {
     };
 
     render() {
+        let buttonText = (
+            <span className="sr-only">
+                Modifier ou supprimer {this.props.index}
+            </span>
+        );
         return (
             <div className="EditButton">
                 <Dropdown
                     header="Modifier ou supprimer"
                     button={
                         <Button size="large" color="blue" toggable={true}>
-                            <i className="fa fa-pencil-alt" />
+                            {buttonText}<i className="fa fa-pencil-alt" />
                         </Button>
                     }
                     items={

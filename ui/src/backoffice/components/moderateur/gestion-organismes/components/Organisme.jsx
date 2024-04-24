@@ -8,6 +8,7 @@ export default class Organisme extends React.Component {
 
     static propTypes = {
         organisme: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -25,7 +26,7 @@ export default class Organisme extends React.Component {
     };
 
     render() {
-        let { organisme, onChange } = this.props;
+        let { organisme, index, onChange } = this.props;
 
         let isInactive = organisme.status === 'inactive';
         /*
@@ -80,7 +81,7 @@ export default class Organisme extends React.Component {
                 {!this.state.showEdition &&
                 <div className="col-sm-2 col-md-1">
                     <div className="btn-group-vertical">
-                        <EditButton organisme={organisme} onChange={onChange} onEdit={this.toggleEdition} />
+                        <EditButton organisme={organisme} index={index} onChange={onChange} onEdit={this.toggleEdition} />
                     </div>
                 </div>
                 }

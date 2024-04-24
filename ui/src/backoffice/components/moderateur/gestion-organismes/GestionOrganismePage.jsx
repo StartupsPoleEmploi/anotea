@@ -192,11 +192,12 @@ export default class GestionOrganismePage extends React.Component {
                                         </div>
                                     }
                                     {
-                                        results.organismes.map(organisme => {
+                                        results.organismes.map((organisme, index) => {
                                             return (
                                                 <div key={organisme._id}>
                                                     <Organisme
                                                         organisme={organisme}
+                                                        index={index}
                                                         onChange={(avis, options = {}) => {
                                                             let { message } = options;
                                                             if (message) {

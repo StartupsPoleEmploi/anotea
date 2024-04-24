@@ -28,7 +28,7 @@ export default class RejectReponseButton extends React.Component {
     render() {
         let buttonText = (
             <span className="sr-only">
-                Rejetés le commentaire {this.props.index}
+                Rejeter le commentaire {this.props.index}
             </span>
         );
         return (
