@@ -98,9 +98,11 @@ export default class GestionOrganismePage extends React.Component {
                         <Form className="a-width-50">
                             <div className="d-flex justify-content-between">
                                 <div className="flex-grow-1 mr-2">
+                                <label className="sr-only" for="recherche-organisme">Rechercher un organisme</label>
                                     <InputText
                                         value={this.state.form.search}
-                                        placeholder="Recherche un organisme"
+                                        id="recherche-organisme"
+                                        placeholder="Rechercher un organisme"
                                         icon={<i className="fas fa-search" />}
                                         reset={() => this.setState({ form: { search: '' } })}
                                         onChange={event => this.setState({ form: { search: event.target.value } })}

@@ -113,9 +113,11 @@ export default class ModerationAvisPage extends React.Component {
                         <Form className="a-width-50">
                             <div className="d-flex justify-content-between">
                                 <div className="flex-grow-1 mr-2">
+                                    <label className="sr-only" for="recherche-avis">Rechercher un avis</label>
                                     <InputText
+                                        id="recherche-avis"
                                         value={this.state.fulltext}
-                                        placeholder="Recherche un avis"
+                                        placeholder="Rechercher un avis"
                                         icon={<i className="fas fa-search" />}
                                         reset={() => this.setState({ fulltext: '' })}
                                         onChange={event => this.setState({ fulltext: event.target.value })}
