@@ -96,7 +96,9 @@ export default class LoginPage extends React.Component {
                                             autoComplete="username"
                                             className="placeholder-opaque"
                                             inputRef={this.inputRef}
+                                            aria-describedby="exemple-siret"
                                         />
+                                        <p id="exemple-siret" className="clarification mt-1">Le numero de SIRET se compose de 14 chiffres.<br/>Exemple&nbsp;:&nbsp;01234567890123</p>
 
                                         <label for="motDePasse" className="mt-3">Mot de passe</label>
                                         <InputText
