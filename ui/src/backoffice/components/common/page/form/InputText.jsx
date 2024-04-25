@@ -7,6 +7,7 @@ import './InputText.scss';
 export default class InputText extends React.Component {
 
     static propTypes = {
+        id: PropTypes.node,
         icon: PropTypes.node,
         reset: PropTypes.func,
         error: PropTypes.string,
@@ -20,7 +21,7 @@ export default class InputText extends React.Component {
     }
 
     render() {
-        let { icon, reset, error, inputRef } = this.props;
+        let { id, icon, reset, error, inputRef } = this.props;
 
         return (
             <div className="InputText">
@@ -34,6 +35,7 @@ export default class InputText extends React.Component {
 
                     <input
                         type="text"
+                        id={id}
                         autocomplete={this.autoComplete?this.autoComplete:null}
                         className={`${this.icon ? 'with-icon' : ''} ${this.reset ? 'with-reset' : ''} ${this.error ? 'with-error' : ''}`}
                         ref={inputRef || this.inputRef}

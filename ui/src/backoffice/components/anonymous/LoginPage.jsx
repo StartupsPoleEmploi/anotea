@@ -86,8 +86,9 @@ export default class LoginPage extends React.Component {
                                 title="Connexion"
                                 elements={
                                     <>
-                                        <label>Identifiant</label>
+                                        <label for="identifiant">Identifiant</label>
                                         <InputText
+                                            id="identifiant"
                                             value={this.state.identifiant}
                                             placeholder="Entrez votre SIRET"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
@@ -97,8 +98,9 @@ export default class LoginPage extends React.Component {
                                             inputRef={this.inputRef}
                                         />
 
-                                        <label className="mt-3">Mot de passe</label>
+                                        <label for="motDePasse" className="mt-3">Mot de passe</label>
                                         <InputText
+                                            id="motDePasse"
                                             type="password"
                                             value={this.state.password}
                                             placeholder="Entrez votre mot de passe "

@@ -67,8 +67,9 @@ export default class MotDePasseOubliePage extends React.Component {
                                 title="Mot de passe oublié"
                                 elements={
                                     <>
-                                        <label>Entrez votre identifiant</label>
+                                        <label for="identifiant">Entrez votre identifiant</label>
                                         <InputText
+                                            id="identifiant"
                                             value={this.state.identifiant}
                                             placeholder="Identifiant"
                                             error={this.state.error}

@@ -91,8 +91,9 @@ export default class MonComptePage extends React.Component {
                             title="Mise à jour du mot de passe"
                             elements={
                                 <>
-                                    <label>Mot de passe actuel</label>
+                                    <label for="motDePasseActu">Mot de passe actuel</label>
                                     <InputText
+                                        id="motDePasseActu"
                                         type="password"
                                         value={this.state.current}
                                         placeholder="Mot de passe"
@@ -101,8 +102,9 @@ export default class MonComptePage extends React.Component {
                                         inputRef={this.inputRef}
                                     />
 
-                                    <label className="mt-3">Nouveau mot de passe</label>
+                                    <label for="motDePasseNew" className="mt-3">Nouveau mot de passe</label>
                                     <InputText
+                                        id="motDePasseNew"
                                         type="password"
                                         value={this.state.password}
                                         placeholder="Mot de passe"
@@ -111,8 +113,9 @@ export default class MonComptePage extends React.Component {
                                         autoComplete="new-password"
                                     />
 
-                                    <label className="mt-3">Confirmer le nouveau mot de passe</label>
+                                    <label for="motDePasseConf" className="mt-3">Confirmer le nouveau mot de passe</label>
                                     <InputText
+                                        id="motDePasseConf"
                                         type="password"
                                         value={this.state.confirmation}
                                         placeholder="Mot de passe"
