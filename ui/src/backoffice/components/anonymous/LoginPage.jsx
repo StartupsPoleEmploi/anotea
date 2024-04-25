@@ -86,6 +86,7 @@ export default class LoginPage extends React.Component {
                                 title="Connexion"
                                 elements={
                                     <>
+                                        <p className="clarification mt-1">Tous les champs sont obligatoires.</p>
                                         <label for="identifiant">Identifiant</label>
                                         <InputText
                                             id="identifiant"
@@ -97,6 +98,7 @@ export default class LoginPage extends React.Component {
                                             className="placeholder-opaque"
                                             inputRef={this.inputRef}
                                             aria-describedby="exemple-siret"
+                                            required
                                         />
                                         <p id="exemple-siret" className="clarification mt-1">Le numero de SIRET se compose de 14 chiffres.<br/>Exemple&nbsp;:&nbsp;01234567890123</p>
 
@@ -110,6 +112,7 @@ export default class LoginPage extends React.Component {
                                             error={this.state.error ? ' ' : ''}
                                             autoComplete="current-password"
                                             className="placeholder-opaque"
+                                            required
                                         />
                                     </>
                                 }

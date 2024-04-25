@@ -39,6 +39,7 @@ export default class InputText extends React.Component {
                         autocomplete={this.autoComplete?this.autoComplete:null}
                         className={`${this.icon ? 'with-icon' : ''} ${this.reset ? 'with-reset' : ''} ${this.error ? 'with-error' : ''}`}
                         ref={inputRef || this.inputRef}
+                        aria-invalid={error ? true : undefined}
                         {..._.omit(this.props, ['icon', 'reset', 'error'])}
                     />
 

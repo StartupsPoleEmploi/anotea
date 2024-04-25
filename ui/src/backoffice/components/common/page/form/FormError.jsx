@@ -12,9 +12,9 @@ export default class FormError extends React.Component {
         let { children } = this.props;
 
         return (
-            <div className="FormError">
+            <p className="FormError">
                 {children}
-            </div>
+            </p>
         );
     }
 }
