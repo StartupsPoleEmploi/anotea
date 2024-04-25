@@ -8,15 +8,15 @@ const NoteGauges = props => {
     let percentage = value => `${Math.round((value / props.total) * 100)}%`;
 
     return (
-        <div className="NoteGauges">
+        <li className="NoteGauges">
             <div className="moyenne">
                 <div className="label">{props.label}</div>
                 <div className="note">
                     <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
             </div>
-            <div className="d-flex flex-column">
-                <div className="repartition">
+            <ul className="d-flex flex-column no-space">
+                <li className="repartition">
                     <div className="definition">
                         5 <Star />
                     </div>
@@ -26,8 +26,8 @@ const NoteGauges = props => {
                     <div className="percentage">
                         {percentage(props.note['5'])}
                     </div>
-                </div>
-                <div className="repartition">
+                </li>
+                <li className="repartition">
                     <div className="definition">
                         4 <Star />
                     </div>
@@ -37,8 +37,8 @@ const NoteGauges = props => {
                     <div className="percentage">
                         {percentage(props.note['4'])}
                     </div>
-                </div>
-                <div className="repartition">
+                </li>
+                <li className="repartition">
                     <div className="definition">
                         3 <Star />
                     </div>
@@ -48,8 +48,8 @@ const NoteGauges = props => {
                     <div className="percentage">
                         {percentage(props.note['3'])}
                     </div>
-                </div>
-                <div className="repartition">
+                </li>
+                <li className="repartition">
                     <div className="definition">
                         2 <Star />
                     </div>
@@ -59,8 +59,8 @@ const NoteGauges = props => {
                     <div className="percentage">
                         {percentage(props.note['2'])}
                     </div>
-                </div>
-                <div className="repartition">
+                </li>
+                <li className="repartition">
                     <div className="definition">
                         1 <Star />
                     </div>
@@ -70,9 +70,9 @@ const NoteGauges = props => {
                     <div className="percentage">
                         {percentage(props.note['1'])}
                     </div>
-                </div>
-            </div>
-        </div>
+                </li>
+            </ul>
+        </li>
     );
 };
 
@@ -110,14 +110,14 @@ const NoteRepartition = ({ notes, total }) => {
     return (
         <div className="NoteRepartition">
             <div className="title">Les notes</div>
-            <div className="box d-flex flex-wrap justify-content-between">
-                <NoteGlobale note={notes.global} total={total} />
-                <NoteGauges label="Accueil" note={notes.accueil} total={total} />
-                <NoteGauges label="Contenu" note={notes.contenu_formation} total={total} />
-                <NoteGauges label="Formateurs" note={notes.equipe_formateurs} total={total} />
-                <NoteGauges label="Matériels" note={notes.moyen_materiel} total={total} />
-                <NoteGauges label="Accompagnement" note={notes.accompagnement} total={total} />
-            </div>
+            <ul className="box d-flex flex-wrap no-list justify-content-between">
+                    <NoteGlobale note={notes.global} total={total} />
+                    <NoteGauges label="Accueil" note={notes.accueil} total={total} />
+                    <NoteGauges label="Contenu" note={notes.contenu_formation} total={total} />
+                    <NoteGauges label="Formateurs" note={notes.equipe_formateurs} total={total} />
+                    <NoteGauges label="Matériels" note={notes.moyen_materiel} total={total} />
+                    <NoteGauges label="Accompagnement" note={notes.accompagnement} total={total} />
+            </ul>
         </div>
     );
 };
