@@ -13,10 +13,12 @@
                        <h1 style="font-size: 24px;">Donnez-nous votre avis en 1 minute.</h1>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Vous avez suivi la formation de <%= stagiaire.formation.intitule %>
-                        du <%= utils.moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY') %>
-                        au <%= utils.moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY') %>
-                        à <%= stagiaire.formation.action.organisme_formateur.raison_sociale %>.
+                        <p>
+                            Vous avez suivi la formation de <%= stagiaire.formation.intitule %>
+                            du <%= utils.moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY') %>
+                            au <%= utils.moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY') %>
+                            à <%= stagiaire.formation.action.organisme_formateur.raison_sociale %>.
+                        </p>
                     </mj-text>
 
                     <mj-button
@@ -28,7 +30,7 @@
                         Evaluer ma formation
                     </mj-button>
 
-                    <mj-divider border-width="2px" border-color="#F4F4F5" />
+                    <mj-divider border-width="2px" border-color="#F4F4F5" role="none" aria-hidden="true"/>
                 </mj-column>
             </mj-section>
 
@@ -38,14 +40,14 @@
                         <h2 style="font-size: 16px;margin: initial;">100% anonyme</h2>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Cet avis est totalement anonyme.
+                        <p>Cet avis est totalement anonyme.</p>
                     </mj-text>
 
                     <mj-text font-size="16px" font-weight="bold">
                         <h2 style="font-size: 16px;margin: initial;">Participer à l'amélioration des formations</h2>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Donnez des retours directs aux centres de formation ainsi qu'à France Travail.
+                        <p>Donnez des retours directs aux centres de formation ainsi qu'à France Travail.</p>
                     </mj-text>
                 </mj-column>
             </mj-section>
@@ -56,7 +58,7 @@
                         <h2 style="font-size: 16px;margin: initial;">Aider les prochains à faire le bon choix</h2>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Votre avis sera publié sur plusieurs plateformes.
+                        <p>Votre avis sera publié sur plusieurs plateformes.</p>
                     </mj-text>
                 </mj-column>
             </mj-section>
