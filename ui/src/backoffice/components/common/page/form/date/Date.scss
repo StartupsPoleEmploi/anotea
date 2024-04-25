@@ -15,10 +15,6 @@
     padding-right: 0.25rem;
 
 
-    &:focus {
-      outline: none;
-    }
-
     &::placeholder {
       color: $color-black;
       opacity: 1;
