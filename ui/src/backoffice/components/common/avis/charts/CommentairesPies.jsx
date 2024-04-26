@@ -9,7 +9,7 @@ const CommentairesPies = ({ stats }) => {
 
     return (
         <div className="CommentairesPies">
-            <div className="title">Les commentaires</div>
+            <h2 className="title">Les commentaires</h2>
             <div className="box d-flex flex-wrap flex-row">
                 <div className="chart first">
                     <div className="title">Modération des commentaires</div>

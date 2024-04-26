@@ -109,7 +109,7 @@ const NoteRepartition = ({ notes, total }) => {
 
     return (
         <div className="NoteRepartition">
-            <div className="title">Les notes</div>
+            <h2 className="title">Les notes</h2>
             <ul className="box d-flex flex-wrap no-list justify-content-between">
                     <NoteGlobale note={notes.global} total={total} />
                     <NoteGauges label="Accueil" note={notes.accueil} total={total} />

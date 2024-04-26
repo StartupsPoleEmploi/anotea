@@ -91,6 +91,7 @@ export default class FinanceurForm extends React.Component {
         let { store, loadFormations } = this.props;
 
         return <Form>
+            <h1 className="sr-only">Avis Stagiaire</h1>
             <div className="form-row  FinanceurAvisChartsPanel">
                 <div className="form-group col-lg-6 col-xl-3">
                     <fieldset>
