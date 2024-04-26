@@ -63,10 +63,7 @@
     height: 40px;
 }
 
-.logo,
-.admin {
-    outline: none;
-}
+
 
 .header .logo img {
     padding: 15px;
@@ -116,7 +113,6 @@
 }
 
 .menu a.unroll {
-    outline: none;
     font-weight: bold;
     display: inline-block;
     margin-top: 30px;

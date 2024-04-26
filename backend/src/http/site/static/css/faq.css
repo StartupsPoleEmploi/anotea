@@ -279,7 +279,6 @@ a {
 }
 
 .question {
-    outline: none;
     margin-bottom: 15px;
 }
 
@@ -327,7 +326,6 @@ a.more:hover {
     border-radius: 5px;
     line-height: 22px;
     padding: 5px 15px;
-    outline: none;
     padding: 20px;
     font-size: 18px;
 }
