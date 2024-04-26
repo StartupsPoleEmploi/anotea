@@ -19,12 +19,10 @@ export default class AvisStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <div className="title">
-                        <div>
-                            <i className="far fa-comment-alt a-icon"></i>
-                            Avis
-                        </div>
-                    </div>
+                    <h2 className="title">
+                        <i className="far fa-comment-alt a-icon"></i>
+                        Avis
+                    </h2>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
                             <div className="name">Total avis déposés</div>

@@ -18,12 +18,10 @@ export default class OrganismeStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <div className="title">
-                        <div>
-                            <i className="far fa-comment-alt a-icon"></i>
-                            Organismes
-                        </div>
-                    </div>
+                    <h2 className="title">
+                        <i className="far fa-comment-alt a-icon"></i>
+                        Organismes
+                    </h2>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats">
                             <div className="name">Organismes actifs</div>

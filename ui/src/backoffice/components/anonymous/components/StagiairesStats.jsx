@@ -28,10 +28,10 @@ export default class StagiairesStats extends React.Component {
             <div className="Stats">
                 <div className="main d-flex justify-content-center justify-content-lg-between">
                     <div className="d-flex flex-column">
-                        <div className="title">
+                        <h2 className="title">
                             <i className="far fa-user a-icon"></i>
                             Stagiaires
-                        </div>
+                        </h2>
                         <div className="d-flex justify-content-around flex-wrap">
                             <div className="stats">
                                 <div className="name">Nombre de stagiaires contactés</div>
