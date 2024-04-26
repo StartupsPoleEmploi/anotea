@@ -44,7 +44,7 @@ export default class Reponse extends React.Component {
             <div className="Reponse">
                 <div className="d-flex justify-content-between align-items-baseline">
                     <div>
-                        <span className="title">Réponse de l&apos;organisme </span>
+                        <h3 className="title span-title">Réponse de l&apos;organisme</h3>
                         <Status avis={avis} />
                     </div>
                     {avis.reponse.date &&
