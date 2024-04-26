@@ -9,9 +9,9 @@ export const CenteredForm = props => {
             <div className="offset-sm-2 col-sm-8 offset-lg-4 col-lg-4">
                 <Form>
                     <div className="d-flex flex-column">
-                        <h1 className="d-flex justify-content-center title mb-3">
+                        <h2 className="d-flex justify-content-center title mb-3">
                             {props.title}
-                        </h1>
+                        </h2>
                         {props.elements}
                         <div className="d-flex justify-content-around mt-3">
                             {props.buttons}

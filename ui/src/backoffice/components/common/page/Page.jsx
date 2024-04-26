@@ -15,9 +15,9 @@ const Page = props => {
 
                 {props.title &&
                 <div className="title-holder">
-                    <div className="container">
+                    <h1 className="container">
                         {props.title}
-                    </div>
+                    </h1>
                 </div>
                 }
 
