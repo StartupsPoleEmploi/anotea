@@ -53,6 +53,7 @@ export default class StatsForm extends React.Component {
 
         return (
             <div className="d-flex justify-content-center">
+                <h1 className="sr-only">Statistique nationale et régionale</h1>
                 <Form className="a-width-50">
                     <div className="d-flex justify-content-between align-items-end">
                         <div className="flex-grow-1 mr-2">

@@ -87,58 +87,61 @@ export default class MonComptePage extends React.Component {
             panel={
                 <Panel
                     results={
-                        <CenteredForm
-                            title="Mise à jour du mot de passe"
-                            elements={
-                                <>
-                                    <label for="motDePasseActu">Mot de passe actuel</label>
-                                    <InputText
-                                        id="motDePasseActu"
-                                        type="password"
-                                        value={this.state.current}
-                                        placeholder="Mot de passe"
-                                        onChange={event => this.setState({ current: event.target.value })}
-                                        autoComplete="current-password"
-                                        inputRef={this.inputRef}
-                                    />
+                        <div>
+                            <h1 className="sr-only">Statistique nationale et régionale</h1>
+                            <CenteredForm
+                                title="Mise à jour du mot de passe"
+                                elements={
+                                    <>
+                                        <label for="motDePasseActu">Mot de passe actuel</label>
+                                        <InputText
+                                            id="motDePasseActu"
+                                            type="password"
+                                            value={this.state.current}
+                                            placeholder="Mot de passe"
+                                            onChange={event => this.setState({ current: event.target.value })}
+                                            autoComplete="current-password"
+                                            inputRef={this.inputRef}
+                                        />
 
-                                    <label for="motDePasseNew" className="mt-3">Nouveau mot de passe</label>
-                                    <InputText
-                                        id="motDePasseNew"
-                                        type="password"
-                                        value={this.state.password}
-                                        placeholder="Mot de passe"
-                                        error={errors.passwordNotStrongEnough}
-                                        onChange={event => this.setState({ password: event.target.value })}
-                                        autoComplete="new-password"
-                                    />
+                                        <label for="motDePasseNew" className="mt-3">Nouveau mot de passe</label>
+                                        <InputText
+                                            id="motDePasseNew"
+                                            type="password"
+                                            value={this.state.password}
+                                            placeholder="Mot de passe"
+                                            error={errors.passwordNotStrongEnough}
+                                            onChange={event => this.setState({ password: event.target.value })}
+                                            autoComplete="new-password"
+                                        />
 
-                                    <label for="motDePasseConf" className="mt-3">Confirmer le nouveau mot de passe</label>
-                                    <InputText
-                                        id="motDePasseConf"
-                                        type="password"
-                                        value={this.state.confirmation}
-                                        placeholder="Mot de passe"
-                                        error={errors.isNotSamePassword}
-                                        onChange={event => this.setState({ confirmation: event.target.value })}
-                                        autoComplete="new-password"
-                                    />
-                                </>
-                            }
-                            buttons={
-                                <>
-                                    <Button
-                                        type="submit"
-                                        size="large"
-                                        color={theme.buttonColor}
-                                        disabled={this.state.loading}
-                                        onClick={() => this.onSubmit()}
-                                    >
-                                        Confirmer
-                                    </Button>
-                                </>
-                            }
-                        />
+                                        <label for="motDePasseConf" className="mt-3">Confirmer le nouveau mot de passe</label>
+                                        <InputText
+                                            id="motDePasseConf"
+                                            type="password"
+                                            value={this.state.confirmation}
+                                            placeholder="Mot de passe"
+                                            error={errors.isNotSamePassword}
+                                            onChange={event => this.setState({ confirmation: event.target.value })}
+                                            autoComplete="new-password"
+                                        />
+                                    </>
+                                }
+                                buttons={
+                                    <>
+                                        <Button
+                                            type="submit"
+                                            size="large"
+                                            color={theme.buttonColor}
+                                            disabled={this.state.loading}
+                                            onClick={() => this.onSubmit()}
+                                        >
+                                            Confirmer
+                                        </Button>
+                                    </>
+                                }
+                            />
+                        </div>
                     }
                 />
             }

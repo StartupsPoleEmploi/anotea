@@ -51,7 +51,6 @@ export default class StatsPage extends React.Component {
         return (
             <Page
                 className="StatsPage"
-                title="Statistique nationale et régionale"
                 form={<StatsForm query={query} store={this.state.store} onSubmit={this.onSubmit} />}
                 panel={<StatsPanel query={query} store={this.state.store} />}
             />
