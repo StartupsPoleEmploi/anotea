@@ -40,12 +40,11 @@ export default class Modal extends React.Component {
         const focusableModalElements = this.modalRef.current.querySelectorAll(
             'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
         );
+        const activeIndex = Array.from(focusableModalElements).indexOf(document.activeElement);    
         const firstElement = focusableModalElements[0];
-        const secondElement = focusableModalElements[1];
-        const lastElement = focusableModalElements[2];
+        const lastElement = focusableModalElements[focusableModalElements.length - 1];
 
-        
-        if (e.key === "Escape") {//escape -> ferme
+        if (e.key === "Escape") { //escape -> ferme
             this.props.onClose();
             return;
         }
@@ -53,36 +52,30 @@ export default class Modal extends React.Component {
             this.props.onClose();
             return;
         }
-        else if (e.shiftKey && e.key === "Tab" && document.activeElement === firstElement) {//Shift + Tabulation sur Croix -> Confirmer
+
+        if (e.shiftKey && e.key === "Tab" && document.activeElement === firstElement) {
+            // Shift + Tabulation sur le premier élément -> dernier élément
             lastElement.focus();
             e.preventDefault();
-        }
-        else if (!e.shiftKey && e.key === "Tab" && document.activeElement === firstElement) {//Tabulation sur Croix -> Annuler
-            secondElement.focus();
-            e.preventDefault();
-        }
-        else if (e.key === "Enter" && document.activeElement === secondElement) {//Entrer sur Annuler -> ferme
-            this.props.onClose();
             return;
         }
-        else if (e.shiftKey && e.key === "Tab" && document.activeElement === secondElement) {//Shift + Tabulation sur Annuler -> Croix
+
+        if (!e.shiftKey && e.key === "Tab" && document.activeElement === lastElement) {
+            // Tabulation sur le dernier élément -> premier élément
             firstElement.focus();
             e.preventDefault();
+            return;
         }
-        else if (!e.shiftKey && e.key === "Tab" && document.activeElement === secondElement) {//Tabulation sur Annuler -> Confirmer
-            lastElement.focus();
-            e.preventDefault();
-        }
-        else if (e.key === "Enter" && document.activeElement === lastElement) {//Entrer sur Confirmer -> Confirme
-            this.props.onConfirmed();
-            e.preventDefault();
-        }else if (e.shiftKey && e.key === "Tab" && document.activeElement === lastElement) {//Shift + Tabulation sur Confirmer -> Annuler
-            secondElement.focus();
-            e.preventDefault();
-        }
-        else {//Tabulation sur confirmer -> Croix
-            firstElement.focus();
-            e.preventDefault();
+    
+        // Gestion de la navigation pour les éléments au milieu
+        if (e.key === "Tab") {
+            const nextIndex = e.shiftKey ? (activeIndex - 1) : (activeIndex + 1);
+            const nextElement = focusableModalElements[nextIndex];
+            
+            if (nextElement) {
+                nextElement.focus();
+                e.preventDefault();
+            }
         }
     };
 
