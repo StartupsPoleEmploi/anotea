@@ -50,47 +50,57 @@ export default class StatsPanel extends React.Component {
     };
 
     render() {
-
         let { query, store } = this.props;
         let { results } = this.state;
-
+    
         if (_.isEmpty(results.stats)) {
             return <EmptyResults />;
         }
-
+    
         return (
             <>
                 <Panel
                     className="StatsPanel"
                     results={
                         <div>
-                            <div className="row mb-5">
-                                <div className="col-12">
+                            {/* Section des statistiques sur les stagiaires */}
+                            <dl className="row mb-5">
+                                <dt className="col-12">Statistiques sur les stagiaires :</dt>
+                                <dd className="col-12">
                                     <StagiairesStats query={query} stats={results.stats} store={store} />
-                                </div>
-                            </div>
-                            <div className="row mb-5">
-                                <div className="col-sm-12 col-md-6">
+                                </dd>
+                            </dl>
+    
+                            <dl className="row mb-5">
+                                <dt className="col-sm-12 col-md-3">Statistiques sur les avis :</dt>
+                                <dd className="col-sm-12 col-md-9">
                                     <AvisStats query={query} stats={results.stats} store={store} />
-                                </div>
-                                <div className="col-sm-12 col-md-6">
+                                </dd>
+                            </dl>
+    
+                            <dl className="row mb-5">
+                                <dt className="col-sm-12 col-md-3">Statistiques sur les formations :</dt>
+                                <dd className="col-sm-12 col-md-9">
                                     <FormationStats query={query} stats={results.stats} store={store} />
-                                </div>
-                            </div>
-                            { this.mustShowAdminStats() &&
-                            <div className="row mb-5">
-                                <div className="col-sm-12 col-md-6">
-                                    <ModerationStats query={query} stats={results.stats} />
-                                </div>
-                                <div className="col-sm-12 col-md-6">
-                                    <OrganismeStats query={query} stats={results.stats} />
-                                </div>
-                            </div>
-                            }
+                                </dd>
+                            </dl>
+    
+                            {this.mustShowAdminStats() && (
+                                <dl className="row mb-5">
+                                    <dt className="col-sm-12 col-md-3">Statistiques d'administration :</dt>
+                                    <dd className="col-sm-12 col-md-3">
+                                        <ModerationStats query={query} stats={results.stats} />
+                                    </dd>
+                                    <dd className="col-sm-12 col-md-6">
+                                        <OrganismeStats query={query} stats={results.stats} />
+                                    </dd>
+                                </dl>
+                            )}
                         </div>
                     }
                 />
             </>
         );
     }
+    
 }
