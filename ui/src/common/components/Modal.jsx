@@ -40,7 +40,7 @@ export default class Modal extends React.Component {
         const focusableModalElements = this.modalRef.current.querySelectorAll(
             'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
         );
-        const activeIndex = Array.from(focusableModalElements).indexOf(document.activeElement);    
+        const activeIndex = Array.from(focusableModalElements).indexOf(document.activeElement);
         const firstElement = focusableModalElements[0];
         const lastElement = focusableModalElements[focusableModalElements.length - 1];
 
