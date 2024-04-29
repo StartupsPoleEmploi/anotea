@@ -98,6 +98,7 @@ export default class FinanceurPage extends React.Component {
 
         return (
             <Page
+                title="Avis stagiaires"
                 form={
                     <FinanceurForm
                         query={query}

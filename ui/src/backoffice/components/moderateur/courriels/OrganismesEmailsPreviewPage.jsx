@@ -22,6 +22,7 @@ export default class OrganismesEmailsPreviewPage extends Component {
 
         return (
             <Page
+                title="Courriels organismes"
                 className="EmailsPreviewPage"
                 panel={
                     <Panel

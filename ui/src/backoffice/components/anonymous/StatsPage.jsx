@@ -50,6 +50,7 @@ export default class StatsPage extends React.Component {
 
         return (
             <Page
+                title="Statistique Anotéa"
                 className="StatsPage"
                 form={<StatsForm query={query} store={this.state.store} onSubmit={this.onSubmit} />}
                 panel={<StatsPanel query={query} store={this.state.store} />}

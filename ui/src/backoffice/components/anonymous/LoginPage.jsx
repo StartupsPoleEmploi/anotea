@@ -75,6 +75,8 @@ export default class LoginPage extends React.Component {
             'Si vous êtes un organisme, vous devez désormais vous identifier avec votre numéro de SIRET';
 
         return (
+            <>
+            <title>Connexion | Anotéa</title>
             <Page
                 className="LoginPage"
                 title={'Votre espace Anotéa'}
@@ -139,6 +141,7 @@ export default class LoginPage extends React.Component {
                     />
                 }
             />
+            </>
         );
     }
 }

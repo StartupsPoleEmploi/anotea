@@ -22,6 +22,7 @@ export default class StagiairesEmailsPreviewPage extends Component {
 
         return (
             <Page
+                title="Courriels stagiaires"
                 className="EmailsPreviewPage"
                 panel={
                     <Panel

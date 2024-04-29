@@ -94,6 +94,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         let { errors } = this.state;
 
         return (
+            <>
+            <title>Réinitialiser le mot de passe | Anotéa</title>
             <Page
                 backgroundColor="grey"
                 title={'Votre espace Anotéa'}
@@ -144,6 +146,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                     />
                 }
             />
+            </>
         );
     }
 }

@@ -84,6 +84,7 @@ export default class MonComptePage extends React.Component {
         let { theme } = this.context;
 
         return <Page
+            title="Mise à jour du mot de passe"
             panel={
                 <Panel
                     results={

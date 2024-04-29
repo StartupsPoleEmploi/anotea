@@ -56,6 +56,8 @@ export default class MotDePasseOubliePage extends React.Component {
     render() {
 
         return (
+            <>
+            <title>Mot de passe oublié | Anotéa</title>
             <Page
                 className="MotDePasseOubliePage"
                 title={'Votre espace Anotéa'}
@@ -120,6 +122,7 @@ export default class MotDePasseOubliePage extends React.Component {
                     />
                 }
             />
+            </>
         );
     }
 }
