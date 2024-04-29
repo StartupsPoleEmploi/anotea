@@ -25,7 +25,7 @@ export default class Titre extends React.Component {
             return <div className="Titre empty">Aucun titre</div>;
         }
         return (
-            <div className="Titre">
+            <div className={`Titre ${avis.commentaire.titleMasked ? 'masked' : ''}`}>
                 
                 {showModerationButtons && (
                     <>

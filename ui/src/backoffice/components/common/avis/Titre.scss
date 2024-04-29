@@ -25,6 +25,10 @@
     }
   }
 
+  &.masked {
+    text-decoration: line-through;
+  }
+  
   .titre-masque{
     display: none;
   }
