@@ -16,14 +16,15 @@
     .page-link {
       color: $color-grey-50;
       font-size: 1rem;
+      font-weight: $font-weight-bold;
 
       &:hover, &:focus {
         cursor: pointer;
         color: $color-black;
         background: $color-grey-5;
         border: 1px solid $color-grey-50;
-        font-weight: $font-weight-bold;
         transition: background 0.20s linear;
+        outline-color: rgb(16, 16, 16);
       }
     }
   }

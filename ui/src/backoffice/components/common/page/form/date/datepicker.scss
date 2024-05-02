@@ -5,6 +5,10 @@
   table {
     tr, td {
       padding: 0.5rem;
+      span.old,
+      &.old{
+        color: black !important; 
+      }
     }
   }
 

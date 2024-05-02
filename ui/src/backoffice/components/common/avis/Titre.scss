@@ -6,7 +6,6 @@
   font-weight: $font-weight-bold;
 
   &.empty {
-    opacity: 0.5;
     color: $color-grey-50;
     font-style: italic;
   }
@@ -18,7 +17,6 @@
 
   .masked {
     color: $color-grey-50;
-    opacity: 0.5;
 
     &.title {
       text-decoration: line-through;
