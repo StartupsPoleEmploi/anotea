@@ -12,7 +12,7 @@ import OrganismeStats from './OrganismeStats';
 import ModerationStats from './ModerationStats';
 
 export default class StatsPanel extends React.Component {
-    
+
     static contextType = BackofficeContext;
 
     static propTypes = {
@@ -41,7 +41,7 @@ export default class StatsPanel extends React.Component {
         let { account } = this.context;
         return account.profile === 'admin';
     }
-    
+
     fetchStats = () => {
         return new Promise(async resolve => {
             let results = await getPublicStats(this.props.query);
@@ -52,11 +52,11 @@ export default class StatsPanel extends React.Component {
     render() {
         let { query, store } = this.props;
         let { results } = this.state;
-    
+
         if (_.isEmpty(results.stats)) {
             return <EmptyResults />;
         }
-    
+
         return (
             <>
                 <Panel
@@ -65,29 +65,29 @@ export default class StatsPanel extends React.Component {
                         <div>
                             {/* Section des statistiques sur les stagiaires */}
                             <dl className="row mb-5">
-                                <dt className="col-12">Statistiques sur les stagiaires :</dt>
+                                <dt className="col-12">Statistiques sur les stagiaires&nbsp;:</dt>
                                 <dd className="col-12">
                                     <StagiairesStats query={query} stats={results.stats} store={store} />
                                 </dd>
                             </dl>
-    
+
                             <dl className="row mb-5">
-                                <dt className="col-sm-12 col-md-3">Statistiques sur les avis :</dt>
+                                <dt className="col-sm-12 col-md-3">Statistiques sur les avis&nbsp;:</dt>
                                 <dd className="col-sm-12 col-md-9">
                                     <AvisStats query={query} stats={results.stats} store={store} />
                                 </dd>
                             </dl>
-    
+
                             <dl className="row mb-5">
-                                <dt className="col-sm-12 col-md-3">Statistiques sur les formations :</dt>
+                                <dt className="col-sm-12 col-md-3">Statistiques sur les formations&nbsp;:</dt>
                                 <dd className="col-sm-12 col-md-9">
                                     <FormationStats query={query} stats={results.stats} store={store} />
                                 </dd>
                             </dl>
-    
+
                             {this.mustShowAdminStats() && (
                                 <dl className="row mb-5">
-                                    <dt className="col-sm-12 col-md-3">Statistiques d'administration :</dt>
+                                    <dt className="col-sm-12 col-md-3">Statistiques d'administration&nbsp;:</dt>
                                     <dd className="col-sm-12 col-md-3">
                                         <ModerationStats query={query} stats={results.stats} />
                                     </dd>
@@ -102,5 +102,5 @@ export default class StatsPanel extends React.Component {
             </>
         );
     }
-    
+
 }
