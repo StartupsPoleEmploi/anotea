@@ -25,7 +25,7 @@ class Remerciements extends Component {
                             <div className="panel-remerciements">
                                 {infosRegion.showLinks &&
                                 <div className="links-block">
-                                    <h1>Et après la formation...</h1>
+                                    <h2>Et après la formation...</h2>
                                     <p>
                                         Vous avez <strong>mis votre CV à jour</strong> ?
                                         Nous pouvons vous aider à <strong>trouver un emploi</strong> !
