@@ -21,6 +21,10 @@ class Commentaire extends Component {
         super(props);
         let createBadwordsDebouncer = name => {
             return _.debounce(value => {
+                if (value === '') {
+                    this.props.onChange(name, value, true);
+                    return;
+                }
                 checkBadwords(value)
                 .then(() => this.props.onChange(name, value, true))
                 .catch(() => this.props.onChange(name, value, false));
