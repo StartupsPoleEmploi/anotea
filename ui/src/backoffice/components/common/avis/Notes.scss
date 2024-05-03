@@ -10,9 +10,6 @@
 
   .details {
 
-    border: 1px solid $color-grey-5;
-    border-radius: 5px;
-
     &:first-child {
       padding-left: 0;
     }
@@ -35,7 +32,7 @@
       }
 
       .fa-star {
-        color: $color-yellow;
+        color: $color-orange;
       }
 
       .title {
@@ -48,7 +45,7 @@
       }
 
       .fa-star {
-        color: $color-yellow;
+        color: $color-orange;
         font-size: 0.75rem;
       }
     }
