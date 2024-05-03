@@ -96,9 +96,9 @@ export default class GestionOrganismePage extends React.Component {
                 form={
                     <div className="d-flex justify-content-center">
                         <Form className="a-width-50">
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex" style={{ flexWrap: "wrap", justifyContent: "space-evenly" }}>
                                 <div className="flex-grow-1 mr-2">
-                                <label className="sr-only" for="recherche-organisme">Rechercher un organisme</label>
+                                    <label className="sr-only" for="recherche-organisme">Rechercher un organisme</label>
                                     <InputText
                                         value={this.state.form.search}
                                         id="recherche-organisme"

@@ -111,7 +111,7 @@ export default class ModerationAvisPage extends React.Component {
                 form={
                     <div className="d-flex justify-content-center">
                         <Form className="a-width-50">
-                            <div className="d-flex justify-content-between" style={{ flexWrap: "wrap" }}>
+                            <div className="d-flex" style={{ flexWrap: "wrap", justifyContent: "space-evenly" }}>
                                 <div className="flex-grow-1 mr-2">
                                     <label className="sr-only" for="recherche-avis">Rechercher un avis</label>
                                     <InputText
