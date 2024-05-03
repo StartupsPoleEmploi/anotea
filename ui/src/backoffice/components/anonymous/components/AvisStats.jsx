@@ -58,7 +58,7 @@ export default class AvisStats extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="details">
+                <div className="d-flex justify-content-between flex-wrap details" style={{ padding:'16px' }}>
                     <div className="stats">
                         <div className="name">Positifs ou neutres</div>
                         <span className="value">

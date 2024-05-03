@@ -65,7 +65,7 @@ export default class StatsPanel extends React.Component {
                         <div>
                             {/* Section des statistiques sur les stagiaires */}
                             <dl className="row mb-5">
-                                <dt className="col-12">Statistiques sur les stagiaires&nbsp;:</dt>
+                                <dt className="col-13">Statistiques sur les stagiaires&nbsp;:</dt>
                                 <dd className="col-12">
                                     <StagiairesStats query={query} stats={results.stats} store={store} />
                                 </dd>
