@@ -24,6 +24,7 @@ export default class MonComptePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
+                emptyField: null,
             },
         };
     }
@@ -39,6 +40,7 @@ export default class MonComptePage extends React.Component {
                     null : 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
+                emptyField: (current === '' || password === '' || confirmation === '') ? 'Veuillez remplir tous les champs.' : null,
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
@@ -101,6 +103,7 @@ export default class MonComptePage extends React.Component {
                                             placeholder="Mot de passe"
                                             onChange={event => this.setState({ current: event.target.value })}
                                             autoComplete="current-password"
+                                            error={errors.emptyField}
                                             inputRef={this.inputRef}
                                         />
 
@@ -110,7 +113,7 @@ export default class MonComptePage extends React.Component {
                                             type="password"
                                             value={this.state.password}
                                             placeholder="Mot de passe"
-                                            error={errors.passwordNotStrongEnough}
+                                            error={errors.emptyField || errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
                                             autoComplete="new-password"
                                         />
@@ -121,7 +124,7 @@ export default class MonComptePage extends React.Component {
                                             type="password"
                                             value={this.state.confirmation}
                                             placeholder="Mot de passe"
-                                            error={errors.isNotSamePassword}
+                                            error={errors.emptyField || errors.isNotSamePassword}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
                                             autoComplete="new-password"
                                         />

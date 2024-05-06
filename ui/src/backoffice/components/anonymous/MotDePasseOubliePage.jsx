@@ -44,7 +44,7 @@ export default class MotDePasseOubliePage extends React.Component {
             });
         })
         .catch(() => {
-            this.setState({ error: 'Une erreur est survenue', loading: false },()=>{
+            this.setState({ error: "Veuillez remplir votre identifiant.", loading: false },()=>{
                 if (this.inputRef.current && this.inputRef.current.focus) {
                     this.inputRef.current.focus();
                 }

@@ -45,17 +45,17 @@ export default class LoginPage extends React.Component {
         this.setState({ loading: true });
     
         if (this.state.password === '' && this.state.identifiant === '') {
-            this.setState({ errorMessage: "Les champs de l'identifiant et du mot de passe sont vides", emptyField: 'both', loading: false });
+            this.setState({ errorMessage: "Veuillez remplir tous les champs.", emptyField: 'both', loading: false });
             if (this.inputRef.current && this.inputRef.current.focus) {
                 this.inputRef.current.focus();
             }
         } else if (this.state.password === '') {
-            this.setState({ errorMessage: "Le champ du mot de passe est vide", emptyField: 'password', loading: false });
+            this.setState({ errorMessage: "Veuillez remplir votre mot de passe.", emptyField: 'password', loading: false });
             if (this.passwordInputRef.current && this.passwordInputRef.current.focus) {
                 this.passwordInputRef.current.focus();
             }
         } else if (this.state.identifiant === '') {
-            this.setState({ errorMessage: "Le champ de l'identifiant est vide", emptyField: 'identifiant', loading: false });
+            this.setState({ errorMessage: "Veuillez remplir votre identifiant.", emptyField: 'identifiant', loading: false });
             if (this.inputRef.current && this.inputRef.current.focus) {
                 this.inputRef.current.focus();
             }
