@@ -11,14 +11,15 @@ const NoteGauges = props => {
         <li className="NoteGauges">
             <div className="moyenne">
                 <div className="label">{props.label}</div>
-                <div className="note">
+                <div aria-hidden="true" className="note">
                     <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
+                <p class="sr-only">{props.note.moyenne} sur 5</p>
             </div>
             <ul className="d-flex flex-column no-space">
                 <li className="repartition">
                     <div className="definition">
-                        5 <Star />
+                        5 <Star /><span className="sr-only">étoiles</span>
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['5']) }}></div>
@@ -29,7 +30,7 @@ const NoteGauges = props => {
                 </li>
                 <li className="repartition">
                     <div className="definition">
-                        4 <Star />
+                        4 <Star /><span className="sr-only">étoiles</span>
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['4']) }}></div>
@@ -40,7 +41,7 @@ const NoteGauges = props => {
                 </li>
                 <li className="repartition">
                     <div className="definition">
-                        3 <Star />
+                        3 <Star /><span className="sr-only">étoiles</span>
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['3']) }}></div>
@@ -51,7 +52,7 @@ const NoteGauges = props => {
                 </li>
                 <li className="repartition">
                     <div className="definition">
-                        2 <Star />
+                        2 <Star /><span className="sr-only">étoiles</span>
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['2']) }}></div>
@@ -62,7 +63,7 @@ const NoteGauges = props => {
                 </li>
                 <li className="repartition">
                     <div className="definition">
-                        1 <Star />
+                        1 <Star /><span className="sr-only">étoile</span>
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['1']) }}></div>
@@ -87,9 +88,10 @@ const NoteGlobale = props => {
         <div className="NoteGlobale align-self-center">
             <span className="label">Moyenne globale</span>
             <div className="moyenne">
-                <div className="note">
+                <div aria-hidden="true" className="note">
                     <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
+                <p class="sr-only">{props.note.moyenne} sur 5</p>
             </div>
             <div className="total">
                 {props.total} notes

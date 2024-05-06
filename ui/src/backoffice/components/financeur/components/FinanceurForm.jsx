@@ -104,7 +104,7 @@ export default class FinanceurForm extends React.Component {
                 </div>
                 <div className="form-group col-lg-6 col-xl-3">
                     {this.mustShowCodeRegionFilter() ?
-                        <>
+                        <fieldset>
                             <label>Regions</label>
                             <Select
                                 placeholder={'Toutes les régions'}
@@ -116,8 +116,8 @@ export default class FinanceurForm extends React.Component {
                                 optionLabel="nom"
                                 onChange={(option = {}) => this.setState({ codeRegion: option.codeRegion })}
                             />
-                        </> :
-                        <>
+                        </fieldset> :
+                        <fieldset>
                             <label>Départements</label>
                             <Select
                                 placeholder={'Tous les départements'}
@@ -129,96 +129,106 @@ export default class FinanceurForm extends React.Component {
                                 optionLabel="label"
                                 onChange={(option = {}) => this.setState({ departement: option.code })}
                             />
-                        </>
+                        </fieldset>
                     }
                 </div>
             </div>
 
             <div className="form-row">
                 <div className="form-group col-lg-4">
-                    <label>SIRET de l&apos;organisme de formation</label>
-                    <InputText
-                        type="number"
-                        value={this.state.siret}
-                        placeholder="000000000000000"
-                        icon={<i className="fas fa-search" />}
-                        reset={() => this.setState({ siret: '', siren: null, numeroFormation: null })}
-                        onChange={
-                            (event = {}) => {
-                                const nouveauSIRET = event.target.value;
-                                const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
-                                this.setState({
-                                    siret: nouveauSIRET,
-                                    siren: nouveauSIREN?.siren,
-                                    numeroFormation: null
-                                }, () => {
-                                    if (nouveauSIREN) {
-                                        loadFormations(nouveauSIREN.siren);
-                                    }
-                                });
+                    <fieldset>
+                        <label>SIRET de l&apos;organisme de formation</label>
+                        <InputText
+                            type="number"
+                            value={this.state.siret}
+                            placeholder="000000000000000"
+                            icon={<i className="fas fa-search" />}
+                            reset={() => this.setState({ siret: '', siren: null, numeroFormation: null })}
+                            onChange={
+                                (event = {}) => {
+                                    const nouveauSIRET = event.target.value;
+                                    const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
+                                    this.setState({
+                                        siret: nouveauSIRET,
+                                        siren: nouveauSIREN?.siren,
+                                        numeroFormation: null
+                                    }, () => {
+                                        if (nouveauSIREN) {
+                                            loadFormations(nouveauSIREN.siren);
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    />
+                        />
+                    </fieldset>
                 </div>
                 <div className="form-group col-lg-4">
-                    <label>Nom de l&apos;organisme de formation</label>
-                    <Select
-                        placeholder={'Tous les organismes'}
-                        trackingId="Nom de l'organisme de formation"
-                        loading={store.loading}
-                        value={this.state.siren}
-                        options={store.sirens}
-                        optionKey="siren"
-                        optionLabel="name"
-                        onChange={(option = {}) => {
-                            this.setState({ siren: option.siren, numeroFormation: null, siret: '' }, () => {
-                                loadFormations(option.siren);
-                            });
-                        }}
-                    />
+                    <fieldset>
+                        <label>Nom de l&apos;organisme de formation</label>
+                        <Select
+                            placeholder={'Tous les organismes'}
+                            trackingId="Nom de l'organisme de formation"
+                            loading={store.loading}
+                            value={this.state.siren}
+                            options={store.sirens}
+                            optionKey="siren"
+                            optionLabel="name"
+                            onChange={(option = {}) => {
+                                this.setState({ siren: option.siren, numeroFormation: null, siret: '' }, () => {
+                                    loadFormations(option.siren);
+                                });
+                            }}
+                        />
+                    </fieldset>
                 </div>
                 {this.state.siren &&
                 <div className={`form-group col-lg-4`}>
-                    <label>Formation</label>
-                    <Select
-                        placeholder={'Toutes les formations'}
-                        trackingId="Formation"
-                        loading={store.loading}
-                        value={this.state.numeroFormation}
-                        options={store.formations}
-                        optionKey="numeroFormation"
-                        optionLabel="title"
-                        onChange={(option = {}) => this.setState({ numeroFormation: option.numeroFormation })}
-                    />
+                    <fieldset>
+                        <label>Formation</label>
+                        <Select
+                            placeholder={'Toutes les formations'}
+                            trackingId="Formation"
+                            loading={store.loading}
+                            value={this.state.numeroFormation}
+                            options={store.formations}
+                            optionKey="numeroFormation"
+                            optionLabel="title"
+                            onChange={(option = {}) => this.setState({ numeroFormation: option.numeroFormation })}
+                        />
+                    </fieldset>
                 </div>
                 }
                 {this.mustShowFinanceurFilter() &&
                 <>
                     <div className="form-group col-lg-5 col-xl-5">
-                        <label>Financeur</label>
-                        <Select
-                            placeholder={'Tous les financeurs'}
-                            trackingId="Financeur"
-                            loading={store.loading}
-                            value={this.state.codeFinanceur}
-                            options={store.financeurs}
-                            optionKey="code"
-                            optionLabel="label"
-                            onChange={(option = {}) => this.setState({ codeFinanceur: option.code })}
-                        />
+                        <fieldset>
+                            <label>Financeur</label>
+                            <Select
+                                placeholder={'Tous les financeurs'}
+                                trackingId="Financeur"
+                                loading={store.loading}
+                                value={this.state.codeFinanceur}
+                                options={store.financeurs}
+                                optionKey="code"
+                                optionLabel="label"
+                                onChange={(option = {}) => this.setState({ codeFinanceur: option.code })}
+                            />
+                        </fieldset>
                     </div>
                     <div className="form-group col-lg-5 col-xl-5">
-                        <label>Dispositif de financement</label>
-                        <Select
-                            placeholder={'Tous les dispositifs'}
-                            trackingId="Dispositif"
-                            loading={store.loading}
-                            value={this.state.dispositifFinancement}
-                            options={store.dispositifs}
-                            optionKey="code"
-                            optionLabel="code"
-                            onChange={(option = {}) => this.setState({ dispositifFinancement: option.code })}
-                        />
+                        <fieldset>
+                            <label>Dispositif de financement</label>
+                            <Select
+                                placeholder={'Tous les dispositifs'}
+                                trackingId="Dispositif"
+                                loading={store.loading}
+                                value={this.state.dispositifFinancement}
+                                options={store.dispositifs}
+                                optionKey="code"
+                                optionLabel="code"
+                                onChange={(option = {}) => this.setState({ dispositifFinancement: option.code })}
+                            />
+                        </fieldset>
                     </div>
                 </>
                 }
