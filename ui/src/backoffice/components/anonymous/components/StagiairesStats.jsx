@@ -29,7 +29,7 @@ export default class StagiairesStats extends React.Component {
                 <div className="main d-flex justify-content-center justify-content-lg-between">
                     <div className="d-flex flex-column">
                         <h2 className="title">
-                            <i className="far fa-user a-icon"></i>
+                            <span aria-hidden="true" className="far fa-user a-icon"></span>
                             Stagiaires
                         </h2>
                         <div className="d-flex justify-content-around flex-wrap">

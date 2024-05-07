@@ -19,7 +19,7 @@ export default class ModerationStats extends React.Component {
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
                     <h2 className="title">
-                        <i className="far fa-comment-alt a-icon"></i>
+                        <span aria-hidden="true" className="far fa-comment-alt a-icon"></span>
                         Modération
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">

@@ -56,17 +56,19 @@ export default class StatsForm extends React.Component {
                 <Form className="a-width-50">
                     <div className="d-flex justify-content-between align-items-end">
                         <div className="flex-grow-1 mr-2">
-                            <h2 style={{fontSize: "1.125rem", fontWeight: 700}}>Filtrer par région</h2>
-                            <Select
-                                placeholder={'Toutes les régions'}
-                                trackingId="Regions"
-                                loading={store.loading}
-                                value={codeRegion}
-                                options={store.regions}
-                                optionKey="codeRegion"
-                                optionLabel="nom"
-                                onChange={(option = {}) => this.setState({ codeRegion: option.codeRegion })}
-                            />
+                            <fieldset>
+                                <label style={{fontSize: "1.125rem", fontWeight: 700}}>Filtrer par région</label>
+                                <Select
+                                    placeholder={'Toutes les régions'}
+                                    trackingId="Regions"
+                                    loading={store.loading}
+                                    value={codeRegion}
+                                    options={store.regions}
+                                    optionKey="codeRegion"
+                                    optionLabel="nom"
+                                    onChange={(option = {}) => this.setState({ codeRegion: option.codeRegion })}
+                                />
+                            </fieldset>
                         </div>
                         <Button
                             size="large"

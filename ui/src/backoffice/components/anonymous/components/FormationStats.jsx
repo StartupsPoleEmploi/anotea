@@ -21,7 +21,7 @@ export default class FormationStats extends React.Component {
                 <div className="main with-details d-flex flex-column">
                     <h2 className="title">
                         <div>
-                            <i className="fas fa-graduation-cap a-icon"></i>
+                            <span aria-hidden="true" className="fas fa-graduation-cap a-icon"></span>
                             Formations
                         </div>
                         <div className="description">(source Intercarif)</div>

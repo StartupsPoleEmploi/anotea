@@ -92,12 +92,12 @@
         .gauge {
           width: 70%;
           float: right;
-          background-color: $color-grey-25;
+          background-color: $color-grey-50;
           margin-right: 0.35rem;
 
           .filler {
             height: 0.25rem;
-            background-color: $color-yellow;
+            background-color: $color-orange
           }
         }
       }
