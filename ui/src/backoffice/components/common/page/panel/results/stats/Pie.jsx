@@ -10,7 +10,7 @@ let round = value => Number(Math.round(value + 'e1') + 'e-1');
 const Pie = ({ data, colors }) => {
 
     let total = _.sumBy(data, d => d.value);
-    let prettyLabel = element => `${element.id} (${round((element.value / total) * 100)}%)`;
+    let prettyLabel = element => `(${round((element.datum.value / total) * 100)}%)`;
 
     return (
         <div className="Pie">

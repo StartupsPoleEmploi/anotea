@@ -8,7 +8,7 @@ const NoteGauges = props => {
     let percentage = value => `${Math.round((value / props.total) * 100)}%`;
 
     return (
-        <li className="NoteGauges">
+        <li className="NoteGauges" tabIndex="0">
             <div className="moyenne">
                 <div className="label">{props.label}</div>
                 <div aria-hidden="true" className="note">
@@ -85,7 +85,7 @@ NoteGauges.propTypes = {
 
 const NoteGlobale = props => {
     return (
-        <div className="NoteGlobale align-self-center">
+        <div className="NoteGlobale align-self-center" tabIndex="0">
             <span className="label">Moyenne globale</span>
             <div className="moyenne">
                 <div aria-hidden="true" className="note">
