@@ -18,16 +18,16 @@ export default class OrganismeStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <h2 className="title">
+                    <h2 className="title" tabIndex="0">
                         <span aria-hidden="true" className="far fa-comment-alt a-icon"></span>
                         Organismes
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Organismes actifs</div>
                             <div className="value">{formatNumber(latest(stats, type, 'organismes.nbOrganismesActifs'))}</div>
                         </div>
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Taux de commentaires avec réponse</div>
                             <div>
                                 <span className="value highlighted">

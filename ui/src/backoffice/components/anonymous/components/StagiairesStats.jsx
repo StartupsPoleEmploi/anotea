@@ -28,12 +28,12 @@ export default class StagiairesStats extends React.Component {
             <div className="Stats">
                 <div className="main d-flex justify-content-center justify-content-lg-between">
                     <div className="d-flex flex-column">
-                        <h2 className="title">
+                        <h2 className="title" tabIndex="0">
                             <span aria-hidden="true" className="far fa-user a-icon"></span>
                             Stagiaires
                         </h2>
                         <div className="d-flex justify-content-around flex-wrap">
-                            <div className="stats">
+                            <div className="stats" tabIndex="0">
                                 <div className="name">Nombre de stagiaires contactés</div>
                                 <div>
                                     <span className="value">
@@ -43,7 +43,7 @@ export default class StagiairesStats extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div className="stats">
+                            <div className="stats" tabIndex="0">
                                 <div className="name">Taux répondants</div>
                                 <span className="value highlighted">
                                     {percentage(diff(stats, type, 'avis.nbAvis'), diff(stats, type, 'avis.nbStagiairesContactes'))}%
@@ -65,15 +65,15 @@ export default class StagiairesStats extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }}>
+                <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }} tabIndex="0">
                     <HistoryLines
                         lines={lines}
-                        colors={type === 'regional' ? ['rgba(35, 47, 56, 0.4)', '#F28017'] : ['#F28017']}
+                        colors={type === 'regional' ? ['rgb(35, 47, 56)', '#EF7016'] : ['#EF7016']}
                         groupBy={groupBy}
                         format={v => `${v}%`}
                         formatTooltip={data => {
                             return (
-                                <div className="d-flex justify-content-between text-left">
+                                <div className="d-flex justify-content-between text-left" >
                                     <span
                                         className="mr-2">{`Avis : ${formatNumber(data.bucket['avis.nbAvis'])}`}</span>
                                     <span>{`Stagiaires contactés : ${formatNumber(data.bucket['avis.nbStagiairesContactes'])}`}</span>

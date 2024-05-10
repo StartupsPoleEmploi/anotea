@@ -74,6 +74,17 @@ export default class HistoryLines extends React.Component {
     render() {
 
         let { lines, groupBy, format, formatTooltip, colors } = this.props;
+
+        const customTheme = {
+            axis: {
+                ticks: {
+                    text: {
+                        fill: "rgb(0, 0, 0)",
+                    },
+                },
+            },
+        };
+
         const isJanvierOuJuillet = (value) => moment(value).month() % 6 === 0;
         return (
             <ResponsiveLine
@@ -143,6 +154,7 @@ export default class HistoryLines extends React.Component {
 
                     }
                 ]}
+                theme={customTheme}
             />
         );
     }

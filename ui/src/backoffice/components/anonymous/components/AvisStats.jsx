@@ -19,22 +19,22 @@ export default class AvisStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <h2 className="title">
+                    <h2 className="title" tabIndex="0">
                         <span aria-hidden="true" className="far fa-comment-alt a-icon"></span>
                         Avis
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Total avis déposés</div>
                             <div className="value">{formatNumber(latest(stats, type, 'avis.nbAvis'))}</div>
                         </div>
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Commentaires</div>
                             <div className="value">
                                 {formatNumber(latest(stats, type, 'avis.nbAvisAvecCommentaire'))}
                             </div>
                         </div>
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Taux</div>
                             <div>
                                 <span className="value highlighted">
@@ -58,8 +58,8 @@ export default class AvisStats extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="d-flex justify-content-between flex-wrap details" style={{ padding:'16px' }}>
-                    <div className="stats">
+                <div className="d-flex justify-content-between flex-wrap details" >
+                    <div className="stats" tabIndex="0">
                         <div className="name">Positifs ou neutres</div>
                         <span className="value">
                             {percentage(latest(stats, type, 'avis.nbCommentairesPositifs'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%
@@ -70,7 +70,7 @@ export default class AvisStats extends React.Component {
                         </span>
                         }
                     </div>
-                    <div className="stats">
+                    <div className="stats" tabIndex="0">
                         <div className="name">Négatifs</div>
                         <span className="value">
                             {percentage(latest(stats, type, 'avis.nbCommentairesNegatifs'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%
@@ -81,7 +81,7 @@ export default class AvisStats extends React.Component {
                         </span>
                         }
                     </div>
-                    <div className="stats">
+                    <div className="stats" tabIndex="0">
                         <div className="name">Rejetés</div>
                         <span className="value">
                             {percentage(latest(stats, type, 'avis.nbCommentairesRejetes'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%

@@ -19,7 +19,7 @@ export default class FormationStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <h2 className="title">
+                    <h2 className="title" tabIndex="0">
                         <div>
                             <span aria-hidden="true" className="fas fa-graduation-cap a-icon"></span>
                             Formations
@@ -27,11 +27,11 @@ export default class FormationStats extends React.Component {
                         <div className="description">(source Intercarif)</div>
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Formations en ligne</div>
                             <div className="value">{formatNumber(latest(stats, type, 'api.nbSessions'))}</div>
                         </div>
-                        <div className="stats">
+                        <div className="stats" tabIndex="0">
                             <div className="name">Formations avec un avis</div>
                             <div>
                                 <span className="value highlighted">
@@ -55,7 +55,7 @@ export default class FormationStats extends React.Component {
                     </div>
                 </div>
                 <div className="details">
-                    <div className="stats">
+                    <div className="stats" tabIndex="0">
                         <div className="name">Nombre d&apos;avis moyen par session</div>
                         <div className="value">{latest(stats, type, 'api.nbAvisParSession')}</div>
                     </div>
