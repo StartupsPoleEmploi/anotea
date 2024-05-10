@@ -189,7 +189,7 @@ export default class GestionOrganismePage extends React.Component {
                                             </tr>
 
                                             <tr className="col-sm-2 col-md-1">
-                                                <th scope="col" className="column-title d-none d-sm-block">&nbsp;</th>
+                                                <th scope="col" className="column-title d-none d-sm-block sr-only">Gestion</th>
                                             </tr>
                                         </thead>
                                     }

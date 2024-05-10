@@ -14,8 +14,9 @@ export const DropdownItem = ({ onClick, className, children, ...props }) => {
     };
 
     return (
-        <a
+        <button
             className={`dropdown-item ${className}`}
+            style={{margin:0}}
             onClick={onClick}
             onKeyDown={handleKeyDown}
             tabIndex="0"
@@ -23,7 +24,7 @@ export const DropdownItem = ({ onClick, className, children, ...props }) => {
             {...props}
             >
             {children}
-        </a>
+        </button>
     );
 };
   
