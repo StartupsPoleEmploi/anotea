@@ -61,19 +61,19 @@ export default class EditReponseButton extends React.Component {
                     header="Edition"
                     button={
                         <Button size="large" color="blue" toggable={true}>
-                            <i className="fa fa-pencil-alt" />
+                            <span aria-hidden="true" className="fa fa-pencil-alt" />
                         </Button>
                     }
                     items={
                         <div>
                             <DropdownItem onClick={onEdit}>
-                                <i className="far fa-edit a-icon" /> {hasReponse ? 'Modifier la réponse' : 'Répondre'}
+                                <span aria-hidden="true" className="far fa-edit a-icon" /> {hasReponse ? 'Modifier la réponse' : 'Répondre'}
                             </DropdownItem>
                             {hasReponse &&
                             <>
                                 <DropdownDivider />
                                 <DropdownItem onClick={() => this.showModal('delete')} className="a-text-important">
-                                    <i className="far fa-trash-alt a-icon" /> Supprimer
+                                    <span aria-hidden="true" className="far fa-trash-alt a-icon" /> Supprimer
                                 </DropdownItem>
                             </>
                             }

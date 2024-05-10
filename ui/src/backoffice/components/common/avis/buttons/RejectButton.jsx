@@ -68,7 +68,7 @@ export default class RejectButton extends React.Component {
                     header="Rejeter"
                     button={
                         <Button size="large" color="red" toggable={true}>
-                            {buttonText}<i className="far fa-times-circle" />
+                            {buttonText}<span aria-hidden="true" className="far fa-times-circle" />
                         </Button>
                     }
                     items={

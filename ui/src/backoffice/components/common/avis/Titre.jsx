@@ -33,7 +33,7 @@ export default class Titre extends React.Component {
                         <h3 className={`mr-1 title span-title ${avis.commentaire.titleMasked ? 'masked' : ''}`}>{avis.commentaire.title}</h3>
                         <button type="button" className="button-eye" onClick={this.toggle} aria-pressed={!avis.commentaire.titleMasked}>
                             <span className="sr-only">Afficher le titre</span>
-                            <i className={`far sr ${avis.commentaire.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} />
+                            <span aria-hidden="true" className={`far sr ${avis.commentaire.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} />
                         </button>
                     </>
                 )}

@@ -36,7 +36,7 @@ export default class RejectReponseButton extends React.Component {
                 <Button
                     size="large" color="red" onClick={this.onClick} className="RejectReponseButton"
                     disabled={this.props.avis.reponse.status === 'rejected'}>
-                    {buttonText}<i className="far fa-times-circle" />
+                    {buttonText}<span aria-hidden="true" className="far fa-times-circle" />
                 </Button>
             </div>
         );

@@ -118,7 +118,7 @@ export default class ModerationAvisPage extends React.Component {
                                         id="recherche-avis"
                                         value={this.state.fulltext}
                                         placeholder="Rechercher un avis"
-                                        icon={<i className="fas fa-search" />}
+                                        icon={<span aria-hidden="true" className="fas fa-search" />}
                                         reset={() => this.setState({ fulltext: '' })}
                                         onChange={event => this.setState({ fulltext: event.target.value })}
                                     />

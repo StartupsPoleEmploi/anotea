@@ -33,7 +33,7 @@ export default class ValidateReponseButton extends React.Component {
         return (
             <div className="PublishReponseButton">
                 <Button size="large" color="green" disabled={isValidated} onClick={this.onClick}>
-                    {buttonText}<i className="far fa-check-circle a-icon" />
+                    {buttonText}<span aria-hidden="true" className="far fa-check-circle a-icon" />
                 </Button>
             </div>
         );

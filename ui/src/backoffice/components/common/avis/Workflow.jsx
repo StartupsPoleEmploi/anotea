@@ -43,9 +43,9 @@ export const Workflow = ({ avis, showStatus }) => {
 
     return (
         <div className="Status">
-            <div className="date">
+            <p className="date">
                 le <PrettyDate date={new Date(avis.date)} /> &nbsp;
-            </div>
+            </p>
             {showStatus &&
             getStatus(avis)
             }
@@ -68,9 +68,9 @@ export const ReconciliationWorkflow = ({ avis }) => {
 
         if (isOnline) {
             return (
-                <div className="reconciliated">
+                <p className="reconciliated">
                     (En ligne)
-                </div>
+                </p>
             );
         } else {
             return <div />;
@@ -80,9 +80,9 @@ export const ReconciliationWorkflow = ({ avis }) => {
 
     return (
         <div className="Status">
-            <div className="date">
+            <p className="date">
                 le <PrettyDate date={new Date(avis.date)} /> &nbsp;
-            </div>
+            </p>
             {getStatus(avis)}
         </div>
     );

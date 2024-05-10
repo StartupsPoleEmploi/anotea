@@ -34,18 +34,18 @@ export default class EditButton extends React.Component {
                     header="Modifier ou supprimer"
                     button={
                         <Button size="large" color="blue" toggable={true}>
-                            {buttonText}<i className="fa fa-pencil-alt" />
+                            {buttonText}<span aria-hidden="true" className="fa fa-pencil-alt" />
                         </Button>
                     }
                     items={
                         <div>
                             <DropdownItem onClick={this.props.onEdit}>
-                                <i className="far fa-edit a-icon" /> Modifier l&apos;adresse
+                                <span aria-hidden="true" className="far fa-edit a-icon" /> Modifier l&apos;adresse
                             </DropdownItem>
                             <DropdownDivider />
                             {this.props.organisme.courriel &&
                             <DropdownItem onClick={this.resend}>
-                                <i className="far fa-envelope a-icon" /> Renvoyer le lien
+                                <span aria-hidden="true" className="far fa-envelope a-icon" /> Renvoyer le lien
                             </DropdownItem>
                             }
                         </div>

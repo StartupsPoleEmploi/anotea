@@ -102,7 +102,7 @@ export default class Avis extends React.Component {
                             <div className="mb-3">
                                 <Stars note={avis.notes.global} />
                                 <span className="sr-only">Moyenne: {avis.notes.global} sur 5</span>
-                                {renderWorkflow(avis)}
+                                <p>{renderWorkflow(avis)}</p>
                             </div>
 
                             <div className="mb-1">

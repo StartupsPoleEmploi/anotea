@@ -48,7 +48,7 @@ export default class Reponse extends React.Component {
                         <Status avis={avis} />
                     </div>
                     {avis.reponse.date &&
-                    <span className="date">le <PrettyDate date={new Date(avis.reponse.date)} /></span>
+                    <p className="date">le <PrettyDate date={new Date(avis.reponse.date)} /></p>
                     }
                 </div>
                 <p>{avis.reponse.text}</p>
