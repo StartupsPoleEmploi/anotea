@@ -45,7 +45,7 @@ export default class InputText extends React.Component {
 
                     {reset &&
                     <div className="reset d-flex align-items-center">
-                        <span onClick={reset}><i className="fas fa-times" /></span>
+                        <button onClick={reset} className="button-reset"><i className="fas fa-times" /><span className="sr-only">supprimer le filtre</span></button>
                     </div>
                     }
                 </div>
