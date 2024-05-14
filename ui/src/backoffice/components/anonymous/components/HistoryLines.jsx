@@ -76,6 +76,11 @@ export default class HistoryLines extends React.Component {
         let { lines, groupBy, format, formatTooltip, colors } = this.props;
 
         const customTheme = {
+            grid: {
+                line: {
+                    stroke: "rgb(0,0,0)",
+                }
+            },
             axis: {
                 ticks: {
                     text: {
@@ -138,7 +143,6 @@ export default class HistoryLines extends React.Component {
                         itemDirection: 'left-to-right',
                         itemWidth: 70,
                         itemHeight: 20,
-                        itemOpacity: 0.75,
                         symbolSize: 12,
                         symbolShape: 'circle',
                         symbolBorderColor: 'rgba(0, 0, 0, .5)',
