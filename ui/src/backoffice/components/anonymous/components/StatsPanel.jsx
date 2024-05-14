@@ -63,6 +63,7 @@ export default class StatsPanel extends React.Component {
                     className="StatsPanel"
                     results={
                         <div>
+                            <span>* National</span>
                             <dl className="row mb-5">
                                 <dt className="col-13">Statistiques sur les stagiaires&nbsp;:</dt>
                                 <dd className="col-12">
