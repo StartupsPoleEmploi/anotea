@@ -52,10 +52,10 @@ class Remerciements extends Component {
                                         <div className="link">
                                             <a
                                                 className="btn"
-                                                href={`/link/${stagiaire.token}?goto=clara`}
+                                                href={`/link/${stagiaire.token}?goto=mesdroitssociaux`}
                                                 target="_blank"
                                                 rel="noopener noreferrer">
-                                                <strong>Les aides au retour à l’emploi</strong> avec l’outil Clara
+                                                <strong>Les aides au retour à l’emploi</strong> avec l’outil mes droits sociaux
                                             </a>
                                         </div>
                                     </div>
