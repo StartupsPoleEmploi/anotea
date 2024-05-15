@@ -28,7 +28,7 @@ const Header = ({ items, defaultPath, onLogout }) => {
                                 <button
                                     onClick={onLogout}
                                     className="logout btn btn-outline-light">
-                                    <span>SE DECONNECTER</span>
+                                    <span>Se déconnecter</span>
                                 </button>
                             }
                         </div>
