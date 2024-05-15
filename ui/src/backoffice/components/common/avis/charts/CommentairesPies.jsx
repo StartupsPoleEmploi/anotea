@@ -16,7 +16,7 @@ const CommentairesPies = ({ stats }) => {
         <div className="CommentairesPies">
             <h2 className="title">Les commentaires</h2>
             <div className="box d-flex flex-wrap flex-row">
-                <div className="chart first" tabIndex="0">
+                <div className="chart first" >
                     <div className="title">Modération des commentaires</div>
                     <div className="description">{stats.nbCommentaires} commentaires au total</div>
                     <Pie colors={colors} data={[
@@ -31,7 +31,7 @@ const CommentairesPies = ({ stats }) => {
                     ]}>
                     </Pie>
                 </div>
-                <div className="chart second" tabIndex="0">
+                <div className="chart second" >
                     <div className="title">Commentaires validés</div>
                     <div className="description">{stats.nbCommentairesValidated} commentaires au total</div>
                     <Pie colors={colors} data={[
@@ -41,7 +41,7 @@ const CommentairesPies = ({ stats }) => {
                             [{ id: `Négatifs (${round((stats.nbCommentairesNegatifs / totalComVal) * 100)}%)`, value: stats.nbCommentairesNegatifs, label: 'commentaires' }] : []),
                     ]} />
                 </div>
-                <div className="chart last" tabIndex="0">
+                <div className="chart last" >
                     <div className="title">Commentaires rejetés</div>
                     <div className="description">{stats.nbCommentairesRejected} commentaires au total</div>
                     <Pie colors={colors} data={[

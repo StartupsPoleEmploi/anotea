@@ -28,12 +28,12 @@ export default class StagiairesStats extends React.Component {
             <div className="Stats">
                 <div className="main d-flex justify-content-center justify-content-lg-between">
                     <div className="d-flex flex-column">
-                        <h2 className="title" tabIndex="0">
+                        <h2 className="title" >
                             <span aria-hidden="true" className="far fa-user a-icon"></span>
                             Stagiaires
                         </h2>
                         <div className="d-flex justify-content-around flex-wrap">
-                            <div className="stats" tabIndex="0">
+                            <div className="stats" >
                                 <div className="name">Nombre de stagiaires contactés</div>
                                 <div>
                                     <span className="value">
@@ -43,7 +43,7 @@ export default class StagiairesStats extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div className="stats" tabIndex="0">
+                            <div className="stats" >
                                 <div className="name">Taux répondants</div>
                                 <span className="value highlighted">
                                     {percentage(diff(stats, type, 'avis.nbAvis'), diff(stats, type, 'avis.nbStagiairesContactes'))}%
@@ -65,7 +65,7 @@ export default class StagiairesStats extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }} tabIndex="0">
+                <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px' }} >
                     <HistoryLines
                         lines={lines}
                         colors={type === 'regional' ? ['rgb(35, 47, 56)', '#EF7016'] : ['#EF7016']}

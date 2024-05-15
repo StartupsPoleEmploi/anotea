@@ -29,7 +29,7 @@ const Pie = ({ data, colors }) => {
                                     bottom: 20,
                                     left: 20,
                                 }}
-                                isInteractive={true}
+                                isInteractive={false}
                                 enableSlicesLabels={false}
                                 theme={{ fontSize: 12, fontFamily: 'Lato', textColor: '#24303A' }}
                                 colors={colors || { scheme: 'nivo' }}
