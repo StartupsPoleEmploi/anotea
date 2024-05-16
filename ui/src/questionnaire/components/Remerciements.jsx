@@ -80,10 +80,11 @@ class Remerciements extends Component {
                                             <img
                                                 src={
                                                     process.env.PUBLIC_URL +
-                                                    `/images/regions/carif-${stagiaire.codeRegion}.png`}
-                                                alt="défi métiers" />
+                                                    `/images/regions/carif-${infosRegion.region.codeRegion}.png`}
+                                                alt={infosRegion.region.carif.nom} />
                                         </a>
                                         }
+                                        {console.log(infosRegion)}
                                         <div>
                                         <a
                                             className="textimage"
