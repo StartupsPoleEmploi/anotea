@@ -21,8 +21,8 @@ const Pie = ({ data, colors }) => {
                         return (
                             <NoResponsivePie
                                 data={data}
-                                height={height}
-                                width={width}
+                                height={height+50}
+                                width={width+50}
                                 margin={{
                                     top: 20,
                                     right: 20,
@@ -31,7 +31,7 @@ const Pie = ({ data, colors }) => {
                                 }}
                                 isInteractive={false}
                                 enableSlicesLabels={false}
-                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor: '#24303A' }}
+                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor:'black' }}
                                 colors={colors || { scheme: 'nivo' }}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
@@ -45,6 +45,9 @@ const Pie = ({ data, colors }) => {
                                         </div>
                                     );
                                 }}
+                                innerRadius={0.25}
+                                outerRadius={100}
+                                padAngle={10}
                             />);
                     }}
                 </AutoSizer>

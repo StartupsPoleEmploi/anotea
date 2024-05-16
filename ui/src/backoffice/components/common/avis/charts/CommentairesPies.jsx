@@ -7,7 +7,7 @@ let round = value => Number(Math.round(value + 'e1') + 'e-1');
 
 const CommentairesPies = ({ stats }) => {
 
-    let colors = ['#007E54', '#E5F2ED', '#66B298'];
+    let colors = ['#007bff ', '#FF6200 ', '#28a745 '];
     let totalComMod = stats.nbCommentairesValidated+stats.nbCommentairesRejected+stats.nbCommentairesReported+stats.nbCommentairesArchived;
     let totalComVal = stats.nbCommentairesPositifs + stats.nbCommentairesNegatifs;
     let totalComRej = stats.nbCommentairesNonConcernes + stats.nbCommentaires + stats.nbCommentairesInjures;
@@ -15,7 +15,7 @@ const CommentairesPies = ({ stats }) => {
     return (
         <div className="CommentairesPies">
             <h2 className="title">Les commentaires</h2>
-            <div className="box d-flex flex-wrap flex-row">
+            <div className="box d-flex flex-wrap flex-row" style={{justifyContent: "center"}}>
                 <div className="chart first" >
                     <div className="title">Modération des commentaires</div>
                     <div className="description">{stats.nbCommentaires} commentaires au total</div>
