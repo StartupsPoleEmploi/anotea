@@ -31,7 +31,7 @@ const Pie = ({ data, colors }) => {
                                 }}
                                 isInteractive={false}
                                 enableSlicesLabels={false}
-                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor:'black' }}
+                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor:'#11181E' }}
                                 colors={colors || { scheme: 'nivo' }}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
@@ -48,6 +48,8 @@ const Pie = ({ data, colors }) => {
                                 innerRadius={0.25}
                                 outerRadius={100}
                                 padAngle={10}
+                                borderWidth={"2px"}
+                                borderColor={"#7C7C7C"}
                             />);
                     }}
                 </AutoSizer>

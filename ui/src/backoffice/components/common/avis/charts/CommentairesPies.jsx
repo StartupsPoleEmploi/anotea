@@ -7,7 +7,7 @@ let round = value => Number(Math.round(value + 'e1') + 'e-1');
 
 const CommentairesPies = ({ stats }) => {
 
-    let colors = ['#007bff ', '#FF6200 ', '#28a745 '];
+    let colors = ['#6cc3d5 ', '#ffa78e ', '#78c2ad '];
     let totalComMod = stats.nbCommentairesValidated+stats.nbCommentairesRejected+stats.nbCommentairesReported+stats.nbCommentairesArchived;
     let totalComVal = stats.nbCommentairesPositifs + stats.nbCommentairesNegatifs;
     let totalComRej = stats.nbCommentairesNonConcernes + stats.nbCommentaires + stats.nbCommentairesInjures;
