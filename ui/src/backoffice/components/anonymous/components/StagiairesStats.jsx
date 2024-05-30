@@ -68,7 +68,7 @@ export default class StagiairesStats extends React.Component {
                 <div className="flex-grow-1" style={{ height: '300px', minWidth: '250px', marginTop: '21px'}}>
                     <HistoryLines
                         lines={lines}
-                        colors={type === 'regional' ? ['rgb(35, 47, 56)', '#EF7016'] : ['#EF7016']}
+                        colors={type === 'regional' ? ['rgb(35, 47, 56)', '#D14905'] : ['#D14905']}
                         groupBy={groupBy}
                         format={v => `${v}%`}
                         formatTooltip={data => {

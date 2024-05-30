@@ -3,5 +3,10 @@
 .Backoffice .Tab {
   .nav-link {
     color: $color-white;
+
+    &.active {
+      opacity: 1;
+    }
   }
+  
 }
