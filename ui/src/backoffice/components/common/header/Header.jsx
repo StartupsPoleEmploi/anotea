@@ -1,13 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import BackofficeContext from '../../../BackofficeContext';
 import logo from './logo.svg';
 import './Header.scss';
 
 const Header = ({ items, defaultPath, onLogout }) => {
+    const { account, theme } = useContext(BackofficeContext);
+    const logoRef = useRef(null);
+    const location = useLocation();
 
-    let { account, theme } = useContext(BackofficeContext);
+    useEffect(() => {
+        if (logoRef.current) {
+            logoRef.current.focus();
+        }
+    }, [location.pathname]);
 
     return (
         <header role="banner" className={`Header ${theme.backgroundColor}`}>
@@ -19,7 +26,7 @@ const Header = ({ items, defaultPath, onLogout }) => {
                     <div className="col-sm-12">
                         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
                             <NavLink to={defaultPath}>
-                                <img src={logo} className="logo" alt="Anotéa" />
+                                <img src={logo} ref={logoRef} className="logo" alt="Anotéa" tabIndex="-1" />
                             </NavLink>
 
                             {items}
