@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { latest } from '../../../services/statsService';
+import { diff } from '../../../services/statsService';
 import { formatNumber, percentage } from '../../../utils/number-utils';
 
 export default class OrganismeStats extends React.Component {
@@ -25,17 +25,17 @@ export default class OrganismeStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Organismes actifs</div>
-                            <div className="value">{formatNumber(latest(stats, type, 'organismes.nbOrganismesActifs'))}</div>
+                            <div className="value">{formatNumber(diff(stats, type, 'organismes.nbOrganismesActifs'))}</div>
                         </div>
                         <div className="stats" >
                             <div className="name">Taux de commentaires avec réponse</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(latest(stats, type, 'avis.nbReponses'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%
+                                    {percentage(diff(stats, type, 'avis.nbReponses'), diff(stats, type, 'avis.nbAvisAvecCommentaire'))}%
                                 </span>
                                 {type === 'regional' &&
                                 <span className="value compare">
-                                    {percentage(latest(stats, 'national', 'avis.nbReponses'), latest(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
+                                    {percentage(diff(stats, 'national', 'avis.nbReponses'), diff(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
                                 </span>
                                 }
                             </div>

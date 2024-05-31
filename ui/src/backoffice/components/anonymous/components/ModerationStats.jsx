@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { latest } from '../../../services/statsService';
+import { diff } from '../../../services/statsService';
 import { formatNumber } from '../../../utils/number-utils';
 
 export default class ModerationStats extends React.Component {
@@ -25,7 +25,7 @@ export default class ModerationStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Avis à modérer</div>
-                            <div className="value">{formatNumber(latest(stats, type, 'avis.nbCommentairesAModerer'))}</div>
+                            <div className="value">{formatNumber(diff(stats, type, 'avis.nbCommentairesAModerer'))}</div>
                         </div>
                     </div>
                 </div>

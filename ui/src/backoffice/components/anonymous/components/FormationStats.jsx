@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { latest } from '../../../services/statsService';
+import { diff, latest } from '../../../services/statsService';
 import { formatNumber, percentage } from '../../../utils/number-utils';
 
 export default class FormationStats extends React.Component {
@@ -29,13 +29,16 @@ export default class FormationStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Formations en ligne</div>
-                            <div className="value">{formatNumber(latest(stats, type, 'api.nbSessions'))}</div>
+                            <div className="value">{formatNumber(diff(stats, type, 'api.nbSessions'))}</div>
+                            {console.log(formatNumber(latest(stats, type, 'api.nbSessions')))}
+                                    {console.log(stats[0])}
+                                    {console.log(type)}
                         </div>
                         <div className="stats" >
                             <div className="name">Formations avec un avis</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(latest(stats, type, 'api.nbSessionsAvecAvis'), latest(stats, type, 'api.nbSessions'))}%
+                                    {percentage(diff(stats, type, 'api.nbSessionsAvecAvis'), diff(stats, type, 'api.nbSessions'))}%
                                 </span>
                                 {type !== 'regional' && (
                                     <span className="sr-only">National</span>
@@ -45,7 +48,7 @@ export default class FormationStats extends React.Component {
                                     <>
                                          <span className="sr-only">Region {store.regions.find((element) => element.codeRegion === query.codeRegion)?.nom}</span>
                                         <span className="value compare">
-                                            {percentage(latest(stats, 'national', 'api.nbSessionsAvecAvis'), latest(stats, 'national', 'api.nbSessions'))}%*
+                                            {percentage(latest(stats, 'national', 'api.nbSessionsAvecAvis'), latest(stats, 'national', 'api.nbSessions')).toFixed(2)}%*
                                         </span>
                                         <span className="sr-only">National</span>
                                     </>

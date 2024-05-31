@@ -38,7 +38,10 @@ export default class StagiairesStats extends React.Component {
                             <div className="stats" >
                                 <div className="name">Nombre de stagiaires contactés</div>
                                 <span className="value">
-                                    {formatNumber(latest(stats, type, 'avis.nbStagiairesContactes'))}
+                                    {formatNumber(diff(stats, type, 'avis.nbStagiairesContactes'))}
+                                    {console.log(stats)}
+                                    {console.log(stats[0])}
+                                    {console.log(type)}
                                 </span><br/>
                                 <span className="asterisque">
                                     {debut ? "DEPUIS LE: "+new Date(debut).toLocaleDateString() : 'DEPUIS LE: 01/01/2018'/*getFullYear*/}

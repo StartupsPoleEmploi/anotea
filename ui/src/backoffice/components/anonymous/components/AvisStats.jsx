@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { latest } from '../../../services/statsService';
+import { diff } from '../../../services/statsService';
 import { formatNumber, percentage } from '../../../utils/number-utils';
 
 export default class AvisStats extends React.Component {
@@ -26,19 +26,19 @@ export default class AvisStats extends React.Component {
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Total avis déposés</div>
-                            <div className="value">{formatNumber(latest(stats, type, 'avis.nbAvis'))}</div>
+                            <div className="value">{formatNumber(diff(stats, type, 'avis.nbAvis'))}</div>
                         </div>
                         <div className="stats" >
                             <div className="name">Commentaires</div>
                             <div className="value">
-                                {formatNumber(latest(stats, type, 'avis.nbAvisAvecCommentaire'))}
+                                {formatNumber(diff(stats, type, 'avis.nbAvisAvecCommentaire'))}
                             </div>
                         </div>
                         <div className="stats" >
                             <div className="name">Taux</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(latest(stats, type, 'avis.nbAvisAvecCommentaire'), latest(stats, type, 'avis.nbAvis'))}%
+                                    {percentage(diff(stats, type, 'avis.nbAvisAvecCommentaire'), diff(stats, type, 'avis.nbAvis'))}%
                                 </span>
                                 {type !== 'regional' && (
                                     <span className="sr-only">National</span>
@@ -48,7 +48,7 @@ export default class AvisStats extends React.Component {
                                     <>
                                         <span className="sr-only">Region {store.regions.find((element) => element.codeRegion === query.codeRegion)?.nom}</span>
                                         <span className="value compare">
-                                            {percentage(latest(stats, 'national', 'avis.nbAvisAvecCommentaire'), latest(stats, 'national', 'avis.nbAvis'))}%*
+                                            {percentage(diff(stats, 'national', 'avis.nbAvisAvecCommentaire'), diff(stats, 'national', 'avis.nbAvis'))}%*
                                         </span>
                                         <span className="sr-only">National</span>
                                     </>
@@ -62,33 +62,33 @@ export default class AvisStats extends React.Component {
                     <div className="stats" >
                         <div className="name">Positifs ou neutres</div>
                         <span className="value">
-                            {percentage(latest(stats, type, 'avis.nbCommentairesPositifs'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%
+                            {percentage(diff(stats, type, 'avis.nbCommentairesPositifs'), diff(stats, type, 'avis.nbAvisAvecCommentaire'))}%
                         </span>
                         {type === 'regional' &&
                         <span className="value compare">
-                            {percentage(latest(stats, 'national', 'avis.nbCommentairesPositifs'), latest(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
+                            {percentage(diff(stats, 'national', 'avis.nbCommentairesPositifs'), diff(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
                         </span>
                         }
                     </div>
                     <div className="stats" >
                         <div className="name">Négatifs</div>
                         <span className="value">
-                            {percentage(latest(stats, type, 'avis.nbCommentairesNegatifs'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%
+                            {percentage(diff(stats, type, 'avis.nbCommentairesNegatifs'), diff(stats, type, 'avis.nbAvisAvecCommentaire'))}%
                         </span>
                         {type === 'regional' &&
                         <span className="value compare">
-                            {percentage(latest(stats, 'national', 'avis.nbCommentairesNegatifs'), latest(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
+                            {percentage(diff(stats, 'national', 'avis.nbCommentairesNegatifs'), diff(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
                         </span>
                         }
                     </div>
                     <div className="stats" >
                         <div className="name">Rejetés</div>
                         <span className="value">
-                            {percentage(latest(stats, type, 'avis.nbCommentairesRejetes'), latest(stats, type, 'avis.nbAvisAvecCommentaire'))}%
+                            {percentage(diff(stats, type, 'avis.nbCommentairesRejetes'), diff(stats, type, 'avis.nbAvisAvecCommentaire'))}%
                         </span>
                         {type === 'regional' &&
                         <span className="value compare">
-                            {percentage(latest(stats, 'national', 'avis.nbCommentairesRejetes'), latest(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
+                            {percentage(diff(stats, 'national', 'avis.nbCommentairesRejetes'), diff(stats, 'national', 'avis.nbAvisAvecCommentaire'))}%*
                         </span>
                         }
                     </div>
