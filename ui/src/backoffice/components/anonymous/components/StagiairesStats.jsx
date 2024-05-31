@@ -11,10 +11,12 @@ export default class StagiairesStats extends React.Component {
         query: PropTypes.object.isRequired,
         store: PropTypes.object.isRequired,
         stats: PropTypes.array.isRequired,
+        form: PropTypes.object.isRequired,
     };
 
     render() {
-        let { query, store, stats } = this.props;
+        let { form, query, store, stats } = this.props;
+        const { codeRegion, debut, fin } = form;
         let type = query.codeRegion ? 'regional' : 'national';
         let groupBy = 'month';
         let lines = [
@@ -35,13 +37,14 @@ export default class StagiairesStats extends React.Component {
                         <div className="d-flex justify-content-around flex-wrap">
                             <div className="stats" >
                                 <div className="name">Nombre de stagiaires contactés</div>
-                                <div>
-                                    <span className="value">
-                                        {formatNumber(latest(stats, type, 'avis.nbStagiairesContactes'))}
-                                    </span>
-                                    <span className="asterisque">depuis 2018
-                                    </span>
-                                </div>
+                                <span className="value">
+                                    {formatNumber(latest(stats, type, 'avis.nbStagiairesContactes'))}
+                                </span><br/>
+                                <span className="asterisque">
+                                    {debut ? "DEPUIS LE: "+new Date(debut).toLocaleDateString() : 'DEPUIS LE: 01/01/2018'/*getFullYear*/}
+                                    <br/>
+                                    {fin ? "JUSQU'AU: "+new Date(fin).toLocaleDateString() : "JUSQU'A: Aujourd'hui"}
+                                </span>
                             </div>
                             <div className="stats" >
                                 <div className="name">Taux répondants</div>

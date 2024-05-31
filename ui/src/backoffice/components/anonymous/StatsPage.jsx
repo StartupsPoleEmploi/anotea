@@ -53,7 +53,7 @@ export default class StatsPage extends React.Component {
                 title="Statistique Anotéa"
                 className="StatsPage"
                 form={<StatsForm query={query} store={this.state.store} onSubmit={this.onSubmit} />}
-                panel={<StatsPanel query={query} store={this.state.store} />}
+                panel={<StatsPanel query={query} store={this.state.store} form={this.state.form}/>}
             />
         );
     }

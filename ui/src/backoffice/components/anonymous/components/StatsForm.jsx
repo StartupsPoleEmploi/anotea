@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../../common/components/Button';
 import _ from 'lodash';
-import { Form, Select } from '../../common/page/form/Form';
+import moment from 'moment';
+import { Form, Periode, Select } from '../../common/page/form/Form';
 import BackofficeContext from '../../../BackofficeContext';
 
 export default class StatsForm extends React.Component {
@@ -22,6 +23,14 @@ export default class StatsForm extends React.Component {
         };
     }
 
+    initState = () => {
+        return {
+            debut: null,
+            fin: null,
+            codeRegion: null,
+        };
+    };
+
     componentDidUpdate(previous) {
         if (!_.isEqual(previous.store, this.props.store) && !this.formAlreadyPopulatedFromQuery) {
             let { query, store } = this.props;
@@ -38,9 +47,17 @@ export default class StatsForm extends React.Component {
         return store.loading || _.isEqual(_.pickBy(this.state), query);
     };
 
+    resetForm = () => {
+        this.setState(this.initState());
+    };
+
     onSubmit = () => {
+        let { debut, fin } = this.state;
+
         return this.props.onSubmit({
             ..._.omitBy(this.state, _.isNil),
+            ...(debut ? { debut: moment(debut).valueOf() } : {}),
+            ...(fin ? { fin: moment(fin).valueOf() } : {}),
         });
     };
 
@@ -69,18 +86,41 @@ export default class StatsForm extends React.Component {
                                     onChange={(option = {}) => this.setState({ codeRegion: option.codeRegion })}
                                 />
                             </fieldset>
+                            <fieldset>
+                                <label>Période</label>
+                                <Periode
+                                    periode={{ debut: this.state.debut, fin: this.state.fin }}
+                                    min={moment('2019-08-01').toDate()}
+                                    max={moment().toDate()}
+                                    onChange={({ debut, fin }) => this.setState({ debut, fin })}
+                                />
+                            </fieldset>
                         </div>
-                        <Button
-                            size="large"
-                            color={theme.buttonColor}
-                            disabled={store.loading}
-                            onClick={() => this.onSubmit()}
-                            style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
-                        >
-                            {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
-                            Rechercher
-                        </Button>
                     </div>
+
+                    <div className="form-row justify-content-center" style={{marginTop: "20px"}}>
+                            <div className="form-group buttons">
+                                <Button
+                                    size="small"
+                                    className="mr-3"
+                                    disabled={store.loading}
+                                    onClick={this.resetForm}
+                                >
+                                    <i className="fas fa-times mr-2"></i>
+                                    Réinitialiser les filtres
+                                </Button>
+                                <Button
+                                    size="large"
+                                    color={theme.buttonColor}
+                                    disabled={store.loading}
+                                    onClick={() => this.onSubmit()}
+                                    style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
+                                >
+                                    {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
+                                    Rechercher
+                                </Button>
+                            </div>
+                        </div>
                 </Form>
             </div>
         );

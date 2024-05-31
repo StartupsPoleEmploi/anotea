@@ -18,6 +18,7 @@ export default class StatsPanel extends React.Component {
     static propTypes = {
         query: PropTypes.object.isRequired,
         store: PropTypes.object.isRequired,
+        form: PropTypes.object.isRequired,
     };
 
     constructor() {
@@ -50,7 +51,7 @@ export default class StatsPanel extends React.Component {
     };
 
     render() {
-        let { query, store } = this.props;
+        let { query, store, form } = this.props;
         let { results } = this.state;
 
         if (_.isEmpty(results.stats)) {
@@ -67,7 +68,7 @@ export default class StatsPanel extends React.Component {
                             <dl className="row mb-5">
                                 <h2 className="col-13">Statistiques sur les stagiaires&nbsp;:</h2>
                                 <dd className="col-12">
-                                    <StagiairesStats query={query} stats={results.stats} store={store} />
+                                    <StagiairesStats query={query} form={form} stats={results.stats} store={store} />
                                 </dd>
                             </dl>
 

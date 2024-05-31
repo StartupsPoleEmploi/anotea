@@ -45,7 +45,8 @@ export default class Periode extends React.Component {
                 <span className="au">à</span>
                 <Date
                     value={periode.fin}
-                    min={periode.debut || min}
+                    min={min}
+                    max={max}
                     depth={depth || 'days'}
                     onChange={date => this.onDateChange('fin', date)}
                 />
