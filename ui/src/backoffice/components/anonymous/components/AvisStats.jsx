@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Stats.scss';
-import { diff } from '../../../services/statsService';
+import { diff, latest } from '../../../services/statsService';
 import { formatNumber, percentage } from '../../../utils/number-utils';
 
 export default class AvisStats extends React.Component {
@@ -10,10 +10,12 @@ export default class AvisStats extends React.Component {
         query: PropTypes.object.isRequired,
         store: PropTypes.object.isRequired,
         stats: PropTypes.array.isRequired,
+        form: PropTypes.object.isRequired,
     };
 
     render() {
-        let { query, store, stats } = this.props;
+        let { query, store, stats, form } = this.props;
+        const { debut, fin } = form;
         let type = query.codeRegion ? 'regional' : 'national';
 
         return (
@@ -22,6 +24,10 @@ export default class AvisStats extends React.Component {
                     <h2 className="title" >
                         <span aria-hidden="true" className="far fa-comment-alt a-icon"></span>
                         Avis
+                        <span className="asterisque" style={{"marginLeft":"10px"}}>
+                            {debut ? " (DEPUIS LE: "+new Date(debut).toLocaleDateString() : '(DEPUIS LE: 01/01/2018 -' /*getFullYear*/}
+                            {fin ? " JUSQU'AU: "+new Date(fin).toLocaleDateString()+")" : "JUSQU'A: Aujourd'hui)"}
+                        </span>
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >

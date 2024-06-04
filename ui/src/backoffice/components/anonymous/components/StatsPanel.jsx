@@ -66,7 +66,7 @@ export default class StatsPanel extends React.Component {
                         <div>
                             <span>* National</span>
                             <dl className="row mb-5">
-                                <h2 className="col-13">Statistiques sur les stagiaires&nbsp;:</h2>
+                                <h2 className="col-12">Statistiques sur les stagiaires&nbsp;:</h2>
                                 <dd className="col-12">
                                     <StagiairesStats query={query} form={form} stats={results.stats} store={store} />
                                 </dd>
@@ -75,14 +75,14 @@ export default class StatsPanel extends React.Component {
                             <dl className="row mb-5">
                                 <h2 className="col-sm-12 col-md-12">Statistiques sur les avis&nbsp;:</h2>
                                 <dd className="col-sm-12 col-md-12">
-                                    <AvisStats query={query} stats={results.stats} store={store} />
+                                    <AvisStats query={query} form={form} stats={results.stats} store={store} />
                                 </dd>
                             </dl>
 
                             <dl className="row mb-5">
                                 <h2 className="col-sm-12 col-md-12">Statistiques sur les formations&nbsp;:</h2>
                                 <dd className="col-sm-12 col-md-12">
-                                    <FormationStats query={query} stats={results.stats} store={store} />
+                                    <FormationStats query={query} form={form} stats={results.stats} store={store} />
                                 </dd>
                             </dl>
 
@@ -90,10 +90,10 @@ export default class StatsPanel extends React.Component {
                                 <dl className="row mb-5">
                                     <h2 className="col-sm-12 col-md-12">Statistiques d'administration&nbsp;:</h2>
                                     <dd className="col-sm-12 col-md-5">
-                                        <ModerationStats query={query} stats={results.stats} />
+                                        <ModerationStats query={query} form={form} stats={results.stats} />
                                     </dd>
                                     <dd className="col-sm-12 col-md-7">
-                                        <OrganismeStats query={query} stats={results.stats} />
+                                        <OrganismeStats query={query} form={form} stats={results.stats} />
                                     </dd>
                                 </dl>
                             )}

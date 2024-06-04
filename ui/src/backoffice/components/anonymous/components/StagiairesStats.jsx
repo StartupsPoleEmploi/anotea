@@ -33,20 +33,16 @@ export default class StagiairesStats extends React.Component {
                         <h2 className="title" >
                             <span aria-hidden="true" className="far fa-user a-icon"></span>
                             Stagiaires
+                            <span className="asterisque" style={{"marginLeft":"10px"}}>
+                                {debut ? " (DEPUIS LE: "+new Date(debut).toLocaleDateString() : '(DEPUIS LE: 01/01/2018 -' /*getFullYear*/}
+                                {fin ? " JUSQU'AU: "+new Date(fin).toLocaleDateString()+")" : "JUSQU'A: Aujourd'hui)"}
+                            </span>
                         </h2>
                         <div className="d-flex justify-content-around flex-wrap">
                             <div className="stats" >
                                 <div className="name">Nombre de stagiaires contactés</div>
                                 <span className="value">
                                     {formatNumber(diff(stats, type, 'avis.nbStagiairesContactes'))}
-                                    {console.log(stats)}
-                                    {console.log(stats[0])}
-                                    {console.log(type)}
-                                </span><br/>
-                                <span className="asterisque">
-                                    {debut ? "DEPUIS LE: "+new Date(debut).toLocaleDateString() : 'DEPUIS LE: 01/01/2018'/*getFullYear*/}
-                                    <br/>
-                                    {fin ? "JUSQU'AU: "+new Date(fin).toLocaleDateString() : "JUSQU'A: Aujourd'hui"}
                                 </span>
                             </div>
                             <div className="stats" >

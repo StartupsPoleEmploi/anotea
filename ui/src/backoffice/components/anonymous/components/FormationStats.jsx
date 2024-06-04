@@ -10,10 +10,12 @@ export default class FormationStats extends React.Component {
         query: PropTypes.object.isRequired,
         store: PropTypes.object.isRequired,
         stats: PropTypes.array.isRequired,
+        form: PropTypes.object.isRequired,
     };
 
     render() {
-        let { query, store, stats } = this.props;
+        let { query, store, stats, form } = this.props;
+        const { fin } = form;
         let type = query.codeRegion ? 'regional' : 'national';
 
         return (
@@ -23,22 +25,23 @@ export default class FormationStats extends React.Component {
                         <div>
                             <span aria-hidden="true" className="fas fa-graduation-cap a-icon"></span>
                             Formations
+                            <span className="asterisque" style={{"marginLeft":"10px"}}>
+                                {'(DEPUIS LE: 01/01/2018 -'}
+                                {fin ? " JUSQU'AU: "+new Date(fin).toLocaleDateString()+")" : "JUSQU'A: Aujourd'hui)"}
+                            </span>
                         </div>
                         <div className="description">(source Intercarif)</div>
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Formations en ligne</div>
-                            <div className="value">{formatNumber(diff(stats, type, 'api.nbSessions'))}</div>
-                            {console.log(formatNumber(latest(stats, type, 'api.nbSessions')))}
-                                    {console.log(stats[0])}
-                                    {console.log(type)}
+                            <div className="value">{formatNumber(latest(stats, type, 'api.nbSessions'))}</div>
                         </div>
                         <div className="stats" >
                             <div className="name">Formations avec un avis</div>
                             <div>
                                 <span className="value highlighted">
-                                    {percentage(diff(stats, type, 'api.nbSessionsAvecAvis'), diff(stats, type, 'api.nbSessions'))}%
+                                    {percentage(latest(stats, type, 'api.nbSessionsAvecAvis'), latest(stats, type, 'api.nbSessions'))}%
                                 </span>
                                 {type !== 'regional' && (
                                     <span className="sr-only">National</span>
