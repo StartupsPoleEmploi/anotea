@@ -83,7 +83,7 @@ export default class StatsForm extends React.Component {
                                     options={store.regions}
                                     optionKey="codeRegion"
                                     optionLabel="nom"
-                                    onChange={(option = {}) => this.setState({ codeRegion: option.codeRegion })}
+                                    onChange={(option) => this.setState({ codeRegion: option ? option.codeRegion : null })}
                                 />
                             </fieldset>
                             <fieldset>
