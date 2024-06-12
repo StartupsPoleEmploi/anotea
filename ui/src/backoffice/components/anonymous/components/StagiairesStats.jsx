@@ -34,8 +34,8 @@ export default class StagiairesStats extends React.Component {
                             <span aria-hidden="true" className="far fa-user a-icon"></span>
                             Stagiaires
                             <span className="asterisque" style={{"marginLeft":"10px"}}>
-                                {debut ? " (DEPUIS LE: "+new Date(debut).toLocaleDateString() : '(DEPUIS LE: 01/01/2018 -' /*getFullYear*/}
-                                {fin ? " JUSQU'AU: "+new Date(fin).toLocaleDateString()+")" : "JUSQU'A: Aujourd'hui)"}
+                                {debut ? " (depuis le: "+new Date(debut).toLocaleDateString() : '(depuis le: 01/01/2018 -' /*getFullYear*/}
+                                {fin ? " jusqu'au: "+new Date(fin).toLocaleDateString()+")" : "jusqu'à: aujourd'hui)"}
                             </span>
                         </h2>
                         <div className="d-flex justify-content-around flex-wrap">

@@ -26,8 +26,8 @@ export default class FormationStats extends React.Component {
                             <span aria-hidden="true" className="fas fa-graduation-cap a-icon"></span>
                             Formations
                             <span className="asterisque" style={{"marginLeft":"10px"}}>
-                                {'(DEPUIS LE: 01/01/2018 -'}
-                                {fin ? " JUSQU'AU: "+new Date(fin).toLocaleDateString()+")" : "JUSQU'A: Aujourd'hui)"}
+                                {'(depuis le: 01/01/2018 -'}
+                                {fin ? " jusqu'au: "+new Date(fin).toLocaleDateString()+")" : "jusqu'à: Aujourd'hui)"}
                             </span>
                         </div>
                         <div className="description">(source Intercarif)</div>

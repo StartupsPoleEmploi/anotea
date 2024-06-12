@@ -24,8 +24,8 @@ export default class ModerationStats extends React.Component {
                         <span aria-hidden="true" className="far fa-comment-alt a-icon"></span>
                         Modération
                         <span className="asterisque" style={{"marginLeft":"10px"}}>
-                            {'(DEPUIS LE: 01/01/2018 -'}
-                            {fin ? " JUSQU'AU: "+new Date(fin).toLocaleDateString()+")" : "JUSQU'A: Aujourd'hui)"}
+                            {'(depuis le: 01/01/2018 -'}
+                            {fin ? " jusqu'au: "+new Date(fin).toLocaleDateString()+")" : "jusqu'à: Aujourd'hui)"}
                         </span>
                     </h2>
                     <div className="d-flex justify-content-between flex-wrap">
