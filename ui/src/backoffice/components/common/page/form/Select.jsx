@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Select.scss';
 
 const Select = ({
+  type,
   id,
   placeholder,
   trackingId,
@@ -57,6 +58,7 @@ const Select = ({
 
   const handleInputKeyDown = event => {
     let newFocusedOption;
+    const optionCount = type === 'create' ? filteredOptions.length + 1 : filteredOptions.length; // +1 for the "Ajouter" option
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
@@ -64,7 +66,7 @@ const Select = ({
         if (focusedOption === null) {
           newFocusedOption = 0;
         } else {
-          newFocusedOption = (focusedOption + 1) % filteredOptions.length;
+          newFocusedOption = (focusedOption + 1) % optionCount;
         }
         setFocusedOption(newFocusedOption);
         if (optionRefs.current[newFocusedOption]) {
@@ -78,9 +80,9 @@ const Select = ({
         event.preventDefault();
         setIsOpen(true);
         if (focusedOption === null) {
-          newFocusedOption = filteredOptions.length - 1;
+          newFocusedOption = optionCount - 1; // Last option is the "Ajouter" option
         } else {
-          newFocusedOption = (focusedOption - 1 + filteredOptions.length) % filteredOptions.length;
+          newFocusedOption = (focusedOption - 1 + optionCount) % optionCount;
         }
         setFocusedOption(newFocusedOption);
         if (optionRefs.current[newFocusedOption]) {
@@ -93,7 +95,11 @@ const Select = ({
       case 'Enter':
         event.preventDefault();
         if (isOpen && focusedOption !== null) {
-          onChange(filteredOptions[focusedOption]);
+          if (focusedOption < filteredOptions.length) {
+            onChange(filteredOptions[focusedOption]);
+          } else if (type === 'create') {
+            onChange({ [optionKey]: filter, [optionLabel]: filter });
+          }
           setIsOpen(false);
           setFilter('');
         }
@@ -115,7 +121,6 @@ const Select = ({
   const handleClear = () => {
     setFilter('');
     setIsOpen(false);
-    //inputRef.current.focus();
     onChange(null); // Clear the selected value
   };
 
@@ -128,9 +133,7 @@ const Select = ({
       setIsOpen(false);
       setFilter('');
     }, 100);
-
   };
-  
 
   return (
     <div className="combobox combobox-list" ref={comboboxRef}>
@@ -202,7 +205,22 @@ const Select = ({
             </li>
           ))
         ) : (
-          <li className="no-results">Aucun résultat</li>
+          type === 'create' ? (
+            <li
+              key="add-new"
+              role="option"
+              aria-selected={focusedOption === filteredOptions.length}
+              onClick={() => handleOptionClick({ [optionKey]: filter, [optionLabel]: filter })}
+              className={focusedOption === filteredOptions.length ? 'focused' : ''}
+              ref={el => {
+                optionRefs.current[filteredOptions.length] = el;
+              }}
+            >
+              Ajouter "{filter}"
+            </li>
+          ) : (
+            <li className="no-results">Aucun résultat</li>
+          )
         )}
       </ul>
     </div>

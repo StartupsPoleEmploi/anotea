@@ -84,7 +84,6 @@ class Remerciements extends Component {
                                                 alt={infosRegion.region.carif.nom} />
                                         </a>
                                         }
-                                        {console.log(infosRegion)}
                                         <div>
                                         <a
                                             className="textimage"
