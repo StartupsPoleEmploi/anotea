@@ -111,12 +111,14 @@ export default class ModerationAvisPage extends React.Component {
                 form={
                     <div className="d-flex justify-content-center">
                         <Form className="a-width-50">
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex" style={{ flexWrap: "wrap", justifyContent: "space-evenly" }}>
                                 <div className="flex-grow-1 mr-2">
+                                    <label className="sr-only" for="recherche-avis">Rechercher un avis</label>
                                     <InputText
+                                        id="recherche-avis"
                                         value={this.state.fulltext}
-                                        placeholder="Recherche un avis"
-                                        icon={<i className="fas fa-search" />}
+                                        placeholder="Rechercher un avis"
+                                        icon={<span aria-hidden="true" className="fas fa-search" />}
                                         reset={() => this.setState({ fulltext: '' })}
                                         onChange={event => this.setState({ fulltext: event.target.value })}
                                     />
@@ -179,10 +181,11 @@ export default class ModerationAvisPage extends React.Component {
                         results={
                             <AvisResults
                                 results={results}
-                                renderAvis={avis => {
+                                renderAvis={(avis, index) => {
                                     return (
                                         <Avis
                                             avis={avis}
+                                            index={index}
                                             showModerationButtons={true}
                                             renderWorkflow={avis => {
                                                 return <Workflow avis={avis} showStatus={query.statuses !== 'none'} />;

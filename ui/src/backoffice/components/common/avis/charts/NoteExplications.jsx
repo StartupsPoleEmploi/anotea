@@ -8,10 +8,11 @@ const NoteCriteria = props => {
         <div className="NoteCriteria">
             <div className="moyenne">
                 <div className="label">{props.label}</div>
-                <div className="note d-flex justify-content-center align-items-center">
+                <div aria-hidden="true" className="note d-flex justify-content-center align-items-center">
                     <span className="value">{props.note.moyenne}</span>/5
                     <Star svg={false} />
                 </div>
+                <p class="sr-only">{props.note.moyenne} sur 5</p>
             </div>
             <div className="d-flex flex-column">
                 <div className="explication">
@@ -40,10 +41,11 @@ const NoteGlobale = props => {
         <div className="NoteGlobale d-flex justify-content-start align-items-center">
             <div className="label pr-3">Moyenne globale</div>
             <div className="note d-flex justify-content-between align-items-baseline px-3">
-                <div className="d-flex align-items-center pr-3">
+                <div aria-hidden="true" className="d-flex align-items-center pr-3">
                     <span className="value">{props.note.moyenne}</span>/5
-                    <Star svg={false} />
+                    <Star svg={false}/>
                 </div>
+                <p class="sr-only">{props.note.moyenne} sur 5</p>
                 <div className="total">{props.total} notes</div>
             </div>
         </div>

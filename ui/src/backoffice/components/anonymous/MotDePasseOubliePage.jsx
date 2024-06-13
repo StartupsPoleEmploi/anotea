@@ -7,6 +7,8 @@ import Button from '../../../common/components/Button';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { askNewPassword } from '../../services/passwordService';
 import BackofficeContext from '../../BackofficeContext';
+import './LoginPage.scss';
+
 
 export default class MotDePasseOubliePage extends React.Component {
 
@@ -18,6 +20,7 @@ export default class MotDePasseOubliePage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             loading: false,
             identifiant: '',
@@ -41,14 +44,22 @@ export default class MotDePasseOubliePage extends React.Component {
             });
         })
         .catch(() => {
-            this.setState({ error: 'Une erreur est survenue', loading: false });
+            this.setState({ error: "Veuillez remplir votre identifiant.", loading: false },()=>{
+                if (this.inputRef.current && this.inputRef.current.focus) {
+                    this.inputRef.current.focus();
+                }
+            }
+        );
         });
     };
 
     render() {
 
         return (
+            <>
+            <title>Mot de passe oublié | Anotéa</title>
             <Page
+                className="MotDePasseOubliePage"
                 title={'Votre espace Anotéa'}
                 panel={
                     <Panel
@@ -58,12 +69,15 @@ export default class MotDePasseOubliePage extends React.Component {
                                 title="Mot de passe oublié"
                                 elements={
                                     <>
-                                        <label>Entrez votre identifiant</label>
+                                        <label for="identifiant">Entrez votre identifiant</label>
                                         <InputText
+                                            id="identifiant"
                                             value={this.state.identifiant}
                                             placeholder="Identifiant"
                                             error={this.state.error}
                                             onChange={event => this.setState({ identifiant: event.target.value })}
+                                            autoComplete="username"
+                                            inputRef={this.inputRef}
                                         />
                                         <p className="clarification mt-3">
                                             Si vous êtes un organisme, vous devez désormais renseigner votre numéro de
@@ -76,6 +90,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                             si vous ne la connaissez pas,
                                             <a
                                                 className="contactez-nous"
+                                                style={{"text-decoration-line": "underline;"}}
                                                 href="mailto:anotea@pole-emploi.fr">
                                                 contactez-nous
                                             </a>.
@@ -107,6 +122,7 @@ export default class MotDePasseOubliePage extends React.Component {
                     />
                 }
             />
+            </>
         );
     }
 }

@@ -28,6 +28,23 @@
             font-size: 1.1rem;
             font-weight: $font-weight-bold;
           }
+
+          .modal-cross {
+            font-weight: 600;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 2px 0px;
+            background-color: rgb(77, 144, 255);
+            color: rgb(247, 248, 250);
+            height: 35px;
+            width: 50px;
+            font-size: 14px;
+            border-radius: 3px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgb(43, 123, 255);
+            cursor: pointer;
+          }
+          
+
         }
 
         .modal-footer {

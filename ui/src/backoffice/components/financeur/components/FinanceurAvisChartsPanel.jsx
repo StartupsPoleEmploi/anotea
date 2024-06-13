@@ -116,7 +116,6 @@ export default class FinanceurAvisChartsPanel extends React.Component {
                         <div className="row">
                             <div className="col-sm-12 text-right">
                                 <Button
-                                    style={{ opacity: '0.75' }}
                                     size="medium"
                                     disabled={this.state.showPDFDocument}
                                     onClick={() => this.generatePDF()}>

@@ -1,9 +1,9 @@
 @import 'src/common/styles/variables';
 
 .champ-texte {
-  background-color: #F4F4F5;
+  background-color: $color-grey-25;
   box-shadow: unset;
-  border: 1px solid #F4F4F5;
+  border: 1px solid $color-grey-25;
   border-radius: 6px;
   padding: 0.1rem;
 

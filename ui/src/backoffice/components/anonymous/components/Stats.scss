@@ -25,8 +25,8 @@
 
   .asterisque {
     font-size: 0.75rem;
-    padding-left: 0.25rem;
     color: $color-black-60;
+    text-transform: uppercase;
   }
 
   .main {
@@ -79,9 +79,8 @@
     justify-content: space-between;
 
     .stats {
-      background-color: $color-grey-5;
+      background-color: $color-grey-25;
       padding: 1rem;
-      border-right: 1px solid $color-white;
       box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.15);
       flex-grow: 1;
 

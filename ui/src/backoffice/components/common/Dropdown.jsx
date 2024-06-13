@@ -5,18 +5,31 @@ import './Dropdown.scss';
 
 export const DropdownDivider = () => (<div className="dropdown-divider" />);
 
-export const DropdownItem = props => {
+export const DropdownItem = ({ onClick, className, children, ...props }) => {
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        onClick();
+        }
+    };
+
     return (
-        <a
-            className={`dropdown-item ${props.className}`}
-            {..._.omit(props, ['className', 'children'])}
-        >
-            {props.children}
-        </a>
+        <button
+            className={`dropdown-item ${className}`}
+            style={{margin:0}}
+            onClick={onClick}
+            onKeyDown={handleKeyDown}
+            tabIndex="0"
+            role="button"
+            {...props}
+            >
+            {children}
+        </button>
     );
 };
-
+  
 DropdownItem.propTypes = {
+    onClick: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
     className: PropTypes.string,
 };

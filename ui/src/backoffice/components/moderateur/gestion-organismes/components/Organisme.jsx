@@ -8,6 +8,7 @@ export default class Organisme extends React.Component {
 
     static propTypes = {
         organisme: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -25,7 +26,7 @@ export default class Organisme extends React.Component {
     };
 
     render() {
-        let { organisme, onChange } = this.props;
+        let { organisme, index, onChange } = this.props;
 
         let isInactive = organisme.status === 'inactive';
         /*
@@ -38,53 +39,54 @@ export default class Organisme extends React.Component {
         let isFormateur = organisme.score?.nb_avis > 0;
 
         return (
-            <div className="Organisme row">
-                <div className="col-sm-2 offset-md-1">
+            <tr className="Organisme row">
+                <h2 className="sr-only">Organisme {index}</h2>
+                <td className="col-sm-2 offset-md-1 style-col">
                     <p className="raison-sociale">{organisme.raison_sociale}</p>
                     <p className="siret">{organisme.siret}</p>
-                </div>
+                </td>
 
-                <div className="col-2">
+                <td className="col-2">
                     <p className="type">
                         {(isResponsable && isFormateur) ? 'Dispensateur et responsable' : ''}
                         {(!isResponsable && isFormateur) ? 'Dispensateur' : ''}
                         {(isResponsable && !isFormateur) ? 'Responsable' : ''}
                         {(!isResponsable && !isFormateur) ? `Pas encore d'avis` : ''}
                     </p>
-                </div>
+                </td>
 
-                <div className="col-2">
+                <td className="col-2">
                     <p className={`status ${isInactive ? 'inactive' : ''}`}>
                         {isInactive ? 'Inactif' : 'Compte activé'}
                     </p>
-                </div>
+                </td>
 
-                <div className="col-1">
+                <td className="col-1">
                     <p className="score">{(organisme.score?.nb_avis ? organisme.score.nb_avis : 0) + (organisme.nbAvisResponsablePasFormateurSiretExact ? organisme.nbAvisResponsablePasFormateurSiretExact : 0)}</p>
-                </div>
+                </td>
 
                 {this.state.showEdition &&
-                <div className="col-4">
+                <td className="col-4">
                     <Edition organisme={organisme} onChange={onChange} onClose={this.toggleEdition} />
-                </div>
+                </td>
                 }
 
                 {!this.state.showEdition &&
-                <div className="col-xs-8 col-sm-4 col-md-3">
+                <td className="col-xs-8 col-sm-4 col-md-3">
                     <p className="email">
                         {organisme.courriel}
                     </p>
-                </div>
+                </td>
                 }
 
                 {!this.state.showEdition &&
-                <div className="col-sm-2 col-md-1">
+                <td className="col-sm-2 col-md-1">
                     <div className="btn-group-vertical">
-                        <EditButton organisme={organisme} onChange={onChange} onEdit={this.toggleEdition} />
+                        <EditButton organisme={organisme} index={index} onChange={onChange} onEdit={this.toggleEdition} />
                     </div>
-                </div>
+                </td>
                 }
-            </div>
+            </tr>
         );
     }
 }

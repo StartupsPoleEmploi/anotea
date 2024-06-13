@@ -1,6 +1,6 @@
 module.exports = (db, communes) => {
 
-    const staticLinks = [{ goto: 'clara', url: 'https://clara.francetravail.fr' }];
+    const staticLinks = [{ goto: 'mesdroitssociaux', url: 'https://www.mesdroitssociaux.gouv.fr/' }];
 
     const getLink = async (stagiaire, goto) => {
 

@@ -12,11 +12,13 @@ import OrganismeStats from './OrganismeStats';
 import ModerationStats from './ModerationStats';
 
 export default class StatsPanel extends React.Component {
-    
+
     static contextType = BackofficeContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
+        store: PropTypes.object.isRequired,
+        form: PropTypes.object.isRequired,
     };
 
     constructor() {
@@ -40,7 +42,7 @@ export default class StatsPanel extends React.Component {
         let { account } = this.context;
         return account.profile === 'admin';
     }
-    
+
     fetchStats = () => {
         return new Promise(async resolve => {
             let results = await getPublicStats(this.props.query);
@@ -49,8 +51,7 @@ export default class StatsPanel extends React.Component {
     };
 
     render() {
-
-        let { query } = this.props;
+        let { query, store, form } = this.props;
         let { results } = this.state;
 
         if (_.isEmpty(results.stats)) {
@@ -63,33 +64,44 @@ export default class StatsPanel extends React.Component {
                     className="StatsPanel"
                     results={
                         <div>
-                            <div className="row mb-5">
-                                <div className="col-12">
-                                    <StagiairesStats query={query} stats={results.stats} />
-                                </div>
-                            </div>
-                            <div className="row mb-5">
-                                <div className="col-sm-12 col-md-6">
-                                    <AvisStats query={query} stats={results.stats} />
-                                </div>
-                                <div className="col-sm-12 col-md-6">
-                                    <FormationStats query={query} stats={results.stats} />
-                                </div>
-                            </div>
-                            { this.mustShowAdminStats() &&
-                            <div className="row mb-5">
-                                <div className="col-sm-12 col-md-6">
-                                    <ModerationStats query={query} stats={results.stats} />
-                                </div>
-                                <div className="col-sm-12 col-md-6">
-                                    <OrganismeStats query={query} stats={results.stats} />
-                                </div>
-                            </div>
-                            }
+                            <span>* National</span>
+                            <dl className="row mb-5">
+                                <h2 className="col-12">Statistiques sur les stagiaires&nbsp;:</h2>
+                                <dd className="col-12">
+                                    <StagiairesStats query={query} form={form} stats={results.stats} store={store} />
+                                </dd>
+                            </dl>
+
+                            <dl className="row mb-5">
+                                <h2 className="col-sm-12 col-md-12">Statistiques sur les avis&nbsp;:</h2>
+                                <dd className="col-sm-12 col-md-12">
+                                    <AvisStats query={query} form={form} stats={results.stats} store={store} />
+                                </dd>
+                            </dl>
+
+                            <dl className="row mb-5">
+                                <h2 className="col-sm-12 col-md-12">Statistiques sur les formations&nbsp;:</h2>
+                                <dd className="col-sm-12 col-md-12">
+                                    <FormationStats query={query} form={form} stats={results.stats} store={store} />
+                                </dd>
+                            </dl>
+
+                            {this.mustShowAdminStats() && (
+                                <dl className="row mb-5">
+                                    <h2 className="col-sm-12 col-md-12">Statistiques d'administration&nbsp;:</h2>
+                                    <dd className="col-sm-12 col-md-5">
+                                        <ModerationStats query={query} form={form} stats={results.stats} />
+                                    </dd>
+                                    <dd className="col-sm-12 col-md-7">
+                                        <OrganismeStats query={query} form={form} stats={results.stats} />
+                                    </dd>
+                                </dl>
+                            )}
                         </div>
                     }
                 />
             </>
         );
     }
+
 }

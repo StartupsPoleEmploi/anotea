@@ -25,7 +25,7 @@ export class Alert extends React.Component {
                     type="button"
                     className="close"
                     data-dismiss="alert"
-                    aria-label="Close"
+                    aria-label="Fermer l'alerte"
                     onClick={onClose}>
                     <span aria-hidden="true">&times;</span>
                 </button>

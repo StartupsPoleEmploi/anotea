@@ -6,7 +6,7 @@
 
   .icon {
     flex: 0 0 auto;
-    background-color: $color-grey-5;
+    background-color: $color-grey-25;
     color: $color-black-80;
     font-size: 1.125rem;
     padding: 0.5rem;
@@ -16,7 +16,7 @@
 
   .reset {
     flex: 0 0 auto;
-    background-color: $color-grey-5;
+    background-color: $color-grey-25;
     color: $color-black-80;
     font-size: 1.125rem;
     padding: 0.5rem;
@@ -26,7 +26,7 @@
 
   input {
     flex: 1 1 auto;
-    background-color: $color-grey-5;
+    background-color: $color-grey-25;
     border: none;
     border-radius: 0.25rem;
     box-shadow: none;
@@ -58,13 +58,18 @@
       }
     }
 
-    &:focus {
-      outline: none;
-    }
 
     &::placeholder {
       color: $color-black;
-      opacity: 0.6;
     }
+  }
+
+  .button-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
   }
 }

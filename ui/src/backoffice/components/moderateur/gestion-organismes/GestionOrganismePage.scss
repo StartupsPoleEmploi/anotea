@@ -3,12 +3,23 @@
 .Backoffice .GestionOrganismePage {
 
   .column-title {
-    opacity: 0.87;
     color: $color-grey-50;
     font-size: 0.75rem;
     font-weight: $font-weight-bold;
     line-height: 1rem;
     letter-spacing: 0.38px;
     text-transform: uppercase;
+  }
+
+  .style-col-title{
+    max-width: 16.66667%;
+    flex: 0 0 16.66667%;
+  }
+
+  @media only screen and (max-width: 770px) {
+    .style-col-title{
+      max-width: 24.66667%;
+      flex: 3 0 18.66667%;
+    }
   }
 }

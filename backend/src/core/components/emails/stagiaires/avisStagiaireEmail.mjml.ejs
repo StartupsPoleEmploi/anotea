@@ -1,6 +1,6 @@
 <% const showCarif = region.carif.active; %>
 <mjml>
-    <%- include('../common/head.mjml.ejs'); %>
+    <%- include('../common/head.mjml.ejs', { titre: "Donnez-nous votre avis en 1 minute" }); %>
 
     <mj-body background-color="#f0f0f0">
 
@@ -10,13 +10,15 @@
             <mj-section padding-bottom="0">
                 <mj-column>
                     <mj-text css-class="text-primary">
-                        Donnez-nous votre avis en 1 minute.
+                       <h1 style="font-size: 24px;">Donnez-nous votre avis en 1 minute.</h1>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Vous avez suivi la formation de <%= stagiaire.formation.intitule %>
-                        du <%= utils.moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY') %>
-                        au <%= utils.moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY') %>
-                        à <%= stagiaire.formation.action.organisme_formateur.raison_sociale %>.
+                        <p>
+                            Vous avez suivi la formation de <%= stagiaire.formation.intitule %>
+                            du <%= utils.moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY') %>
+                            au <%= utils.moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY') %>
+                            à <%= stagiaire.formation.action.organisme_formateur.raison_sociale %>.
+                        </p>
                     </mj-text>
 
                     <mj-button
@@ -28,24 +30,24 @@
                         Evaluer ma formation
                     </mj-button>
 
-                    <mj-divider border-width="2px" border-color="#F4F4F5" />
+                    <mj-divider border-width="2px" border-color="#F4F4F5" role="none" aria-hidden="true"/>
                 </mj-column>
             </mj-section>
 
             <mj-section padding-top="0" padding-bottom="0">
                 <mj-column>
                     <mj-text font-size="16px" font-weight="bold">
-                        100% anonyme
+                        <h2 style="font-size: 16px;margin: initial;">100% anonyme</h2>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Cet avis est totalement anonyme.
+                        <p>Cet avis est totalement anonyme.</p>
                     </mj-text>
 
                     <mj-text font-size="16px" font-weight="bold">
-                        Participer à l'amélioration des formations
+                        <h2 style="font-size: 16px;margin: initial;">Participer à l'amélioration des formations</h2>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Donnez des retours directs aux centres de formation ainsi qu'à France Travail.
+                        <p>Donnez des retours directs aux centres de formation ainsi qu'à France Travail.</p>
                     </mj-text>
                 </mj-column>
             </mj-section>
@@ -53,23 +55,23 @@
             <mj-section padding-top="0">
                 <mj-column>
                     <mj-text font-size="16px" font-weight="bold">
-                        Aider les prochains à faire le bon choix
+                        <h2 style="font-size: 16px;margin: initial;">Aider les prochains à faire le bon choix</h2>
                     </mj-text>
                     <mj-text css-class="text-secondary">
-                        Votre avis sera publié sur plusieurs plateformes.
+                        <p>Votre avis sera publié sur plusieurs plateformes.</p>
                     </mj-text>
                 </mj-column>
             </mj-section>
 
             <mj-section padding-top="0" padding-left="70px" padding-right="70px" >
                 <mj-column vertical-align="middle">
-                    <mj-image align="center" width="200%" alt="Logo France Travail"
+                    <mj-image align="center" width="200%" alt="République française - liberté égalité fraternité France Travail"
                               src="<%= utils.getPublicUrl('/static/images/Bloc_Marque_RF_France_Travail_RVB_Horizontal_Coul_Positif.png') %>" />
                 </mj-column>
 
                 <% if (showCarif) { %>
                     <mj-column vertical-align="middle">
-                        <mj-image align="center" width="100%" alt="Logo Carif"
+                        <mj-image align="center" width="100%" alt="<%= `${region.carif.nom}` %>"
                                   src="<%= utils.getPublicUrl(`/static/images/regions/carif-${region.codeRegion}.png`) %>" />
                     </mj-column>
                 <% } %>
