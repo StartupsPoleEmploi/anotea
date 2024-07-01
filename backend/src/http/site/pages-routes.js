@@ -16,9 +16,9 @@ module.exports = ({ db, configuration, communes, peconnect }) => {
     router.get('/', async (req, res) => {
 
         let [avisCount, organismesCount, stagiairesCount] = await Promise.all([
-            db.collection('avis').count(),
-            db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 } }),
-            db.collection('stagiaires').count({ mailSentDate: { $ne: null } })
+            961482,
+            6820,
+            3169196
         ]);
 
         res.render('homepage', {
