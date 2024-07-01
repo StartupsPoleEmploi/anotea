@@ -1,6 +1,5 @@
 FROM nginx:mainline
 
-RUN echo "DPkg::Post-Invoke { \"rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true\"; }" > /etc/apt/apt.conf.d/99remove-archives
 RUN apt-get update \
     && apt-get install -y logrotate
 
