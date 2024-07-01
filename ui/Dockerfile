@@ -1,14 +1,14 @@
-FROM nginx:bullseye
+FROM nginx:mainline
 RUN apt-get update \
-    && apt-get install -y curl git \
+    && apt-get install -y curl \
     && apt-get -y autoclean
 
 #Install nodejs
-ENV NVM_VERSION v0.35.1
-ENV NODE_VERSION 12.13.1
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+ENV NVM_VERSION=v0.35.1
+ENV NODE_VERSION=12.22.12
+ENV NVM_DIR=/usr/local/nvm
+ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN mkdir $NVM_DIR \
     && curl -o- https://raw.githubusercontent.com/creationix/nvm/$NVM_VERSION/install.sh | bash \
     && echo "source $NVM_DIR/nvm.sh && \

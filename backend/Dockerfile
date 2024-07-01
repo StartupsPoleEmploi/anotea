@@ -1,4 +1,4 @@
-FROM node:12.13.1-stretch
+FROM node:12.22.12-stretch
 
 RUN npm install -g forever
 
