@@ -4,4 +4,4 @@ mkdir -p /data/log
 touch /data/log/error.log
 touch /data/log/access.log
 
-nginx && tail -f /data/log/*.log
+nginx && service fail2ban start && tail -f /data/log/*.log
