@@ -9,15 +9,17 @@ const Page = props => {
     let { theme } = useContext(BackofficeContext);
 
     return (
-        <div className={`Page mb-0 ${props.className || ''}`}>
+        <>
+        <title>{props.title} | Anotéa</title>
+        <main id="contents" role="main" className={`Page mb-0 ${props.className || ''}`}>
 
             <div className={`search-holder ${theme.backgroundColor}`}>
 
                 {props.title &&
                 <div className="title-holder">
-                    <div className="container">
+                    <h1 className="container">
                         {props.title}
-                    </div>
+                    </h1>
                 </div>
                 }
 
@@ -45,7 +47,8 @@ const Page = props => {
             <div className="panel-holder">
                 {props.panel}
             </div>
-        </div>
+        </main>
+        </>
     );
 };
 

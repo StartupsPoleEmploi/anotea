@@ -25,6 +25,12 @@
     width: 50%;
   }
 
+  @media screen and (max-width: 984px) {
+    .a-width-50 {
+      width: 80%;
+    }
+  }
+
   .a-green {
     color: $color-green;
   }

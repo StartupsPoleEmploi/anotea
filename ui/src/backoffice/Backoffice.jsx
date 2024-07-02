@@ -153,7 +153,7 @@ class Backoffice extends Component {
                     <div className="Backoffice">
                         <Header
                             items={header}
-                            defaultPath={`/backoffice/${account.profile}`}
+                            defaultPath={``}
                             onLogout={this.onLogout}
                         />
                         {routes}

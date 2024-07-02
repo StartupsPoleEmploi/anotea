@@ -6,10 +6,10 @@ $color-white: #FFFFFF;
 
 $color-black: #24303A;
 $color-dark: #11181E;
-$color-black-80: rgba(35, 47, 56, 0.8);
-$color-black-60: rgba(35, 47, 56, 0.6);
+$color-black-80: rgb(35, 47, 56);
+$color-black-60: rgb(35, 47, 56);
 
-$color-grey-50: #91979C;
+$color-grey-50: #64727D;
 $color-grey-25: #C8CBCE;
 $color-grey-5: #F4F4F5;
 
@@ -26,13 +26,13 @@ $color-red-30: #F4C2C1;
 $color-red-10: #FBEAEA;
 
 $color-green-dark: #00432B;
-$color-green: #007E54;
+$color-green: #017D52;
 $color-green-60: #66B298;
 $color-green-30: #B2D8CB;
 $color-green-10: #E5F2ED;
 
 $color-orange-dark: #751314;
-$color-orange: #F28017;
+$color-orange: #D14905;
 $color-orange-60: #F7A583;
 $color-orange-30: #FBD2C0;
 $color-orange-10: #FDF0EA;
@@ -66,4 +66,3 @@ $shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
   border-radius: 8px;
   box-shadow: $shadow;
 }
-

@@ -106,7 +106,9 @@ class Note extends Component {
                                             onMouseOver={this.onMouseOverStar.bind(this, index)}
                                             onMouseOut={this.onMouseOutStar.bind(this)}
                                             onClick={this.select.bind(this, index)}
-                                        />
+                                        >
+                                            <span className="sr-only">{tooltipLabels[index]}</span>
+                                        </button>
                                     )
                                 }
                             </div>

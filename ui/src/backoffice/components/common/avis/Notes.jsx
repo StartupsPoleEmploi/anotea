@@ -19,6 +19,7 @@ export default class Notes extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -32,9 +33,10 @@ export default class Notes extends React.Component {
         return (
             <div className="note">
                 <div className="title">{label}</div>
-                <div className="text">
+                <div aria-hidden="true" className="text">
                     {note}/5 <Star />
                 </div>
+                <p class="sr-only">{note} sur 5</p>
             </div>
         );
     };
@@ -47,7 +49,8 @@ export default class Notes extends React.Component {
         let { avis } = this.props;
         let buttonText = (
             <span className="text">
-                Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
+                Détails des notes <span className="sr-only">du commentaire {this.props.index}</span>
+                <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
             </span>
         );
 

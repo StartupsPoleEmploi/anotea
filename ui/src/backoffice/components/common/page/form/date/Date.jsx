@@ -74,7 +74,7 @@ export default class Date extends React.Component {
 
         return (
             <div className={'Date'}>
-                <input ref={this.reference} placeholder={pattern.toLowerCase()} />
+                <input ref={this.reference} placeholder={"jj/mm/aaaa"} />
             </div>
         );
     }

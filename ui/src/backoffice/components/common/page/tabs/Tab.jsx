@@ -9,7 +9,7 @@ const Tab = ({ label, isActive, onClick, isDisabled = () => false }) => {
 
     return (
         <li className={`Tab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
-            <a href="/#" className={`nav-link`} onClick={e => {
+            <a href="/#" className={`nav-link ${isActive() ? 'active' : ''}`} onClick={e => {
                 e.preventDefault();
                 trackClick(label);
                 onClick(e);

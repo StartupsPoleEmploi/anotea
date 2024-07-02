@@ -62,11 +62,11 @@ export default class CommentaireEditor extends React.Component {
                         items={
                             <div>
                                 <DropdownItem onClick={() => this.validate('négatif')}>
-                                    <i className="far fa-thumbs-down icon" /> Négatif
+                                    <span aria-hidden="true" className="far fa-thumbs-down icon" /> Négatif
                                 </DropdownItem>
                                 <DropdownDivider />
                                 <DropdownItem onClick={() => this.validate('positif')}>
-                                    <i className="far fa-thumbs-up icon" /> Positif ou neutre
+                                    <span aria-hidden="true" className="far fa-thumbs-up icon" /> Positif ou neutre
                                 </DropdownItem>
                             </div>
                         }

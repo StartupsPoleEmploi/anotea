@@ -28,7 +28,7 @@ export default class MarkAsReadButton extends React.Component {
         return (
             <div className="MarkAsReadButton">
                 <Button size="large" color="green" onClick={this.onClick} tooltip={`Marquer comme ${avis.read ? 'non lu' : 'lu'}`}>
-                    <i className={`far ${avis.read ? 'fa-eye-slash' : 'fa-eye'} a-icon`} />
+                    <span aria-hidden="true" className={`far ${avis.read ? 'fa-eye-slash' : 'fa-eye'} a-icon`} />
                 </Button>
             </div>
         );

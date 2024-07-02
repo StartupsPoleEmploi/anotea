@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
-    <title>France Travail : Notez et commentez votre formation</title>
+    <title>Vous êtes un organisme de la formation ? | Anotéa</title>
     <link rel="icon" type="image/png" href="/static/images/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/static/css/faq.css" media="all">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
     <script id="rgpd" node-env="<%= utils.nodeEnv %>" src="/static/js/rgpd.js"></script>
     <script src="/static/js/faq.js"></script>
     <script>
@@ -36,7 +36,7 @@
 
 <body>
     <%- include('./common/header.ejs'); %>
-    <div class="main">
+    <main role="content" id="contents" class="main">
         <div class="intro">
             <div class="content">
                 <div class="text">
@@ -284,8 +284,8 @@
                         organisme sur votre propre site sans nécessiter de développements informatiques. Vous pouvez
                         ainsi valoriser vos formations et votre démarche qualité auprès des futurs stagiaires.</p>
                     <a class="button esd"
-                        href="https://pole-emploi.io/data/api/widget-anotea"><img
-                            src="/static/images/FT-io.svg" class="logo-esd" alt="logo du site pole-emploi.io" /></a>
+                        href="https://francetravail.io/data/api/widget-anotea"><img
+                            src="/static/images/FT-io.svg" class="logo-esd" alt="site francetravail.io" /></a>
                 </div>
             </div>
         </div>
@@ -522,12 +522,12 @@
                                 <a
                                     href="https://francetravail.io/data/api/anotea"><img
                                         src="/static/images/FT-io.svg" class="logo-esd"
-                                        alt="logo du site pole-emploi.io" /></a>
+                                        alt="site francetravail.io" /></a>
                             </p>
 
                             <p>Le Widget est disponible sur
                                 <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/misc/doc/WIDGET.md"><img
-                                        class="logo-github" src="/static/images/logo_github.webp" alt="Logo GitHub"></a>
+                                        class="logo-github" src="/static/images/logo_github.webp" alt="GitHub"></a>
                             </p>
 
                         </div>
@@ -658,7 +658,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
     <%- include('./common/contact.ejs'); %>
     <%- include('./common/footer.ejs'); %>
 </body>

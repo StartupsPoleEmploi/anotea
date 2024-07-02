@@ -39,8 +39,12 @@ export default class Edition extends React.Component {
 
         return (
             <div className="Edition">
+                <label id="combo-label-add" className="sr-only">Modifier l´adresse email de contact</label>
                 <Select
                     type="create"
+                    id="combo-label-add"
+                    placeholder={'Modifier l´adresse email de contact'}
+                    aria-labelledby="combo-label-add"
                     value={selected}
                     options={options}
                     loading={false}

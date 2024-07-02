@@ -8,5 +8,15 @@
     font-size: 0.875rem;
   }
 
+  .placeholder-opaque::placeholder {
+    opacity: 1;
+  }
+}
+
+.Backoffice .MotDePasseOubliePage {
+
+  .placeholder-opaque::placeholder {
+    opacity: 1;
+  }
 }
 

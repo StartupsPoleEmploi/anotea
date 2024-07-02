@@ -6,7 +6,6 @@
   font-weight: $font-weight-bold;
 
   &.empty {
-    opacity: 0.5;
     color: $color-grey-50;
     font-style: italic;
   }
@@ -18,11 +17,30 @@
 
   .masked {
     color: $color-grey-50;
-    opacity: 0.5;
 
     &.title {
       text-decoration: line-through;
     }
+  }
+
+  &.masked {
+    text-decoration: line-through;
+  }
+  
+  .titre-masque{
+    display: none;
+  }
+
+  .span-title{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    display: contents;
+  }
+
+  .button-eye{
+    border: none;
+    background-color: transparent;
   }
 }
 

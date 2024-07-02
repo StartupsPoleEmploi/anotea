@@ -1,64 +1,143 @@
-@import 'src/common/styles/variables';
+.combobox-list {
+  position: relative;
+}
 
-.Backoffice .Select {
+.combobox .group {
+  display: inline-flex;
+  background-color: #c8cbce;
+  box-shadow: unset;
+  border: 1px solid #f4f4f5;
+  border-radius: 6px;
+  padding: .3rem;
+  width: 100%;
+  height: 49px;
+}
 
-  .Select__control {
-    background-color: $color-grey-5;
-    box-shadow: unset;
-    border: 1px solid $color-grey-5;
-    border-radius: 6px;
-    padding: 0.30rem;
-  }
+.combobox input,
+.combobox button {
+  color: black;
+  box-sizing: border-box;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+}
 
-  .Select__single-value {
-    font-size: 1rem;
-    color: $color-black;
-  }
+.combobox input {
+  width: 150px;
+  outline: none;
+  font-size: 87.5%;
+  padding: 1px 3px;
+  border: none;
+  background-color: #c8cbce;
+  -webkit-box-align: center;
+  align-items: center;
+  display: flex;
+  flex: 1 1 0%;
+  flex-wrap: wrap;
+  padding: 2px 8px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  min-height: 38px;
+}
 
-  .Select__control--is-focused {
-    background-color: $color-grey-5;
-    box-shadow: 0 0 1px 3px #C3C9E5;
-  }
+/* Placeholder styles */
+.combobox input::placeholder {
+  color: black;
+  text-shadow: 0 0 0 gray;
+  opacity: 1;
+}
 
-  .Select__clear-indicator {
-    padding-right: 0;
-  }
+.combobox input::-webkit-input-placeholder {
+  color: black;
+  text-shadow: 0 0 0 gray;
+  opacity: 1;
+}
 
-  .Select__option {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-    border-bottom: solid 1px $color-grey-5;
-  }
+.combobox input:-ms-input-placeholder {
+  color: black;
+  text-shadow: 0 0 0 gray;
+  opacity: 1;
+}
 
-  .Select__option--is-focused {
-    background-color: $color-grey-5;
-  }
+.combobox input::-ms-input-placeholder {
+  color: black;
+  text-shadow: 0 0 0 gray;
+  opacity: 1;
+}
 
-  .Select__option--is-selected {
-    background-color: $color-grey-25;
-  }
+.combobox input:focus {
+  border: 2px solid currentcolor;
+  border-radius: 4px;
+}
 
-  .Select__indicator {
-    color: $color-black;
-  }
+.combobox button {
+  width: 19px;
+  border: none;
+  outline: none;
+  color: #11181E;
+  background-color: #c8cbce;
+  height: 100%;
+}
 
-  .Select__indicator-separator {
-    width: 0;
-  }
+.combobox button:focus {
+  border: 2px solid currentcolor;
+  border-radius: 4px;
+}
 
-  .Select__meta {
-    font-size: 0.75rem;
-    color: $color-black-60;
-  }
+.combobox button[aria-expanded="true"] svg {
+  transform: rotate(180deg) translate(0, -3px);
+}
 
-  .Select__label {
-    color: $color-black;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+ul[role="listbox"] {
+  display: none;
+  max-height: 250px;
+  overflow-y: auto; 
+  top: 100%;
+  padding: 0;
+  background-color: rgb(255, 255, 255);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 4px 11px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  box-sizing: border-box;
+}
 
-  .Select__label--with-meta {
-    max-width: 85%;
-  }
+ul[role="listbox"].open {
+  display: block;
+}
+
+ul[role="listbox"] li[role="option"] {
+  margin: 0;
+  display: block;
+  padding: .5rem;
+  font-size: .875rem;
+  border-bottom: 1px solid #c8cbce;
+}
+
+ul[role="listbox"] li[role="option"].focused {
+  background-color: #c8cbce;
+}
+
+/* focus and hover styling */
+.combobox.focus {
+  border: 2px solid currentcolor;
+  border-radius: 4px;
+}
+
+.combobox .group.focus polygon,
+.combobox .group:hover polygon {
+  fill-opacity: 1;
+}
+
+.no-results {
+  padding: .5rem;
+  font-size: .875rem;
+  color: #999;
+  text-align: center;
 }

@@ -4,7 +4,6 @@
 
   .title {
     padding-top: 1rem;
-    padding-bottom: 1rem;
     font-size: 1.5rem;
     font-weight: $font-weight-boldest;
   }
@@ -13,14 +12,14 @@
     @include box();
 
     .chart {
-      flex: 1 0 300px;
-      padding: 0 2rem;
+      flex: 5 0 500px;
+      padding: 0rem 2rem 4rem 2rem;
 
-      &.first, &.second {
+      &.first{
         border-right: solid 1px $color-grey-25;
       }
 
-      &.last {
+      &.last, &.second  {
         border-right: unset;
       }
 
@@ -32,7 +31,28 @@
       .description {
         font-size: 0.875rem;
         padding-bottom: 1rem;
-        opacity: 0.6;
+      }
+
+      @media screen and (max-width: 425px) {
+        &.first{
+          border-right: none;
+        }
+      }
+    }
+
+    @media screen and (max-width: 425px) {
+      .chart{
+        padding-left: 0;
+        padding-right: 0;
+        max-width: 323px;
+      }
+    }
+
+    @media screen and (max-width: 375px) {
+      .chart{
+        padding-left: 0;
+        padding-right: 0;
+        max-width: 217px;
       }
     }
   }

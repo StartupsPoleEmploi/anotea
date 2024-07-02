@@ -79,7 +79,7 @@ export default class Avis extends React.Component {
 
     render() {
         let {
-            avis, renderWorkflow, showReponse, showReponseButtons,
+            avis, index, renderWorkflow, showReponse, showReponseButtons,
             showModerationButtons, showModerationReponseButtons,
         } = this.props;
         let { message, showReponseEditor } = this.state;
@@ -87,7 +87,7 @@ export default class Avis extends React.Component {
 
         return (
             <div className="Avis">
-
+                <h2 className="sr-only">Commentaire {index}</h2>
                 {message &&
                 <LocalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
                 }
@@ -101,7 +101,8 @@ export default class Avis extends React.Component {
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
                                 <Stars note={avis.notes.global} />
-                                {renderWorkflow(avis)}
+                                <span className="sr-only">Moyenne: {avis.notes.global} sur 5</span>
+                                <p>{renderWorkflow(avis)}</p>
                             </div>
 
                             <div className="mb-1">
@@ -129,7 +130,7 @@ export default class Avis extends React.Component {
                             }
 
                             <div className="mt-2 d-none d-lg-block">
-                                <Notes avis={avis} />
+                                <Notes avis={avis} index={index}/>
                             </div>
                         </div>
                     </div>
@@ -139,11 +140,12 @@ export default class Avis extends React.Component {
                             <div className="btn-group-vertical">
                                 <EditButton
                                     avis={avis}
+                                    index={index}
                                     onChange={this.handleChange}
                                     onEdit={this.toggleCommentairesEditor}
                                 />
-                                <ValidateButton avis={avis} onChange={this.handleChange} />
-                                <RejectButton avis={avis} onChange={this.handleChange} />
+                                <ValidateButton avis={avis} index={index} onChange={this.handleChange} />
+                                <RejectButton avis={avis} index={index} onChange={this.handleChange} />
                             </div>
                         </div>
                     }
@@ -183,8 +185,8 @@ export default class Avis extends React.Component {
                         {showModerationReponseButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <ValidateReponseButton avis={avis} onChange={this.handleChange} />
-                                <RejectReponseButton avis={avis} onChange={this.handleChange} />
+                                <ValidateReponseButton avis={avis} index={index} onChange={this.handleChange} />
+                                <RejectReponseButton avis={avis} index={index} onChange={this.handleChange} />
                             </div>
                         </div>
                         }

@@ -52,7 +52,6 @@
       .star {
         border: none;
         background: transparent;
-        outline: none;
         padding-left: 0;
         font-size: 1.25rem;
         margin: 0;
@@ -61,11 +60,13 @@
 
       .fas.fa-star.inactive {
         color: $color-grey-50;
+        font-size: 1.25rem;
       }
 
       .fas.fa-star {
         color: $color-orange;
         cursor: pointer;
+        font-size: 1.55rem;
       }
 
       .star-tooltip {

@@ -4,24 +4,25 @@
   .nav {
     text-align: center;
     font-size: 1.5rem;
-    font-weight: $font-weight-boldest;
     color: $color-white;
+    font-weight: $font-weight-normal;
 
     .nav-item {
 
-      opacity: 0.6;
 
       &.active {
         opacity: 1;
+        color: $color-white;
+        font-weight: $font-weight-boldest;
 
         &:hover, &:focus {
-          font-weight: $font-weight-normal;
+          text-decoration: underline;
         }
       }
 
       &:hover, &:focus {
         cursor: pointer;
-        font-weight: $font-weight-bold;
+        text-decoration: underline;
       }
     }
   }

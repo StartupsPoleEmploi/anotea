@@ -8,6 +8,7 @@ export default class ValidateButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -24,24 +25,28 @@ export default class ValidateButton extends React.Component {
     };
 
     render() {
-
+        let buttonText = (
+            <span className="sr-only">
+                Valider et tagguer le commentaire {this.props.index}
+            </span>
+        );
         return (
             <div className="PublishButton">
                 <Dropdown
                     header="Valider et tagguer comme"
                     button={
                         <Button size="large" color="green" toggable={true}>
-                            <i className="far fa-check-circle" />
+                            {buttonText}<span aria-hidden="true" className="far fa-check-circle" />
                         </Button>
                     }
                     items={
                         <div>
                             <DropdownItem onClick={() => this.validate('négatif')}>
-                                <i className="far fa-thumbs-down a-icon" /> Négatif
+                                <span aria-hidden="true" className="far fa-thumbs-down a-icon" /> Négatif
                             </DropdownItem>
                             <DropdownDivider />
                             <DropdownItem onClick={() => this.validate('positif')}>
-                                <i className="far fa-thumbs-up a-icon" /> Positif ou neutre
+                                <span aria-hidden="true" className="far fa-thumbs-up a-icon" /> Positif ou neutre
                             </DropdownItem>
                         </div>
                     }

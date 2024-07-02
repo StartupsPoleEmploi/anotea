@@ -27,4 +27,10 @@
   .panel-holder {
     height: 100%;
   }
+
+  .form-control:focus{
+    outline:2px solid black;
+    box-shadow: none;
+    border-color: transparent;
+  }
 }

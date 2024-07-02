@@ -58,7 +58,7 @@ class Questionnaire extends Component {
                             onSubmit={() => this.setState({ showRemerciements: true })}
                         />
                     }
-                    <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
+                    
                 </div>
             </WithAnalytics>
         );

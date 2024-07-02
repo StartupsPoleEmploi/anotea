@@ -43,7 +43,7 @@ const createStagiaire = session => {
             },
         },
         unsubscribe: false,
-        mailSent: true,
+        mailSent: false,
         mailSentDate: getDateInThePast(),
         tracking: {
             firstRead: getDateInThePast(),

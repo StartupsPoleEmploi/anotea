@@ -39,12 +39,12 @@ export default class Pagination extends React.Component {
                 <div className="offset-4 col-4 d-flex justify-content-center">
                     <ul className="pagination">
                         <li className={`page-item ${isFirstPage ? 'active' : ''}`}>
-                            <a href="/#" className="page-link" onClick={e => this.onClick(e, 1)}>1</a>
+                            <a href="/#" className="page-link" onClick={e => this.onClick(e, 1)} aria-label="page 1">1</a>
                         </li>
                         {
                             (totalPages > 5 && currentPage > 3) &&
-                            <li className="page-item disabled">
-                                <a href="/#" className="page-link">...</a>
+                            <li className="page-item disabled" aria-hidden="true">
+                                <p className="page-link">...</p>
                             </li>
                         }
                         {
@@ -53,7 +53,8 @@ export default class Pagination extends React.Component {
                                 <a
                                     href="/#"
                                     className="page-link"
-                                    onClick={e => this.onClick(e, previousPage)}>{previousPage}
+                                    onClick={e => this.onClick(e, previousPage)}
+                                    aria-label={`page ${previousPage}`}>{previousPage}
                                 </a>
                             </li>
                         }
@@ -63,24 +64,27 @@ export default class Pagination extends React.Component {
                                 <a
                                     href="/#"
                                     className="page-link"
-                                    onClick={e => this.onClick(e, currentPage)}>{currentPage}
+                                    onClick={e => this.onClick(e, currentPage)}
+                                    aria-label={`page ${currentPage}`}>{currentPage}
                                 </a>
                             </li>
                         }
                         {
                             (nextPage < lastPage) &&
                             <li className="page-item">
-                                <a href="/#" className="page-link" onClick={e => this.onClick(e, nextPage)}>{nextPage}</a>
+                                <a href="/#" className="page-link" onClick={e => this.onClick(e, nextPage)}
+                                aria-label={`page ${nextPage}`}>{nextPage}</a>
                             </li>
                         }
                         {
                             (currentPage < totalPages - 2) &&
-                            <li className="page-item disabled">
-                                <a href="/#" className="page-link">...</a>
+                            <li className="page-item disabled" aria-hidden="true">
+                                <p className="page-link">...</p>
                             </li>
                         }
                         <li className={`page-item ${isLastPage && 'active'}`}>
-                            <a href="/#" className="page-link" onClick={e => this.onClick(e, lastPage)}>{lastPage}</a>
+                            <a href="/#" className="page-link" onClick={e => this.onClick(e, lastPage)}
+                            aria-label={`page ${lastPage}`}>{lastPage}</a>
                         </li>
                     </ul>
                 </div>

@@ -96,12 +96,14 @@ export default class GestionOrganismePage extends React.Component {
                 form={
                     <div className="d-flex justify-content-center">
                         <Form className="a-width-50">
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex" style={{ flexWrap: "wrap", justifyContent: "space-evenly" }}>
                                 <div className="flex-grow-1 mr-2">
+                                    <label className="sr-only" for="recherche-organisme">Rechercher un organisme</label>
                                     <InputText
                                         value={this.state.form.search}
-                                        placeholder="Recherche un organisme"
-                                        icon={<i className="fas fa-search" />}
+                                        id="recherche-organisme"
+                                        placeholder="Rechercher un organisme"
+                                        icon={<span aria-hidden="true" className="fas fa-search" />}
                                         reset={() => this.setState({ form: { search: '' } })}
                                         onChange={event => this.setState({ form: { search: event.target.value } })}
                                     />
@@ -155,7 +157,7 @@ export default class GestionOrganismePage extends React.Component {
                                     <Button
                                         size="medium"
                                         onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
-                                        <i className="fas fa-download pr-2"></i>Exporter
+                                        <span aria-hidden="true" className="fas fa-download pr-2"></span>Exporter
                                     </Button>
                                 }
                             />
@@ -165,50 +167,53 @@ export default class GestionOrganismePage extends React.Component {
                                 <EmptyResults /> :
                                 <>
                                     {
-                                        <div className="row">
-                                            <div className="col-sm-2 offset-md-1">
-                                                <p className="column-title d-none d-sm-block">Nom et SIRET</p>
-                                            </div>
+                                        <thead className="row">
+                                            <tr className="col-sm-2 offset-md-1 style-col-title">
+                                                <th scope="col" className="column-title d-none d-sm-block">Nom et SIRET</th>
+                                            </tr>
 
-                                            <div className="col-2">
-                                                <p className="column-title d-none d-sm-block">Type</p>
-                                            </div>
+                                            <tr className="col-2">
+                                                <th scope="col" className="column-title d-none d-sm-block">Type</th>
+                                            </tr>
 
-                                            <div className="col-2">
-                                                <p className="column-title d-none d-sm-block">Statut</p>
-                                            </div>
+                                            <tr className="col-2">
+                                                <th scope="col" className="column-title d-none d-sm-block">Statut</th>
+                                            </tr>
 
-                                            <div className="col-1">
-                                                <p className="column-title d-none d-sm-block">Avis</p>
-                                            </div>
+                                            <tr className="col-1">
+                                                <th scope="col" className="column-title d-none d-sm-block">Avis</th>
+                                            </tr>
 
-                                            <div className="col-xs-8 col-sm-4 col-md-3">
-                                                <p className="column-title d-none d-sm-block">Contact</p>
-                                            </div>
+                                            <tr className="col-xs-8 col-sm-4 col-md-3">
+                                                <th scope="col" className="column-title d-none d-sm-block">Contact</th>
+                                            </tr>
 
-                                            <div className="col-sm-2 col-md-1">
-                                                <p className="column-title d-none d-sm-block">&nbsp;</p>
-                                            </div>
-                                        </div>
+                                            <tr className="col-sm-2 col-md-1">
+                                                <th scope="col" className="column-title d-none d-sm-block sr-only">Gestion</th>
+                                            </tr>
+                                        </thead>
                                     }
-                                    {
-                                        results.organismes.map(organisme => {
-                                            return (
-                                                <div key={organisme._id}>
-                                                    <Organisme
-                                                        organisme={organisme}
-                                                        onChange={(avis, options = {}) => {
-                                                            let { message } = options;
-                                                            if (message) {
-                                                                showMessage(message);
-                                                            }
-                                                            return this.search({ silent: true });
-                                                        }} />
-                                                    <ResultDivider />
-                                                </div>
-                                            );
-                                        })
-                                    }
+                                    <tbody style={{display: "grid"}}>
+                                        {
+                                            results.organismes.map((organisme, index) => {
+                                                return (
+                                                    <div key={organisme._id}>
+                                                        <Organisme
+                                                            organisme={organisme}
+                                                            index={index}
+                                                            onChange={(avis, options = {}) => {
+                                                                let { message } = options;
+                                                                if (message) {
+                                                                    showMessage(message);
+                                                                }
+                                                                return this.search({ silent: true });
+                                                            }} />
+                                                        <ResultDivider />
+                                                    </div>
+                                                );
+                                            })
+                                        }
+                                    </tbody>
                                 </>
                         }
                         pagination={

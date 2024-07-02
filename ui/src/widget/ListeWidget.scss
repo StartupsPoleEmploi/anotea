@@ -26,19 +26,12 @@
         background-color: $color-white;
         border: 1px solid $color-black-80;
 
-        &:focus {
-          outline: 0;
-        }
       }
 
       button {
         background-color: unset;
         border: none;
         color: $color-black-60;
-
-        &:focus {
-          outline: 0;
-        }
 
         &.active {
           color: $color-black;

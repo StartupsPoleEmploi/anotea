@@ -15,6 +15,7 @@ export default class MonComptePage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             loading: false,
             current: '',
@@ -23,6 +24,7 @@ export default class MonComptePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
+                emptyField: null,
             },
         };
     }
@@ -38,9 +40,13 @@ export default class MonComptePage extends React.Component {
                     null : 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
+                emptyField: (current === '' || password === '' || confirmation === '') ? 'Veuillez remplir tous les champs.' : null,
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
+            if (this.inputRef.current && this.inputRef.current.focus) {
+                this.inputRef.current.focus();
+            }
             if (isFormValid) {
                 this.setState({ loading: true });
 
@@ -60,7 +66,7 @@ export default class MonComptePage extends React.Component {
                     });
                 })
                 .catch(async error => {
-                    let json = await error.json;
+                    let json = await error.json();
 
                     showMessage({
                         text: json.message,
@@ -80,54 +86,65 @@ export default class MonComptePage extends React.Component {
         let { theme } = this.context;
 
         return <Page
+            title="Mon compte"
             panel={
                 <Panel
                     results={
-                        <CenteredForm
-                            title="Mise à jour du mot de passe"
-                            elements={
-                                <>
-                                    <label>Mot de passe actuel</label>
-                                    <InputText
-                                        type="password"
-                                        value={this.state.current}
-                                        placeholder="Mot de passe"
-                                        onChange={event => this.setState({ current: event.target.value })}
-                                    />
+                        <div>
+                            <CenteredForm
+                                title="Mise à jour du mot de passe"
+                                elements={
+                                    <>
+                                        <label for="motDePasseActu">Mot de passe actuel</label>
+                                        <InputText
+                                            id="motDePasseActu"
+                                            type="password"
+                                            value={this.state.current}
+                                            placeholder="Mot de passe"
+                                            onChange={event => this.setState({ current: event.target.value })}
+                                            autoComplete="current-password"
+                                            error={errors.emptyField}
+                                            inputRef={this.inputRef}
+                                        />
 
-                                    <label className="mt-3">Nouveau mot de passe</label>
-                                    <InputText
-                                        type="password"
-                                        value={this.state.password}
-                                        placeholder="Mot de passe"
-                                        error={errors.passwordNotStrongEnough}
-                                        onChange={event => this.setState({ password: event.target.value })}
-                                    />
+                                        <label for="motDePasseNew" className="mt-3">Nouveau mot de passe</label>
+                                        <InputText
+                                            id="motDePasseNew"
+                                            type="password"
+                                            value={this.state.password}
+                                            placeholder="Mot de passe"
+                                            error={errors.emptyField || errors.passwordNotStrongEnough}
+                                            onChange={event => this.setState({ password: event.target.value })}
+                                            autoComplete="new-password"
+                                        />
 
-                                    <label className="mt-3">Confirmer le nouveau mot de passe</label>
-                                    <InputText
-                                        type="password"
-                                        value={this.state.confirmation}
-                                        placeholder="Mot de passe"
-                                        error={errors.isNotSamePassword}
-                                        onChange={event => this.setState({ confirmation: event.target.value })}
-                                    />
-                                </>
-                            }
-                            buttons={
-                                <>
-                                    <Button
-                                        type="submit"
-                                        size="large"
-                                        color={theme.buttonColor}
-                                        disabled={this.state.loading}
-                                        onClick={() => this.onSubmit()}
-                                    >
-                                        Confirmer
-                                    </Button>
-                                </>
-                            }
-                        />
+                                        <label for="motDePasseConf" className="mt-3">Confirmer le nouveau mot de passe</label>
+                                        <InputText
+                                            id="motDePasseConf"
+                                            type="password"
+                                            value={this.state.confirmation}
+                                            placeholder="Mot de passe"
+                                            error={errors.emptyField || errors.isNotSamePassword}
+                                            onChange={event => this.setState({ confirmation: event.target.value })}
+                                            autoComplete="new-password"
+                                        />
+                                    </>
+                                }
+                                buttons={
+                                    <>
+                                        <Button
+                                            type="submit"
+                                            size="large"
+                                            color={theme.buttonColor}
+                                            disabled={this.state.loading}
+                                            onClick={() => this.onSubmit()}
+                                        >
+                                            Confirmer
+                                        </Button>
+                                    </>
+                                }
+                            />
+                        </div>
                     }
                 />
             }

@@ -113,6 +113,7 @@ export default class OrganismePage extends React.Component {
 
         return (
             <Page
+                title="Avis stagiaires"
                 loading={this.state.loading}
                 form={
                     <OrganismeForm

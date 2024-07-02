@@ -5,7 +5,6 @@
   padding-top: 1rem;
 
   .raison-sociale {
-    opacity: 0.87;
     color: $color-black;
     font-size: 1rem;
     font-weight: $font-weight-bold;
@@ -13,7 +12,6 @@
   }
 
   .siret {
-    opacity: 0.87;
     color: $color-grey-50;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -21,7 +19,6 @@
 
   .type {
     padding-top: 1rem;
-    opacity: 0.87;
     color: $color-grey-50;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -29,7 +26,6 @@
 
   .score {
     padding-top: 1rem;
-    opacity: 0.87;
     color: $color-grey-50;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -37,7 +33,6 @@
 
   .status {
     padding-top: 1rem;
-    opacity: 0.87;
     color: $color-green;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -49,7 +44,6 @@
 
   .email {
     padding-top: 1rem;
-    opacity: 0.87;
     color: $color-black;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -62,6 +56,18 @@
     button {
       width: 100%;
       margin-bottom: 0.7rem;
+    }
+  }
+
+  .style-col{
+    max-width: 16.66667%;
+    flex: 0 0 16.66667%;
+  }
+
+  @media only screen and (max-width: 770px) {
+    .style-col{
+      max-width: 24.66667%;
+      flex: 3 0 18.66667%;
     }
   }
 }

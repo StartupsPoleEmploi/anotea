@@ -3,25 +3,26 @@ import PropTypes from 'prop-types';
 import EmptyResults from './EmptyResults';
 import ResultDivider from './ResultDivider';
 import WithAnalytics from '../../../../../../common/components/analytics/WithAnalytics';
+import './AvisResults.scss';
 
 const AvisResults = ({ results, renderAvis }) => {
     return (
-        <div>
+        <ul>
             {
                 results.meta.pagination.totalItems === 0 ?
                     <EmptyResults /> :
-                    results.avis.map(avis => {
+                    results.avis.map((avis, index) => {
                         return (
-                            <div key={avis._id}>
+                            <li className="no-list" key={avis._id} index={index}>
                                 <WithAnalytics category="avis">
-                                    {renderAvis(avis)}
+                                    {renderAvis(avis, index)}
                                     <ResultDivider />
                                 </WithAnalytics>
-                            </div>
+                            </li>
                         );
                     })
             }
-        </div>
+        </ul>
     );
 };
 

@@ -8,7 +8,7 @@ const Star = props => {
     if (!props.svg) {
         return (<img src={star} className={className} alt="star" />);
     }
-    return (<i className={`${className} fas fa-star`}></i>);
+    return (<span aria-hidden="true" className={`${className} fas fa-star`}></span>);
 };
 
 Star.propTypes = {

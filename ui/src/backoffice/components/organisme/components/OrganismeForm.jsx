@@ -75,12 +75,14 @@ export default class OrganismeForm extends React.Component {
             <Form>
                 <div className="form-row">
                     <div className="form-group col-lg-6 col-xl-3">
-                        <label>Période</label>
-                        <Periode
-                            periode={{ debut: this.state.debut, fin: this.state.fin }}
-                            min={moment('2016-01-01T00:00:00Z').toDate()}
-                            onChange={({ debut, fin }) => this.setState({ debut, fin })}
-                        />
+                        <fieldset>
+                            <label>Période</label>
+                            <Periode
+                                periode={{ debut: this.state.debut, fin: this.state.fin }}
+                                min={moment('2016-01-01T00:00:00Z').toDate()}
+                                onChange={({ debut, fin }) => this.setState({ debut, fin })}
+                            />
+                        </fieldset>
                     </div>
                     <div className="form-group col-lg-6 col-xl-3">
                         <label>Départements</label>
@@ -92,7 +94,7 @@ export default class OrganismeForm extends React.Component {
                             options={store.departements}
                             optionKey="code"
                             optionLabel="label"
-                            onChange={(option = {}) => this.setState({ departement: option.code })}
+                            onChange={(option) => this.setState({ departement: option ? option.code : null })}
                         />
                     </div>
                     <div className="form-group col-lg-6">
@@ -106,10 +108,12 @@ export default class OrganismeForm extends React.Component {
                             optionKey="siren"
                             optionLabel="name"
                             onChange={(option = {}) => {
-                                this.setState({ siren: option.siren, numeroFormation: null }, () => {
-                                    loadFormations(option.siren || account.siret);
+                                const siren = option ? option.siren : undefined;
+                                this.setState({ siren, numeroFormation: null }, () => {
+                                    loadFormations(siren || account.siret);
                                 });
                             }}
+                            
                         />
                     </div>
                     <div className="form-group offset-lg-6 col-lg-6">
@@ -122,7 +126,7 @@ export default class OrganismeForm extends React.Component {
                             optionLabel="title"
                             placeholder={'Toutes les formations'}
                             trackingId="Formation"
-                            onChange={(option = {}) => this.setState({ numeroFormation: option.numeroFormation })}
+                            onChange={(option) => this.setState({ numeroFormation: option ? option.numeroFormation : null })}
                         />
                     </div>
                 </div>

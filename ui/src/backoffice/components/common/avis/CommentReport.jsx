@@ -19,7 +19,7 @@ export default class CommentReport extends React.Component {
                 <div className="Titre">
                     <span className={`mr-1 title`}>Commentaire du signalement OF</span>
                 </div>
-                <span className="Commentaire">{avis.commentReport}</span>
+                <p className="Commentaire">{avis.commentReport}</p>
             </div>
         );
     }

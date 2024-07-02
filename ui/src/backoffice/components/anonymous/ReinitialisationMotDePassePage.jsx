@@ -20,6 +20,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             loading: false,
             password: '',
@@ -27,6 +28,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
+                emptyField: null, // Ajout du champ pour gérer les champs vides
             },
         };
     }
@@ -59,9 +61,13 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                     null : 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
+                emptyField: (password === '' || confirmation === '') ? 'Veuillez remplir tous les champs.' : null,
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
+            if (this.inputRef.current && this.inputRef.current.focus) {
+                this.inputRef.current.focus();
+            }
             if (isFormValid) {
                 let { forgottenPasswordToken } = this.props.router.getQuery();
 
@@ -90,6 +96,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         let { errors } = this.state;
 
         return (
+            <>
+            <title>Réinitialiser le mot de passe | Anotéa</title>
             <Page
                 backgroundColor="grey"
                 title={'Votre espace Anotéa'}
@@ -100,22 +108,31 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                 title="Créer un nouveau mot de passe"
                                 elements={
                                     <>
-                                        <label>Nouveau mot de passe</label>
+                                        <label for="newMotDePasse" className="mt-3">Nouveau mot de passe</label>
                                         <InputText
+                                            id="newMotDePasse"
                                             type="password"
                                             value={this.state.password}
                                             placeholder="Mot de passe"
-                                            error={errors.passwordNotStrongEnough}
+                                            error={errors.emptyField || errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
+                                            autoComplete="new-password"
+                                            aria-invalid="true"
+                                            inputRef={this.inputRef}
+                                            aria-required="true"
                                         />
 
-                                        <label className="mt-3">Confirmer le nouveau mot de passe</label>
+                                        <label for="confMotDePasse" className="mt-3">Confirmer le nouveau mot de passe</label>
                                         <InputText
+                                            id="confMotDePasse"
                                             type="password"
                                             value={this.state.confirmation}
                                             placeholder="Mot de passe"
-                                            error={errors.isNotSamePassword}
+                                            error={errors.emptyField || errors.isNotSamePassword}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
+                                            autoComplete="new-password"
+                                            aria-invalid="true"
+                                            aria-required="true"
                                         />
                                     </>
                                 }
@@ -137,6 +154,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                     />
                 }
             />
+            </>
         );
     }
 }

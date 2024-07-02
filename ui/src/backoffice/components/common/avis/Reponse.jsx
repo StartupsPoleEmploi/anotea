@@ -44,11 +44,11 @@ export default class Reponse extends React.Component {
             <div className="Reponse">
                 <div className="d-flex justify-content-between align-items-baseline">
                     <div>
-                        <span className="title">Réponse de l&apos;organisme </span>
+                        <h3 className="title span-title">Réponse de l&apos;organisme</h3>
                         <Status avis={avis} />
                     </div>
                     {avis.reponse.date &&
-                    <span className="date">le <PrettyDate date={new Date(avis.reponse.date)} /></span>
+                    <p className="date">le <PrettyDate date={new Date(avis.reponse.date)} /></p>
                     }
                 </div>
                 <p>{avis.reponse.text}</p>

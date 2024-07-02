@@ -37,7 +37,7 @@ export default class PDF extends React.Component {
                     <div className="header">
                         <div className="row align-items-center">
                             <div className="col-sm-3 text-left">
-                                <img src={logo} className="logo" alt="logo" width={'50%'} />
+                                <img src={logo} className="logo" alt="Anotéa" width={'50%'} />
                             </div>
                             <div className="title col-sm-6 d-flex justify-content-center">
                                 {title}

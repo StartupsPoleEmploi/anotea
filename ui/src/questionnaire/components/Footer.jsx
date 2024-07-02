@@ -23,7 +23,7 @@ class Footer extends Component {
                         <img
                             className="logo"
                             src={process.env.PUBLIC_URL + `/images/regions/conseil-regional-${stagiaire.codeRegion}.png`}
-                            alt="logo région" />
+                            alt="région" />
                         }
                     </div>
                 </div>

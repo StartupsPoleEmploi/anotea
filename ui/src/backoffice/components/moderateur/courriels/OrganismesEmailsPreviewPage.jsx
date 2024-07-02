@@ -22,6 +22,7 @@ export default class OrganismesEmailsPreviewPage extends Component {
 
         return (
             <Page
+                title="Courriels organismes"
                 className="EmailsPreviewPage"
                 panel={
                     <Panel
@@ -63,7 +64,8 @@ export default class OrganismesEmailsPreviewPage extends Component {
                             <div className="row  justify-content-md-center">
                                 <div className="col-md-6">
                                     <iframe
-                                        title="organismes-emails-preview-page"
+                                        title="Prévisualisation du courriel organismes"
+                                        lang="fr"
                                         src={getEmailPreviewUrl('organismes', query.templateName || 'activationCompteEmail')}>
                                     </iframe>
                                 </div>
