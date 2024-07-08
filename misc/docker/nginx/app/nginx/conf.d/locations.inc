@@ -1,6 +1,6 @@
  location ~ ^/(admin|backoffice|questionnaire|widget|stats)(.*)$ {
 
-    limit_conn conn_limit_per_ip 30;
+    limit_conn conn_limit_per_ip 100;
     limit_req zone=req_limit_per_ip burst=100 nodelay;
 
     proxy_buffering off;
@@ -16,7 +16,7 @@
 
 location / {
 
-    limit_conn conn_limit_per_ip 30;
+    limit_conn conn_limit_per_ip 100;
     limit_req zone=req_limit_per_ip burst=100 nodelay;
 
     proxy_buffering off;
