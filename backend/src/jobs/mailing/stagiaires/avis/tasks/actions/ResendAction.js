@@ -25,6 +25,7 @@ class ResendAction {
                 { mailRetry: { $lt: parseInt(avisMaxRelaunch) } }
             ],
             'formation.action.session.nbStagiairesFormes': { $gte: 5 },
+            'individu.email': { $exists: true },
         };
     }
 }

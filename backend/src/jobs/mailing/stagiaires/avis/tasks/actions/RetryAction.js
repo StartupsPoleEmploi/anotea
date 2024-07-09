@@ -20,6 +20,7 @@ class RetryAction {
                     mailRetry: { $lt: parseInt(this.configuration.smtp.stagiaires.avisMaxRelaunch) }
                 }
             ],
+            'individu.email': { $exists: true },
         };
     }
 }

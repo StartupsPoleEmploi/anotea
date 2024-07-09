@@ -42,6 +42,7 @@ export default class EditButton extends React.Component {
                     await this.props.onChange(this.props.avis, {
                         message: {
                             type: 'local',
+                            color: 'red',
                             text: 'L\'avis a été supprimé.',
                         },
                     });
@@ -60,7 +61,18 @@ export default class EditButton extends React.Component {
                 }
                 onClose={this.handleCancel}
                 onConfirmed={async () => {
-                    await deleteAvis(this.props.avis._id, { sendEmail: true });
+                    try {
+                        await deleteAvis(this.props.avis._id, { sendEmail: true });
+                    } catch(e) {
+                        const messageJson = (await e.json).message;
+                        await this.props.onChange(this.props.avis, {
+                            message: {
+                                text: !messageJson ? e.message : messageJson,
+                                color: 'red',
+                                type: 'local',
+                            }
+                        });
+                    }
                     await this.props.onChange(this.props.avis, {
                         message: {
                             text: 'Le questionnaire a bien été envoyé au stagiaire.',

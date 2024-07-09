@@ -1,3 +1,5 @@
+const BadDataError = require('./../../../errors');
+
 module.exports = (db, regions, mailer) => {
 
     const templateName = 'questionnaire6MoisEmail';
@@ -14,6 +16,9 @@ module.exports = (db, regions, mailer) => {
         templateName,
         render,
         send: async stagiaire => {
+            if (!stagiaire.individu || !stagiaire.individu.email) {
+                throw new BadDataError(`Le courriel de l'individu a été supprimé pour raison de RGPD. `);
+            }
             let onSuccess = () => {
                 return db.collection('stagiaires').updateOne({ '_id': stagiaire._id }, {
                     $set: {
