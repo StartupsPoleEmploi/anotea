@@ -16,6 +16,7 @@ class SendAction {
             ...(this.filters.codeRegions ? { 'codeRegion': { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { 'campaign': this.filters.campaign } : {}),
             'formation.action.session.nbStagiairesFormes': { $gte: 5 },
+            'individu.email': { $exists: true },
         };
     }
 }

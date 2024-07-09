@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const _ = require('lodash');
 const { IdNotFoundError, ForbiddenError } = require('./../errors');
+const Boom = require('boom');
 
 module.exports = (db, logger, emails) => {
 
@@ -109,9 +110,11 @@ module.exports = (db, logger, emails) => {
                 }
 
                 if ((qualification === 'injure' || qualification === 'alerte')) {
+                    let stagiaire = await db.collection('stagiaires').findOne({ token: original.token });
+                    if (!stagiaire.individu || !stagiaire.individu.email) {
+                        throw Boom.badRequest(`Avis rejeté, cependant le stagiaire n'a pas pu être notifié. `);
+                    }
                     sendEmail(async () => {
-                        let stagiaire = await db.collection('stagiaires').findOne({ token: original.token });
-
                         let message = emails.getEmailMessageByTemplateName(`avisRejected${_.capitalize(qualification)}Email`);
                         return message.send(stagiaire);
                     });
@@ -187,8 +190,11 @@ module.exports = (db, logger, emails) => {
             });
 
             if (options.sendEmail) {
+                let stagiaire = await db.collection('stagiaires').findOne({ token: previous.token });
+                if (!stagiaire.individu || !stagiaire.individu.email) {
+                    throw Boom.badRequest(`Avis supprimé, cependant le courriel n'a pas pu être renvoyé. `);
+                }
                 sendEmail(async () => {
-                    let stagiaire = await db.collection('stagiaires').findOne({ token: previous.token });
                     let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
                     return message.send(stagiaire);
                 });

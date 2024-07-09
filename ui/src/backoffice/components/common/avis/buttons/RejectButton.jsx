@@ -49,7 +49,20 @@ export default class RejectButton extends React.Component {
                     </span>
                 }
                 onClose={this.handleCancel}
-                onConfirmed={() => this.reject(this.props.avis, this.state.qualification)} />
+                onConfirmed={async () => {
+                    try {
+                        await this.reject(this.props.avis, this.state.qualification);
+                    } catch(e) {
+                        const messageJson = (await e.json).message;
+                        await this.props.onChange(this.props.avis, {
+                            message: {
+                                text: !messageJson ? e.message : messageJson,
+                                color: 'red',
+                                type: 'local',
+                            }
+                        });
+                    }
+                }} />
         );
     };
 
