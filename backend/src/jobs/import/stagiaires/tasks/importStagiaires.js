@@ -5,6 +5,7 @@ const validateStagiaire = require('./utils/validateStagiaire');
 const shouldBeImported = require('./utils/shouldBeImported');
 const hasNotBeenImported = require('./utils/hasNotBeenImported');
 const organismeResponsableAbsent = require('./utils/organismeResponsableAbsent');
+const individuAbsent = require('./utils/individuAbsent');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
 const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
 
@@ -48,12 +49,23 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                         {refreshKey: stagiaire.refreshKey},
                         {
                             $set: {
+                                "individu": stagiaire.individu,
                                 "formation.action.organisme_responsable": stagiaire.formation.action.organisme_responsable
                             }
                         }
                     );
                     stats.imported++;
                     logger.debug('Organisme responsable updated');
+                } else if (shouldStagiaireBeImported && await individuAbsent(db, stagiaire)) {
+                    await db.collection('stagiaires').updateOne(
+                        {refreshKey: stagiaire.refreshKey},
+                        {
+                            $set: {
+                                "individu": stagiaire.individu
+                            }
+                        }
+                    );
+                    stats.imported++;
                 } else {
                     stats.ignored++;
                     logger.debug('Stagiaire ignored', stagiaire, {});
