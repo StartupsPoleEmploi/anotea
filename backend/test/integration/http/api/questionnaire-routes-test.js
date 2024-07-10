@@ -122,7 +122,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     }
                 },
                 carif: {
-                    nom: 'Défi Métiers',
+                    nom: 'Défi Métiers - île-de-France',
                     url: 'https://www.defi-metiers.fr/',
                     active: true
                 }

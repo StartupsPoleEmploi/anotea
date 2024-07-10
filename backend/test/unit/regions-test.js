@@ -7,7 +7,7 @@ describe(__filename, () => {
 
         let region = regions().findRegionByCodeRegion('52');
         assert.deepStrictEqual(region, {
-            nom: 'Pays de la Loire',
+            nom: 'Région Pays de la Loire',
             active: true,
             since: '2017-07-01',
             codeRegion: '52',
@@ -48,7 +48,7 @@ describe(__filename, () => {
                 import: 'all',
             },
             carif: {
-                nom: 'Orientation Pays de la Loire',
+                nom: 'Choisir mon metier en Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',
                 active: true
             }
