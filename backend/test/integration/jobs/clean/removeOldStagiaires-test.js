@@ -7,7 +7,7 @@ const removeOldStagiaires = require('../../../../src/jobs/clean/tasks/removeOldS
 
 const moment = require('moment');
 
-describe.only(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile, insertIntoDatabase }) => {
 
     it('should remove stagiaire contacted at unknown date', async () => {
         let db = await getTestDatabase();
