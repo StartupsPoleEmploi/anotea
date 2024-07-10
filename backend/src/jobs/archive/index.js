@@ -28,6 +28,10 @@ execute(async ({ db, logger, sendSlackNotification }) => {
             { _id: avis._id },
             { $set: { 'status': 'archived' } }
         );
+        await db.collection('stagiaires').updateOne(
+            { token: avis.token },
+            { $unset: { individu: 1 } }
+        );
         if (res.result.nModified > 0) {
             stats.archived++;
         }
