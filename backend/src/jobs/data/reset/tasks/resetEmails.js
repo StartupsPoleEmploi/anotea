@@ -11,7 +11,10 @@ module.exports = async db => {
         let cursor = db.collection('stagiaires').find().project({ _id: 1 });
         await batchCursor(cursor, async next => {
             let doc = await next();
-            let res = await db.collection('stagiaires').updateOne({ _id: doc._id }, {
+            let res = await db.collection('stagiaires').updateOne({ 
+                _id: doc._id,
+                individu: { $exists: true },
+            }, {
                 $set: {
                     individu: {
                         nom: faker.name.lastName(),
