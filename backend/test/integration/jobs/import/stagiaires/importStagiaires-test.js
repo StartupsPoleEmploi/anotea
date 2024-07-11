@@ -89,7 +89,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             },
         });
 
-        let resultsSiret0 = await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray()[0];
+        let resultsSiret0 = (await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray())[0];
         assert.strictEqual("MARTINADO", resultsSiret0.individu.nom);
         assert.strictEqual("82436343601230", resultsSiret0.formation.action.organisme_formateur.siret);
         assert.strictEqual("ANOTEA 0", resultsSiret0.formation.action.organisme_formateur.raison_sociale);
