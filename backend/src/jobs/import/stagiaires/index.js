@@ -53,7 +53,7 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
         if (stats.total && stats.total > 0) {
             sendSlackNotification({
                 text: `[STAGIAIRE] Des nouveaux stagiaires ont été importés : ` +
-                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
+                    `${stats.imported} importés / ${stats.updated} mis à jour / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
             });
         }
 
@@ -61,7 +61,7 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
     } catch (stats) {
         sendSlackNotification({
             text: `[STAGIAIRE] Une erreur est survenue lors de l'import du fichier stagiaires ${file} : ` +
-                `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`
+                `${stats.imported} importés / ${stats.updated} mis à jour / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`
         });
         throw stats;
     }

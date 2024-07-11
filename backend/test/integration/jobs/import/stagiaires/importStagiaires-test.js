@@ -16,10 +16,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let db = await getTestDatabase();
         let { regions } = await getComponents();
 
-        await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
+        const retourStats1 = await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
 
         await db.collection('stagiaires').updateOne({ 'individu.nom': 'MARTINADO' }, { $unset: { individu: 1 } });
-        await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
+        const retourStats2 = await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
 
         const filters = { all: true };
         await countStagiaires(db, logger, filters);
@@ -89,10 +89,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             },
         });
 
-        let results_siret_0 = await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray();
-        assert.strictEqual("MARTINADO", results_siret_0[0].individu.nom);
-        assert.strictEqual("82436343601230", results_siret_0[0].formation.action.organisme_formateur.siret);
-        assert.strictEqual("ANOTEA 0", results_siret_0[0].formation.action.organisme_formateur.raison_sociale);
+        let resultsSiret0 = await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray()[0];
+        assert.strictEqual("MARTINADO", resultsSiret0.individu.nom);
+        assert.strictEqual("82436343601230", resultsSiret0.formation.action.organisme_formateur.siret);
+        assert.strictEqual("ANOTEA 0", resultsSiret0.formation.action.organisme_formateur.raison_sociale);
+        assert.deepStrictEqual({
+            total: 5,
+            imported: 5,
+            ignored: 0,
+            invalid: 0,
+            updated: 0,
+        }, retourStats1);
+        assert.deepStrictEqual({
+            total: 5,
+            imported: 0,
+            ignored: 4,
+            invalid: 0,
+            updated: 1,
+        }, retourStats2);
     });
 
     it('should fail to import stagiaire when codeRegion can not be found', async () => {
@@ -107,6 +121,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 0,
             imported: 0,
             total: 1,
+            updated: 0,
         });
     });
 
@@ -144,8 +159,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 0,
-            imported: 1,
+            imported: 0,
             total: 1,
+            updated: 1,
         });
 
         const resultsBis = await importStagiaires(db, logger, getTestFile('stagiaires-pe-doublons.csv'), handler);
@@ -158,6 +174,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 0,
             total: 1,
+            updated: 0,
         });
     });
 
@@ -173,6 +190,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 0,
             imported: 1,
             total: 1,
+            updated: 0,
         });
     });
 
@@ -202,6 +220,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 4,
             total: 5,
+            updated: 0,
         });
     });
 
@@ -301,6 +320,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 imported: 5,
                 invalid: 0,
                 total: 5,
+                updated: 0,
             }
         });
     });
@@ -328,6 +348,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 imported: 1,
                 invalid: 0,
                 total: 1,
+                updated: 0,
             }
         });
     });
@@ -345,6 +366,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 0,
             imported: 5,
             total: 5,
+            updated: 0,
         });
     });
 
@@ -379,6 +401,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 4,
             imported: 1,
             total: 5,
+            updated: 0,
         });
     });
 
@@ -406,6 +429,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 0,
             imported: 2,
             total: 2,
+            updated: 0,
         });
     });
 
@@ -434,6 +458,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 1,
             total: 2,
+            updated: 0,
         });
     });
 
@@ -461,6 +486,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 2,
             imported: 0,
             total: 2,
+            updated: 0,
         });
     });
 
@@ -490,6 +516,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 1,
             total: 2,
+            updated: 0,
         });
     });
 
@@ -513,6 +540,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 0,
             total: 1,
+            updated: 0,
         });
     });
 
@@ -530,6 +558,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 0,
             total: 1,
+            updated: 0,
         });
     });
 
@@ -562,6 +591,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 0,
             total: 1,
+            updated: 0,
         });
     });
 
@@ -581,6 +611,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 1,
             imported: 0,
             total: 1,
+            updated: 0,
         });
     });
 

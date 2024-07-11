@@ -13,6 +13,7 @@ execute(async ({ db, logger, sendSlackNotification }) => {
     logger.info(`Adding flag 'archived' to old avis...`);
     let stats = {
         archived: 0,
+        stagiaireArchived: 0,
     };
 
     let cursor = db.collection('avis')
@@ -28,18 +29,21 @@ execute(async ({ db, logger, sendSlackNotification }) => {
             { _id: avis._id },
             { $set: { 'status': 'archived' } }
         );
-        await db.collection('stagiaires').updateOne(
+        let resStagiaire = await db.collection('stagiaires').updateOne(
             { token: avis.token },
             { $unset: { individu: 1 } }
         );
         if (res.result.nModified > 0) {
             stats.archived++;
         }
+        if (resStagiaire.result.nModified > 0) {
+            stats.stagiaireArchived++;
+        }
     });
 
     if (stats.archived > 0) {
         sendSlackNotification({
-            text: `[AVIS] ${stats.archived} avis ont été archivé(s)`,
+            text: `[AVIS] ${stats.archived} avis ont été archivé(s) ; [STAGIARIES] ${stats.stagiaireArchived} stagiaires ont été archivé(s)`,
         });
     }
 
