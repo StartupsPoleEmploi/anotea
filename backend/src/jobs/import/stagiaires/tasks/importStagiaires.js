@@ -20,6 +20,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
     let stats = {
         total: 0,
         imported: 0,
+        updated: 0,
         ignored: 0,
         invalid: 0,
     };
@@ -54,7 +55,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                             }
                         }
                     );
-                    stats.imported++;
+                    stats.updated++;
                     logger.debug('Organisme responsable updated');
                 } else if (shouldStagiaireBeImported && await individuAbsent(db, stagiaire)) {
                     await db.collection('stagiaires').updateOne(
@@ -65,7 +66,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                             }
                         }
                     );
-                    stats.imported++;
+                    stats.updated++;
                 } else {
                     stats.ignored++;
                     logger.debug('Stagiaire ignored', stagiaire, {});
