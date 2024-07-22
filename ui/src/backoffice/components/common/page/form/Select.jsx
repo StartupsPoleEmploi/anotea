@@ -175,6 +175,7 @@ const Select = ({
         )}
         <button
           type="button"
+          className="expand-button"
           id={`${id}-button`}
           aria-label={placeholder}
           aria-expanded={isOpen}
