@@ -19,12 +19,16 @@ export default class LoginPage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef();
+        this.passwordInputRef = React.createRef();
         this.state = {
             loginWithAccessToken: false,
             loading: false,
             errors: false,
+            errorMessage: '',
             identifiant: '',
             password: '',
+            emptyField: '',
         };
     }
 
@@ -39,11 +43,36 @@ export default class LoginPage extends React.Component {
 
     onSubmit = () => {
         this.setState({ loading: true });
-
-        login(this.state.identifiant, this.state.password)
-        .then(data => this.props.onLogin(data))
-        .catch(() => this.setState({ error: true, loading: false }));
+    
+        if (this.state.password === '' && this.state.identifiant === '') {
+            this.setState({ errorMessage: "Veuillez remplir tous les champs.", emptyField: 'both', loading: false });
+            if (this.inputRef.current && this.inputRef.current.focus) {
+                this.inputRef.current.focus();
+            }
+        } else if (this.state.password === '') {
+            this.setState({ errorMessage: "Veuillez remplir votre mot de passe.", emptyField: 'password', loading: false });
+            if (this.passwordInputRef.current && this.passwordInputRef.current.focus) {
+                this.passwordInputRef.current.focus();
+            }
+        } else if (this.state.identifiant === '') {
+            this.setState({ errorMessage: "Veuillez remplir votre identifiant.", emptyField: 'identifiant', loading: false });
+            if (this.inputRef.current && this.inputRef.current.focus) {
+                this.inputRef.current.focus();
+            }
+        } else {
+            login(this.state.identifiant, this.state.password)
+                .then(data => this.props.onLogin(data))
+                .catch(() => {
+                    const errorMessage = 'Votre identifiant et/ou votre mot de passe sont incorrects. ' +
+                        'Si vous êtes un organisme, vous devez désormais vous identifier avec votre numéro de SIRET';
+                    this.setState({ errorMessage: errorMessage, emptyField: 'incorrect' , loading: false });
+                    if (this.inputRef.current && this.inputRef.current.focus) {
+                        this.inputRef.current.focus();
+                    }
+                });
+        }
     };
+    
 
     handleAccessToken = data => {
         loginWithAccessToken(data.access_token, data.origin)
@@ -64,10 +93,11 @@ export default class LoginPage extends React.Component {
             />;
         }
 
-        let errorMessage = 'Votre identifiant et/ou votre mot de passe sont incorrects. ' +
-            'Si vous êtes un organisme, vous devez désormais vous identifier avec votre numéro de SIRET';
+        
 
         return (
+            <>
+            <title>Connexion | Anotéa</title>
             <Page
                 className="LoginPage"
                 title={'Votre espace Anotéa'}
@@ -79,28 +109,49 @@ export default class LoginPage extends React.Component {
                                 title="Connexion"
                                 elements={
                                     <>
-                                        <label>Identifiant</label>
+                                        <p className="clarification mt-1">Tous les champs sont obligatoires.</p>
+                                        <label for="identifiant">Identifiant</label>
                                         <InputText
+                                            id="identifiant"
                                             value={this.state.identifiant}
                                             placeholder="Entrez votre SIRET"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
-                                            error={this.state.error ? errorMessage : ''}
+                                            error={
+                                                (this.state.emptyField === 'identifiant' || this.state.emptyField === 'both' || this.state.emptyField === 'incorrect') ?
+                                                this.state.errorMessage : ''
+                                            }
+                                            autoComplete="username"
+                                            className="placeholder-opaque"
+                                            inputRef={this.inputRef}
+                                            aria-describedby="exemple-siret"
+                                            aria-invalid="true"
+                                            aria-required="true"
                                         />
+                                        <p id="exemple-siret" className="clarification mt-1">Le numero de SIRET se compose de 14 chiffres.<br/>Exemple&nbsp;:&nbsp;01234567890123</p>
 
-                                        <label className="mt-3">Mot de passe</label>
+                                        <label for="motDePasse" className="mt-3">Mot de passe</label>
                                         <InputText
+                                            id="motDePasse"
                                             type="password"
                                             value={this.state.password}
                                             placeholder="Entrez votre mot de passe "
                                             onChange={event => this.setState({ password: event.target.value })}
-                                            error={this.state.error ? ' ' : ''}
+                                            error={
+                                                (this.state.emptyField === 'password') ?
+                                                this.state.errorMessage : ''
+                                            }
+                                            autoComplete="current-password"
+                                            className="placeholder-opaque"
+                                            aria-invalid="true"
+                                            inputRef={this.passwordInputRef}
+                                            aria-required="true"
                                         />
                                     </>
                                 }
                                 buttons={
                                     <div className="d-flex flex-column">
                                         <div className="mot-de-passe-oublie">
-                                            <NavLink to="/backoffice/mot-de-passe-oublie">
+                                            <NavLink to="/backoffice/mot-de-passe-oublie" style={{ color: "#0175E4" }} >
                                                 Mot de passe oublié
                                             </NavLink>
                                         </div>
@@ -120,6 +171,7 @@ export default class LoginPage extends React.Component {
                     />
                 }
             />
+            </>
         );
     }
 }

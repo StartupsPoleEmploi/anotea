@@ -9,6 +9,7 @@ export default class EditButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
         onEdit: PropTypes.func.isRequired,
     };
@@ -84,6 +85,11 @@ export default class EditButton extends React.Component {
     };
 
     render() {
+        let buttonText = (
+            <span className="sr-only">
+                éditer le commentaire {this.props.index}
+            </span>
+        );
         return (
             <div className="EditButton">
                 {this.state.showModal === 'resend' && this.getResendModal()}
@@ -92,21 +98,21 @@ export default class EditButton extends React.Component {
                     header="Edition"
                     button={
                         <Button size="large" color="blue" toggable={true}>
-                            <i className="fa fa-pencil-alt" />
+                            {buttonText}<span aria-hidden="true" className="fa fa-pencil-alt" />
                         </Button>
                     }
                     items={
                         <div>
                             <DropdownItem onClick={this.props.onEdit}>
-                                <i className="far fa-edit a-icon" /> Modifier le contenu
+                                <span aria-hidden="true" className="far fa-edit a-icon" /> Modifier le contenu
                             </DropdownItem>
                             <DropdownDivider />
                             <DropdownItem onClick={() => this.showModal('resend')}>
-                                <i className="far fa-envelope a-icon" /> Renvoyer le questionnaire
+                                <span aria-hidden="true" className="far fa-envelope a-icon" /> Renvoyer le questionnaire
                             </DropdownItem>
                             <DropdownDivider />
                             <DropdownItem onClick={() => this.showModal('delete')} className="a-text-important">
-                                <i className="far fa-trash-alt a-icon" /> Supprimer définitivement
+                                <span aria-hidden="true" className="far fa-trash-alt a-icon" /> Supprimer définitivement
                             </DropdownItem>
                         </div>
                     }

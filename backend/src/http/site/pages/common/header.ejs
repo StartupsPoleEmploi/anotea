@@ -1,60 +1,64 @@
 <link rel="stylesheet" type="text/css" href="/static/css/header.css" media="all">
 
-<div class="header">
-    <a href="/" title="Accueil" class="logo" alt="logo Anotéa" title="retour à l'accueil">
-        <img src="/static/images/Republique_Francaise_RVB.png" />
-        <img src="/static/images/logo_Anotea_Horizontal_baseline.png" />
+<header role="banner" class="header">
+    <div class="skip-link-group">
+        <a href="#contents" class="skip-link sr-only sr-only-focusable">Accéder au contenu principal</a>
+        <a href="#footer" class="skip-link sr-only sr-only-focusable">Accéder au pied de page</a>
+    </div>
+    <a href="/" title="Accueil" class="logo" title="retour à l'accueil">
+        <img src="/static/images/Republique_Francaise_RVB.png" alt="République française - liberté égalité fraternité"/>
+        <img src="/static/images/logo_Anotea_Horizontal_baseline.png" alt="Anotéa France Travail"/>
     </a>
-    <img src="/static/images/logo-ft-horizontal.svg" class="logo-pe-mobile" alt="logo France Travail" />
+    <img src="/static/images/logo-ft-horizontal.svg" class="logo-pe-mobile" alt="France Travail" />
     <div class="login">
         <div class="menu closed of" onMouseOver="javascript:$('.menu.of').not('.clicked').toggleClass('closed open')"
              onMouseOut="javascript:$('.menu.of').not('.clicked').toggleClass('closed open')"
              onClick="javascript:$('.menu.of.closed').toggleClass('closed open clicked');$('.menu.of.open').toggleClass('clicked')"
         >
-            <a href="javascript:;" class="unroll" alt="menu Financeurs"><span>Nos services</span>
-                <img class="icon-open" src="/static/images/chevron-down.svg" />
-                <img class="icon-close" src="/static/images/chevron-up.svg" />
-                <img src="/static/images/burger.svg" class="burger" alt="Nos services" />
+            <a href="javascript:;" class="unroll"><span>Nos services</span>
+                <img class="icon-open" src="/static/images/chevron-down.svg" alt=""/>
+                <img class="icon-close" src="/static/images/chevron-up.svg" alt=""/>
+                <img src="/static/images/burger.svg" class="burger" alt=""/>
             </a>
             <div class="content">
                 <ul>
                     <li>
-                        <a href="/services/stagiaires" title="Demandeurd'emploi">Demandeurs d'emploi
-                            <img class="icon" src="/static/images/chevron-right.png" />
+                        <a href="/services/stagiaires">Demandeurs d'emploi
+                            <img class="icon" src="/static/images/chevron-right.png" alt=""/>
                         </a>
                         <div class="de bar"></div>
                     </li>
                     <li>
-                        <a href="/services/organismes" title="Organisme de formation">Organismes de formation
-                            <img class="icon" src="/static/images/chevron-right.png" />
+                        <a href="/services/organismes">Organismes de formation
+                            <img class="icon" src="/static/images/chevron-right.png" alt=""/>
                         </a>
                         <div class="of bar"></div>
                     </li>
                     <li>
-                        <a href="/services/financeurs" title="Financeur">Financeurs
-                            <img class="icon" src="/static/images/chevron-right.png" />
+                        <a href="/services/financeurs">Financeurs
+                            <img class="icon" src="/static/images/chevron-right.png" alt=""/>
                         </a>
                         <div class="financeur bar"></div>
                     </li>
                     <li>
-                        <a href="<%= utils.getBackofficeUrl() %>/stats" title="Statistiques">Statistiques
-                            <img class="icon" src="/static/images/chevron-right.png" />
+                        <a href="<%= utils.getBackofficeUrl() %>/stats">Statistiques
+                            <img class="icon" src="/static/images/chevron-right.png" alt=""/>
                         </a>
                         <div class="bar"></div>
                     </li>
                 </ul>
                 <div class="menu-mobile">
                     <a href="<%= utils.getBackofficeUrl() %>" class="admin">
-                        <img src="/static/images/moderateur.svg" title="Accès espace modérateur" />
+                        <img src="/static/images/moderateur.svg" alt=""/>
                         Espace modérateur
                     </a>
                     <a href="anotea@pole-emploi.fr" class="contact">Contactez-nous</a>
                 </div>
             </div>
         </div>
-        <img src="/static/images/logo-ft-horizontal.svg" class="logo-pe" alt="logo France Travail" />
-        <a href="<%= utils.getBackofficeUrl() %>" class="admin">
-            <img src="/static/images/moderateur.svg" title="Accès espace modérateur" />
+        <img src="/static/images/logo-ft-horizontal.svg" class="logo-pe" alt="France Travail" />
+        <a href="<%= utils.getBackofficeUrl() %>" class="admin" title="Accès espace modérateur">
+            <img src="/static/images/moderateur.svg" alt="Accès espace modérateur"/>
         </a>
     </div>
-</div>
+</header>

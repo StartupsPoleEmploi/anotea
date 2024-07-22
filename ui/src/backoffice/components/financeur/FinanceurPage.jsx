@@ -95,9 +95,11 @@ export default class FinanceurPage extends React.Component {
         let { router } = this.props;
         let { store } = this.state;
         let query = router.getQuery();
+        let isNoTabActive = !router.isActive('/backoffice/financeur/avis/charts') && !router.isActive('/backoffice/financeur/avis/liste');
 
         return (
             <Page
+                title="Avis stagiaires"
                 form={
                     <FinanceurForm
                         query={query}
@@ -110,7 +112,7 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/backoffice/financeur/avis/charts')}
+                            isActive={() => isNoTabActive || router.isActive('/backoffice/financeur/avis/charts')}
                             onClick={() => this.onTabClicked('/backoffice/financeur/avis/charts')}
                         />
                         <Tab

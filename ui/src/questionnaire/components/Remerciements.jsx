@@ -25,7 +25,7 @@ class Remerciements extends Component {
                             <div className="panel-remerciements">
                                 {infosRegion.showLinks &&
                                 <div className="links-block">
-                                    <h1>Et après la formation...</h1>
+                                    <h2>Et après la formation...</h2>
                                     <p>
                                         Vous avez <strong>mis votre CV à jour</strong> ?
                                         Nous pouvons vous aider à <strong>trouver un emploi</strong> !
@@ -52,10 +52,10 @@ class Remerciements extends Component {
                                         <div className="link">
                                             <a
                                                 className="btn"
-                                                href={`/link/${stagiaire.token}?goto=clara`}
+                                                href={`/link/${stagiaire.token}?goto=mesdroitssociaux`}
                                                 target="_blank"
                                                 rel="noopener noreferrer">
-                                                <strong>Les aides au retour à l’emploi</strong> avec l’outil Clara
+                                                <strong>Les aides au retour à l’emploi</strong> avec l’outil mes droits sociaux
                                             </a>
                                         </div>
                                     </div>
@@ -80,8 +80,8 @@ class Remerciements extends Component {
                                             <img
                                                 src={
                                                     process.env.PUBLIC_URL +
-                                                    `/images/regions/carif-${stagiaire.codeRegion}.png`}
-                                                alt="logo carif" />
+                                                    `/images/regions/carif-${infosRegion.region.codeRegion}.png`}
+                                                alt={infosRegion.region.carif.nom} />
                                         </a>
                                         }
                                         <div>
@@ -91,7 +91,7 @@ class Remerciements extends Component {
                                             title="Visiter l'espace de recherche de formation de France Travail"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src={logo} height="86px" />
+                                            <img src={logo} height="86px" alt="République française - liberté égalité fraternité France travail"/>
                                         </a>
                                         </div></div>
                                     </div>

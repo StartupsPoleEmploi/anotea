@@ -85,7 +85,7 @@ export default class ReportButton extends React.Component {
                     }
                     return this.setState({ showModal: true });
                 }}>
-                    <i className={`far ${avis.status === 'reported' ? 'fa-bell-slash' : 'fa-bell'} a-icon`} />
+                    <span aria-hidden="true" className={`far ${avis.status === 'reported' ? 'fa-bell-slash' : 'fa-bell'} a-icon`} />
                 </Button>
             </div>
         );

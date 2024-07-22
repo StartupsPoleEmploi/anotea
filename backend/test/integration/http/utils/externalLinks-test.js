@@ -125,8 +125,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
             },
         });
 
-        let links = await externalLinks(db, communes).getLink(stagiaire, 'clara');
-        assert.strictEqual(links, 'https://clara.francetravail.fr');
+        let links = await externalLinks(db, communes).getLink(stagiaire, 'mesdroitssociaux');
+        assert.strictEqual(links, 'https://www.mesdroitssociaux.gouv.fr/');
     });
 
     it('should get null link when trying to get Offres France Travail link when formation has no formacode', async () => {

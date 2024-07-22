@@ -21,8 +21,8 @@ module.exports = stagiaire => {
             email: Joi.string().email().required(),
             telephones: Joi.array().items(Joi.string().allow('')),
             emailValid: Joi.boolean().required(),
-            identifiant_pe: Joi.string().allow(null).required(),
-            identifiant_local: Joi.string().allow(null).required(),
+            identifiant_pe: Joi.string().allow(null).allow(''),
+            identifiant_local: Joi.string().allow(null).allow(''),
         },
         formation: {
             numero: Joi.string().allow(null).required(),

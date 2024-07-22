@@ -8,6 +8,7 @@ export default class EditButton extends React.Component {
 
     static propTypes = {
         organisme: PropTypes.object.isRequired,
+        index: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
         onEdit: PropTypes.func.isRequired,
     };
@@ -22,24 +23,29 @@ export default class EditButton extends React.Component {
     };
 
     render() {
+        let buttonText = (
+            <span className="sr-only">
+                Modifier ou supprimer {this.props.index}
+            </span>
+        );
         return (
             <div className="EditButton">
                 <Dropdown
                     header="Modifier ou supprimer"
                     button={
                         <Button size="large" color="blue" toggable={true}>
-                            <i className="fa fa-pencil-alt" />
+                            {buttonText}<span aria-hidden="true" className="fa fa-pencil-alt" />
                         </Button>
                     }
                     items={
                         <div>
                             <DropdownItem onClick={this.props.onEdit}>
-                                <i className="far fa-edit a-icon" /> Modifier l&apos;adresse
+                                <span aria-hidden="true" className="far fa-edit a-icon" /> Modifier l&apos;adresse
                             </DropdownItem>
                             <DropdownDivider />
                             {this.props.organisme.courriel &&
                             <DropdownItem onClick={this.resend}>
-                                <i className="far fa-envelope a-icon" /> Renvoyer le lien
+                                <span aria-hidden="true" className="far fa-envelope a-icon" /> Renvoyer le lien
                             </DropdownItem>
                             }
                         </div>

@@ -9,6 +9,43 @@
     background: white;
 }
 
+.skip-link-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.skip-link:focus {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    padding: 0.375rem;
+    background: #414042;
+    color: #ffffff;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.sr-only-focusable:active, .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
 .login {
     position: absolute;
     top: 0px;
@@ -17,18 +54,16 @@
     padding: 0;
 }
 
-.login > div {
+.login>div {
     float: left;
 }
 
-.login > * {
+.login>* {
     display: inline-block;
     height: 40px;
 }
 
-.logo, .admin {
-    outline: none;
-}
+
 
 .header .logo img {
     padding: 15px;
@@ -44,7 +79,8 @@
     vertical-align: middle;
 }
 
-.header .logo-pe, .logo img {
+.header .logo-pe,
+.logo img {
     display: inline-block;
     height: 75px;
     vertical-align: middle;
@@ -77,14 +113,14 @@
 }
 
 .menu a.unroll {
-    outline: none;
     font-weight: bold;
     display: inline-block;
     margin-top: 30px;
     padding-bottom: 25px;
 }
 
-a.admin, a.contact {
+a.admin,
+a.contact {
     line-height: 107px;
 }
 
@@ -168,11 +204,13 @@ a.contact {
         display: none;
     }
 
-    .header .logo-pe-mobile, .header .logo img {
+    .header .logo-pe-mobile,
+    .header .logo img {
         display: inline-block;
     }
 
-    .header .logo-pe-mobile, .header .logo img {
+    .header .logo-pe-mobile,
+    .header .logo img {
         height: 36px;
         padding: 5px;
         display: inline-block;
@@ -194,8 +232,23 @@ a.contact {
         width: 24px;
     }
 
-    .header .admin, .header .menu span, .header .menu .icon-close, .header .menu .icon-open {
+    .header .admin,
+    .header .menu .icon-close,
+    .header .menu .icon-open {
         display: none;
+    }
+
+    .header .menu span {
+        border: 0 !important;
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        -webkit-clip-path: inset(50%) !important;
+        clip-path: inset(50%) !important;
+        height: 1px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        position: absolute !important;
+        width: 1px !important;
+        white-space: nowrap !important;
     }
 
     .header .menu .content {

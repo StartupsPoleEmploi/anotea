@@ -140,10 +140,12 @@ export default class ListeWidget extends Component {
                                 </Button>
                                 }
 
+                                {pagination.total_pages > 0 &&
                                 <div className="summary">
                                     <span className="d-none d-sm-block">Page</span>
                                     {pagination.page + 1}/{pagination.total_pages}
                                 </div>
+                                }
 
                                 {pagination.total_items > 1 &&
                                 <Button
