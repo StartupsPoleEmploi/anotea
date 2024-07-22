@@ -2,6 +2,11 @@
 
 .Backoffice .CenteredForm {
 
+  legend {
+    font-size: 1rem;
+    font-weight: $font-weight-bold;
+  }
+
   label {
     font-size: 1rem;
     font-weight: $font-weight-bold;
@@ -23,7 +28,7 @@
 
     .contactez-nous {
       color: $color-blue;
-	  text-decoration: underline;
+    text-decoration: underline;
     }
   }
 }

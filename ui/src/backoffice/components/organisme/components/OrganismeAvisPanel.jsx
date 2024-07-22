@@ -168,11 +168,12 @@ export default class OrganismeAvisPanel extends React.Component {
                         <AvisResults
                             results={results}
                             message={message}
-                            renderAvis={avis => {
+                            renderAvis={(avis, index) => {
                                 const compteConnecteEstLeSirenFormateur = avis.formation.action.organisme_formateur.siret && this.context.account.siret &&
                                     avis.formation.action.organisme_formateur.siret.substring(0, 9) === this.context.account.siret.substring(0, 9);
                                 return <Avis
                                     avis={avis}
+									index={index}
                                     showReponse={compteConnecteEstLeSirenFormateur}
                                     showReponseButtons={compteConnecteEstLeSirenFormateur}
                                     renderWorkflow={avis => {

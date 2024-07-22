@@ -6,7 +6,7 @@ export { default as Tab } from './Tab';
 export const Tabs = ({ children }) => {
     return (
         <div className="Tabs d-flex justify-content-center">
-            <nav className="nav justify-content-center">
+            <nav className="nav justify-content-center" aria-label="secondaire">
                 {children}
             </nav>
         </div>

@@ -15,6 +15,7 @@ export default class Date extends React.Component {
         min: PropTypes.object,
         max: PropTypes.object,
         depth: PropTypes.string,
+        label: PropTypes.string,
     };
 
     static defaultProps = {
@@ -70,11 +71,11 @@ export default class Date extends React.Component {
     }
 
     render() {
-        let { pattern } = this.props;
+        let { pattern, label } = this.props;
 
         return (
             <div className={'Date'}>
-                <input ref={this.reference} placeholder={"jj/mm/aaaa"} />
+                <input ref={this.reference} placeholder={"jj/mm/aaaa"} aria-label={label}/>
             </div>
         );
     }

@@ -25,9 +25,13 @@ const Header = ({ items, defaultPath, onLogout }) => {
                 <div className="row">
                     <div className="col-sm-12">
                         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
-                            <NavLink to={defaultPath}>
-                                <img src={logo} ref={logoRef} className="logo" alt="Anotéa" tabIndex="-1" />
-                            </NavLink>
+                            {account.profile === 'anonymous' ?
+                                <a href="https://anotea.francetravail.fr">
+                                    <img src={logo} ref={logoRef} className="logo" alt="Anotéa accueil" tabIndex="-1" />
+                                </a> : <NavLink to={defaultPath}>
+                                    <img src={logo} ref={logoRef} className="logo" alt="Anotéa accueil backoffice" tabIndex="-1" />
+                                </NavLink>
+                            }
 
                             {items}
 

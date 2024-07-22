@@ -95,7 +95,7 @@ export default class FinanceurForm extends React.Component {
                 <div className="form-row FinanceurAvisChartsPanel">
                     <div className="form-group col-lg-6 col-xl-3">
                         <fieldset>
-                            <label>Période</label>
+                            <legend>Période</legend>
                             <Periode
                                 periode={{ debut: this.state.debut, fin: this.state.fin }}
                                 min={moment('2016-01-01T00:00:00Z').toDate()}
@@ -105,8 +105,8 @@ export default class FinanceurForm extends React.Component {
                     </div>
                     <div className="form-group col-lg-6 col-xl-3">
                         {this.mustShowCodeRegionFilter() ? (
-                            <fieldset>
-                                <label id="combo1-label">Regions</label>
+                            <>
+                                <label for="combo1-label">Regions</label>
                                 <Select
                                     id="combo1-label"
                                     placeholder={'Toutes les régions'}
@@ -119,11 +119,12 @@ export default class FinanceurForm extends React.Component {
                                     aria-labelledby="combo1-label"
                                     onChange={(option) => this.setState({ codeRegion: option ? option.codeRegion : null })}
                                 />
-                            </fieldset>
+                            </>
                         ) : (
-                            <fieldset>
-                                <label>Départements</label>
+                            <>
+                                <label for="departements">Départements</label>
                                 <Select
+                                    id="departements"
                                     placeholder={'Tous les départements'}
                                     trackingId="Départements"
                                     loading={store.loading}
@@ -133,109 +134,104 @@ export default class FinanceurForm extends React.Component {
                                     optionLabel="label"
                                     onChange={(option) => this.setState({ departement: option ? option.code : null })}
                                 />
-                            </fieldset>
+                            </>
                         )}
                     </div>
                 </div>
 
                 <div className="form-row">
                     <div className="form-group col-lg-4">
-                        <fieldset>
-                            <label>SIRET de l&apos;organisme de formation</label>
-                            <InputText
-                                type="number"
-                                value={this.state.siret}
-                                placeholder="000000000000000"
-                                icon={<i className="fas fa-search" />}
-                                reset={() => this.setState({ siret: '', siren: null, numeroFormation: null })}
-                                onChange={(event = {}) => {
-                                    const nouveauSIRET = event.target.value;
-                                    const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
-                                    this.setState(
-                                        {
-                                            siret: nouveauSIRET,
-                                            siren: nouveauSIREN?.siren,
-                                            numeroFormation: null
-                                        },
-                                        () => {
-                                            if (nouveauSIREN) {
-                                                loadFormations(nouveauSIREN.siren);
-                                            }
+                        <label for="filtre-siret">SIRET de l&apos;organisme de formation</label>
+                        <InputText
+                            id="filtre-siret"
+                            type="number"
+                            value={this.state.siret}
+                            placeholder="000000000000000"
+                            icon={<i className="fas fa-search" />}
+                            reset={() => this.setState({ siret: '', siren: null, numeroFormation: null })}
+                            onChange={(event = {}) => {
+                                const nouveauSIRET = event.target.value;
+                                const nouveauSIREN = store.sirens.find(s => s.siren === nouveauSIRET.substring(0, 9));
+                                this.setState(
+                                    {
+                                        siret: nouveauSIRET,
+                                        siren: nouveauSIREN?.siren,
+                                        numeroFormation: null
+                                    },
+                                    () => {
+                                        if (nouveauSIREN) {
+                                            loadFormations(nouveauSIREN.siren);
                                         }
-                                    );
-                                }}
-                            />
-                        </fieldset>
+                                    }
+                                );
+                            }}
+                        />
                     </div>
                     <div className="form-group col-lg-4">
-                        <fieldset>
-                            <label>Nom de l&apos;organisme de formation</label>
-                            <Select
-                                placeholder={'Tous les organismes'}
-                                trackingId="Nom de l'organisme de formation"
-                                loading={store.loading}
-                                value={this.state.siren}
-                                options={store.sirens}
-                                optionKey="siren"
-                                optionLabel="name"
-                                onChange={(option) => {
-                                    this.setState({ siren: option ? option.siren : null, numeroFormation: null, siret: '' }, () => {
-                                        if (option) {
-                                            loadFormations(option.siren);
-                                        }
-                                    });
-                                }}
-                            />
-                        </fieldset>
+                        <label for="nom-organisme">Nom de l&apos;organisme de formation</label>
+                        <Select
+                            id="nom-organisme"
+                            placeholder={'Tous les organismes'}
+                            trackingId="Nom de l'organisme de formation"
+                            loading={store.loading}
+                            value={this.state.siren}
+                            options={store.sirens}
+                            optionKey="siren"
+                            optionLabel="name"
+                            onChange={(option) => {
+                                this.setState({ siren: option ? option.siren : null, numeroFormation: null, siret: '' }, () => {
+                                    if (option) {
+                                        loadFormations(option.siren);
+                                    }
+                                });
+                            }}
+                        />
                     </div>
                     {this.state.siren && (
                         <div className={`form-group col-lg-4`}>
-                            <fieldset>
-                                <label>Formation</label>
-                                <Select
-                                    placeholder={'Toutes les formations'}
-                                    trackingId="Formation"
-                                    loading={store.loading}
-                                    value={this.state.numeroFormation}
-                                    options={store.formations}
-                                    optionKey="numeroFormation"
-                                    optionLabel="title"
-                                    onChange={(option) => this.setState({ numeroFormation: option ? option.numeroFormation : null })}
-                                />
-                            </fieldset>
+                            <label for="formation">Formation</label>
+                            <Select
+                                id="formation"
+                                placeholder={'Toutes les formations'}
+                                trackingId="Formation"
+                                loading={store.loading}
+                                value={this.state.numeroFormation}
+                                options={store.formations}
+                                optionKey="numeroFormation"
+                                optionLabel="title"
+                                onChange={(option) => this.setState({ numeroFormation: option ? option.numeroFormation : null })}
+                            />
                         </div>
                     )}
                     {this.mustShowFinanceurFilter() && (
                         <>
                             <div className="form-group col-lg-5 col-xl-5">
-                                <fieldset>
-                                    <label>Financeur</label>
-                                    <Select
-                                        placeholder={'Tous les financeurs'}
-                                        trackingId="Financeur"
-                                        loading={store.loading}
-                                        value={this.state.codeFinanceur}
-                                        options={store.financeurs}
-                                        optionKey="code"
-                                        optionLabel="label"
-                                        onChange={(option) => this.setState({ codeFinanceur: option ? option.code : null })}
-                                    />
-                                </fieldset>
+                                <label for="financeur">Financeur</label>
+                                <Select
+                                  id="financeur"
+                                    placeholder={'Tous les financeurs'}
+                                    trackingId="Financeur"
+                                    loading={store.loading}
+                                    value={this.state.codeFinanceur}
+                                    options={store.financeurs}
+                                    optionKey="code"
+                                    optionLabel="label"
+                                    onChange={(option) => this.setState({ codeFinanceur: option ? option.code : null })}
+                                />
                             </div>
                             <div className="form-group col-lg-5 col-xl-5">
-                                <fieldset>
-                                    <label>Dispositif de financement</label>
-                                    <Select
-                                        placeholder={'Tous les dispositifs'}
-                                        trackingId="Dispositif"
-                                        loading={store.loading}
-                                        value={this.state.dispositifFinancement}
-                                        options={store.dispositifs}
-                                        optionKey="code"
-                                        optionLabel="code"
-                                        onChange={(option) => this.setState({ dispositifFinancement: option ? option.code : null })}
-                                    />
-                                </fieldset>
+                                <label for="dispositif">Dispositif de financement</label>
+                                <Select
+                                  id="dispositif"
+                                    placeholder={'Tous les dispositifs'}
+                                    trackingId="Dispositif"
+                                    loading={store.loading}
+                                    value={this.state.dispositifFinancement}
+                                    options={store.dispositifs}
+                                    optionKey="code"
+                                    optionLabel="code"
+                                    onChange={(option) => this.setState({ dispositifFinancement: option ? option.code : null })}
+                                />
                             </div>
                         </>
                     )}

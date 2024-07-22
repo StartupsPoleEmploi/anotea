@@ -131,7 +131,7 @@ export default class FinanceurAvisPanel extends React.Component {
                         <AvisResults
                             results={results}
                             message={message}
-                            renderAvis={avis => <Avis avis={avis} />}
+                            renderAvis={(avis, index) => <Avis avis={avis} index={index} />}
                         />
                 }
                 pagination={

@@ -76,7 +76,7 @@ export default class OrganismeForm extends React.Component {
                 <div className="form-row">
                     <div className="form-group col-lg-6 col-xl-3">
                         <fieldset>
-                            <label>Période</label>
+                            <legend>Période</legend>
                             <Periode
                                 periode={{ debut: this.state.debut, fin: this.state.fin }}
                                 min={moment('2016-01-01T00:00:00Z').toDate()}

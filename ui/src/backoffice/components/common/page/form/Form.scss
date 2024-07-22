@@ -4,6 +4,11 @@
 
   @include box();
 
+  legend {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+  }
+
   label {
     font-size: 1.125rem;
     font-weight: $font-weight-bold;
