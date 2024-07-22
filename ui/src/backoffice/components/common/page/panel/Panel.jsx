@@ -21,6 +21,7 @@ const Panel = props => {
             {props.loading ?
                 <Loader centered={true} /> :
                 <div className="container">
+                    {props.pagination ? <h2 className="sr-only">Liste des avis</h2> : ''}
                     <div className="summary-holder">
                         {props.summary}
                     </div>

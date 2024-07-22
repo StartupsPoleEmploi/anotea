@@ -7,7 +7,7 @@ export const Filters = ({ children }) => {
 
     return (
         <div className="Filters d-flex justify-content-center">
-            <nav className="nav justify-content-center">
+            <nav className="nav justify-content-center" aria-label="Type d'avis">
                 {children}
             </nav>
         </div>

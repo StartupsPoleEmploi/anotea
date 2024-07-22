@@ -21,7 +21,7 @@ export default class FormationStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <h2 className="title" >
+                    <h3 className="title" >
                         <div>
                             <span aria-hidden="true" className="fas fa-graduation-cap a-icon"></span>
                             Formations
@@ -31,7 +31,7 @@ export default class FormationStats extends React.Component {
                             </span>
                         </div>
                         <div className="description">(source Intercarif)</div>
-                    </h2>
+                    </h3>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Formations en ligne</div>

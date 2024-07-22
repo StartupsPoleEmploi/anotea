@@ -87,7 +87,7 @@ export default class Avis extends React.Component {
 
         return (
             <div className="Avis">
-                <h2 className="sr-only">Commentaire {index}</h2>
+                <h3 className="sr-only">Commentaire {index}</h3>
                 {message &&
                 <LocalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
                 }
