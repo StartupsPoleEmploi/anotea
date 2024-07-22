@@ -39,6 +39,7 @@ export default class ModerateurHeaderItems extends React.Component {
         let isEmailsPreview = router.isActive('/backoffice/moderateur/emails');
 
         return (
+            <nav aria-label="principale">
             <ul className="nav">
                 <li className="nav-item">
                     <Link
@@ -93,6 +94,7 @@ export default class ModerateurHeaderItems extends React.Component {
                     </Link>
                 </li>
             </ul>
+            </nav>
         );
 
     }

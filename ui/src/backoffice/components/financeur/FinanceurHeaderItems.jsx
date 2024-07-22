@@ -4,6 +4,7 @@ import Link from '../common/header/Link';
 export default function FinanceurHeaderItems() {
 
     return (
+    <nav aria-label="principale">
         <ul className="nav">
             <li className="nav-item">
                 <Link className="nav-link" url="/backoffice/financeur/avis">
@@ -21,6 +22,7 @@ export default function FinanceurHeaderItems() {
                 </Link>
             </li>
         </ul>
+    </nav>
     );
 }
 

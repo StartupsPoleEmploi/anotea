@@ -4,6 +4,7 @@ import Link from '../common/header/Link';
 export default function OrganismeHeaderItems() {
 
     return (
+		<nav aria-label="principale">
         <ul className="nav">
             <li className="nav-item">
                 <Link className="nav-link" url="/backoffice/organisme/avis/liste?dispensateur=true&amp;responsable=true">
@@ -16,6 +17,7 @@ export default function OrganismeHeaderItems() {
                 </Link>
             </li>
         </ul>
+		</nav>
     );
 }
 

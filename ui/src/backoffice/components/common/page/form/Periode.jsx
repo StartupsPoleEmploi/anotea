@@ -34,21 +34,22 @@ export default class Periode extends React.Component {
         return (
             <div className="Periode d-flex justify-content-around align-items-center">
                 <i className="fas fa-map-marker-alt pl-1"></i>
-                <span className="sr-only">de</span>
                 <Date
                     value={periode.debut}
                     min={min}
                     max={max}
                     depth={depth || 'days'}
                     onChange={date => this.onDateChange('debut', date)}
+                    label="date de début"
                 />
-                <span className="au">à</span>
+                <span className="au" aria-hidden="true">à</span>
                 <Date
                     value={periode.fin}
                     min={min}
                     max={max}
                     depth={depth || 'days'}
                     onChange={date => this.onDateChange('fin', date)}
+                    label="date de fin"
                 />
                 <span className="clear" onClick={() => this.onReset()}>
                     <svg

@@ -39,7 +39,7 @@ export default class Pagination extends React.Component {
                 <div className="offset-4 col-4 d-flex justify-content-center">
                     <ul className="pagination">
                         <li className={`page-item ${isFirstPage ? 'active' : ''}`}>
-                            <a href="/#" className="page-link" onClick={e => this.onClick(e, 1)} aria-label="page 1">1</a>
+                            <a href="/#" className="page-link" onClick={e => this.onClick(e, 1)} aria-label="page 1" title="page 1">1</a>
                         </li>
                         {
                             (totalPages > 5 && currentPage > 3) &&
@@ -54,6 +54,7 @@ export default class Pagination extends React.Component {
                                     href="/#"
                                     className="page-link"
                                     onClick={e => this.onClick(e, previousPage)}
+									title={`page ${previousPage}`}
                                     aria-label={`page ${previousPage}`}>{previousPage}
                                 </a>
                             </li>
@@ -65,6 +66,7 @@ export default class Pagination extends React.Component {
                                     href="/#"
                                     className="page-link"
                                     onClick={e => this.onClick(e, currentPage)}
+									title={`page ${currentPage}`}
                                     aria-label={`page ${currentPage}`}>{currentPage}
                                 </a>
                             </li>
@@ -73,7 +75,7 @@ export default class Pagination extends React.Component {
                             (nextPage < lastPage) &&
                             <li className="page-item">
                                 <a href="/#" className="page-link" onClick={e => this.onClick(e, nextPage)}
-                                aria-label={`page ${nextPage}`}>{nextPage}</a>
+                                title={`page ${nextPage}`} aria-label={`page ${nextPage}`}>{nextPage}</a>
                             </li>
                         }
                         {
@@ -84,7 +86,7 @@ export default class Pagination extends React.Component {
                         }
                         <li className={`page-item ${isLastPage && 'active'}`}>
                             <a href="/#" className="page-link" onClick={e => this.onClick(e, lastPage)}
-                            aria-label={`page ${lastPage}`}>{lastPage}</a>
+                            title={`page ${lastPage}`} aria-label={`page ${lastPage}`}>{lastPage}</a>
                         </li>
                     </ul>
                 </div>

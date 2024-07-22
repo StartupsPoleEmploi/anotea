@@ -20,14 +20,14 @@ export default class OrganismeStats extends React.Component {
         return (
             <div className="Stats">
                 <div className="main with-details d-flex flex-column">
-                    <h2 className="title" >
+                    <h3 className="title" >
                         <span aria-hidden="true" className="far fa-comment-alt a-icon"></span>
                         Organismes
                         <span className="asterisque" style={{"marginLeft":"10px"}}>
                             {'(depuis le: 01/01/2018 -'}
                             {fin ? " jusqu'au: "+new Date(fin).toLocaleDateString()+")" : "jusqu'à: Aujourd'hui)"}
                         </span>
-                    </h2>
+                    </h3>
                     <div className="d-flex justify-content-between flex-wrap">
                         <div className="stats" >
                             <div className="name">Organismes actifs</div>
