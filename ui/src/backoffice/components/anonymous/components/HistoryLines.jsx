@@ -81,8 +81,10 @@ export default class HistoryLines extends React.Component {
                 let content = this.nextElementSibling;
                 if (content.style.display === "block") {
                     content.style.display = "none";
+					this.setAttribute("aria-expanded", false);
                 } else {
                     content.style.display = "block";
+					this.setAttribute("aria-expanded", true);
                 }
             });
         }
@@ -130,7 +132,7 @@ export default class HistoryLines extends React.Component {
     
         return Object.keys(years).map(year => (
             <div key={year} className="sr-only">
-                <button type="button" className="collapsible">Ouvrir les données nationales de {year}</button>
+                <button type="button" className="collapsible" aria-expanded="false">Ouvrir les données nationales de {year}</button>
                 <div style={{ display: "none"}}>
                     {years[year].national.map((item, index) => (
                         <div key={index}>
@@ -143,7 +145,7 @@ export default class HistoryLines extends React.Component {
                 </div>
                 {lines.length > 1 && (
                     <>
-                    <button type="button" className="collapsible">Ouvrir les données régionales de {year}</button>
+                    <button type="button" className="collapsible" aria-expanded="false">Ouvrir les données régionales de {year}</button>
                     <div style={{ display: "none"}}>
                         {years[year].regional.map((item, index) => (
                             <div key={index}>
