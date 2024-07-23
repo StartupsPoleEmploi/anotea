@@ -18,8 +18,8 @@ const Header = ({ items, defaultPath, onLogout }) => {
 
     return (
         <header role="banner" className={`Header ${theme.backgroundColor}`}>
-            <div class="skip-link-group">
-                <a href="#contents" class="skip-link sr-only sr-only-focusable">Accéder au contenu principal</a>
+            <div className="skip-link-group">
+                <a href="#contents" className="skip-link sr-only sr-only-focusable">Accéder au contenu principal</a>
             </div>
             <div className="container">
                 <div className="row">

@@ -108,7 +108,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                 title="Créer un nouveau mot de passe"
                                 elements={
                                     <>
-                                        <label for="newMotDePasse" className="mt-3">Nouveau mot de passe</label>
+                                        <label htmlFor="newMotDePasse" className="mt-3">Nouveau mot de passe</label>
                                         <InputText
                                             id="newMotDePasse"
                                             type="password"
@@ -122,7 +122,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             aria-required="true"
                                         />
 
-                                        <label for="confMotDePasse" className="mt-3">Confirmer le nouveau mot de passe</label>
+                                        <label htmlFor="confMotDePasse" className="mt-3">Confirmer le nouveau mot de passe</label>
                                         <InputText
                                             id="confMotDePasse"
                                             type="password"

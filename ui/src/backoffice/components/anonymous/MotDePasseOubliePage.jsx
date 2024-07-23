@@ -69,7 +69,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                 title="Mot de passe oublié"
                                 elements={
                                     <>
-                                        <label for="identifiant">Entrez votre identifiant</label>
+                                        <label htmlFor="identifiant">Entrez votre identifiant</label>
                                         <InputText
                                             id="identifiant"
                                             value={this.state.identifiant}
@@ -78,8 +78,9 @@ export default class MotDePasseOubliePage extends React.Component {
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                             autoComplete="username"
                                             inputRef={this.inputRef}
+                                            aria-describedby="clarification-1"
                                         />
-                                        <p className="clarification mt-3">
+                                        <p className="clarification mt-3" id="clarification-1">
                                             Si vous êtes un organisme, vous devez désormais renseigner votre numéro de
                                             SIRET.
                                         </p>
@@ -101,7 +102,6 @@ export default class MotDePasseOubliePage extends React.Component {
                                     <>
                                         <Button
                                             size="small"
-                                            type="submit"
                                             onClick={this.props.router.goBack}
                                         >
                                             Retour

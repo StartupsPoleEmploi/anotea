@@ -106,7 +106,7 @@ export default class FinanceurForm extends React.Component {
                     <div className="form-group col-lg-6 col-xl-3">
                         {this.mustShowCodeRegionFilter() ? (
                             <>
-                                <label for="combo1-label">Regions</label>
+                                <label htmlFor="combo1-label">Regions</label>
                                 <Select
                                     id="combo1-label"
                                     placeholder={'Toutes les régions'}
@@ -122,7 +122,7 @@ export default class FinanceurForm extends React.Component {
                             </>
                         ) : (
                             <>
-                                <label for="departements">Départements</label>
+                                <label htmlFor="departements">Départements</label>
                                 <Select
                                     id="departements"
                                     placeholder={'Tous les départements'}
@@ -141,7 +141,7 @@ export default class FinanceurForm extends React.Component {
 
                 <div className="form-row">
                     <div className="form-group col-lg-4">
-                        <label for="filtre-siret">SIRET de l&apos;organisme de formation</label>
+                        <label htmlFor="filtre-siret">SIRET de l&apos;organisme de formation</label>
                         <InputText
                             id="filtre-siret"
                             type="number"
@@ -168,7 +168,7 @@ export default class FinanceurForm extends React.Component {
                         />
                     </div>
                     <div className="form-group col-lg-4">
-                        <label for="nom-organisme">Nom de l&apos;organisme de formation</label>
+                        <label htmlFor="nom-organisme">Nom de l&apos;organisme de formation</label>
                         <Select
                             id="nom-organisme"
                             placeholder={'Tous les organismes'}
@@ -189,7 +189,7 @@ export default class FinanceurForm extends React.Component {
                     </div>
                     {this.state.siren && (
                         <div className={`form-group col-lg-4`}>
-                            <label for="formation">Formation</label>
+                            <label htmlFor="formation">Formation</label>
                             <Select
                                 id="formation"
                                 placeholder={'Toutes les formations'}
@@ -206,7 +206,7 @@ export default class FinanceurForm extends React.Component {
                     {this.mustShowFinanceurFilter() && (
                         <>
                             <div className="form-group col-lg-5 col-xl-5">
-                                <label for="financeur">Financeur</label>
+                                <label htmlFor="financeur">Financeur</label>
                                 <Select
                                   id="financeur"
                                     placeholder={'Tous les financeurs'}
@@ -220,7 +220,7 @@ export default class FinanceurForm extends React.Component {
                                 />
                             </div>
                             <div className="form-group col-lg-5 col-xl-5">
-                                <label for="dispositif">Dispositif de financement</label>
+                                <label htmlFor="dispositif">Dispositif de financement</label>
                                 <Select
                                   id="dispositif"
                                     placeholder={'Tous les dispositifs'}
