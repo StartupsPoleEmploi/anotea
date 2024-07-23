@@ -108,7 +108,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                 title="Créer un nouveau mot de passe"
                                 elements={
                                     <>
-                                        <label for="newMotDePasse" className="mt-3">Nouveau mot de passe</label>
+                                        <label htmlFor="newMotDePasse" className="mt-3">Nouveau mot de passe</label>
                                         <InputText
                                             id="newMotDePasse"
                                             type="password"
@@ -117,12 +117,11 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             error={errors.emptyField || errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
                                             autoComplete="new-password"
-                                            aria-invalid="true"
                                             inputRef={this.inputRef}
                                             aria-required="true"
                                         />
 
-                                        <label for="confMotDePasse" className="mt-3">Confirmer le nouveau mot de passe</label>
+                                        <label htmlFor="confMotDePasse" className="mt-3">Confirmer le nouveau mot de passe</label>
                                         <InputText
                                             id="confMotDePasse"
                                             type="password"
@@ -131,7 +130,6 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             error={errors.emptyField || errors.isNotSamePassword}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
                                             autoComplete="new-password"
-                                            aria-invalid="true"
                                             aria-required="true"
                                         />
                                     </>

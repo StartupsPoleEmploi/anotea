@@ -6,13 +6,14 @@ export default class FormError extends React.Component {
 
     static propTypes = {
         children: PropTypes.node,
+        id: PropTypes.string,
     };
 
     render() {
-        let { children } = this.props;
+        let { children, id } = this.props;
 
         return (
-            <p className="FormError">
+            <p className="FormError" id={id}>
                 {children}
             </p>
         );

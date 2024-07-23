@@ -24,7 +24,10 @@ export default class MonComptePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
-                emptyField: null,
+                emptyCurrent: null,
+                emptyPasswordNew: null,
+                emptyPasswordConf: null,
+                invalidPassword: null,
             },
         };
     }
@@ -40,7 +43,9 @@ export default class MonComptePage extends React.Component {
                     null : 'Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
-                emptyField: (current === '' || password === '' || confirmation === '') ? 'Veuillez remplir tous les champs.' : null,
+                emptyCurrent: (current === '') ? 'Veuillez remplir tous les champs.' : null,
+                emptyPasswordNew: (password === '') ? 'Veuillez remplir tous les champs.' : null,
+                emptyPasswordConf: (confirmation === '') ? 'Veuillez remplir tous les champs.' : null,
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
@@ -65,16 +70,16 @@ export default class MonComptePage extends React.Component {
                         confirmation: '',
                     });
                 })
-                .catch(async error => {
-                    let json = await error.json();
-
+                .catch(() => {
                     showMessage({
-                        text: json.message,
+                        text: "Le mot de passe n'est pas correct",
                         color: 'red',
                     });
-
                     this.setState({
-                        loading: false,
+                        errors: {
+                            invalidPassword: "Le mot de passe n'est pas correct",
+                            loading: false,
+                        }
                     });
                 });
             }
@@ -95,7 +100,7 @@ export default class MonComptePage extends React.Component {
                                 title="Mise à jour du mot de passe"
                                 elements={
                                     <>
-                                        <label for="motDePasseActu">Mot de passe actuel</label>
+                                        <label htmlFor="motDePasseActu">Mot de passe actuel</label>
                                         <InputText
                                             id="motDePasseActu"
                                             type="password"
@@ -103,28 +108,31 @@ export default class MonComptePage extends React.Component {
                                             placeholder="Mot de passe"
                                             onChange={event => this.setState({ current: event.target.value })}
                                             autoComplete="current-password"
-                                            error={errors.emptyField}
+                                            error={errors.emptyCurrent || errors.invalidPassword}
+                                            errorid={errors.emptyCurrent ? 'empty-password-actu' : (errors.invalidPassword ? 'password-invalid' : null)}
                                             inputRef={this.inputRef}
                                         />
 
-                                        <label for="motDePasseNew" className="mt-3">Nouveau mot de passe</label>
+                                        <label htmlFor="motDePasseNew" className="mt-3">Nouveau mot de passe</label>
                                         <InputText
                                             id="motDePasseNew"
                                             type="password"
                                             value={this.state.password}
                                             placeholder="Mot de passe"
-                                            error={errors.emptyField || errors.passwordNotStrongEnough}
+                                            error={errors.emptyPasswordNew || errors.passwordNotStrongEnough}
+                                            errorid={errors.emptyPasswordNew ? 'empty-password-new' : (errors.passwordNotStrongEnough ? 'password-not-strong-enough' : null)}
                                             onChange={event => this.setState({ password: event.target.value })}
                                             autoComplete="new-password"
                                         />
 
-                                        <label for="motDePasseConf" className="mt-3">Confirmer le nouveau mot de passe</label>
+                                        <label htmlFor="motDePasseConf" className="mt-3">Confirmer le nouveau mot de passe</label>
                                         <InputText
                                             id="motDePasseConf"
                                             type="password"
                                             value={this.state.confirmation}
                                             placeholder="Mot de passe"
-                                            error={errors.emptyField || errors.isNotSamePassword}
+                                            error={errors.emptyPasswordConf || errors.isNotSamePassword}
+                                            errorid={errors.emptyPasswordConf ? 'empty-password-conf' : (errors.isNotSamePassword ? 'not-same-password' : null)}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
                                             autoComplete="new-password"
                                         />

@@ -113,7 +113,7 @@ export default class ModerationAvisPage extends React.Component {
                         <Form className="a-width-50">
                             <div className="d-flex" style={{ flexWrap: "wrap", justifyContent: "space-evenly" }}>
                                 <div className="flex-grow-1 mr-2">
-                                    <label className="sr-only" for="recherche-avis">Rechercher un avis</label>
+                                    <label className="sr-only" htmlFor="recherche-avis">Rechercher un avis</label>
                                     <InputText
                                         id="recherche-avis"
                                         value={this.state.fulltext}

@@ -11,8 +11,10 @@ export default class InputText extends React.Component {
         icon: PropTypes.node,
         reset: PropTypes.func,
         error: PropTypes.string,
+        errorid: PropTypes.string,
         autoComplete: PropTypes.string,
         inputRef: PropTypes.object,
+        invalid: PropTypes.string,
     };
 
     constructor(props) {
@@ -21,7 +23,8 @@ export default class InputText extends React.Component {
     }
 
     render() {
-        let { id, icon, reset, error, inputRef } = this.props;
+        let { id, icon, reset, error, errorid, inputRef, invalid } = this.props;
+        let describedBy = this.props['aria-describedby'];
 
         return (
             <div className="InputText">
@@ -36,11 +39,12 @@ export default class InputText extends React.Component {
                     <input
                         type="text"
                         id={id}
-                        autocomplete={this.autoComplete?this.autoComplete:null}
+                        autoComplete={this.autoComplete?this.autoComplete:null}
                         className={`${this.icon ? 'with-icon' : ''} ${this.reset ? 'with-reset' : ''} ${this.error ? 'with-error' : ''}`}
                         ref={inputRef || this.inputRef}
-                        aria-invalid={error ? true : undefined}
-                        {..._.omit(this.props, ['icon', 'reset', 'error'])}
+                        aria-invalid={error || invalid ? true : undefined}
+                        aria-describedby={describedBy ? (error ? (errorid ? `${describedBy} ${errorid}` : `${describedBy} ${id}-error`) : describedBy) : (error ? (errorid ? `${errorid}` : `${id}-error`) : null)}
+                        {..._.omit(this.props, ['icon', 'reset', 'error', 'errorid', 'aria-describedby', 'inputRef'])}
                     />
 
                     {reset &&
@@ -50,7 +54,7 @@ export default class InputText extends React.Component {
                     }
                 </div>
                 {error &&
-                <FormError>
+                <FormError id={errorid ? errorid : `${id}-error`}>
                     {error}
                 </FormError>
                 }

@@ -175,12 +175,17 @@ const Select = ({
         )}
         <button
           type="button"
+          className="expand-button"
           id={`${id}-button`}
           aria-label={placeholder}
           aria-expanded={isOpen}
           aria-controls={`${id}-listbox`}
           onClick={() => setIsOpen(!isOpen)}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          onBlur={handleInputBlur}
           aria-hidden="true"
+          tabindex="-1"
         >
           <svg width="18" height="16" aria-hidden="true" focusable="false">
             <polygon className="arrow" strokeWidth="0" fillOpacity="0.75" fill="currentColor" points="3,6 15,6 9,14" />

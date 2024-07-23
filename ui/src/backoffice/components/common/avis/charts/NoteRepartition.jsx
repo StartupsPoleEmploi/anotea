@@ -14,7 +14,7 @@ const NoteGauges = props => {
                 <div aria-hidden="true" className="note">
                     <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
-                <p class="sr-only">{props.note.moyenne} sur 5</p>
+                <p className="sr-only">{props.note.moyenne} sur 5</p>
             </div>
             <ul className="d-flex flex-column no-space">
                 <li className="repartition">
@@ -91,7 +91,7 @@ const NoteGlobale = props => {
                 <div aria-hidden="true" className="note">
                     <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
-                <p class="sr-only">{props.note.moyenne} sur 5</p>
+                <p className="sr-only">{props.note.moyenne} sur 5</p>
             </div>
             <div className="total">
                 {props.total} notes

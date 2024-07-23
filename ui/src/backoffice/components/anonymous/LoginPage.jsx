@@ -45,17 +45,17 @@ export default class LoginPage extends React.Component {
         this.setState({ loading: true });
     
         if (this.state.password === '' && this.state.identifiant === '') {
-            this.setState({ errorMessage: "Veuillez remplir tous les champs.", emptyField: 'both', loading: false });
+            this.setState({ errorMessage: "Veuillez remplir tous les champs.", emptyField: 'both', loading: false, errorid: 'empty-error' });
             if (this.inputRef.current && this.inputRef.current.focus) {
                 this.inputRef.current.focus();
             }
         } else if (this.state.password === '') {
-            this.setState({ errorMessage: "Veuillez remplir votre mot de passe.", emptyField: 'password', loading: false });
+            this.setState({ errorMessage: "Veuillez remplir votre mot de passe.", emptyField: 'password', loading: false, errorid: 'empty-password-error' });
             if (this.passwordInputRef.current && this.passwordInputRef.current.focus) {
                 this.passwordInputRef.current.focus();
             }
         } else if (this.state.identifiant === '') {
-            this.setState({ errorMessage: "Veuillez remplir votre identifiant.", emptyField: 'identifiant', loading: false });
+            this.setState({ errorMessage: "Veuillez remplir votre identifiant.", emptyField: 'identifiant', loading: false, errorid: 'empty-identifiant-error' });
             if (this.inputRef.current && this.inputRef.current.focus) {
                 this.inputRef.current.focus();
             }
@@ -65,7 +65,7 @@ export default class LoginPage extends React.Component {
                 .catch(() => {
                     const errorMessage = 'Votre identifiant et/ou votre mot de passe sont incorrects. ' +
                         'Si vous êtes un organisme, vous devez désormais vous identifier avec votre numéro de SIRET';
-                    this.setState({ errorMessage: errorMessage, emptyField: 'incorrect' , loading: false });
+                    this.setState({ errorMessage: errorMessage, emptyField: 'incorrect' , loading: false, errorid: 'bad-password-or-id-error' });
                     if (this.inputRef.current && this.inputRef.current.focus) {
                         this.inputRef.current.focus();
                     }
@@ -110,7 +110,7 @@ export default class LoginPage extends React.Component {
                                 elements={
                                     <>
                                         <p className="clarification mt-1">Tous les champs sont obligatoires.</p>
-                                        <label for="identifiant">Identifiant</label>
+                                        <label htmlFor="identifiant">Identifiant</label>
                                         <InputText
                                             id="identifiant"
                                             value={this.state.identifiant}
@@ -120,16 +120,16 @@ export default class LoginPage extends React.Component {
                                                 (this.state.emptyField === 'identifiant' || this.state.emptyField === 'both' || this.state.emptyField === 'incorrect') ?
                                                 this.state.errorMessage : ''
                                             }
+                                            errorid={this.state.errorid}
                                             autoComplete="username"
                                             className="placeholder-opaque"
                                             inputRef={this.inputRef}
                                             aria-describedby="exemple-siret"
-                                            aria-invalid="true"
                                             aria-required="true"
                                         />
                                         <p id="exemple-siret" className="clarification mt-1">Le numero de SIRET se compose de 14 chiffres.<br/>Exemple&nbsp;:&nbsp;01234567890123</p>
 
-                                        <label for="motDePasse" className="mt-3">Mot de passe</label>
+                                        <label htmlFor="motDePasse" className="mt-3">Mot de passe</label>
                                         <InputText
                                             id="motDePasse"
                                             type="password"
@@ -142,9 +142,9 @@ export default class LoginPage extends React.Component {
                                             }
                                             autoComplete="current-password"
                                             className="placeholder-opaque"
-                                            aria-invalid="true"
                                             inputRef={this.passwordInputRef}
                                             aria-required="true"
+                                            invalid={this.state.emptyField === 'both' || this.state.emptyField === 'incorrect' || this.state.emptyField === 'password'}
                                         />
                                     </>
                                 }

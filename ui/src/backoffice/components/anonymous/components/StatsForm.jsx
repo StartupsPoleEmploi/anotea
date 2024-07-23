@@ -73,7 +73,7 @@ export default class StatsForm extends React.Component {
                 <Form className="a-width-50">
                     <div className="d-flex justify-content-between align-items-end">
                         <div className="flex-grow-1 mr-2">
-                            <label for="choix-region" style={{fontSize: "1.125rem", fontWeight: 700}}>Filtrer par région</label>
+                            <label htmlFor="choix-region" style={{fontSize: "1.125rem", fontWeight: 700}}>Filtrer par région</label>
                             <Select
                                 id="choix-region"
                                 placeholder={'Toutes les régions'}

@@ -36,7 +36,7 @@ export default class Notes extends React.Component {
                 <div aria-hidden="true" className="text">
                     {note}/5 <Star />
                 </div>
-                <p class="sr-only">{note} sur 5</p>
+                <p className="sr-only">{note} sur 5</p>
             </div>
         );
     };
