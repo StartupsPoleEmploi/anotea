@@ -14,6 +14,7 @@ export default class InputText extends React.Component {
         errorid: PropTypes.string,
         autoComplete: PropTypes.string,
         inputRef: PropTypes.object,
+        invalid: PropTypes.string,
     };
 
     constructor(props) {
@@ -22,7 +23,7 @@ export default class InputText extends React.Component {
     }
 
     render() {
-        let { id, icon, reset, error, errorid, inputRef } = this.props;
+        let { id, icon, reset, error, errorid, inputRef, invalid } = this.props;
         let describedBy = this.props['aria-describedby'];
 
         return (
@@ -41,7 +42,7 @@ export default class InputText extends React.Component {
                         autoComplete={this.autoComplete?this.autoComplete:null}
                         className={`${this.icon ? 'with-icon' : ''} ${this.reset ? 'with-reset' : ''} ${this.error ? 'with-error' : ''}`}
                         ref={inputRef || this.inputRef}
-                        aria-invalid={error ? true : undefined}
+                        aria-invalid={error || invalid ? true : undefined}
                         aria-describedby={describedBy ? (error ? (errorid ? `${describedBy} ${errorid}` : `${describedBy} ${id}-error`) : describedBy) : (error ? (errorid ? `${errorid}` : `${id}-error`) : null)}
                         {..._.omit(this.props, ['icon', 'reset', 'error', 'errorid', 'aria-describedby', 'inputRef'])}
                     />

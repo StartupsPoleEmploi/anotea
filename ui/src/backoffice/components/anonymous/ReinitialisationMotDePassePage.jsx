@@ -117,7 +117,6 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             error={errors.emptyField || errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
                                             autoComplete="new-password"
-                                            aria-invalid="true"
                                             inputRef={this.inputRef}
                                             aria-required="true"
                                         />
@@ -131,7 +130,6 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                             error={errors.emptyField || errors.isNotSamePassword}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
                                             autoComplete="new-password"
-                                            aria-invalid="true"
                                             aria-required="true"
                                         />
                                     </>

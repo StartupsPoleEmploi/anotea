@@ -125,7 +125,6 @@ export default class LoginPage extends React.Component {
                                             className="placeholder-opaque"
                                             inputRef={this.inputRef}
                                             aria-describedby="exemple-siret"
-                                            aria-invalid="true"
                                             aria-required="true"
                                         />
                                         <p id="exemple-siret" className="clarification mt-1">Le numero de SIRET se compose de 14 chiffres.<br/>Exemple&nbsp;:&nbsp;01234567890123</p>
@@ -143,9 +142,9 @@ export default class LoginPage extends React.Component {
                                             }
                                             autoComplete="current-password"
                                             className="placeholder-opaque"
-                                            aria-invalid="true"
                                             inputRef={this.passwordInputRef}
                                             aria-required="true"
+                                            invalid={this.state.emptyField === 'both' || this.state.emptyField === 'incorrect' || this.state.emptyField === 'password'}
                                         />
                                     </>
                                 }
