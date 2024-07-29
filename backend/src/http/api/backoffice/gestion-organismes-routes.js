@@ -135,7 +135,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     router.put('/api/backoffice/moderateur/organismes/:id/updateCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        let idNonModifie = (await Joi.validate(req.params, { id: Joi.required() }, { abortEarly: false })).id;
+        let idNonModifie = (await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false })).id;
                 
         let bonId = await recupererIdOrganisme(idNonModifie);
 
@@ -171,11 +171,22 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             ip: getRemoteAddress(req)
         });
 
-        return res.status(201).send(result.value);
+        return res.status(201).send(await db.collection('accounts').findOne({ _id: organisme._id },
+            {
+                projection: {
+                    profile: true,
+                    codeRegion: true,
+                    siret: true,
+                    courriel: true,
+                    courriels: true,
+                    raison_sociale: true,
+                }
+            }
+        ));
     }));
 
     router.post('/api/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let idNonModifie = (await Joi.validate(req.params, { id: Joi.required() }, { abortEarly: false })).id;
+        let idNonModifie = (await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false })).id;
             
         let bonId = await recupererIdOrganisme(idNonModifie);
 
