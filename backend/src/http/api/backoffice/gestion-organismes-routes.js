@@ -98,7 +98,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
         }, { token: 0 }).stream();
 
         let isKairos = organisme => {
-            let kairos = organisme.sources.find(s => s === 'kairos');
+            let kairos = organisme.sources && organisme.sources.find(s => s === 'kairos');
             return kairos === 'kairos' ? 'oui' : 'non';
         };
         let isResponsable = organisme => organisme.nbAvisResponsablePasFormateurSiretExact > 0;
