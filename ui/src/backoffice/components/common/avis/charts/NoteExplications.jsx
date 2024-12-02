@@ -12,7 +12,7 @@ const NoteCriteria = props => {
                     <span className="value">{props.note.moyenne}</span>/5
                     <Star svg={false} />
                 </div>
-                <p class="sr-only">{props.note.moyenne} sur 5</p>
+                <p className="sr-only">{props.note.moyenne} sur 5</p>
             </div>
             <div className="d-flex flex-column">
                 <div className="explication">
@@ -45,7 +45,7 @@ const NoteGlobale = props => {
                     <span className="value">{props.note.moyenne}</span>/5
                     <Star svg={false}/>
                 </div>
-                <p class="sr-only">{props.note.moyenne} sur 5</p>
+                <p className="sr-only">{props.note.moyenne} sur 5</p>
                 <div className="total">{props.total} notes</div>
             </div>
         </div>

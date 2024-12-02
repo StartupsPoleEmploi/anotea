@@ -44,6 +44,7 @@
     .chart {
       flex-grow: 1;
       min-width: 300px;
+      min-height: 250px;
 
       &.first, &.second {
         border-right: solid 1px $color-grey-25;

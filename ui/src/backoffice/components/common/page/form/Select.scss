@@ -1,12 +1,17 @@
+@import 'src/common/styles/variables';
+
 .combobox-list {
   position: relative;
 }
 
+.expand-button {
+  padding-bottom: 4px !important;
+}
+
 .combobox .group {
   display: inline-flex;
-  background-color: #c8cbce;
   box-shadow: unset;
-  border: 1px solid #f4f4f5;
+  border: 1px solid $color-black;
   border-radius: 6px;
   padding: .3rem;
   width: 100%;
@@ -24,13 +29,13 @@
   position: relative;
 }
 
+
 .combobox input {
   width: 150px;
   outline: none;
   font-size: 87.5%;
   padding: 1px 3px;
   border: none;
-  background-color: #c8cbce;
   -webkit-box-align: center;
   align-items: center;
   display: flex;
@@ -78,7 +83,7 @@
   border: none;
   outline: none;
   color: #11181E;
-  background-color: #c8cbce;
+  background-color: white;
   height: 100%;
 }
 
