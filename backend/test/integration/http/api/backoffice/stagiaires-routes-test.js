@@ -26,11 +26,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let testParameters = [
             {
                 profileName: 'moderateur',
-                logUser: app => logAsModerateur(app, 'admin@pole-emploi.fr', { codeRegion: '11' }),
+                logUser: app => logAsModerateur(app, 'admin@francetravail.fr', { codeRegion: '11' }),
             },
             {
                 profileName: 'financeur',
-                logUser: app => logAsFinanceur(app, 'financeur@pole-emploi.fr', '10', { codeRegion: '11' }),
+                logUser: app => logAsFinanceur(app, 'financeur@francetravail.fr', '10', { codeRegion: '11' }),
             },
             {
                 profileName: 'organisme',

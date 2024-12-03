@@ -29,13 +29,13 @@ module.exports = (configuration, regions) => {
     });
     transporter.use('compile', htmlToText({ ignoreImage: true }));
 
-    let getRegionEmail = region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
+    let getRegionEmail = region => region.contact ? `${region.contact}@francetravail.fr` : configuration.smtp.from;
     let getPublicUrl = path => `${(configuration.app.public_hostname)}${path}`;
 
     let utils = {
         getPublicUrl,
         getUTM: campaign => `utm_source=PE&utm_medium=mail&utm_campaign=${campaign}`,
-        getRegionEmail: region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from,
+        getRegionEmail: region => region.contact ? `${region.contact}@francetravail.fr` : configuration.smtp.from,
         getUnsubscribeLink: token => getPublicUrl(`/emails/stagiaires/${token}/unsubscribe`),
         getConsultationLink: (type, templateName, token, commentToken) => {
             const params = commentToken ? `?avis=${commentToken}` : '';

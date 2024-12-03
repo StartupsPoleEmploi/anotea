@@ -11,7 +11,7 @@ module.exports = ({ regions }) => {
             return {
                 codeRegion: region.codeRegion,
                 nom: region.nom,
-                email: `${region.contact}@pole-emploi.fr`
+                email: `${region.contact}@francetravail.fr`
             };
         }).sort((a, b) => {
             return a.nom.localeCompare(b.nom);

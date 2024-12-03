@@ -29,7 +29,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can update my password', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
         let response = await request(app)
         .put(`/api/backoffice/me/updatePassword`)
@@ -43,15 +43,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         //can login with new password
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'Azer123!' });
+        .send({ identifiant: 'admin@francetravail.fr', password: 'Azer123!' });
         assert.strictEqual(response.statusCode, 200);
     });
 
     it('can not update my password with invalid current password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount({ identifiant: 'admin@pole-emploi.fr' }));
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        await insertIntoDatabase('accounts', newModerateurAccount({ identifiant: 'admin@francetravail.fr' }));
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
         let response = await request(app)
         .put(`/api/backoffice/me/updatePassword`)
@@ -67,8 +67,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not update my password with weak password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount({ identifiant: 'admin@pole-emploi.fr' }));
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        await insertIntoDatabase('accounts', newModerateurAccount({ identifiant: 'admin@francetravail.fr' }));
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
         let response = await request(app)
         .put(`/api/backoffice/me/updatePassword`)

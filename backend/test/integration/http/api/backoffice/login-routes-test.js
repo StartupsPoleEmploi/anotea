@@ -29,7 +29,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@francetravail.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -44,7 +44,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
             region: 'Île-de-France',
             codeRegion: '11',
             profile: 'moderateur',
-            sub: 'admin@pole-emploi.fr',
+            sub: 'admin@francetravail.fr',
         });
     });
 
@@ -150,7 +150,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@francetravail.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
     });
@@ -164,7 +164,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'ADMIN@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'ADMIN@francetravail.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
     });
@@ -183,7 +183,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@francetravail.fr', password: 'password' });
         assert.strictEqual(response.statusCode, 200);
 
         let db = await getTestDatabase();
@@ -194,7 +194,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         // user can login
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@francetravail.fr', password: 'password' });
         assert.strictEqual(response.statusCode, 200);
     });
 
@@ -208,7 +208,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@francetravail.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
         return new Promise(async (resolve, reject) => {

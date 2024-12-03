@@ -8,7 +8,7 @@ describe(__filename, withServer(({ startServer, logAsFinanceur }) => {
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '2'),
         ]);
 
         let response = await request(app)

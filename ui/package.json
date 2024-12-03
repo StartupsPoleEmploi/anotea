@@ -11,7 +11,8 @@
   "contributors": [
     "Loïc Guillois <loic@fitlab.fr>",
     "Benoît Guérout <bguerout@yonoma.com>",
-    "Nabil Choukri <nabil.choukri@pole-emploi.fr>"
+    "Nabil Choukri",
+    "Julien Perrin"
   ],
   "scripts": {
     "build": "react-scripts build",

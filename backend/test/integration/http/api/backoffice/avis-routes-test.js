@@ -26,11 +26,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let testParameters = [
             {
                 profileName: 'moderateur',
-                logUser: app => logAsModerateur(app, 'admin@pole-emploi.fr', { codeRegion: '11' }),
+                logUser: app => logAsModerateur(app, 'admin@francetravail.fr', { codeRegion: '11' }),
             },
             {
                 profileName: 'financeur',
-                logUser: app => logAsFinanceur(app, 'financeur@pole-emploi.fr', '10', { codeRegion: '11' }),
+                logUser: app => logAsFinanceur(app, 'financeur@francetravail.fr', '10', { codeRegion: '11' }),
             },
             {
                 profileName: 'organisme',
@@ -81,7 +81,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             let app = await startServer();
             let [token] = await Promise.all([
-                logAsModerateur(app, 'admin@pole-emploi.fr'),
+                logAsModerateur(app, 'admin@francetravail.fr'),
                 insertIntoDatabase('avis', buildAvis()),
                 insertIntoDatabase('avis', buildAvis()),
                 insertIntoDatabase('avis', buildAvis()),
@@ -281,7 +281,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             delete avis.commentaire;
 
             let [token] = await Promise.all([
-                logAsModerateur(app, 'admin@pole-emploi.fr'),
+                logAsModerateur(app, 'admin@francetravail.fr'),
                 insertIntoDatabase('avis', buildAvis({ token: 'avec-commentaire' })),
                 insertIntoDatabase('avis', avis),
             ]);
@@ -362,7 +362,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         it(`[${profileName}] can search avis with reponse`, async () => {
             let app = await startServer();
             let [token] = await Promise.all([
-                logAsModerateur(app, 'admin@pole-emploi.fr'),
+                logAsModerateur(app, 'admin@francetravail.fr'),
                 insertIntoDatabase('avis', buildAvis({
                     reponse: {
                         text: 'Voici notre réponse',
