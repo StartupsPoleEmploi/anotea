@@ -52,11 +52,13 @@ const Select = ({
   }, []);
 
   const handleInputChange = event => {
+    console.debug("handleInputChange", event);
     setFilter(event.target.value);
     setIsOpen(true);
   };
 
   const handleInputKeyDown = event => {
+    console.debug("handleInputKeyDown", event);
     let newFocusedOption;
     const optionCount = type === 'create' ? filteredOptions.length + 1 : filteredOptions.length; // +1 for the "Ajouter" option
     switch (event.key) {
@@ -113,26 +115,30 @@ const Select = ({
   };
 
   const handleOptionClick = option => {
+    console.debug("handleOptionClick", option);
     onChange(option);
     setIsOpen(false);
     setFilter('');
   };
 
   const handleClear = () => {
+    console.debug("handleClear");
     setFilter('');
     setIsOpen(false);
     onChange(null); // Clear the selected value
   };
 
   const handleInputFocus = () => {
+    console.debug("handleInputFocus");
     setIsOpen(true);
   };
 
   const handleInputBlur = () => {
+    console.debug("handleInputBlur");
     setTimeout(() => {
       setIsOpen(false);
       setFilter('');
-    }, 100);
+    }, 1000);
   };
 
   return (
@@ -153,6 +159,7 @@ const Select = ({
           onBlur={handleInputBlur}
           placeholder={placeholder}
           ref={inputRef}
+          autoComplete="off"
         />
         {(filter || value) && (
           <button
@@ -185,7 +192,7 @@ const Select = ({
           onKeyDown={handleInputKeyDown}
           onBlur={handleInputBlur}
           aria-hidden="true"
-          tabindex="-1"
+          tabIndex="-1"
         >
           <svg width="18" height="16" aria-hidden="true" focusable="false">
             <polygon className="arrow" strokeWidth="0" fillOpacity="0.75" fill="currentColor" points="3,6 15,6 9,14" />
