@@ -30,7 +30,7 @@ const Select = ({
   useEffect(() => {
     setFilteredOptions(
       options.filter(option =>
-        normalizeString(option[optionLabel]).includes(normalizeString(filter))
+        option[optionLabel] && normalizeString(option[optionLabel]).includes(normalizeString(filter))
       )
     );
   }, [filter, options, optionLabel]);
