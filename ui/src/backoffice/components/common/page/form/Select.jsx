@@ -135,10 +135,8 @@ const Select = ({
 
   const handleInputBlur = () => {
     console.debug("handleInputBlur");
-    setTimeout(() => {
-      setIsOpen(false);
-      setFilter('');
-    }, 1000);
+    setIsOpen(false);
+    setFilter('');
   };
 
   return (
@@ -207,7 +205,7 @@ const Select = ({
               id={`${id}-${option[optionKey]}`}
               role="option"
               aria-selected={index === focusedOption}
-              onClick={() => handleOptionClick(option)}
+              onMouseDown={() => handleOptionClick(option)}
               className={index === focusedOption ? 'focused' : ''}
               ref={el => {
                 optionRefs.current[index] = el;
@@ -222,7 +220,7 @@ const Select = ({
               key="add-new"
               role="option"
               aria-selected={focusedOption === filteredOptions.length}
-              onClick={() => handleOptionClick({ [optionKey]: filter, [optionLabel]: filter })}
+              onMouseDown={() => handleOptionClick({ [optionKey]: filter, [optionLabel]: filter })}
               className={focusedOption === filteredOptions.length ? 'focused' : ''}
               ref={el => {
                 optionRefs.current[filteredOptions.length] = el;
