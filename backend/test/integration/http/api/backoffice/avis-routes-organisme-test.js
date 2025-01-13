@@ -189,7 +189,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let avis = buildAvis();
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis)
         ]);
 
@@ -214,7 +214,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let avis = buildAvis();
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis)
         ]);
 
@@ -265,7 +265,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
             },
         });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111122222'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111122222'),
             insertIntoDatabase('avis', avis)
         ]);
 
@@ -282,7 +282,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let avis = buildAvis();
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '2222222222222'),
             insertIntoDatabase('avis', avis)
         ]);
 
@@ -297,7 +297,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can not create reponse with invalid avis id', async () => {
 
         let app = await startServer();
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
+        let token = await logAsOrganisme(app, 'organisme@francetravail.fr', '2222222222222');
 
         let response = await request(app)
         .put(`/api/backoffice/avis/INVALID/addReponse`)
@@ -338,7 +338,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
             }
         });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis)
         ]);
 
@@ -360,7 +360,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
             }
         });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '2222222222222'),
             insertIntoDatabase('avis', avis)
         ]);
 
@@ -377,7 +377,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         const avis = buildAvis({ read: false, qualification: 'positif' });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -407,7 +407,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         const avis = buildAvis({ read: false, qualification: 'positif' });
         delete avis.commentaire;
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -424,7 +424,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         const avis = buildAvis({ read: false });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '2222222222222'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -441,7 +441,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         const avis = buildAvis({ read: false });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -467,7 +467,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         const avis = buildAvis({ read: true });
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            logAsOrganisme(app, 'organisme@francetravail.fr', '2222222222222'),
             insertIntoDatabase('avis', avis),
         ]);
 

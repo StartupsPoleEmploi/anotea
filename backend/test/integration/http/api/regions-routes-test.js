@@ -16,7 +16,7 @@ describe(__filename, withServer(({ startServer }) => {
         assert.deepStrictEqual(response.body.find(r => r.codeRegion === '93'), {
             codeRegion: '93',
             nom: 'Provence-Alpes-Côte d\'Azur',
-            email: 'anoteapepaca.13992@pole-emploi.fr'
+            email: 'anoteapepaca.13992@francetravail.fr'
         });
     });
 }));

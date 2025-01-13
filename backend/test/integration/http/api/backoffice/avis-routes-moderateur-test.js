@@ -51,7 +51,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', buildAvis({ status: 'validated' })),
             insertIntoDatabase('avis', buildAvis({ status: 'rejected' })),
             insertIntoDatabase('avis', buildAvis({ status: 'reported' })),
@@ -94,7 +94,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by email (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
                 individu: {
@@ -119,7 +119,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by email (fulltext) multimatch', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({
                 token: '12345',
                 individu: {
@@ -152,7 +152,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by email (no match) (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
@@ -168,7 +168,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by postal code (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
@@ -184,7 +184,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by postal code (fulltext) (0 result)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
@@ -200,7 +200,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by SIRET (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
@@ -216,7 +216,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by SIRET (fulltext) (0 result)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
@@ -232,7 +232,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by titre (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({
                 commentaire: {
                     title: 'Trop Génial',
@@ -258,7 +258,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search avis by titre (no match) (fulltext)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis()),
             createIndexes(['avis']),
         ]);
@@ -278,7 +278,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let avis = newAvis();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -296,7 +296,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let avis = newAvis({ codeRegion: '6' });
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -318,7 +318,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         });
         let organisme = newOrganismeAccount({ siret: avis.formation.action.organisme_formateur.siret });
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', avis),
             insertIntoDatabase('accounts', organisme)
         ]);
@@ -349,7 +349,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             },
         });
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', avis),
         ]);
 
@@ -365,7 +365,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({
                 _id: id,
                 commentaire: {
@@ -390,7 +390,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({
                 _id: id,
                 codeRegion: '44',
@@ -413,7 +413,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
@@ -434,7 +434,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', status: 'reported' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -460,7 +460,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', status: 'reported' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -487,7 +487,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', codeRegion: '44' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
@@ -528,7 +528,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
@@ -555,7 +555,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
@@ -581,7 +581,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', codeRegion: '44' })),
             insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
         ]);
@@ -600,7 +600,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let db = await getTestDatabase();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({ token: '123', avisCreated: true })),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '123' })),
         ]);
@@ -620,7 +620,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({ token: '1234' })),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '1234' })),
         ]);
@@ -645,7 +645,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, codeRegion: '44' })),
         ]);
 
@@ -661,7 +661,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id })),
         ]);
 
@@ -687,7 +687,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         const id = new ObjectID();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, codeRegion: '44' })),
         ]);
 
@@ -703,7 +703,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
         ]);
 
         let response = await request(app)
@@ -720,7 +720,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let avis = newAvis();
         avis.commentReport = 'yo';
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', avis),
             createIndexes(['avis']),
         ]);

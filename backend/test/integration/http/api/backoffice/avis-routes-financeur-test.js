@@ -26,7 +26,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '10'),
             insertIntoDatabase('avis', buildAvis({ status: 'validated' })),
             insertIntoDatabase('avis', buildAvis({ status: 'rejected' })),
             insertIntoDatabase('avis', buildAvis({ status: 'reported' })),
@@ -70,7 +70,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '10'),
             insertIntoDatabase('avis', buildAvis({
                 qualification: 'positif',
             })),
@@ -103,7 +103,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '10'),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111111111' } } } })),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_formateur: { siret: '11111111122222' } } } })),
         ]);
@@ -125,7 +125,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '4'),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '10' }] } } })),
         ]);
 
@@ -141,7 +141,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '4'),
             insertIntoDatabase('avis', buildAvis({ dispositifFinancement: 'AIF' })),
         ]);
 
@@ -157,7 +157,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '4'),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '10' }] } } })),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '2' }] } } })),
         ]);
@@ -174,7 +174,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '10'),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '2' }] } } })),
         ]);
 
@@ -190,7 +190,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '10'),
             insertIntoDatabase('avis', buildAvis({ formation: { action: { organisme_financeurs: [{ code_financeur: '10' }] } } })),
         ]);
 
@@ -206,7 +206,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '4'),
             insertIntoDatabase('avis', buildAvis({ status: 'validated' })),
             insertIntoDatabase('avis', buildAvis({ status: 'archived' })),
         ]);
@@ -223,7 +223,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            logAsFinanceur(app, 'financeur@francetravail.fr', '10'),
             insertIntoDatabase('avis', buildAvis()),
         ]);
 

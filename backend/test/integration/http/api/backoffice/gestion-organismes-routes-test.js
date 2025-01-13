@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes avec id entier', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         let organisme = newOrganismeAccount({
             _id: '1234',
             siret: '11111111111111',
@@ -19,7 +19,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -81,7 +81,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes avec id ObjectId', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         const idOrganisme = '5f43672078b3c84a55a0c305';
         let organisme = newOrganismeAccount({
             _id: await objectId(idOrganisme),
@@ -92,7 +92,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -155,7 +155,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes actifs', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         let actif = newOrganismeAccount({
             siret: '11111111111111',
             passwordHash: 'fake',
@@ -173,7 +173,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?status=active`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -184,7 +184,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes inactifs', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         let actif = newOrganismeAccount({
             siret: '11111111111111',
             passwordHash: 'fake',
@@ -202,7 +202,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?status=inactive`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -212,7 +212,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes by SIRET', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '11111111111111',
@@ -225,7 +225,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?search=33333333333333`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -235,7 +235,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes by raison sociale', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111111,
@@ -256,7 +256,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?search=Anotea`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 2);
@@ -267,7 +267,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can search organismes by courriel', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '11111111111111',
@@ -283,7 +283,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?search=contact@anotea.fr`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -293,7 +293,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can edit email (no duplicates) for int _id', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
         const retourInsertion = await insertIntoDatabase('accounts', newOrganismeAccount({
             objectId: false,
@@ -315,7 +315,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can edit email (no duplicates) for string _id', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
         const monInsert = await insertIntoDatabase('accounts', newOrganismeAccount({
             objectId: true,
@@ -336,7 +336,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
     it('can resend email password for int _id', async () => {
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         let organisme = newOrganismeAccount({
             siret: '11111111111111',
         });
@@ -345,14 +345,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .post(`/api/backoffice/moderateur/organismes/11111111111111/resendEmailAccount`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
     });
 
     it('can resend email password for ObjectId _id', async () => {
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
         let organisme = newOrganismeAccount({
             objectId: true,
             siret: '11111111111111',
@@ -362,7 +362,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .post(`/api/backoffice/moderateur/organismes/${organisme._id}/resendEmailAccount`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'me@pole-emploi.fr' });
+        .send({ email: 'me@francetravail.fr' });
 
         assert.strictEqual(response.statusCode, 200);
     });

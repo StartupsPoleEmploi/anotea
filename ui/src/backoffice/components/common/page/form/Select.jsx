@@ -30,7 +30,7 @@ const Select = ({
   useEffect(() => {
     setFilteredOptions(
       options.filter(option =>
-        normalizeString(option[optionLabel]).includes(normalizeString(filter))
+        option[optionLabel] && normalizeString(option[optionLabel]).includes(normalizeString(filter))
       )
     );
   }, [filter, options, optionLabel]);
@@ -52,11 +52,13 @@ const Select = ({
   }, []);
 
   const handleInputChange = event => {
+    console.debug("handleInputChange", event);
     setFilter(event.target.value);
     setIsOpen(true);
   };
 
   const handleInputKeyDown = event => {
+    console.debug("handleInputKeyDown", event);
     let newFocusedOption;
     const optionCount = type === 'create' ? filteredOptions.length + 1 : filteredOptions.length; // +1 for the "Ajouter" option
     switch (event.key) {
@@ -113,26 +115,28 @@ const Select = ({
   };
 
   const handleOptionClick = option => {
+    console.debug("handleOptionClick", option);
     onChange(option);
     setIsOpen(false);
     setFilter('');
   };
 
   const handleClear = () => {
+    console.debug("handleClear");
     setFilter('');
     setIsOpen(false);
     onChange(null); // Clear the selected value
   };
 
   const handleInputFocus = () => {
+    console.debug("handleInputFocus");
     setIsOpen(true);
   };
 
   const handleInputBlur = () => {
-    setTimeout(() => {
-      setIsOpen(false);
-      setFilter('');
-    }, 100);
+    console.debug("handleInputBlur");
+    setIsOpen(false);
+    setFilter('');
   };
 
   return (
@@ -153,6 +157,7 @@ const Select = ({
           onBlur={handleInputBlur}
           placeholder={placeholder}
           ref={inputRef}
+          autoComplete="off"
         />
         {(filter || value) && (
           <button
@@ -185,7 +190,7 @@ const Select = ({
           onKeyDown={handleInputKeyDown}
           onBlur={handleInputBlur}
           aria-hidden="true"
-          tabindex="-1"
+          tabIndex="-1"
         >
           <svg width="18" height="16" aria-hidden="true" focusable="false">
             <polygon className="arrow" strokeWidth="0" fillOpacity="0.75" fill="currentColor" points="3,6 15,6 9,14" />
@@ -200,7 +205,7 @@ const Select = ({
               id={`${id}-${option[optionKey]}`}
               role="option"
               aria-selected={index === focusedOption}
-              onClick={() => handleOptionClick(option)}
+              onMouseDown={() => handleOptionClick(option)}
               className={index === focusedOption ? 'focused' : ''}
               ref={el => {
                 optionRefs.current[index] = el;
@@ -215,7 +220,7 @@ const Select = ({
               key="add-new"
               role="option"
               aria-selected={focusedOption === filteredOptions.length}
-              onClick={() => handleOptionClick({ [optionKey]: filter, [optionLabel]: filter })}
+              onMouseDown={() => handleOptionClick({ [optionKey]: filter, [optionLabel]: filter })}
               className={focusedOption === filteredOptions.length ? 'focused' : ''}
               ref={el => {
                 optionRefs.current[filteredOptions.length] = el;

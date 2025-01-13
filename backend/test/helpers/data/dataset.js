@@ -74,7 +74,7 @@ module.exports = {
     },
     newModerateurAccount: custom => {
         return _.merge({
-            identifiant: 'admin@pole-emploi.fr',
+            identifiant: 'admin@francetravail.fr',
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
             profile: 'moderateur'
