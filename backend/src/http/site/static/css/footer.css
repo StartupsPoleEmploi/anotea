@@ -45,9 +45,12 @@
     width: inherit;
     text-align: center;
     margin-top: -90px;
+
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1325px) {
     .footer {
         padding: 0;
     }
@@ -81,5 +84,18 @@
         width: max-content;
         text-align: inherit;
         margin-top: inherit;
+        display: inline-block;
+    }
+}
+
+@media (max-width: 560px) {
+    .footer .menu-footer {
+        display: inline-block;
+        flex-direction: column;
+        max-width: 90%;
+    }
+
+    .footer a {
+        line-height: 1em;
     }
 }
