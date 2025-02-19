@@ -309,3 +309,11 @@ a.contact {
         line-height: 48px;
     }
 }
+
+@media (max-width: 300px) {
+
+    .header .logo-pe-mobile {
+        display: none
+    }
+
+}

@@ -88,6 +88,7 @@ function loadWidget() {
     var elements = document.querySelectorAll('.anotea-widget');
     for (var i = 0; i < elements.length; i++) {
         var element = elements[i];
+        if (!isNullEmptyOrBlank(element.innerHTML)) continue;
         var attributes = {
             format: element.getAttribute('data-format'),
             env: element.getAttribute('data-env'),
@@ -108,6 +109,18 @@ function loadWidget() {
             element.appendChild(getIframeResizerScript(attributes));
         }
     }
+}
+
+function isNullEmptyOrBlank(s) {
+    if (s == null || typeof s !== 'string') {
+        return true;
+    }
+    for (var i = 0; i < s.length; i++) {
+        if (s.charCodeAt(i) > 32) { // Vérifie si le caractère n'est pas un espace blanc
+            return false;
+        }
+    }
+    return true;
 }
 
 document.addEventListener('DOMContentLoaded', loadWidget);
