@@ -21,6 +21,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
         total: 0,
         imported: 0,
         updated: 0,
+        updatedDispositif: 0,
         ignored: 0,
         invalid: 0,
     };
@@ -51,7 +52,8 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                         {
                             $set: {
                                 "individu": stagiaire.individu,
-                                "formation.action.organisme_responsable": stagiaire.formation.action.organisme_responsable
+                                "formation.action.organisme_responsable": stagiaire.formation.action.organisme_responsable,
+                                "dispositifFinancement": stagiaire.dispositifFinancement,
                             }
                         }
                     );
@@ -68,6 +70,16 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                         }
                     );
                     stats.updated++;
+                } else if (shouldStagiaireBeImported && ("Autres_AFC" === stagiaire.dispositifFinancement || "FOAD" === stagiaire.dispositifFinancement)) {
+                    await db.collection('stagiaires').updateOne(
+                        {refreshKey: stagiaire.refreshKey},
+                        {
+                            $set: {
+                                "dispositifFinancement": stagiaire.dispositifFinancement,
+                            }
+                        }
+                    );
+                    stats.updatedDispositif++;
                 } else {
                     stats.ignored++;
                     logger.debug('Stagiaire ignored', stagiaire, {});

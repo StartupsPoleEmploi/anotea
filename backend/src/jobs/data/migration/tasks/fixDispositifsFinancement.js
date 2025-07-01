@@ -1,4 +1,3 @@
-const md5 = require('md5');
 const { getNbModifiedDocuments, batchCursor } = require('../../../job-utils');
 
 module.exports = async (db) => {
