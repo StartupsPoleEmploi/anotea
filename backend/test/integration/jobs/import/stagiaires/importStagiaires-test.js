@@ -88,19 +88,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 },
             },
         });
-
-
         let resultsSiret0 = (await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray())[0];
         assert.strictEqual("MARTINADO", resultsSiret0.individu.nom);
         assert.strictEqual("82436343601230", resultsSiret0.formation.action.organisme_formateur.siret);
         assert.strictEqual("ANOTEA 0", resultsSiret0.formation.action.organisme_formateur.raison_sociale);
-        assert.strictEqual("BEN", resultsSiret0.dispositifFinancement);
+        assert.strictEqual("FOAD", resultsSiret0.dispositifFinancement);
         assert.deepStrictEqual({
             total: 5,
             imported: 5,
             ignored: 0,
             invalid: 0,
             updated: 0,
+            updatedDispositif: 0,
         }, retourStats1);
         assert.deepStrictEqual({
             total: 5,
@@ -108,7 +107,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             ignored: 4,
             invalid: 0,
             updated: 1,
+            updatedDispositif: 0,
         }, retourStats2);
+
+        //teste la modif du dispositif de financement
+        await db.collection('stagiaires').updateOne({ 'individu.nom': 'MARTINADO' }, { $set: { dispositifFinancement: "AFC" } });
+        const retourStats3 = await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
+        let stagiaireDispositifModifie = (await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray())[0];
+        assert.strictEqual("FOAD", stagiaireDispositifModifie.dispositifFinancement);
+        assert.deepStrictEqual({
+            total: 5,
+            imported: 0,
+            ignored: 4,
+            invalid: 0,
+            updated: 0,
+            updatedDispositif: 1,
+        }, retourStats3);
     });
 
     it('should fail to import stagiaire when codeRegion can not be found', async () => {
@@ -124,6 +138,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -164,6 +179,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 1,
+            updatedDispositif: 0,
         });
 
         const resultsBis = await importStagiaires(db, logger, getTestFile('stagiaires-pe-doublons.csv'), handler);
@@ -177,6 +193,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -193,6 +210,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 1,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -223,6 +241,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 4,
             total: 5,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -323,6 +342,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 invalid: 0,
                 total: 5,
                 updated: 0,
+                updatedDispositif: 0,
             }
         });
     });
@@ -351,6 +371,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 invalid: 0,
                 total: 1,
                 updated: 0,
+                updatedDispositif: 0,
             }
         });
     });
@@ -369,6 +390,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 5,
             total: 5,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -404,6 +426,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 1,
             total: 5,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -432,6 +455,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 2,
             total: 2,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -461,6 +485,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 1,
             total: 2,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -489,6 +514,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 2,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -519,6 +545,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 1,
             total: 2,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -543,6 +570,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -561,6 +589,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -594,6 +623,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
@@ -614,6 +644,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
             updated: 0,
+            updatedDispositif: 0,
         });
     });
 
