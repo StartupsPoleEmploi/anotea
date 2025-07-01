@@ -18,7 +18,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         const retourStats1 = await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
 
-        await db.collection('stagiaires').updateOne({ 'individu.nom': 'MARTINADO' }, { $unset: { individu: 1 } });
+        await db.collection('stagiaires').updateOne({ 'individu.nom': 'MARTINADO' }, { $unset: { individu: 1, dispositifFinancement: 1 } });
         const retourStats2 = await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
 
         const filters = { all: true };
@@ -89,10 +89,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             },
         });
 
+
         let resultsSiret0 = (await db.collection('stagiaires').find({ 'individu.nom': 'MARTINADO' }).toArray())[0];
         assert.strictEqual("MARTINADO", resultsSiret0.individu.nom);
         assert.strictEqual("82436343601230", resultsSiret0.formation.action.organisme_formateur.siret);
         assert.strictEqual("ANOTEA 0", resultsSiret0.formation.action.organisme_formateur.raison_sociale);
+        assert.strictEqual("BEN", resultsSiret0.dispositifFinancement);
         assert.deepStrictEqual({
             total: 5,
             imported: 5,

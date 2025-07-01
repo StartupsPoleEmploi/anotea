@@ -62,7 +62,8 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                         {refreshKey: stagiaire.refreshKey},
                         {
                             $set: {
-                                "individu": stagiaire.individu
+                                "individu": stagiaire.individu,
+                                "dispositifFinancement": stagiaire.dispositifFinancement,
                             }
                         }
                     );
