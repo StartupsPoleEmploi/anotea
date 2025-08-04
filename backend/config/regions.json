@@ -512,11 +512,11 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
-      "active": false,
+      "active": true,
       "import": "all"
     },
     "carif": {
