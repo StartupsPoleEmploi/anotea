@@ -20,6 +20,10 @@ let mapper = {
 };
 
 module.exports = name => {
+    if (!isNaN(name)) {
+        //codeRegion send as such
+        return name;
+    }
     let codeRegion = mapper[name];
     if (!codeRegion) {
         throw new Error(`Region inconnue ${name}`);
