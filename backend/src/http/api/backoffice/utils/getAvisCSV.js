@@ -47,36 +47,36 @@ module.exports = user => {
         'statut': avis => getStatus(avis),
         'réponse': avis => sanitizeString(_.get(avis, 'reponse.text', '')),
         'réponse statut': avis => avis.reponse ? getReponseStatus(avis.reponse) : '',
-        'id formation': avis => avis.formation.numero,
-        'titre formation': avis => avis.formation.intitule,
+        'id formation': avis => sanitizeString(avis.formation.numero),
+        'titre formation': avis => sanitizeString(avis.formation.intitule),
         'date début': avis => moment(avis.formation.action.session.periode.debut).format('DD/MM/YYYY'),
         'date de fin prévue': avis => moment(avis.formation.action.session.periode.fin).format('DD/MM/YYYY'),
-        'siret organisme dispensateur': avis => avis.formation.action.organisme_formateur.siret,
-        'libellé organisme dispensateur': avis => avis.formation.action.organisme_formateur.label,
-        'raison sociale organisme dispensateur': avis => avis.formation.action.organisme_formateur.raison_sociale,
+        'siret organisme dispensateur': avis => sanitizeString(avis.formation.action.organisme_formateur.siret),
+        'libellé organisme dispensateur': avis => sanitizeString(avis.formation.action.organisme_formateur.label),
+        'raison sociale organisme dispensateur': avis => sanitizeString(avis.formation.action.organisme_formateur.raison_sociale),
         'siret organisme responsable': avis => {
             if (avis.formation.action.organisme_responsable) {
-                return avis.formation.action.organisme_responsable.siret;
+                return sanitizeString(avis.formation.action.organisme_responsable.siret);
             } else {
                 return "";
             }
         },
         'libellé organisme responsable': avis => {
             if (avis.formation.action.organisme_responsable) {
-                return avis.formation.action.organisme_responsable.label;
+                return sanitizeString(avis.formation.action.organisme_responsable.label);
             } else {
                 return "";
             }
         },
         'raison sociale organisme responsable': avis => {
             if (avis.formation.action.organisme_responsable) {
-                return avis.formation.action.organisme_responsable.raison_sociale;
+                return sanitizeString(avis.formation.action.organisme_responsable.raison_sociale);
             } else {
                 return "";
             }
         },
-        'code postal': avis => avis.formation.action.lieu_de_formation.code_postal,
-        'ville': avis => avis.formation.action.lieu_de_formation.ville,
+        'code postal': avis => sanitizeString(avis.formation.action.lieu_de_formation.code_postal),
+        'ville': avis => sanitizeString(avis.formation.action.lieu_de_formation.ville),
         'certifInfos': avis => avis.formation.certifications.map(c => c.certif_info).join(','),
         'formacodes': avis => avis.formation.domaine_formation.formacodes.join(','),
         'id session': avis => avis.formation.action.session.id,
