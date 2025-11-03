@@ -45,7 +45,7 @@ export const convertToRatioLine = (stats, type, path1, path2, options = {}) => {
 
         }, [])
         .filter(b => b[path2] > 0)// Ignore bucket
-        .slice(0, -1)// Drop last bucket
+        .slice(1, -1)// Drop last bucket
         .map(bucket => {
             return {
                 x: bucket.date,

@@ -6,7 +6,7 @@ import moment from 'moment';
 export const getPublicStats = (options = {}) => {
     let optCorrigees = { ...options };
     if (optCorrigees.debut) {
-        optCorrigees.debut = moment(Number(optCorrigees.debut)).valueOf();
+        optCorrigees.debut = moment(Number(optCorrigees.debut)).add(-1, 'day').valueOf();
     }
     if (optCorrigees.fin) {
         optCorrigees.fin = moment(Number(optCorrigees.fin)).add(1, 'day').valueOf();
