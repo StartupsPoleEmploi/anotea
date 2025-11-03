@@ -1,9 +1,17 @@
 import { _get } from '../../common/utils/http-client';
 import queryString from 'query-string';
 import _ from 'lodash';
+import moment from 'moment';
 
 export const getPublicStats = (options = {}) => {
-    return _get(`/backoffice/stats?${queryString.stringify(options)}`);
+    let optCorrigees = { ...options };
+    if (optCorrigees.debut) {
+        optCorrigees.debut = moment(Number(optCorrigees.debut)).valueOf();
+    }
+    if (optCorrigees.fin) {
+        optCorrigees.fin = moment(Number(optCorrigees.fin)).add(1, 'day').valueOf();
+    }
+    return _get(`/backoffice/stats?${queryString.stringify(optCorrigees)}`);
 };
 
 export const diff = (stats, type, path) => {
