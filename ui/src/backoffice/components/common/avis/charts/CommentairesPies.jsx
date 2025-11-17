@@ -21,13 +21,13 @@ const CommentairesPies = ({ stats }) => {
                     <div className="description">{stats.nbCommentaires} commentaires au total</div>
                     <Pie colors={colors} data={[
                         ...(stats.nbCommentairesValidated !== 0 ?
-                            [{ id:`Validés (${round((stats.nbCommentairesValidated / totalComMod) * 100)}%)`,value: stats.nbCommentairesValidated,label: 'commentaires'}] : []),
+                            [{ id:`${stats.nbCommentairesValidated} validés (${round((stats.nbCommentairesValidated / totalComMod) * 100)}%)`,value: stats.nbCommentairesValidated,label: 'commentaires'}] : []),
                         ...(stats.nbCommentairesRejected !== 0 ?
-                            [{ id: `Rejetés (${round((stats.nbCommentairesRejected / totalComMod) * 100)}%)`, value: stats.nbCommentairesRejected, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesRejected} rejetés (${round((stats.nbCommentairesRejected / totalComMod) * 100)}%)`, value: stats.nbCommentairesRejected, label: 'commentaires' }] : []),
                         ...(stats.nbCommentairesReported !== 0 ?
-                            [{ id: `Signalés (${round((stats.nbCommentairesReported / totalComMod) * 100)}%)`, value: stats.nbCommentairesReported, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesReported} signalés (${round((stats.nbCommentairesReported / totalComMod) * 100)}%)`, value: stats.nbCommentairesReported, label: 'commentaires' }] : []),
                         ...(stats.nbCommentairesArchived !== 0 ?
-                            [{ id: `Archivés (${round((stats.nbCommentairesArchived / totalComMod) * 100)}%)`, value: stats.nbCommentairesArchived, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesArchived} archivés (${round((stats.nbCommentairesArchived / totalComMod) * 100)}%)`, value: stats.nbCommentairesArchived, label: 'commentaires' }] : []),
                     ]}>
                     </Pie>
                 </div>
@@ -36,9 +36,9 @@ const CommentairesPies = ({ stats }) => {
                     <div className="description">{stats.nbCommentairesValidated} commentaires au total</div>
                     <Pie colors={colors} data={[
                         ...(stats.nbCommentairesPositifs !== 0 ?
-                            [{ id: `Positifs (${round((stats.nbCommentairesPositifs / totalComVal) * 100)}%)`, value: stats.nbCommentairesPositifs, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesPositifs} positifs (${round((stats.nbCommentairesPositifs / totalComVal) * 100)}%)`, value: stats.nbCommentairesPositifs, label: 'commentaires' }] : []),
                         ...(stats.nbCommentairesNegatifs !== 0 ?
-                            [{ id: `Négatifs (${round((stats.nbCommentairesNegatifs / totalComVal) * 100)}%)`, value: stats.nbCommentairesNegatifs, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesNegatifs} négatifs (${round((stats.nbCommentairesNegatifs / totalComVal) * 100)}%)`, value: stats.nbCommentairesNegatifs, label: 'commentaires' }] : []),
                     ]} />
                 </div>
                 <div className="chart last" >
@@ -46,11 +46,11 @@ const CommentairesPies = ({ stats }) => {
                     <div className="description">{stats.nbCommentairesRejected} commentaires au total</div>
                     <Pie colors={colors} data={[
                         ...(stats.nbCommentairesNonConcernes !== 0 ?
-                            [{ id: `Non concernés (${round((stats.nbCommentairesNonConcernes / totalComRej) * 100)}%)`, value: stats.nbCommentairesNonConcernes, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesNonConcernes} non concernés (${round((stats.nbCommentairesNonConcernes / totalComRej) * 100)}%)`, value: stats.nbCommentairesNonConcernes, label: 'commentaires' }] : []),
                         ...(stats.nbCommentairesAlertes !== 0 ?
-                            [{ id: `Alertes (${round((stats.nbCommentairesAlertes / totalComRej) * 100)}%)`, value: stats.nbCommentairesAlertes, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesAlertes} alertes (${round((stats.nbCommentairesAlertes / totalComRej) * 100)}%)`, value: stats.nbCommentairesAlertes, label: 'commentaires' }] : []),
                         ...(stats.nbCommentairesInjures !== 0 ?
-                            [{ id: `Injures (${round((stats.nbCommentairesInjures / totalComRej) * 100)}%)`, value: stats.nbCommentairesInjures, label: 'commentaires' }] : []),
+                            [{ id: `${stats.nbCommentairesInjures} injures (${round((stats.nbCommentairesInjures / totalComRej) * 100)}%)`, value: stats.nbCommentairesInjures, label: 'commentaires' }] : []),
                     ]} />
                 </div>
             </div>
