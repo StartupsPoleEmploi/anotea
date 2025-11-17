@@ -21,7 +21,7 @@
     "test:unit": "mocha --recursive --exit --timeout 5000 test/unit",
     "test:integration": "npm run db:memory:stop; npm run db:memory:start && ANOTEA_MONGODB_URI=mongodb://127.0.0.1:27018/anotea?w=1 mocha --recursive --exit --timeout 5000 test/integration",
     "test:integration:log": "npm run db:memory:stop; npm run db:memory:start && ANOTEA_LOG_LEVEL=error ANOTEA_MONGODB_URI=mongodb://127.0.0.1:27018/anotea?w=1 mocha --recursive --exit --timeout 5000 test/integration",
-    "test:coverage": "npm run db:memory:stop; npm run db:memory:start && ANOTEA_MONGODB_URI=mongodb://127.0.0.1:27018/anotea?w=1 nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
+    "test:coverage": "npm run db:memory:stop; npm run db:memory:start && ANOTEA_MONGODB_URI=mongodb://127.0.0.1:27018/anotea?w=1 nyc --reporter=lcov --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
     "test:all": "npm run db:memory:stop; npm run db:memory:start && ANOTEA_MONGODB_URI=mongodb://127.0.0.1:27018/anotea?w=1 npm run test",
     "lint": "eslint src test",
     "smtp:start": "docker rm anotea-smtp; docker run -d --name anotea-smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
