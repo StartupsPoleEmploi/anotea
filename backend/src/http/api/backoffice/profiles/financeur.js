@@ -24,8 +24,8 @@ module.exports = (db, regions, user) => {
                     fin: Joi.number(),
                     numeroFormation: Joi.string(),
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
-                    siren: Joi.number().min(0).max(999999999),
-                    siret: Joi.number().min(0).max(99999999999999),
+                    siren: Joi.string().min(0).max(9),
+                    siret: Joi.string().min(0).max(14),
                     codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
                         Joi.string().valid(getFinanceurs().map(f => f.code)) : Joi.any().forbidden(),
                     dispositifFinancement: isPoleEmploi(user.codeFinanceur) ?
