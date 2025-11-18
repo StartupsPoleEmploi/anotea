@@ -62,7 +62,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            '@context': 'http://schema.org',
+            '@context': 'https://schema.org',
             '@type': 'Organization',
             'name': 'France Travail Formation',
             'aggregateRating': {
