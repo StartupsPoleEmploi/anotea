@@ -1,21 +1,29 @@
 import { _get } from '../../common/utils/http-client';
 import queryString from 'query-string';
 import _ from 'lodash';
+import moment from 'moment';
 
 export const getPublicStats = (options = {}) => {
-    return _get(`/backoffice/stats?${queryString.stringify(options)}`);
+    let optCorrigees = { ...options };
+    if (optCorrigees.debut) {
+        optCorrigees.debut = moment(Number(optCorrigees.debut)).add(-1, 'day').valueOf();
+    }
+    if (optCorrigees.fin) {
+        optCorrigees.fin = moment(Number(optCorrigees.fin)).add(2, 'day').valueOf();
+    }
+    return _get(`/backoffice/stats?${queryString.stringify(optCorrigees)}`);
 };
 
 export const diff = (stats, type, path) => {
     let latest = stats[0];
-    let oldest = stats[stats.length - 1];
+    let oldest = stats[stats.length - 2];
 
     return _.get(latest, `${type}.${path}`, 0) - _.get(oldest, `${type}.${path}`, 0);
 };
 
 export const avg = (stats, type, path) => {
 
-    let sum = stats.reduce((acc, item) => {
+    let sum = stats.slice(1, -1).reduce((acc, item) => {
         return acc + _.get(item, `${type}.${path}`);
     }, 0);
 

@@ -197,7 +197,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            '@context': 'http://schema.org',
+            '@context': 'https://schema.org',
             '@type': 'Course',
             'name': 'Développeur web',
             'description': 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',

@@ -80,7 +80,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
             backoffice: {
                 url: 'http://localhost:3000/backoffice',
                 logins: [
-                    { profile: 'moderateur', login: 'moderateur', password },
+                    { profile: 'moderateur', login: 'moderateur', codeRegion: '11', password, codeRegion: '11' },
                     { profile: 'financeur', login: 'financeur', password },
                     { profile: 'admin', login: 'admin', password },
                     { profile: 'organisme', login: '22222222222222', password },

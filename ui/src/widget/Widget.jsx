@@ -72,12 +72,6 @@ class Widget extends Component {
         try {
             let score = await getScore(type, identifiant);
             this.setState({ score });
-
-            if (score && score.nb_avis && score.nb_avis > 0) {
-                this.postMessageToParent('avec-avis');
-            } else {
-                this.postMessageToParent('sans-avis');
-            }
         } catch (e) {
             this.postMessageToParent('sans-avis');
             if (!e.statusCode || e.statusCode > 404) {

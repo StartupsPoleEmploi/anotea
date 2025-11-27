@@ -90,7 +90,7 @@ export default class StatsForm extends React.Component {
                                 <Periode
                                     periode={{ debut: this.state.debut, fin: this.state.fin }}
                                     min={moment('2019-08-01').toDate()}
-                                    max={moment().toDate()}
+                                    max={moment().startOf('day').toDate()}
                                     onChange={({ debut, fin }) => this.setState({ debut, fin })}
                                 />
                             </fieldset>

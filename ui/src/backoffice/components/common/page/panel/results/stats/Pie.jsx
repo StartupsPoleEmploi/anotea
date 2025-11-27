@@ -24,14 +24,15 @@ const Pie = ({ data, colors }) => {
                                 height={height+50}
                                 width={width+50}
                                 margin={{
-                                    top: 20,
+                                    top: 30,
                                     right: 20,
-                                    bottom: 20,
+                                    bottom: 30,
                                     left: 20,
                                 }}
+                                arcLabel={false}
                                 isInteractive={false}
                                 enableSlicesLabels={false}
-                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor:'#11181E' }}
+                                theme={{ fontSize: '1.1rem', fontFamily: 'sans-serif', textColor:'#11181E' }}
                                 colors={colors || { scheme: 'nivo' }}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
@@ -40,7 +41,7 @@ const Pie = ({ data, colors }) => {
                                 radialLabel={element => prettyLabel(element)}
                                 tooltip={element => {
                                     return (
-                                        <div style={{ fontSize: '10px' }}>
+                                        <div>
                                             {element.value} {prettyLabel(element)}
                                         </div>
                                     );
