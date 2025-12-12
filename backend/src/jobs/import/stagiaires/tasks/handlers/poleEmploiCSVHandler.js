@@ -73,6 +73,7 @@ module.exports = (db, regions) => {
                 'dc_siretformateur',
                 'dc_lblorganismeformateur',
                 'dc_raisonsocialeformateur',
+                'dc_cofinanceuropca',
             ]
         },
         shouldBeImported: stagiaire => {
