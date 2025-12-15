@@ -19,7 +19,7 @@ module.exports = (db, regions, mailer) => {
             let generateForgottenPasswordToken = async () => {
                 let passwordToken = uuid.v4();
 
-                await db.collection('forgottenPasswordTokens').removeOne({
+                await db.collection('forgottenPasswordTokens').deleteOne({
                     id: account._id,
                     profile: account.profile
                 });
@@ -35,7 +35,7 @@ module.exports = (db, regions, mailer) => {
             };
 
             let onSuccess = async () => {
-                await db.collection('accounts').update({ _id: account._id }, {
+                await db.collection('accounts').updateOne({ _id: account._id }, {
                     $set: { mailSentDate: new Date() },
                     $unset: {
                         mailError: '',
@@ -51,7 +51,7 @@ module.exports = (db, regions, mailer) => {
             };
 
             let onError = async err => {
-                await db.collection('accounts').update({ _id: account._id }, {
+                await db.collection('accounts').updateOne({ _id: account._id }, {
                     $set: {
                         mailError: 'smtpError',
                         mailErrorDetail: err

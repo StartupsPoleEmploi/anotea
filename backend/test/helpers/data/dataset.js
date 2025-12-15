@@ -82,7 +82,7 @@ module.exports = {
     },
     newOrganismeAccount: (custom = {}) => {
         return _.merge({
-            _id: ((custom.objectId) ? new ObjectId() : (parseInt(custom.siret) || 6080274100045)),
+            _id: ((custom.ObjectId) ? new ObjectId() : (parseInt(custom.siret) || 6080274100045)),
             siret: (custom.siret) || '6080274100045',
             raison_sociale: 'France Travail Formation',
             courriel: 'contact@poleemploi-formation.fr',
@@ -140,7 +140,6 @@ module.exports = {
     },
     newAvis: (custom, date = getDateInThePast()) => {
         return _.merge({
-            _id: new ObjectId(),
             token: randomize('token'),
             campaign: 'test-campaign',
             formation: {

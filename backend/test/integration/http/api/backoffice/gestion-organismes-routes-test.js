@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/with-server');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
-const objectId = require('mongodb').ObjectId;
+const { ObjectId } = require('mongodb');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
 
@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let token = await logAsModerateur(app, 'admin@francetravail.fr');
         const idOrganisme = '5f43672078b3c84a55a0c305';
         let organisme = newOrganismeAccount({
-            _id: await objectId(idOrganisme),
+            _id: new ObjectId(idOrganisme),
             siret: '11111111111111',
         });
         await insertIntoDatabase('accounts', organisme);
@@ -295,13 +295,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
-        const retourInsertion = await insertIntoDatabase('accounts', newOrganismeAccount({
-            objectId: false,
+        const siret = "12345678901234";
+        await insertIntoDatabase('accounts', newOrganismeAccount({
+            siret: siret,
         }));
-        const organisme = retourInsertion.ops[0];
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/${siret}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ courriel: 'contact@poleemploi-formation.fr' });
 
@@ -317,13 +317,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@francetravail.fr');
 
-        const monInsert = await insertIntoDatabase('accounts', newOrganismeAccount({
-            objectId: true,
+        const id = new ObjectId();
+        await insertIntoDatabase('accounts', newOrganismeAccount({
+            _id: id,
         }));
-        const organisme = monInsert.ops[0];
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/${organisme._id}/updateCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/${id}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ courriel: 'contact@poleemploi-formation.fr' });
 
@@ -354,7 +354,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@francetravail.fr');
         let organisme = newOrganismeAccount({
-            objectId: true,
+            ObjectId: true,
             siret: '11111111111111',
         });
         await insertIntoDatabase('accounts', organisme);

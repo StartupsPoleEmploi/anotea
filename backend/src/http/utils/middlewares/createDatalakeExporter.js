@@ -16,6 +16,8 @@ module.exports = (logger, configuration) => {
         }, {
             interval: '1d',
             path: configuration.log.datalake.path,
+            compress: false,
+            omitExtension: true,
         }
     );
 

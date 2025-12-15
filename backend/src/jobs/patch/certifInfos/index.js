@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 const refreshCertifInfos = require('./tasks/refreshCertifInfos');
 
@@ -9,9 +9,9 @@ cli
 .option('--file [file]', 'The CSV file with new certifInfos')
 .parse(process.argv);
 
-execute(async ({ logger, db, exit }) => {
+const { file } = cli.opts();
 
-    let { file } = cli;
+execute(async ({ logger, db, exit }) => {
     let stats = {};
 
     if (!file) {

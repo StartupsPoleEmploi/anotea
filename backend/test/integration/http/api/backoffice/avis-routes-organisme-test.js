@@ -315,10 +315,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
                     path: [
                         'id'
                     ],
-                    type: 'string.regex.name',
+                    type: 'string.pattern.name',
                     context: {
                         name: 'Identifiant invalide',
-                        pattern: {},
+                        regex: {},
                         value: 'INVALID',
                         key: 'id',
                         label: 'id'
@@ -406,13 +406,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         const avis = buildAvis({ read: false, qualification: 'positif' });
         delete avis.commentaire;
-        let [token] = await Promise.all([
+        let [token, insertResult] = await Promise.all([
             logAsOrganisme(app, 'organisme@francetravail.fr', '11111111111111'),
             insertIntoDatabase('avis', avis),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${avis._id}/report`)
+        .put(`/api/backoffice/avis/${insertResult.insertedId}/report`)
         .send({ report: true })
         .set('authorization', `Bearer ${token}`);
 
@@ -423,13 +423,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         let app = await startServer();
         const avis = buildAvis({ read: false });
-        let [token] = await Promise.all([
+        let [token, insertResult ] = await Promise.all([
             logAsOrganisme(app, 'organisme@francetravail.fr', '2222222222222'),
             insertIntoDatabase('avis', avis),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${avis._id}/report`)
+        .put(`/api/backoffice/avis/${insertResult.insertedId}/report`)
         .send({ report: true })
         .set('authorization', `Bearer ${token}`);
 

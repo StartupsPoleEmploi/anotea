@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 const importStagiaire = require('./tasks/importStagiaires');
 const refreshStagiaires = require('./tasks/refreshStagiaires');
@@ -24,9 +24,9 @@ let sources = {
     'IDF': 'ileDeFrance',
 };
 
-execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
+const { file, source, region, financeur, unpack, refresh, count, all, slack } = cli.opts();
 
-    let { file, source, region, financeur, unpack, refresh, count, all } = cli;
+execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
     let filters = {
         codeRegion: region,
         codeFinanceur: financeur,
@@ -65,4 +65,4 @@ execute(async ({ logger, db, exit, regions, sendSlackNotification }) => {
         });
         throw stats;
     }
-}, { slack: cli.slack });
+}, { slack: slack });

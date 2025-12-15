@@ -1,9 +1,9 @@
 const express = require('express');
-const Boom = require('boom');
+const { notFound } = require('@hapi/boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
-const validators = require('./utils/validators');
+const { organismeSearchSchema, catalogueFindSchema, catalogueFindAvisSchema } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const buildSort = require('./utils/buildSort');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
@@ -17,17 +17,7 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.query, {
-            ...validators.pagination(),
-            id: validators.arrayOf(Joi.string()),
-            numero: validators.arrayOf(Joi.string()),
-            siret: validators.arrayOf(Joi.string()),
-            lieu_de_formation: validators.arrayOf(Joi.string()),
-            nb_avis: Joi.number(),
-            ...validators.fields(),
-            ...validators.pagination(),
-            ...validators.notesDecimales(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(req.query, organismeSearchSchema, '', { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
         let limit = pagination.items_par_page;
@@ -50,10 +40,10 @@ module.exports = ({ db, middlewares }) => {
         .limit(limit)
         .skip(skip);
 
-        let total = await organismes.count();
-        let stream = organismes.transformStream({
-            transform: organisme => createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales })
-        });
+        let total = await db.collection('accounts').countDocuments(query);;
+        let stream = organismes.map(
+            organisme => createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales })
+        ).stream();
 
         return sendArrayAsJsonStream(stream, res, {
             arrayPropertyName: 'organismes_formateurs',
@@ -67,12 +57,7 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/v1/organismes-formateurs/:id', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
-            'id': Joi.string().required(),
-            'x-anotea-widget': Joi.string().allow(),
-            ...validators.fields(),
-            ...validators.notesDecimales(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(Object.assign({}, req.query, req.params), catalogueFindSchema, '', { abortEarly: false });
 
         let organisme = await db.collection('accounts').findOne(
             {
@@ -85,7 +70,7 @@ module.exports = ({ db, middlewares }) => {
         );
 
         if (!organisme) {
-            throw Boom.notFound('Identifiant inconnu');
+            throw notFound('Identifiant inconnu');
         }
 
         if (req.headers.accept === 'application/ld+json') {
@@ -98,13 +83,7 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/v1/organismes-formateurs/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
-            id: Joi.string().required(),
-            ...validators.pagination(),
-            ...validators.notesDecimales(),
-            ...validators.commentaires(),
-            ...validators.tri(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(Object.assign({}, req.query, req.params), catalogueFindAvisSchema, '', { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
         let limit = pagination.items_par_page;
@@ -118,11 +97,10 @@ module.exports = ({ db, middlewares }) => {
         });
 
         if (!organisme) {
-            throw Boom.notFound('Identifiant inconnu');
+            throw notFound('Identifiant inconnu');
         }
 
-        let avis = await db.collection('avis')
-        .find({
+        const query = {
             'formation.action.organisme_formateur.siret': organisme.siret,
             ...(
                 parameters.commentaires === null ?
@@ -135,15 +113,18 @@ module.exports = ({ db, middlewares }) => {
 
                     }
             )
-        })
-        .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
-        .limit(limit)
-        .skip(skip);
+        };
 
-        let total = await avis.count();
-        let stream = avis.transformStream({
-            transform: avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
-        });
+        let avis = await db.collection('avis')
+            .find(query)
+            .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
+            .limit(limit)
+            .skip(skip);
+
+        let total = await db.collection('avis').countDocuments(query);
+        let stream = avis.map(
+            avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
+        ).stream();
 
         return sendArrayAsJsonStream(stream, res, {
             arrayPropertyName: 'avis',

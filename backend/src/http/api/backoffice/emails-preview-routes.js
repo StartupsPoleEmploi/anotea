@@ -8,13 +8,18 @@ module.exports = ({ emails, middlewares }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
 
-    let getPreviewData = ({user, previewResponsableParam = false}) => {
+    const emailTemplate = Joi.object({
+        type: Joi.string().valid('organismes', 'stagiaires').required(),
+        templateName: Joi.string().required(),
+    });
+
+    let getPreviewData = ({ user, previewResponsableParam = false }) => {
         return {
             organisme: {
                 siret: '123456789000000',
                 token: 'token-organisme',
                 codeRegion: user.codeRegion,
-                score: { nb_avis: !previewResponsableParam? 1 : 0 },
+                score: { nb_avis: !previewResponsableParam ? 1 : 0 },
             },
             stagiaire: {
                 token: 'token-stagiaire',
@@ -53,13 +58,10 @@ module.exports = ({ emails, middlewares }) => {
 
     router.get('/api/backoffice/emails-preview/:type/templates/:templateName', checkAuth, tryAndCatch(async (req, res) => {
 
-        const { type, templateName } = await Joi.validate(req.params, {
-            type: Joi.string().valid(['organismes', 'stagiaires']).required(),
-            templateName: Joi.string().required(),
-        }, { abortEarly: false });
+        const { type, templateName } = Joi.attempt(req.params, emailTemplate, '', { abortEarly: false });
 
         const previewResponsable = templateName === 'activationCompteEmailResponsable';
-        const templateNameReformule = previewResponsable ? 'activationCompteEmail': templateName;
+        const templateNameReformule = previewResponsable ? 'activationCompteEmail' : templateName;
         let message = emails.getEmailMessageByTemplateName(templateNameReformule);
         let preview = getPreviewData({ user: req.user, previewResponsableParam: previewResponsable });
         let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);

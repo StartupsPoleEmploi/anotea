@@ -1,9 +1,7 @@
 const moment = require('moment');
 const _ = require('lodash');
-const faker = require('faker');
+const { fakerFR: faker } = require('@faker-js/faker');
 const uuid = require('uuid');
-
-faker.locale = 'fr';
 
 const createStagiaire = session => {
 
@@ -18,12 +16,12 @@ const createStagiaire = session => {
         importDate: getDateInThePast(),
         codeRegion: session.region,
         individu: {
-            nom: faker.name.lastName(),
-            prenom: faker.name.firstName(),
+            nom: faker.person.lastName(),
+            prenom: faker.person.firstName(),
             email: email,
-            telephones: [faker.phone.phoneNumber('06########')],
+            telephones: [faker.phone.number()],
             emailValid: true,
-            identifiant_pe: faker.phone.phoneNumber('##########')
+            identifiant_pe: faker.phone.number()
         },
         formation: {
             numero: formation.numero,

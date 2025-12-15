@@ -1,4 +1,4 @@
-const faker = require('faker');
+const { fakerFR: faker } = require('@faker-js/faker');
 
 module.exports = async (db, workflow, options = {}) => {
 

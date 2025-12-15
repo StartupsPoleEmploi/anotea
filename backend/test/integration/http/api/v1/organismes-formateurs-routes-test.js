@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const moment = require('moment');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const { withServer } = require('../../../../helpers/with-server');
 const { newOrganismeAccount, newAvis } = require('../../../../helpers/data/dataset');
 
@@ -397,7 +397,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let date = new Date();
-        let avisId = new ObjectID();
+        let avisId = new ObjectId();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '22222222222222',
@@ -478,7 +478,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can return avis sans commentaires', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         let sansCommentaire = newAvis({
             _id: oid,
@@ -517,7 +517,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         let avisAvecReponse = newAvis({
             _id: oid,

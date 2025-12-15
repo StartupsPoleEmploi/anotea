@@ -84,9 +84,41 @@ La procédure d'installation décrit ci-dessus permet de configurer un environne
 
 Toutefois en production, l'application est déployée au sein de [containers Docker](ARCHITECTURE.md).
 
-En local, il est aussi possible de reproduire cet environnement via la commande : 
+Pour tester en local, avant tout il faut mettre à jour la conf nginx pour tester l'envoi de courriel : 
 
+```bash
+cat >>misc/docker/nginx/app/nginx/conf.d/locations.inc <<'EOF'
+location /mailhog {
+    proxy_pass http://smtp:8025;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+}
+EOF
+
+cat >>misc/docker/nginx/app/nginx/conf.d/default.conf <<'EOF'
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+EOF
+
+cat >misc/docker/nginx/app/nginx/conf.d/jail.conf <<'EOF'
+geo $whitelist {
+	default 0;
+	127.0.0.1 1;
+	172.16.1.0/24 1;
+}
+map $whitelist $limit {
+	0 $binary_remote_addr;
+	1 "";
+}
+EOF
 ```
+
+Ensuite, il est possible de reproduire l'environnement de prod via la commande : 
+
+```bash
 docker-compose up --build
 ```
 

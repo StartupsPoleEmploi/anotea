@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 const importIntercarif = require('./tasks/importIntercarif');
 
@@ -12,7 +12,7 @@ cli.description('Import intercarif and generate all related collections')
 
 execute(async ({ logger, db, exit }) => {
 
-    let { file, unpack } = cli;
+    const { file, unpack } = cli.opts();
 
     if (!file) {
         return exit('file are required');

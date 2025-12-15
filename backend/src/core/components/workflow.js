@@ -1,7 +1,7 @@
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const _ = require('lodash');
 const { IdNotFoundError, ForbiddenError } = require('./../errors');
-const Boom = require('boom');
+const { badRequest } = require('@hapi/boom');
 
 module.exports = (db, logger, emails) => {
 
@@ -25,11 +25,11 @@ module.exports = (db, logger, emails) => {
         validate: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let original = await db.collection('avis').findOne({ _id: new ObjectID(id) });
+            let original = await db.collection('avis').findOne({ _id: new ObjectId(id) });
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -39,10 +39,10 @@ module.exports = (db, logger, emails) => {
                         lastStatusUpdate: new Date(),
                     }
                 },
-                { returnOriginal: false }
+                { returnDocument: "after" }
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -63,18 +63,18 @@ module.exports = (db, logger, emails) => {
                 });
             }
 
-            return result.value;
+            return result;
 
 
         },
         reject: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let original = await db.collection('avis').findOne({ _id: new ObjectID(id) });
+            let original = await db.collection('avis').findOne({ _id: new ObjectId(id) });
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -84,10 +84,10 @@ module.exports = (db, logger, emails) => {
                         lastStatusUpdate: new Date(),
                     }
                 },
-                { returnOriginal: false }
+                { returnDocument: "after" }
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -112,7 +112,7 @@ module.exports = (db, logger, emails) => {
                 if ((qualification === 'injure' || qualification === 'alerte')) {
                     let stagiaire = await db.collection('stagiaires').findOne({ token: original.token });
                     if (!stagiaire.individu || !stagiaire.individu.email) {
-                        throw Boom.badRequest(`Avis rejeté, cependant le stagiaire n'a pas pu être notifié. `);
+                        throw badRequest(`Avis rejeté, cependant le stagiaire n'a pas pu être notifié. `);
                     }
                     sendEmail(async () => {
                         let message = emails.getEmailMessageByTemplateName(`avisRejected${_.capitalize(qualification)}Email`);
@@ -121,12 +121,12 @@ module.exports = (db, logger, emails) => {
                 }
             }
 
-            return result.value;
+            return result;
         },
         edit: async (id, text, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let oid = new ObjectID(id);
+            let oid = new ObjectId(id);
             let previous = await db.collection('avis').findOne({ _id: oid });
 
             let result = await db.collection('avis').findOneAndUpdate(
@@ -149,10 +149,10 @@ module.exports = (db, logger, emails) => {
                         },
                     }
                 },
-                { returnOriginal: false }
+                { returnDocument: "after" }
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -162,16 +162,19 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
-            return result.value;
+            return result;
         },
         delete: async (id, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let oid = new ObjectID(id);
-            let previous = await db.collection('avis').findOne({ _id: oid });
+            let oid = new ObjectId(id);
+            let previous = await db.collection('avis').findOne({ _id: oid, ...(profile ? profile.getShield() : {}) });
+            if (!previous || !previous.token) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
 
-            let [results] = await Promise.all([
-                db.collection('avis').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
+            let [deleteResult, updateResult] = await Promise.all([
+                db.collection('avis').deleteOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
                 db.collection('stagiaires').updateOne({ token: previous.token }, {
                     $set: {
                         avisCreated: false,
@@ -179,8 +182,11 @@ module.exports = (db, logger, emails) => {
                 })
             ]);
 
-            if (results.result.n !== 1) {
+            if (deleteResult.deletedCount !== 1) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+            if (updateResult.matchedCount !== 1) {
+                throw new IdNotFoundError(`Stagiaire for avis with identifier ${id} not found`);
             }
 
             saveEvent(id, 'delete', {
@@ -192,7 +198,7 @@ module.exports = (db, logger, emails) => {
             if (options.sendEmail) {
                 let stagiaire = await db.collection('stagiaires').findOne({ token: previous.token });
                 if (!stagiaire.individu || !stagiaire.individu.email) {
-                    throw Boom.badRequest(`Avis supprimé, cependant le courriel n'a pas pu être renvoyé. `);
+                    throw badRequest(`Avis supprimé, cependant le courriel n'a pas pu être renvoyé. `);
                 }
                 sendEmail(async () => {
                     let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
@@ -206,7 +212,7 @@ module.exports = (db, logger, emails) => {
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -214,10 +220,10 @@ module.exports = (db, logger, emails) => {
                         'commentaire.titleMasked': mask
                     }
                 },
-                { returnOriginal: false },
+                { returnDocument: "after" },
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -227,7 +233,7 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
-            return result.value;
+            return result;
         },
         validateReponse: async (id, options = {}) => {
 
@@ -235,7 +241,7 @@ module.exports = (db, logger, emails) => {
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -244,10 +250,10 @@ module.exports = (db, logger, emails) => {
                         'reponse.lastStatusUpdate': new Date(),
                     }
                 },
-                { returnOriginal: false },
+                { returnDocument: "after" },
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -257,12 +263,12 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
-            return result.value;
+            return result;
         },
         rejectReponse: async (id, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
-            let oid = new ObjectID(id);
+            let oid = new ObjectId(id);
             let original = await db.collection('avis').findOne({ _id: oid });
 
             let result = await db.collection('avis').findOneAndUpdate(
@@ -276,10 +282,10 @@ module.exports = (db, logger, emails) => {
                         'reponse.lastStatusUpdate': new Date(),
                     }
                 },
-                { returnOriginal: false },
+                { returnDocument: "after" },
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -300,7 +306,7 @@ module.exports = (db, logger, emails) => {
                 });
             }
 
-            return result.value;
+            return result;
         },
         addReponse: async (id, text, options = {}) => {
 
@@ -308,7 +314,7 @@ module.exports = (db, logger, emails) => {
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -322,10 +328,10 @@ module.exports = (db, logger, emails) => {
                         read: true,
                     }
                 },
-                { returnOriginal: false }
+                { returnDocument: "after" }
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -336,7 +342,7 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
             });
 
-            return result.value;
+            return result;
         },
         removeReponse: async (id, options = {}) => {
 
@@ -344,7 +350,7 @@ module.exports = (db, logger, emails) => {
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -352,10 +358,10 @@ module.exports = (db, logger, emails) => {
                         reponse: 1
                     }
                 },
-                { returnOriginal: false }
+                { returnDocument: "after" }
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -365,7 +371,7 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
             });
 
-            return result.value;
+            return result;
         },
         markAsRead: async (id, status, options = {}) => {
 
@@ -373,7 +379,7 @@ module.exports = (db, logger, emails) => {
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -381,10 +387,10 @@ module.exports = (db, logger, emails) => {
                         read: status
                     }
                 },
-                { returnOriginal: false }
+                { returnDocument: "after" }
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -394,7 +400,7 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
             });
 
-            return result.value;
+            return result;
         },
         report: async (id, status, commentReport, options = {}) => {
 
@@ -402,7 +408,7 @@ module.exports = (db, logger, emails) => {
 
             let result = await db.collection('avis').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: new ObjectId(id),
                     ...(profile ? profile.getShield() : {}),
                     commentaire: { $exists: true }
                 },
@@ -417,10 +423,10 @@ module.exports = (db, logger, emails) => {
                         'qualification': 1,
                     }
                 },
-                { returnOriginal: false },
+                { returnDocument: "after" },
             );
 
-            if (!result.value) {
+            if (!result) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
@@ -430,7 +436,7 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
             });
 
-            return result.value;
+            return result;
         },
     };
 };

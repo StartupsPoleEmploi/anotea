@@ -1,8 +1,6 @@
 const moment = require('moment');
 const { getNbModifiedDocuments, batchCursor } = require('../../../job-utils');
-const faker = require('faker');
-
-faker.locale = 'fr';
+const { fakerFR: faker } = require('@faker-js/faker');
 
 module.exports = async db => {
     let anonymize = async () => {
@@ -17,8 +15,8 @@ module.exports = async db => {
             }, {
                 $set: {
                     individu: {
-                        nom: faker.name.lastName(),
-                        prenom: faker.name.firstName(),
+                        nom: faker.person.lastName(),
+                        prenom: faker.person.firstName(),
                         email: faker.phone.phoneNumber('###') + faker.internet.email(),
                         telephones: [faker.phone.phoneNumber('06########')],
                         emailValid: true,

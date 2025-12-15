@@ -1,7 +1,6 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newStagiaire } = require('../../../helpers/data/dataset');
-const doImportRome = require('../../../../src/jobs/import/rome/importer');
 const importCommunes = require('../../../../src/jobs/import/communes/tasks/importCommunes');
 const logger = require('../../../helpers/components/fake-logger');
 const externalLinks = require('../../../../src/http/utils/externalLinks');
@@ -14,6 +13,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get La Bonne Boite link with a formation having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
+
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -27,8 +39,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
                 },
             },
         });
-        let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(romeMappgingFile);
 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
@@ -38,6 +48,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get La Bonne Boite link with a formation having a postal code with an INSEE mapping', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -51,8 +73,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
                 },
             },
         });
-        let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(romeMappgingFile);
 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
@@ -62,6 +82,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get Offres France Travail link with a formation having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -75,8 +107,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
                 },
             },
         });
-        let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(romeMappgingFile);
 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
@@ -86,6 +116,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get Offres France Travail link with a formation having a postal code with an INSEE mapping', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -99,8 +141,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
                 },
             },
         });
-        let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(romeMappgingFile);
 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
@@ -111,6 +151,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get Clara link', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -131,6 +183,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get null link when trying to get Offres France Travail link when formation has no formacode', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -144,8 +208,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
                 },
             },
         });
-        let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(romeMappgingFile);
 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 
@@ -154,6 +216,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
 
     it('should get null link when trying to get La Bonne Boite link when formation has no formacode', async () => {
         let db = await getTestDatabase();
+        db.collection('formacodeRomeMapping').insertOne({
+            codeROME: "A1101", label: "Conduite d'engins agricoles et forestiers",
+            formacodes: [
+                {formacode: "21032", label: "AGROEQUIPEMENT"},
+                {formacode: "21043",label: "BUCHERONNAGE"},
+                {formacode: "21042",label: "EXPLOITATION FORESTIERE"},
+                {formacode: "21011",label: "MACHINISME AGRICOLE"},
+                {formacode: "21044",label: "MACHINISME FORESTIER"},
+                {formacode: "21034",label: "MACHINISME HORTICOLE"},
+                {formacode: "21055",label: "MACHINISME VITICOLE"},
+            ]
+        });
         let { communes } = await getComponents();
         const stagiaire = newStagiaire({
             formation: {
@@ -167,8 +241,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
                 },
             },
         });
-        let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(romeMappgingFile);
 
         await importCommunes(db, logger, communesCsvFile, cedexCsvFile);
 

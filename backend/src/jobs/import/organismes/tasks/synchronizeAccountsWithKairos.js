@@ -1,4 +1,4 @@
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const { writeObject, pipeline } = require('../../../../core/utils/stream-utils');
 const getOrganismesFromKairosCSV = require('./kairos/getOrganismesFromKairosCSV');
 
@@ -40,7 +40,7 @@ module.exports = async (db, logger, file) => {
                     , { upsert: true }
                 );
 
-                if (results.result.nModified === 1) {
+                if (results.modifiedCount === 1) {
                     stats.updated++;
                 }
             } catch (e) {

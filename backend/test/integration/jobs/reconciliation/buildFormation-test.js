@@ -1,7 +1,7 @@
 const assert = require('assert');
 const _ = require('lodash');
 const logger = require('../../../helpers/components/fake-logger');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newAvis, newIntercarif } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
@@ -11,7 +11,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile formation with avis', async () => {
 
         let db = await getTestDatabase();
-        let avisId = new ObjectID();
+        let avisId = new ObjectId();
         let date = new Date();
 
         await Promise.all([
@@ -391,7 +391,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
     it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
         let db = await getTestDatabase();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         let avis = newAvis({
             _id: oid,
@@ -424,7 +424,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile comments with same certifinfo/siret/code_postal than the session', async () => {
 
         let db = await getTestDatabase();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         let avis = newAvis({
             _id: oid,

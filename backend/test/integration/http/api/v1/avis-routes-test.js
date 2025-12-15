@@ -1,7 +1,7 @@
 const request = require('supertest');
 const moment = require('moment/moment');
 const assert = require('assert');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const { withServer } = require('../../../../helpers/with-server');
 const { newAvis, randomSIRET } = require('../../../../helpers/data/dataset');
 
@@ -11,7 +11,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let date = new Date();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         await Promise.all([
             insertIntoDatabase('avis', newAvis()),
@@ -92,7 +92,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let date = new Date();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
@@ -171,7 +171,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        let response = await request(app).get(`/api/v1/avis/${new ObjectID().toString()}`);
+        let response = await request(app).get(`/api/v1/avis/${new ObjectId().toString()}`);
 
         assert.strictEqual(response.statusCode, 404);
         assert.deepStrictEqual(response.body, {
@@ -198,7 +198,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis by organisme_formateur', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         let date = new Date();
         let siret = randomSIRET();
 
@@ -225,7 +225,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis by lieu_de_formation', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         let date = new Date();
         let codePostal = '75000';
 
@@ -252,7 +252,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis by certif_info', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         let date = new Date();
         let certifInfo = '12345';
 
@@ -275,7 +275,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis by formacode', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         let formacode = '11111';
 
         await Promise.all([
@@ -301,7 +301,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis with partial code', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         let partialFormacode = '224';
         let formacode = '224123';
 
@@ -497,7 +497,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('should return avis (notes)', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         let avis = newAvis({
             _id: oid,
         });
@@ -513,7 +513,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('should return avis with commentaire=null', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
             commentaire: null,
@@ -528,7 +528,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('should not return avis not validated yet', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         await insertIntoDatabase('avis', newAvis({
             _id: oid,
@@ -587,14 +587,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     context: {
                         key: 'lieu_de_formation',
                         label: 'lieu_de_formation',
-                        pattern: {},
+                        regex: {},
                         value: 'INVALID',
                     },
                     message: '"lieu_de_formation" with value "INVALID" fails to match the required pattern: /^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/',
                     path: [
                         'lieu_de_formation',
                     ],
-                    type: 'string.regex.base',
+                    type: 'string.pattern.base',
                 }
             ]
         });

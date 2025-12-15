@@ -1,8 +1,7 @@
-const Boom = require('boom');
+const { unauthorized } = require('@hapi/boom');
 const _ = require('lodash');
-const basicAuth = require('basic-auth');
-const uuid = require('node-uuid');
-const RateLimit = require('express-rate-limit');
+const uuid = require('uuid');
+const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 const { tryAndCatch, getFullUrl } = require('../routes-utils');
 const createDatalakeExporter = require('./createDatalakeExporter');
 const createResponseRecorder = require('./createResponseRecorder');
@@ -11,29 +10,27 @@ const Joi = require('joi');
 const { BadDataError } = require('../../../core/errors');
 
 module.exports = (auth, logger, configuration) => {
+    const userSchema = Joi.object({
+        id: [
+            Joi.string(),
+            Joi.number()
+        ],
+        profile: Joi.string(),
+        region: Joi.string(),
+        codeRegion: Joi.string(),
+        codeFinanceur: Joi.string(),
+        siret: Joi.string(),
+        raison_sociale: Joi.string(),
+        nbAvisSirenFormateur: Joi.number().allow(null),
+        nbAvisResponsable: Joi.number().allow(null),
+        nbAvisResponsablePasFormateur: Joi.number().allow(null),
+        nbAvisResponsablePasFormateurSiretExact: Joi.number().allow(null),
+        iat: Joi.number(),
+        exp: Joi.number(),
+        sub: Joi.string(),
+    });
+
     return {
-        createBasicAuthMiddleware: clientKeys => {
-
-            let unauthorized = res => {
-                res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-                return res.send(401);
-            };
-
-            return (req, res, next) => {
-
-                let user = basicAuth(req);
-
-                if (!user || !user.name || !user.pass) {
-                    return unauthorized(res);
-                }
-
-                if (clientKeys.includes(user.name) && user.pass === configuration.auth[user.name].secret) {
-                    return next();
-                } else {
-                    return unauthorized(res);
-                }
-            };
-        },
         createHMACAuthMiddleware: (clientKeys, options) => {
             let scheme = 'ANOTEA-HMAC-SHA256 ';
 
@@ -47,12 +44,12 @@ module.exports = (auth, logger, configuration) => {
                     let [apiKey, timestamp, digest] = credentials.split(':');
 
                     if (!clientKeys.includes(apiKey)) {
-                        throw Boom.unauthorized('Clé d\'api inconnue');
+                        throw unauthorized('Clé d\'api inconnue');
                     }
 
                     let apiSignatureExpirationInSeconds = configuration.auth[apiKey].expiration_in_seconds;
                     if (new Date().getTime() - timestamp > apiSignatureExpirationInSeconds * 1000) {
-                        throw Boom.unauthorized(`Le header Authorization est expiré (durée de vie ${apiSignatureExpirationInSeconds}s)`);
+                        throw unauthorized(`Le header Authorization est expiré (durée de vie ${apiSignatureExpirationInSeconds}s)`);
                     }
 
                     let serverSideDigest = auth.buildHmacDigest(configuration.auth[apiKey].secret, {
@@ -67,14 +64,14 @@ module.exports = (auth, logger, configuration) => {
                         return next();
                     }
 
-                    throw Boom.unauthorized(`Le header Authorization contient une signature invalide`);
+                    throw unauthorized(`Le header Authorization contient une signature invalide`);
 
                 } catch (e) {
                     if (e.isBoom) {
                         throw e;
                     }
-                    throw Boom.unauthorized(`Cette resource doit être appelée avec un header Authorization: ` +
-                        `${scheme}<yourApiKey>:<timestamp>:<sha256-hmac-digest>`, e);
+                    throw unauthorized(`Cette resource doit être appelée avec un header Authorization: ` +
+                        `${scheme}<yourApiKey>:<timestamp>:<sha256-hmac-digest>`);
                 }
             });
         },
@@ -95,25 +92,7 @@ module.exports = (auth, logger, configuration) => {
                 return auth.checkJWT(clientKey, token, options)
                 .then(decoded => {
                     try {
-                        Joi.assert(decoded, {
-                            id: [
-                                Joi.string(),
-                                Joi.number()
-                            ],
-                            profile: Joi.string(),
-                            region: Joi.string(),
-                            codeRegion: Joi.string(),
-                            codeFinanceur: Joi.string(),
-                            siret: Joi.string(),
-                            raison_sociale: Joi.string(),
-                            nbAvisSirenFormateur: Joi.number().allow(null),
-                            nbAvisResponsable: Joi.number().allow(null),
-                            nbAvisResponsablePasFormateur: Joi.number().allow(null),
-                            nbAvisResponsablePasFormateurSiretExact: Joi.number().allow(null),
-                            iat: Joi.number(),
-                            exp: Joi.number(),
-                            sub: Joi.string(),
-                        });
+                        Joi.assert(decoded, userSchema);
                     } catch (e) {
                         throw new BadDataError("user mal encodé");
                     }
@@ -231,8 +210,11 @@ module.exports = (auth, logger, configuration) => {
                 next();
             }
         },
-        addRateLimit: () => new RateLimit({
-            keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
+        addRateLimit: () => rateLimit({
+            keyGenerator: req => {
+                if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
+                return ipKeyGenerator(req.ip);
+            },
             windowMs: 1 * 60 * 1000, // 1 minute
             max: 1000, // 400 requests per minutes
             delayMs: 0, // disabled

@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const configuration = require('config');
 const path = require('path');
 const moment = require('moment');

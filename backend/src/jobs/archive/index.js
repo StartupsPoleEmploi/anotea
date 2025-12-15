@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 const moment = require('moment');
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute, batchCursor } = require('../job-utils');
 
 cli.description('Archive avis')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
+
+const { slack } = cli.opts();
 
 execute(async ({ db, logger, sendSlackNotification }) => {
 
@@ -33,10 +35,10 @@ execute(async ({ db, logger, sendSlackNotification }) => {
             { token: avis.token },
             { $unset: { individu: 1 } }
         );
-        if (res.result.nModified > 0) {
+        if (res.modifiedCount > 0) {
             stats.archived++;
         }
-        if (resStagiaire.result.nModified > 0) {
+        if (resStagiaire.modifiedCount > 0) {
             stats.stagiaireArchived++;
         }
     });
@@ -48,4 +50,4 @@ execute(async ({ db, logger, sendSlackNotification }) => {
     }
 
     return stats;
-}, { slack: cli.slack });
+}, { slack: slack });

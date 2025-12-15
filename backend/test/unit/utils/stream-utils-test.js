@@ -37,9 +37,7 @@ describe(__filename, () => {
 
         stream
         .pipe(transformObject(async data => {
-            return new Promise(resolve => {
-                resolve(data.substring(0, 1));
-            });
+            return data.substring(0, 1);
         }))
         .pipe(writeObject(async data => {
             return new Promise(resolve => {
@@ -63,9 +61,7 @@ describe(__filename, () => {
 
         stream
         .pipe(transformObject(async data => {
-            return new Promise(resolve => {
-                resolve(data.substring(0, 1));
-            });
+            return data.substring(0, 1);
         }, { parallel: 2 }))
         .pipe(writeObject(data => {
             return new Promise(resolve => {

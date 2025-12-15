@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const path = require('path');
 const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/tasks/createIndexes');
@@ -19,20 +19,24 @@ const reconcile = require('../../reconciliation/tasks/reconcile');
 const addReconciliationAvisMetadata = require('../../reconciliation/tasks/addReconciliationAvisMetadata');
 const removePreviousImports = require('../../reconciliation/tasks/removePreviousImports');
 const computeStats = require('../../stats/tasks/computeStats');
+const moment = require('moment');
 
 cli.description('Inject dataset')
 .option('-d, --drop', 'Drop database')
 .option('-p, --password [password]', 'Password for accounts')
 .parse(process.argv);
 
+const { drop, passwordInput } = cli.opts();
+
 execute(async ({ db, logger, workflow, regions, passwords }) => {
 
-    if (cli.drop) {
+
+    if (drop) {
         logger.info('Dropping database....');
         await db.dropDatabase();
     }
 
-    let password = cli.password || 'password';
+    let password = passwordInput || 'password';
     let options = { nbStagiaires: 1000, notes: 10, commentaires: 500 };
 
     await createIndexes(db);
@@ -68,6 +72,76 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
     await removePreviousImports(db);
 
     logger.info(`Compute stats accounts....`);
+    for (let i = 1 ; i<365 ; i++) {
+        await db.collection('statistics').insertOne({
+            date: moment().subtract(365-i, 'day').toDate(),
+            national: {
+                api: {
+                    nbAvis: i,
+                    nbAvisRestituables: i,
+                    nbSessions: i,
+                    nbSessionsAvecAvis: i,
+                    nbSessionsCertifiantesAvecAvis: i,
+                    nbAvisParSession: i,
+                },
+                organismes: {
+                    nbOrganismesContactes: i,
+                    nbMailsEnvoyes: i,
+                    nbOuvertureMails: i,
+                    nbLiensCliques: i,
+                    nbOrganismesActifs: i,
+                },
+                avis: {
+                    nbStagiairesImportes: i,
+                    nbStagiairesContactes: i,
+                    nbMailEnvoyes: i,
+                    nbCommentairesAModerer: i,
+                    nbMailsOuverts: i,
+                    nbLiensCliques: i,
+                    nbAvis: i,
+                    nbAvisAvecCommentaire: i,
+                    nbCommentairesPositifs: i,
+                    nbCommentairesNegatifs: i,
+                    nbCommentairesRejetes: i,
+                    nbReponses: i,
+                },
+            },
+            regions:  {
+                11: {
+                    codeRegion: "11",
+                    api: {
+                        nbAvis: i,
+                        nbAvisRestituables: i,
+                        nbSessions: i,
+                        nbSessionsAvecAvis: i,
+                        nbSessionsCertifiantesAvecAvis: i,
+                        nbAvisParSession: i,
+                    },
+                    organismes: {
+                        nbOrganismesContactes: i,
+                        nbMailsEnvoyes: i,
+                        nbOuvertureMails: i,
+                        nbLiensCliques: i,
+                        nbOrganismesActifs: i,
+                    },
+                    avis: {
+                        nbStagiairesImportes: i,
+                        nbStagiairesContactes: i,
+                        nbMailEnvoyes: i,
+                        nbCommentairesAModerer: i,
+                        nbMailsOuverts: i,
+                        nbLiensCliques: i,
+                        nbAvis: i,
+                        nbAvisAvecCommentaire: i,
+                        nbCommentairesPositifs: i,
+                        nbCommentairesNegatifs: i,
+                        nbCommentairesRejetes: i,
+                        nbReponses: i,
+                    }
+                },
+            },
+        });
+    }
     await computeStats(db, regions);
 
     let stagiaire = await db.collection('stagiaires').findOne({ avisCreated: false });

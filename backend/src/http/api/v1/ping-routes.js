@@ -1,6 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
-const { boomify } = require('boom');
+const { boomify } = require('@hapi/boom');
 
 module.exports = ({ middlewares }) => {
 

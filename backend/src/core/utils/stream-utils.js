@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const { Transform, Writable } = require('stream');
 const pipeline = require('stream').pipeline;
-const parse = require('csv-parse');
+const { parse } = require('csv-parse');
 const { encodeStream } = require('iconv-lite');
 
 let transformObject = (transform, options = {}) => {

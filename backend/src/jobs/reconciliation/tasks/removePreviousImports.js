@@ -10,8 +10,8 @@ module.exports = (db, retention = moment().subtract(1, 'hours').toDate()) => {
     };
 
     return Promise.all([
-        db.collection('sessionsReconciliees').removeMany(query),
-        db.collection('actionsReconciliees').removeMany(query),
-        db.collection('formationsReconciliees').removeMany(query),
+        db.collection('sessionsReconciliees').deleteMany(query),
+        db.collection('actionsReconciliees').deleteMany(query),
+        db.collection('formationsReconciliees').deleteMany(query),
     ]);
 };

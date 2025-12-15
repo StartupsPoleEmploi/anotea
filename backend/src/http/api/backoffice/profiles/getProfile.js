@@ -1,4 +1,4 @@
-const Boom = require('boom');
+const { unauthorized } = require('@hapi/boom');
 const moderateur = require('./moderateur');
 const organisme = require('./organisme');
 const financeur = require('./financeur');
@@ -15,6 +15,6 @@ module.exports = (db, regions, user) => {
         case 'admin':
             return admin(db, regions, user);
         default:
-            throw Boom.unauthorized(`Le profile de l'utilistateur n'est pas valide`);
+            throw unauthorized(`Le profile de l'utilistateur n'est pas valide`);
     }
 };

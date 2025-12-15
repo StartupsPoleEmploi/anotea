@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const sendAvisEmails = require('./tasks/sendAvisEmails');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
@@ -14,9 +14,9 @@ cli.description('send email campaign')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
+let { type = 'Send', campaign, region, limit = 1, delay = 100, slack } = cli.opts();
 
-    let { type = 'Send', campaign, region, limit = 1, delay = 100 } = cli;
+execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
     let ActionClass = require(`./tasks/actions/${type}Action`);
     let action = new ActionClass(configuration, {
@@ -48,4 +48,4 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
         });
         throw stats;
     }
-}, { slack: cli.slack });
+}, { slack: slack });

@@ -2,7 +2,7 @@ const request = require('supertest');
 const moment = require('moment');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/with-server');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const { newAvis, newIntercarif } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
@@ -19,7 +19,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        let avisId = new ObjectID();
+        let avisId = new ObjectId();
         await insertAndReconcile(
             [
                 newIntercarif({
@@ -531,7 +531,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        let avisId = new ObjectID();
+        let avisId = new ObjectId();
         await insertAndReconcile(
             [
                 newIntercarif({
@@ -637,7 +637,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return avis avec commentaires', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         let sansCommentaire = newAvis({
             _id: oid,
@@ -701,7 +701,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return avis avec réponse', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
+        let oid = new ObjectId();
 
         let avisAvecReponse = newAvis({
             _id: oid,

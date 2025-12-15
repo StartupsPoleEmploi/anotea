@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 const synchronizeAccountsWithIntercarif = require('./tasks/synchronizeAccountsWithIntercarif');
 const synchronizeAccountsWithKairos = require('./tasks/synchronizeAccountsWithKairos');
@@ -12,6 +12,7 @@ cli
 .option('--kairos [kairos]', 'The CSV file with organismes from Kairos')
 .parse(process.argv);
 
+const { kairos } = cli.opts();
 
 execute(async ({ logger, db }) => {
 
@@ -23,9 +24,9 @@ execute(async ({ logger, db }) => {
     logger.info('Synchronizing organismes responsables from Intercarif...');
     stats.responsables = await synchronizeAccountsResponsableWithIntercarif(db, logger);
 
-    if (cli.kairos) {
+    if (kairos) {
         logger.info('Synchronizing organismes from Kairos...');
-        stats.kairos = await synchronizeAccountsWithKairos(db, logger, cli.kairos);
+        stats.kairos = await synchronizeAccountsWithKairos(db, logger, kairos);
     }
 
     logger.info('Computing score for all organismes...');

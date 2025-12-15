@@ -9,20 +9,22 @@ module.exports = (db, type) => async (parameters, options = {}) => {
     let limit = pagination.items_par_page;
     let skip = pagination.page * limit;
 
-    let documents = await db.collection(`${type}sReconciliees`).find({
+    const query = {
         ...(parameters.id ? { '_id': { $in: parameters.id } } : {}),
         ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
         ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
         ...options,
-    })
-    .project(buildProjection(parameters.fields))
-    .limit(limit)
-    .skip(skip);
+    };
 
-    let total = await documents.count();
-    let stream = documents.transformStream({
-        transform: doc => createIntercarifDTO(doc, { notes_decimales: parameters.notes_decimales })
-    });
+    let documents = await db.collection(`${type}sReconciliees`).find(query)
+        .project(buildProjection(parameters.fields))
+        .limit(limit)
+        .skip(skip);
+
+    let total = await db.collection(`${type}sReconciliees`).countDocuments(query);
+    let stream = documents.map(
+        doc => createIntercarifDTO(doc, { notes_decimales: parameters.notes_decimales })
+    ).stream();
 
     return stream.pipe(jsonStream({
         arrayPropertyName: `${type}s`,

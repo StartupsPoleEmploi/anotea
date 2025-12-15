@@ -23,7 +23,7 @@ module.exports = (db, regions, user) => {
                     debut: Joi.number(),
                     fin: Joi.number(),
                     numeroFormation: Joi.string(),
-                    departement: Joi.string().valid(region.departements.map(d => d.code)),
+                    departement: Joi.string().valid(...(region.departements.map(d => d.code))),
                     siren: Joi.string().regex(new RegExp(`^${user.siret.substring(0, 9)}`), 'siren'),
                     dispensateur: Joi.boolean(),
                     responsable: Joi.boolean(),
@@ -31,10 +31,10 @@ module.exports = (db, regions, user) => {
             },
             filters: () => {
                 return {
-                    statuses: arrayOf(Joi.string().valid(['validated', 'reported'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
+                    statuses: arrayOf(Joi.string().valid('validated', 'reported')),
+                    reponseStatuses: arrayOf(Joi.string().valid('none', 'validated', 'rejected')),
                     read: Joi.bool(),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
+                    sortBy: Joi.string().allow('date', 'lastStatusUpdate', 'reponse.lastStatusUpdate'),
                 };
             },
             pagination: () => {

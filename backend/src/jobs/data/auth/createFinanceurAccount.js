@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 
 cli.description('Create new account')
@@ -13,7 +13,7 @@ cli.description('Create new account')
 
 execute(async ({ db, exit, passwords }) => {
 
-    let { identifiant, password, region, codeFinanceur } = cli;
+    let { identifiant, password, region, codeFinanceur } = cli.opts();
 
     if (!identifiant || !password || !region || !codeFinanceur) {
         return exit('Invalid arguments');

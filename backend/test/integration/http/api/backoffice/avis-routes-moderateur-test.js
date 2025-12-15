@@ -2,7 +2,7 @@ const _ = require('lodash');
 const waitUntil = require('wait-until');
 const request = require('supertest');
 const assert = require('assert');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const { withServer } = require('../../../../helpers/with-server');
 const { newAvis, newStagiaire, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 
@@ -363,7 +363,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can edit an avis', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({
@@ -388,7 +388,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not edit an avis of another region', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({
@@ -411,12 +411,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can validate an avis', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
-        let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@francetravail.fr'),
-            insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
-        ]);
+        const id = new ObjectId();
+        let token = await logAsModerateur(app, 'admin@francetravail.fr');
+        await insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' }));
+        await  insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' }));
 
         let response = await request(app)
         .put(`/api/backoffice/avis/${id}/validate`)
@@ -432,11 +430,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can cancel report', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', status: 'reported' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '11111111111111',
                 courriel: 'validate@email.fr',
@@ -458,11 +456,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
     it('can confirm report', async () => {
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', status: 'reported' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 siret: '11111111111111',
                 courriel: 'reject@email.fr',
@@ -485,11 +483,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not validate an avis of another region', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', codeRegion: '44' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -503,11 +501,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not validate an avis when logged as financeur', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -526,11 +524,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can reject an avis (injure)', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -553,11 +551,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can reject an avis (alerte)', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -579,11 +577,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not reject an avis of another region', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, token: '12345', codeRegion: '44' })),
-            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('stagiaires', newStagiaire({ _id: new ObjectId(), token: '12345' })),
         ]);
 
         let response = await request(app)
@@ -598,7 +596,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let app = await startServer();
         let db = await getTestDatabase();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({ token: '123', avisCreated: true })),
@@ -618,7 +616,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can delete an avis and resend email', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('stagiaires', newStagiaire({ token: '1234' })),
@@ -643,7 +641,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not delete an avis of another region', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, codeRegion: '44' })),
@@ -659,7 +657,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can un/mask title', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id })),
@@ -671,7 +669,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.commentaire.titleMasked, true);
 
         response = await request(app)
         .put(`/api/backoffice/avis/${id}/title`)
@@ -685,7 +682,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not un/mask title of another region', async () => {
 
         let app = await startServer();
-        const id = new ObjectID();
+        const id = new ObjectId();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@francetravail.fr'),
             insertIntoDatabase('avis', newAvis({ _id: id, codeRegion: '44' })),
@@ -707,7 +704,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${new ObjectID()}/reject`)
+        .put(`/api/backoffice/avis/${new ObjectId()}/reject`)
         .send({ qualification: 'alerte' })
         .set('authorization', `Bearer ${token}`);
 

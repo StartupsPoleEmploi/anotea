@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 const importCommunes = require('./tasks/importCommunes');
 
@@ -10,13 +10,15 @@ cli
 .option('--cedex [cedex]', 'The cedex CSV file to import')
 .parse(process.argv);
 
+const { communes, cedex } = cli.opts();
+
 execute(async ({ logger, db, exit }) => {
 
-    if (!cli.communes || !cli.cedex) {
+    if (!communes || !cedex) {
         return exit('Invalid arguments');
     }
 
     let stats = {};
-    stats.importCommunes = await importCommunes(db, logger, cli.communes, cli.cedex);
+    stats.importCommunes = await importCommunes(db, logger, communes, cedex);
     return stats;
 });

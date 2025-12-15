@@ -23,22 +23,22 @@ module.exports = (db, regions, user) => {
                     debut: Joi.number(),
                     fin: Joi.number(),
                     numeroFormation: Joi.string(),
-                    departement: Joi.string().valid(region.departements.map(d => d.code)),
+                    departement: Joi.string().valid(...(region.departements.map(d => d.code))),
                     siren: Joi.string().min(0).max(9),
                     siret: Joi.string().min(0).max(14),
                     codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
-                        Joi.string().valid(getFinanceurs().map(f => f.code)) : Joi.any().forbidden(),
+                        Joi.string().valid(...(getFinanceurs().map(f => f.code))) : Joi.any().forbidden(),
                     dispositifFinancement: isPoleEmploi(user.codeFinanceur) ?
                         Joi.string() : Joi.any().forbidden(),
                 };
             },
             filters: () => {
                 return {
-                    statuses: arrayOf(Joi.string().valid(['validated', 'rejected', 'reported', 'archived'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
-                    qualification: Joi.string().valid(['all', 'négatif', 'positif']),
+                    statuses: arrayOf(Joi.string().valid('validated', 'rejected', 'reported', 'archived')),
+                    reponseStatuses: arrayOf(Joi.string().valid('none', 'validated', 'rejected')),
+                    qualification: Joi.string().valid('all', 'négatif', 'positif'),
                     commentaires: Joi.bool(),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate']),
+                    sortBy: Joi.string().allow('date', 'lastStatusUpdate'),
                 };
             },
             pagination: () => {

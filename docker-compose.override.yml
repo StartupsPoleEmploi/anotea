@@ -16,19 +16,17 @@ services:
         - ANOTEA_HOTJAR_ID=1234
 
   backend:
-    command: npm run start
+    build: 
+      network: host
     volumes:
       - ./backend:/opt/anotea/backend:ro
+      - ./.data/imports:/data/imports:ro
+      - ./.data/exports:/data/exports
     environment:
       - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
       - ANOTEA_SMTP_HOST=smtp
       - ANOTEA_SMTP_PORT=1025
-      # Use Bunyan to sent logs to Fluentbit instead of Docker logging driver
-      - ANOTEA_LOG_TYPE=fluentbit
-      - ANOTEA_LOG_FLUENTBIT_HOST=fluentbit
-      - ANOTEA_LOG_FLUENTBIT_PORT=24224
     depends_on:
-      - fluentbit
       - mongodb
       - smtp
 
@@ -41,59 +39,10 @@ services:
       - ./.data/mongodb/db:/data/db
       - ./.data/mongodb/config:/data/configdb
       - ./.data/backups/mongodb:/data/backups
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        tag: docker.mongodb
-    depends_on:
-      - fluentbit
-
   smtp:
     image: mailhog/mailhog
     container_name: anotea_smtp
     ports:
       - 8024:8025
-
-  ###########
-  #EFK stack
-  ##########
-
-  fluentbit:
-    image: anotea_fluentbit
-    container_name: anotea_fluentbit
-    build:
-      context: misc/docker/efk/fluentbit
-    ports:
-      - "127.0.0.1:24224:24224"
     environment:
-      - ANOTEA_FLUENTBIT_ELASTICSEARCH_HOST=elasticsearch
-      - ANOTEA_FLUENTBIT_ELASTICSEARCH_PORT=9200
-      - ANOTEA_FLUENTBIT_ELASTICSEARCH_TLS=false
-      - ANOTEA_FLUENTBIT_ELASTICSEARCH_USER=
-      - ANOTEA_FLUENTBIT_ELASTICSEARCH_PASSWORD=
-    depends_on:
-      - elasticsearch
-
-  elasticsearch:
-    image: anotea_elasticsearch
-    container_name: anotea_elasticsearch
-    build:
-      context: misc/docker/efk/elasticsearch
-    ports:
-      - "127.0.0.1:9200:9200"
-    environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    volumes:
-      - ./.data/elasticsearch:/usr/share/elasticsearch/data
-
-  kibana:
-    image: anotea_kibana
-    container_name: anotea_kibana
-    build:
-      context: misc/docker/efk/kibana
-    ports:
-      - "127.0.0.1:5601:5601"
-    depends_on:
-      - elasticsearch
-
+      - MH_UI_WEB_PATH=mailhog

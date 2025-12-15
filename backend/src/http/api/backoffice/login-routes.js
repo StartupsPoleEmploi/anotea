@@ -1,7 +1,8 @@
 const express = require('express');
-const Boom = require('boom');
+const { badRequest } = require('@hapi/boom');
 const Joi = require('joi');
 const { tryAndCatch } = require('../../utils/routes-utils');
+const { loginSchema , checkLoginSchema } = require('../../utils/validators-utils');
 
 module.exports = ({ db, auth, passwords, regions }) => {
 
@@ -90,10 +91,8 @@ module.exports = ({ db, auth, passwords, regions }) => {
 
     router.post('/api/backoffice/login', tryAndCatch(async (req, res) => {
 
-        let { identifiant, password } = await Joi.validate(req.body, {
-            identifiant: Joi.string().lowercase().required(),
-            password: Joi.string().required(),
-        }, { abortEarly: false });
+
+        let { identifiant, password } = Joi.attempt(req.body, loginSchema, '', { abortEarly: false });
 
         let token;
         let account = await db.collection('accounts').findOne({
@@ -112,28 +111,25 @@ module.exports = ({ db, auth, passwords, regions }) => {
         if (token) {
             return res.json(token);
         } else {
-            throw Boom.badRequest('Identifiant ou mot de passe invalide');
+            throw badRequest('Identifiant ou mot de passe invalide');
         }
     }));
 
     router.get('/api/backoffice/login', tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.query, {
-            access_token: Joi.string().required(),
-            origin: Joi.string(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(req.query, checkLoginSchema, '', { abortEarly: false });
 
         let user;
         try {
             user = await auth.checkJWT('backoffice', parameters.access_token);
         } catch (e) {
-            throw Boom.badRequest('Token invalide', e);
+            throw badRequest('Token invalide');
         }
 
         let organisme = await db.collection('accounts').findOne({ 'siret': user.sub });
 
         if (await isTokenAlreadyUsed(organisme._id, parameters.access_token)) {
-            throw Boom.badRequest('Token déjà utilisé');
+            throw badRequest('Token déjà utilisé');
         }
 
         if (organisme) {
@@ -144,7 +140,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             ]);
             return res.json(token);
         } else {
-            throw Boom.badRequest('Token invalide');
+            throw badRequest('Token invalide');
         }
     }));
 

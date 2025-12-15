@@ -3,7 +3,7 @@ const _ = require('lodash');
 const { ignoreFirstLine, pipeline, writeObject } = require('../../../../core/utils/stream-utils');
 const { getDifferences } = require('../../../../core/utils/object-utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
-const parse = require('csv-parse');
+const { parse } = require('csv-parse');
 
 let loadCertifinfos = async file => {
     const ETAT_ERRONE = '2';

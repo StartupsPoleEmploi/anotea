@@ -11,6 +11,11 @@ const renderFile = promisify(ejs.renderFile);
 
 module.exports = (configuration, regions) => {
 
+    const mail = Joi.object({
+        subject: Joi.string().required(),
+        body: Joi.string().required(),
+    });
+
     let transporter = nodemailer.createTransport({
         name: configuration.smtp.hostname,
         host: configuration.smtp.host,
@@ -59,10 +64,7 @@ module.exports = (configuration, regions) => {
             return {
                 sendEmail: async (emailAddress, message, options = {}) => {
 
-                    let { subject, body } = await Joi.validate(message, {
-                        subject: Joi.string().required(),
-                        body: Joi.string().required(),
-                    }, { abortEarly: false });
+                    let { subject, body } = Joi.attempt(message, mail, '', { abortEarly: false });
 
                     return transporter.sendMail(_.merge({}, {
                         to: emailAddress,

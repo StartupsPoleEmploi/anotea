@@ -23,7 +23,7 @@ module.exports = async (db, logger) => {
             { token: stagiaire.token },
             { $unset: { individu: 1 } }
         );
-        if (res.result.nModified > 0) {
+        if (res.modifiedCount > 0) {
             stats.deletedMailSentNoDate++;
         }
     });
@@ -41,7 +41,7 @@ module.exports = async (db, logger) => {
             { token: stagiaire.token },
             { $unset: { individu: 1 } }
         );
-        if (res.result.nModified > 0) {
+        if (res.modifiedCount > 0) {
             stats.deletedMailSentTooOld++;
         }
     });
@@ -58,7 +58,7 @@ module.exports = async (db, logger) => {
             { token: stagiaire.token },
             { $unset: { individu: 1 } }
         );
-        if (res.result.nModified > 0) {
+        if (res.modifiedCount > 0) {
             stats.deletedMailNotSent++;
         }
     });
