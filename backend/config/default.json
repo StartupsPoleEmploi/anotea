@@ -2,7 +2,7 @@
   "env": "dev",
   "app": {
     "name": "Anotea",
-    "public_hostname": "http://127.0.0.1:3000",
+    "public_hostname": "",
     "port": 8080,
     "session_secret": "1234"
   },
@@ -43,7 +43,7 @@
     },
     "backoffice": {
       "type": "jwt",
-      "secret": "1234",
+      "secret": "a-string-secret-at-least-256-bits-long",
       "expiration_in_seconds": 86400
     },
     "esd": {
