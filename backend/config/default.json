@@ -2,7 +2,7 @@
   "env": "dev",
   "app": {
     "name": "Anotea",
-    "public_hostname": "",
+    "public_hostname": "http://localhost",
     "port": 8080,
     "session_secret": "1234"
   },
