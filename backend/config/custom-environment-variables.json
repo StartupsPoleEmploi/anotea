@@ -44,6 +44,13 @@
     "callback_url": "ANOTEA_PECONNECT_CLIENT_CALLBACK_URL",
     "timeout": "ANOTEA_PECONNECT_TIMEOUT"
   },
+  "ftmail": {
+    "client_id": "ANOTEA_FTMAIL_CLIENT_ID",
+    "client_secret": "ANOTEA_FTMAIL_CLIENT_SECRET",
+    "scope": "ANOTEA_FTMAIL_SCOPE",
+    "endpoint": "ANOTEA_FTMAIL_ENDPOINT",
+    "api_url": "ANOTEA_FTMAIL_API_URL"
+  },
   "sentry": {
     "dsn": "ANOTEA_SENTRY_DSN"
   },
