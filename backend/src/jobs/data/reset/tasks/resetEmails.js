@@ -17,11 +17,10 @@ module.exports = async db => {
                     individu: {
                         nom: faker.person.lastName(),
                         prenom: faker.person.firstName(),
-                        email: faker.phone_number.number('###') + faker.internet.email(),
-                        telephones: [faker.phone_number.number('06########')],
+                        email: faker.internet.email(),
                         emailValid: true,
-                        identifiant_pe: faker.phone_number.number('##########'),
-                        identifiant_local: faker.phone_number.number('##########'),
+                        identifiant_pe: faker.random.numeric(),
+                        identifiant_local: faker.random.numeric(),
                     },
                 },
             });
