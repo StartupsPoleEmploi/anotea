@@ -241,13 +241,9 @@ module.exports = (configuration, regions, authMail) => {
 
                     const url = configuration.ftmail.api_url;
 
-                    console.log("options envoi mail", url, restOptions);
-
                     const response = await fetch(url, restOptions);
                     if (response.ok) {
-                     console.log("response", response);
                        const data = await response.json();
-                     console.log("response data", data);
 
                         //the mail has an uuid that can be logged if needed
                         return data.uuid;

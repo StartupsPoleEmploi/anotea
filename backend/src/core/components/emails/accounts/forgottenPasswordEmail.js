@@ -18,7 +18,6 @@ module.exports = (db, regions, mailer) => {
         send: account => {
             let generateForgottenPasswordToken = async () => {
                 let passwordToken = uuid.v4();
-                console.error("generateForgottenPasswordToken");
 
                 await db.collection('forgottenPasswordTokens').deleteOne({
                     id: account._id,
