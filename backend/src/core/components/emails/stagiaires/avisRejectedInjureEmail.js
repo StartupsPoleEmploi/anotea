@@ -26,7 +26,7 @@ module.exports = (db, regions, mailer) => {
                 {
                     codeMessage: 'ANOTEA_STAGIAIRE_REJET_AVIS_INJURE',
                     stagiaireToken: stagiaire.token,
-                    campaign: stagiaire.campaign ? stagiaire.campaign : 'unknown',
+                    campaign: stagiaire.campaign,
                     formationIntitule: stagiaire.formation.intitule,
                     formationDebut: moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY'),
                     formationFin: moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY'),
