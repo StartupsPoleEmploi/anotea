@@ -205,6 +205,16 @@ module.exports = (configuration, regions, authMail) => {
                                     '@type': 'Texte',
                                     valeur: avisToken
                                 }] : []),
+                                ...(texteAvis ? [{
+                                    nom: 'texteAvis',
+                                    '@type': 'Texte',
+                                    valeur: texteAvis
+                                }] : []),
+                                ...(dispensateur ? [{
+                                    nom: 'dispensateur',
+                                    '@type': 'Texte',
+                                    valeur: dispensateur
+                                }] : []),
                             ],
                         }),
                     };
