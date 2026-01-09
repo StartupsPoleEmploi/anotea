@@ -1,4 +1,5 @@
 const BadDataError = require('./../../../errors');
+const moment = require('moment');
 
 module.exports = (db, regions, mailer) => {
 
@@ -20,10 +21,10 @@ module.exports = (db, regions, mailer) => {
 
             let region = regions.findRegionByCodeRegion(stagiaire.codeRegion);
 
-            return mailer.createRegionalMailer(region).sendEmail(
+            return mailer.createRegionalMailerV2(region).sendEmail(
                 stagiaire.individu.email,
                 {
-                    codeMessage: 'ANOTEA_STAGIAIRE_REJET_AVIS_ALERTE',
+                    codeMessage: 'ANOTEA_STAGIAIRE_REJET_AVIS_INJURE',
                     stagiaireToken: stagiaire.token,
                     campaign: stagiaire.campaign,
                     formationIntitule: stagiaire.formation.intitule,

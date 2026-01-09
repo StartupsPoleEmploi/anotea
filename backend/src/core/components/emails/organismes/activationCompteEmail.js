@@ -39,7 +39,7 @@ module.exports = (db, regions, mailer) => {
             };
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            return mailer.createRegionalMailer(region).sendEmail(
+            return mailer.createRegionalMailerV2(region).sendEmail(
                 organisme.courriel,
                 {
                     codeMessage: 'ANOTEA_ORGANISME_COMPTE_CREE',

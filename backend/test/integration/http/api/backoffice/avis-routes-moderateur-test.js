@@ -334,7 +334,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         return checkEmail(mailer => {
             let message = mailer.getLastEmailMessageSent();
             assert.strictEqual(message.email, 'contact@poleemploi-formation.fr');
-            assert.strictEqual(message.parameters.subject, 'France Travail - Votre réponse n\'a pas été prise en compte');
+            assert.strictEqual(message.parameters.codeMessage, 'ANOTEA_ORGANISME_REJET_REPONSE');
         });
     });
 
@@ -450,7 +450,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         return checkEmail(mailer => {
             let message = mailer.getLastEmailMessageSent();
             assert.strictEqual(message.email, 'validate@email.fr');
-            assert.strictEqual(message.parameters.subject, 'France Travail - Avis signalé dans votre Espace Anotéa');
+            assert.strictEqual(message.parameters.codeMessage, 'ANOTEA_ORGANISME_AVIS_CONSERVE');
         });
     });
 
@@ -476,7 +476,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         return checkEmail(mailer => {
             let message = mailer.getEmailMessagesSent().find(m => m.email === 'reject@email.fr');
             assert.strictEqual(message.email, 'reject@email.fr');
-            assert.strictEqual(message.parameters.subject, 'France Travail - Avis signalé dans votre Espace Anotéa');
+            assert.strictEqual(message.parameters.codeMessage, 'ANOTEA_ORGANISME_AVIS_RETIRE');
         });
     });
 
@@ -544,7 +544,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         return checkEmail(mailer => {
             let message = mailer.getLastEmailMessageSent();
             assert.strictEqual(message.email, 'henri@email.fr');
-            assert.strictEqual(message.parameters.subject, 'Rejet de votre avis sur votre formation Développeur à INSTITUT DE FORMATION');
+            assert.strictEqual(message.parameters.codeMessage, 'ANOTEA_STAGIAIRE_REJET_AVIS_INJURE');
         });
     });
 
@@ -570,7 +570,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         return checkEmail(mailer => {
             let message = mailer.getLastEmailMessageSent();
             assert.strictEqual(message.email, 'henri@email.fr');
-            assert.strictEqual(message.parameters.subject, 'Nous avons bien pris en compte votre commentaire');
+            assert.strictEqual(message.parameters.codeMessage, 'ANOTEA_STAGIAIRE_REJET_AVIS_ALERTE');
         });
     });
 
