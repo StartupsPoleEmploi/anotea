@@ -215,6 +215,11 @@ module.exports = (configuration, regions, authMail) => {
                                     '@type': 'Texte',
                                     valeur: dispensateur
                                 }] : []),
+                                ...(nbUnreadCommentaires ? [{
+                                    nom: 'nbUnreadCommentaires',
+                                    '@type': 'Texte',
+                                    valeur: nbUnreadCommentaires
+                                }] : []),
                             ],
                         }),
                     };

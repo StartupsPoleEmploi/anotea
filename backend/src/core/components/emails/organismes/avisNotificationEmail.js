@@ -31,6 +31,7 @@ module.exports = (db, regions, mailer) => {
                     organismeToken: organisme.token,
                     siret: organisme.siret,
                     texteAvis: avis?.commentaire?.text,
+                    nbUnreadCommentaires: nbUnreadCommentaires,
                 },
             )
             .then(onSuccess);
