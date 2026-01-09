@@ -29,6 +29,14 @@ module.exports = (configuration, regions, authMail) => {
         formationDebut: Joi.string(),
         formationFin: Joi.string(),
         organismeFormateurRaisonSociale: Joi.string(),
+        //mail aux organisme
+        organismeToken: Joi.string(),
+        siret: Joi.string(), 
+        texteReponse: Joi.string(),
+        avisToken: Joi.string(),
+        texteAvis: Joi.string(),
+        dispensateur: Joi.string(),
+        nbUnreadCommentaires: Joi.string(),
     });
 
     let transporter = nodemailer.createTransport({        name: configuration.smtp.hostname,
@@ -107,6 +115,13 @@ module.exports = (configuration, regions, authMail) => {
                         formationDebut,
                         formationFin,
                         organismeFormateurRaisonSociale,
+                        organismeToken,
+                        siret, 
+                        texteReponse,
+                        avisToken,
+                        texteAvis,
+                        dispensateur,
+                        nbUnreadCommentaires,
                     } = Joi.attempt(message, mailV2, '', { abortEarly: false });
 
                     const restOptions = {
