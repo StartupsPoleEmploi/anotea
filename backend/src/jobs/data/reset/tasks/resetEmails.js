@@ -19,8 +19,8 @@ module.exports = async db => {
                         prenom: faker.person.firstName(),
                         email: faker.internet.email(),
                         emailValid: true,
-                        identifiant_pe: faker.random.numeric(),
-                        identifiant_local: faker.random.numeric(),
+                        identifiant_pe: faker.string.numeric(),
+                        identifiant_local: faker.string.numeric(),
                     },
                 },
             });
