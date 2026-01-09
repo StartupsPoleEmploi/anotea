@@ -24,11 +24,13 @@ module.exports = (db, regions, mailer) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
-            return mailer.createRegionalMailer(region).sendEmail(
+            return mailer.createRegionalMailerV2(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: `France Travail - Vous avez ${nbUnreadCommentaires || 'des'} nouveaux avis stagiaires`,
-                    body: await render(organisme, avis),
+                    codeMessage: 'ANOTEA_ORGANISME_NOTIF_AVIS',
+                    organismeToken: organisme.token,
+                    siret: organisme.siret,
+                    texteAvis: avis?.commentaire?.text,
                 },
             )
             .then(onSuccess);

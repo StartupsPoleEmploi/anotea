@@ -15,11 +15,13 @@ module.exports = (db, regions, mailer) => {
         render,
         send: async (organisme, avis) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            return mailer.createRegionalMailer(region).sendEmail(
+            return mailer.createRegionalMailerV2(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'France Travail - Avis signalé dans votre Espace Anotéa',
-                    body: await render(organisme, avis),
+                    codeMessage: 'ANOTEA_ORGANISME_AVIS_CONSERVE',
+                    organismeToken: organisme.token,
+                    texteAvis: avis?.commentaire?.text,
+                    avisToken: avis.token,
                 },
             );
         },

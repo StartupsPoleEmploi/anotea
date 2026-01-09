@@ -18,6 +18,7 @@ module.exports = (db, regions, mailer) => {
         send: account => {
             let generateForgottenPasswordToken = async () => {
                 let passwordToken = uuid.v4();
+                console.error("generateForgottenPasswordToken");
 
                 await db.collection('forgottenPasswordTokens').deleteOne({
                     id: account._id,
@@ -65,11 +66,11 @@ module.exports = (db, regions, mailer) => {
 
                 let region = regions.findRegionByCodeRegion(account.codeRegion);
 
-                return mailer.createRegionalMailer(region).sendEmail(
+                return mailer.createRegionalMailerV2(region).sendEmail(
                     account.courriel,
                     {
-                        subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
-                        body: await render(account, passwordToken),
+                        codeMessage: 'ANOTEA_CHANGER_MDP',
+                        forgottenPasswordToken: passwordToken,
                     },
                 );
             })

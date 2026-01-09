@@ -1,3 +1,4 @@
+const authMail = require('../../../src/core/components/emails/auth-mail');
 const createMailer = require('../../../src/core/components/emails/mailer');
 
 module.exports = (configuration, regions, options = {}) => {
@@ -19,12 +20,19 @@ module.exports = (configuration, regions, options = {}) => {
     };
 
     return {
-        ...createMailer(configuration, regions),
+        ...createMailer(configuration, regions, authMail(configuration)),
         getEmailAddresses: () => calls.map(call => call.email),
         getEmailMessagesSent: () => calls,
         getLastEmailMessageSent: () => calls[calls.length - 1],
         flush: () => calls.splice(0, calls.length),
         createRegionalMailer: () => {
+            return {
+                sendEmail: (...args) => {
+                    return registerCall(args);
+                }
+            };
+        },
+        createRegionalMailerV2: () => {
             return {
                 sendEmail: (...args) => {
                     return registerCall(args);

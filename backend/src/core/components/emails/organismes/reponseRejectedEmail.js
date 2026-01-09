@@ -16,11 +16,14 @@ module.exports = (db, regions, mailer) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
-            return mailer.createRegionalMailer(region).sendEmail(
+            return mailer.createRegionalMailerV2(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'France Travail - Votre réponse n\'a pas été prise en compte',
-                    body: await render(organisme, avis),
+                    codeMessage: 'ANOTEA_ORGANISME_REJET_REPONSE',
+                    organismeToken: organisme.token,
+                    siret: organisme.siret,
+                    texteReponse: avis.reponse.text,
+                    avisToken: avis.token,
                 },
             );
         },

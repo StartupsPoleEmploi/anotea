@@ -24,13 +24,13 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 stagiaire.individu.email,
                 {
-                    subject: 'Nous avons bien pris en compte votre commentaire',
-                    body: await render(stagiaire),
-                },
-                {
-                    list: {
-                        unsubscribe: utils.getUnsubscribeLink(stagiaire.token),
-                    },
+                    codeMessage: 'ANOTEA_STAGIAIRE_REJET_AVIS_ALERTE',
+                    stagiaireToken: stagiaire.token,
+                    campaign: stagiaire.campaign,
+                    formationIntitule: stagiaire.formation.intitule,
+                    formationDebut: moment(stagiaire.formation.action.session.periode.debut).format('DD/MM/YYYY'),
+                    formationFin: moment(stagiaire.formation.action.session.periode.fin).format('DD/MM/YYYY'),
+                    organismeFormateurRaisonSociale: stagiaire.formation.action.organisme_formateur.raison_sociale,
                 }
             );
         },
