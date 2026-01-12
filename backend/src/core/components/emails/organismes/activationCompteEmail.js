@@ -43,6 +43,7 @@ module.exports = (db, regions, mailer) => {
                 organisme.courriel,
                 {
                     codeMessage: 'ANOTEA_ORGANISME_COMPTE_CREE',
+                    usager: false,
                     organismeToken: organisme.token,
                     siret: organisme.siret,
                     dispensateur: (organisme.score && organisme.score.nb_avis && organisme.score.nb_avis > 0) ? 'dispensateur' : 'responsable',

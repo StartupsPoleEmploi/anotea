@@ -18,6 +18,7 @@ module.exports = (db, regions, mailer) => {
                 organisme.courriel,
                 {
                     codeMessage: 'ANOTEA_ORGANISME_AVIS_RETIRE',
+                    usager: false,
                     organismeToken: organisme.token,
                     texteAvis: avis?.commentaire?.text,
                     avisToken: avis.token,

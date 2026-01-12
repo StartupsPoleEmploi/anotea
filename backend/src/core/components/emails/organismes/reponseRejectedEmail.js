@@ -20,6 +20,7 @@ module.exports = (db, regions, mailer) => {
                 organisme.courriel,
                 {
                     codeMessage: 'ANOTEA_ORGANISME_REJET_REPONSE',
+                    usager: false,
                     organismeToken: organisme.token,
                     siret: organisme.siret,
                     texteReponse: avis.reponse.text,

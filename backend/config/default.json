@@ -80,7 +80,8 @@
     "secure": false,
     "hostname": "localhost",
     "greetingTimeout": 300000,
-    "from": "anotea@francetravail.fr",
+    "from": "anotea@email.francetravail.fr",
+    "usagerFrom": "anotea@usager.francetravail.fr",
     "stagiaires": {
       "avisRelaunchDelay": 5,
       "avisMaxRelaunch": 1

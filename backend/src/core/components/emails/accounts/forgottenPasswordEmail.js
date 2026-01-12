@@ -69,6 +69,7 @@ module.exports = (db, regions, mailer) => {
                     account.courriel,
                     {
                         codeMessage: 'ANOTEA_CHANGER_MDP',
+                        usager: false,
                         forgottenPasswordToken: passwordToken,
                     },
                 );

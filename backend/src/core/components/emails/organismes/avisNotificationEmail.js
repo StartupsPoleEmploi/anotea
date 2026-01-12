@@ -28,6 +28,7 @@ module.exports = (db, regions, mailer) => {
                 organisme.courriel,
                 {
                     codeMessage: 'ANOTEA_ORGANISME_NOTIF_AVIS',
+                    usager: false,
                     organismeToken: organisme.token,
                     siret: organisme.siret,
                     texteAvis: avis?.commentaire?.text,

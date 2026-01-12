@@ -62,7 +62,9 @@
     "host": "ANOTEA_SMTP_HOST",
     "port": "ANOTEA_SMTP_PORT",
     "user": "ANOTEA_SMTP_USER",
-    "password": "ANOTEA_SMTP_PASSWORD"
+    "password": "ANOTEA_SMTP_PASSWORD",
+    "from": "ANOTEA_SMTP_FROM",
+    "usagerFrom": "ANOTEA_SMTP_USAGER_FROM"
   },
   "slack": {
     "webhookUrl": "ANOTEA_SLACK_WEBHOOK_URL"

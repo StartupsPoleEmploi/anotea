@@ -20,6 +20,7 @@ module.exports = (configuration, regions, authMail) => {
     });
     const mailV2 = Joi.object({
         codeMessage: Joi.string().required(),
+        usager: Joi.boolean(),
         //mot de passe oublie
         forgottenPasswordToken: Joi.string(),
         //questionnaire
@@ -143,7 +144,7 @@ module.exports = (configuration, regions, authMail) => {
                             expediteur: {
                                 '@type': 'Personnalise',
                                 nom: 'Anotea',
-                                adresseMail: configuration.smtp.from
+                                adresseMail: usager ? configuration.smtp.usagerFrom : configuration.smtp.from
                             },
                             variablesComposition: [
                                 {

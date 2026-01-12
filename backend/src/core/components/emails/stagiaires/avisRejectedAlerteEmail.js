@@ -26,6 +26,7 @@ module.exports = (db, regions, mailer) => {
                 stagiaire.individu.email,
                 {
                     codeMessage: 'ANOTEA_STAGIAIRE_REJET_AVIS_ALERTE',
+                    usager: true,
                     stagiaireToken: stagiaire.token,
                     campaign: stagiaire.campaign,
                     formationIntitule: stagiaire.formation.intitule,
