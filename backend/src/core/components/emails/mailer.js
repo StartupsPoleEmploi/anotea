@@ -109,6 +109,7 @@ module.exports = (configuration, regions, authMail) => {
                 sendEmail: async (emailAddress, message, options = {}) => {
                     const {
                         codeMessage,
+                        usager,
                         forgottenPasswordToken,
                         stagiaireToken,
                         campaign,
