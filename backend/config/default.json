@@ -2,7 +2,7 @@
   "env": "dev",
   "app": {
     "name": "Anotea",
-    "public_hostname": "http://127.0.0.1:3000",
+    "public_hostname": "http://localhost",
     "port": 8080,
     "session_secret": "1234"
   },
@@ -27,6 +27,14 @@
     "api_url": "https://api.francetravail.io/partenaire/peconnect-individu/v1/userinfo",
     "timeout": 1000
   },
+  "ftmail": {
+    "client_id": "client_id",
+    "client_secret": "client_secret",
+    "scope": "",
+    "endpoint":   "",
+    "api_url": "",
+    "timeout": 1000
+  },
   "sentry": {
     "dsn": null
   },
@@ -43,7 +51,7 @@
     },
     "backoffice": {
       "type": "jwt",
-      "secret": "1234",
+      "secret": "a-string-secret-at-least-256-bits-long",
       "expiration_in_seconds": 86400
     },
     "esd": {
@@ -53,7 +61,7 @@
     },
     "kairos": {
       "type": "jwt",
-      "secret": "1234",
+      "secret": "a-string-secret-at-least-256-bits-long",
       "expiration_in_seconds": 300
     },
     "maformation": {
@@ -72,7 +80,8 @@
     "secure": false,
     "hostname": "localhost",
     "greetingTimeout": 300000,
-    "from": "anotea@anotea.francetravail.fr",
+    "from": "anotea@email.francetravail.fr",
+    "usagerFrom": "anotea@usager.francetravail.fr",
     "stagiaires": {
       "avisRelaunchDelay": 5,
       "avisMaxRelaunch": 1

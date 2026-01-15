@@ -10,11 +10,11 @@ module.exports = ({ db, middlewares, regions }) => {
     let checkAuth = createJWTAuthMiddleware('backoffice');
 
     router.get('/api/backoffice/stagiaires/stats', checkAuth, tryAndCatch(async (req, res) => {
-
         let { validators, queries } = getProfile(db, regions, req.user);
-        let parameters = await Joi.validate(req.query, {
+        const schema = Joi.object({
             ...validators.form(),
-        }, { abortEarly: false });
+        });
+        let parameters = Joi.attempt(req.query, schema, '', { abortEarly: false });
 
         let results = await db.collection('stagiaires').aggregate([
             {

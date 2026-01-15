@@ -1,6 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const { sendHTML } = require('../utils/routes-utils');
+const { tokenSchema } = require('../utils/validators-utils');
 
 module.exports = ({ db, logger, emails }) => {
 
@@ -10,14 +11,16 @@ module.exports = ({ db, logger, emails }) => {
         return res.status(404).render('errors/404');
     };
 
+    const unsubSchema = Joi.object({
+        type: Joi.string().valid('organismes', 'stagiaires').required(),
+        token: Joi.string().required(),
+        templateName: Joi.string().required(),
+        avis: Joi.string(),
+    });
+
     router.get('/emails/:type/:token/templates/:templateName', async (req, res) => {
 
-        const parameters = await Joi.validate(Object.assign({}, req.params, req.query), {
-            type: Joi.string().valid(['organismes', 'stagiaires']).required(),
-            token: Joi.string().required(),
-            templateName: Joi.string().required(),
-            avis: Joi.string(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(Object.assign({}, req.params, req.query), unsubSchema, '', { abortEarly: false });
 
         let doc = await db.collection(parameters.type === 'organismes' ? 'accounts' : 'stagiaires').findOne({
             token: parameters.token
@@ -35,14 +38,12 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/emails/stagiaires/:token/unsubscribe', async (req, res) => {
         try {
-            let { token } = await Joi.validate(req.params, {
-                token: Joi.string().required(),
-            }, { abortEarly: false });
+            let { token } = Joi.attempt(req.params, tokenSchema, '', { abortEarly: false });
             let stagiaire = await db.collection('stagiaires').findOne({ token: token });
             if (!stagiaire) {
                 return send404(res);
             }
-            await db.collection('stagiaires').update({ '_id': stagiaire._id }, {
+            await db.collection('stagiaires').updateOne({ '_id': stagiaire._id }, {
                 $set: {
                     'unsubscribe': true
                 }

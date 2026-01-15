@@ -30,7 +30,7 @@ module.exports = {
         let hasScore = organisme.score && organisme.score.nb_avis > 0;
 
         return {
-            '@context': 'http://schema.org',
+            '@context': 'https://schema.org',
             ...getOrganization(organisme),
             ...(hasScore ? { 'aggregateRating': getAggregateRating(organisme.score) } : {}),
         };
@@ -41,7 +41,7 @@ module.exports = {
         let hasScore = score && score.nb_avis > 0;
 
         return {
-            '@context': 'http://schema.org',
+            '@context': 'https://schema.org',
             ...getCourse(formation),
             ...(hasScore ? { 'aggregateRating': getAggregateRating(score) } : {}),
             ...(doc.periode ? {

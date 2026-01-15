@@ -1,7 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const { tryAndCatch, sendJsonStream } = require('../../utils/routes-utils');
-const validators = require('./utils/validators');
+const { catalogueSearchSchema, catalogueFindSchema, catalogueFindAvisSchema } = require('./utils/validators');
 const createReconciliation = require('./reconcilication/reconciliation');
 
 module.exports = ({ db, middlewares }) => {
@@ -13,14 +13,7 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/v1/formations', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.query, {
-            id: validators.arrayOf(Joi.string()),
-            numero: validators.arrayOf(Joi.string()),
-            nb_avis: Joi.number(),
-            ...validators.fields(),
-            ...validators.pagination(),
-            ...validators.notesDecimales(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(req.query, catalogueSearchSchema, '', { abortEarly: false });
 
 
         let stream = await reconciliation.findFormationsAsStream(parameters);
@@ -30,12 +23,7 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/v1/formations/:id', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
-            'id': Joi.string().required(),
-            'x-anotea-widget': Joi.string().allow(),
-            ...validators.fields(),
-            ...validators.notesDecimales(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(Object.assign({}, req.query, req.params), catalogueFindSchema, '', { abortEarly: false });
 
 
         let dto = await reconciliation.getFormation(parameters, {
@@ -47,13 +35,7 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/api/v1/formations/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
-            id: Joi.string().required(),
-            ...validators.pagination(),
-            ...validators.commentaires(),
-            ...validators.notesDecimales(),
-            ...validators.tri(),
-        }, { abortEarly: false });
+        const parameters = Joi.attempt(Object.assign({}, req.query, req.params), catalogueFindAvisSchema, '', { abortEarly: false });
 
         let avis = await reconciliation.getAvisForFormation(parameters);
 

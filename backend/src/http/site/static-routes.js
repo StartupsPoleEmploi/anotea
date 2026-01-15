@@ -23,7 +23,7 @@ module.exports = () => {
         res.send(new Buffer(code));
     });
 
-    router.get('/static/*', express.static(path.join(__dirname)));
+    router.get('/static{/*path}', express.static(path.join(__dirname)));
 
     return router;
 };

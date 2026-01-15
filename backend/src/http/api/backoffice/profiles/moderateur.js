@@ -27,9 +27,9 @@ module.exports = (db, user) => {
             filters: () => {
                 return {
                     commentaires: Joi.bool(),
-                    statuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected', 'reported'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
+                    statuses: arrayOf(Joi.string().valid('none', 'validated', 'rejected', 'reported')),
+                    reponseStatuses: arrayOf(Joi.string().valid('none', 'validated', 'rejected')),
+                    sortBy: Joi.string().allow('date', 'lastStatusUpdate', 'reponse.lastStatusUpdate'),
                 };
             },
             pagination: () => {

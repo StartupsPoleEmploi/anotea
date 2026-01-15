@@ -1,8 +1,9 @@
 const express = require('express');
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const Joi = require('joi');
-const Boom = require('boom');
+const { badRequest } = require('@hapi/boom');
 const { tryAndCatch } = require('../../utils/routes-utils');
+const { updatePassowrd } = require('../../utils/validators-utils');
 
 module.exports = ({ db, middlewares, passwords }) => {
 
@@ -13,14 +14,13 @@ module.exports = ({ db, middlewares, passwords }) => {
     router.put('/api/backoffice/me/updatePassword', checkAuth, tryAndCatch(async (req, res) => {
 
         let user = req.user;
-        let { current, password } = await Joi.validate(req.body, {
-            current: Joi.string().required(),
-            password: Joi.string().required(),
-        }, { abortEarly: false });
+        let { current, password } = Joi.attempt(req.body, updatePassowrd, '', { abortEarly: false });
 
-        let query = user.profile === 'organisme' ? { _id: user.id } : { _id: new ObjectID(user.id) };
+        let query = isNaN(user.id) ?
+            { '_id': new ObjectId(user.id) } :
+            { '_id': user.id };
         let account = await db.collection('accounts').findOne(query);
-        if (await checkPassword(current, account.passwordHash)) {
+        if (account && await checkPassword(current, account.passwordHash)) {
             if (isPasswordStrongEnough(password)) {
                 let passwordHash = await hashPassword(password);
                 await db.collection('accounts').updateOne(query, {
@@ -33,10 +33,10 @@ module.exports = ({ db, middlewares, passwords }) => {
                 return res.json({});
 
             } else {
-                throw Boom.badRequest('Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
+                throw badRequest('Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
             }
         }
-        throw Boom.badRequest('Le mot de passe n\'est pas correct');
+        throw badRequest('Le mot de passe n\'est pas correct');
     }));
     return router;
 };

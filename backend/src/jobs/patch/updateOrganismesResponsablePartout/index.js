@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../../job-utils');
 const majSiretResponsableDansAvis = require('./tasks/majSiretResponsableDansAvis');
 

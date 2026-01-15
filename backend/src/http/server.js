@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const Boom = require('boom');
+const { badRequest, boomify } = require('@hapi/boom');
 const compression = require('compression');
 const createMiddlewares = require('./utils/middlewares/middlewares');
 
@@ -25,7 +25,8 @@ module.exports = (components, options = {}) => {
             if (buf && buf.length) {
                 req.rawBody = buf.toString(encoding || 'utf8');
             }
-        }
+        },
+        limit: '5kb',
     }));
 
     //Site
@@ -75,10 +76,10 @@ module.exports = (components, options = {}) => {
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {
                 //This is a joi validatin error
-                error = Boom.badRequest('Erreur de validation');
+                error = badRequest('Erreur de validation');
                 error.output.payload.details = rawError.details;
             } else {
-                error = Boom.boomify(rawError, {
+                error = boomify(rawError, {
                     statusCode: rawError.status || 500,
                     ...(!rawError.message ? 'Une erreur est survenue' : {}),
                 });

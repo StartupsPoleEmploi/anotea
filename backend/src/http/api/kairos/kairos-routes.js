@@ -1,6 +1,6 @@
 const express = require('express');
-const Boom = require('boom');
-const uuid = require('node-uuid');
+const { badRequest, unauthorized } = require('@hapi/boom');
+const uuid = require('uuid');
 const Joi = require('joi');
 const _ = require('lodash');
 const configuration = require('config');
@@ -8,6 +8,7 @@ const YAML = require('yamljs');
 const path = require('path');
 const swagger = require('swagger-ui-express');
 const { tryAndCatch } = require('../../utils/routes-utils');
+const { checkSiret } = require('../../utils/validators-utils');
 const { createOrganismeFomateurDTO } = require('../v1/utils/dto');
 const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
 
@@ -19,7 +20,7 @@ module.exports = ({ db, auth, middlewares }) => {
         externalToken: true,
         onInvalidToken: e => {
             let message = e.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide';
-            throw Boom.unauthorized(message, e);
+            throw unauthorized(message);
         }
     });
 
@@ -57,14 +58,19 @@ module.exports = ({ db, auth, middlewares }) => {
         res.send(html);
     });
 
+    const kairosAuthSchema = Joi.object({
+        siret: Joi.string().required(),
+        raison_sociale: Joi.string().required(),
+        courriel: Joi.string().email().required(),
+        region: Joi.string().required(),
+    });
+    const siretSchema = Joi.object({
+        siret: checkSiret().required(),
+    });
+
     router.post('/api/kairos/generate-auth-url', checkAuth, tryAndCatch(async (req, res) => {
 
-        let parameters = await Joi.validate(req.body, {
-            siret: Joi.string().required(),
-            raison_sociale: Joi.string().required(),
-            courriel: Joi.string().email().required(),
-            region: Joi.string().required(),
-        }, { abortEarly: false });
+        let parameters = Joi.attempt(req.body, kairosAuthSchema, '', { abortEarly: false });
 
         let organisme = await db.collection('accounts').findOne({ siret: parameters.siret });
         let created = false;
@@ -87,14 +93,12 @@ module.exports = ({ db, auth, middlewares }) => {
 
     router.get('/api/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
 
-        let parameters = await Joi.validate(req.query, {
-            siret: Joi.string().required(),
-        }, { abortEarly: false });
+        let parameters = Joi.attempt(req.query, siretSchema, '', { abortEarly: false });
 
         let organisme = await db.collection('accounts').findOne({ siret: parameters.siret });
 
         if (!organisme) {
-            throw Boom.badRequest('Numéro de siret invalide');
+            throw badRequest('Numéro de siret invalide');
         }
 
         return res.json({

@@ -3,6 +3,7 @@ const express = require('express');
 const Joi = require('joi');
 const externalLinks = require('../utils/externalLinks');
 const { getFullUrl } = require('../utils/routes-utils');
+const { tokenSchema } = require('../utils/validators-utils');
 
 module.exports = ({ db, configuration, communes, peconnect }) => {
 
@@ -12,6 +13,9 @@ module.exports = ({ db, configuration, communes, peconnect }) => {
         analytics: configuration.analytics,
         nodeEnv: configuration.env,
     };
+    const gotoSchema = Joi.object({
+        goto: Joi.string().required(),
+    });
 
     router.get('/', async (req, res) => {
 
@@ -95,12 +99,8 @@ module.exports = ({ db, configuration, communes, peconnect }) => {
     router.get('/link/:token', async (req, res) => {
 
         
-        let { goto } = await Joi.validate(req.query, {
-            goto: Joi.string().required(),
-        }, { abortEarly: false });
-        let { token } = await Joi.validate(req.params, {
-            token: Joi.string().required(),
-        }, { abortEarly: false });
+        let { goto } = Joi.attempt(req.query, gotoSchema, '', { abortEarly: false });
+        let { token } = Joi.attempt(req.params, tokenSchema, '', { abortEarly: false });
 
         let stagiaire = await db.collection('stagiaires').findOne({ token: token });
         if (!stagiaire) {

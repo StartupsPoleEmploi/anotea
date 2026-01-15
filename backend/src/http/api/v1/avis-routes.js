@@ -1,8 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
 const _ = require('lodash');
-const Boom = require('boom');
-const ObjectID = require('mongodb').ObjectID;
+const { badRequest, notFound } = require('@hapi/boom');
+const { ObjectId } = require('mongodb');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
 const validators = require('./utils/validators');
 const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
@@ -48,17 +48,28 @@ module.exports = ({ db, middlewares }) => {
     let { createHMACAuthMiddleware } = middlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    router.get('/api/v1/avis', checkAuth, tryAndCatch(async (req, res) => {
+    const schemaSearchAvis = Joi.object({
+        organisme_formateur: Joi.string().min(9).max(15),
+        lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
+        certif_info: Joi.string(),
+        formacode: Joi.string(),
+        ...validators.tri(),
+        ...validators.pagination(),
+        ...validators.notesDecimales(),
+    });
 
-        const parameters = await Joi.validate(req.query, {
-            organisme_formateur: Joi.string().min(9).max(15),
-            lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
-            certif_info: Joi.string(),
-            formacode: Joi.string(),
-            ...validators.tri(),
-            ...validators.pagination(),
-            ...validators.notesDecimales(),
-        }, { abortEarly: false });
+    const schemaGetAvis = Joi.object({
+        id: Joi.string().required(),
+        ...validators.notesDecimales(),
+    });
+
+    router.get('/api/v1/avis', checkAuth, tryAndCatch(async (req, res) => {
+        const parameters = Joi.attempt(
+            req.query,
+            schemaSearchAvis,
+            '',
+            { abortEarly: false }
+        );
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
         let filters = _.pick(parameters, ['organisme_formateur', 'lieu_de_formation', 'certif_info', 'formacode']);
@@ -67,15 +78,14 @@ module.exports = ({ db, middlewares }) => {
         let query = buildAvisQuery(filters);
 
         let avis = await db.collection('avis')
-        .find(query)
-        .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
-        .limit(limit)
-        .skip(skip);
+            .find(query)
+            .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
+            .limit(limit)
+            .skip(skip);
 
-        let total = await avis.count();
-        let stream = avis.transformStream({
-            transform: avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales })
-        });
+        let total = await db.collection('avis').countDocuments(query);
+        let stream = avis.map(avis => createAvisDTO(avis, { notes_decimales: parameters.notes_decimales }))
+            .stream();
 
         return sendArrayAsJsonStream(stream, res, {
             arrayPropertyName: 'avis',
@@ -88,20 +98,21 @@ module.exports = ({ db, middlewares }) => {
     }));
 
     router.get('/api/v1/avis/:id', checkAuth, tryAndCatch(async (req, res) => {
+        const parameters = Joi.attempt(
+            Object.assign({}, req.query, req.params),
+            schemaGetAvis,
+            '',
+            { abortEarly: false }
+        );
 
-        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
-            id: Joi.string().required(),
-            ...validators.notesDecimales(),
-        }, { abortEarly: false });
-
-        if (!ObjectID.isValid(parameters.id)) {
-            throw Boom.badRequest('Identifiant invalide');
+        if (!ObjectId.isValid(parameters.id)) {
+            throw badRequest('Identifiant invalide');
         }
 
-        let avis = await db.collection('avis').findOne({ _id: new ObjectID(parameters.id) });
+        let avis = await db.collection('avis').findOne({ _id: new ObjectId(parameters.id) });
 
         if (!avis) {
-            throw Boom.notFound('Identifiant inconnu');
+            throw notFound('Identifiant inconnu');
         }
         res.json(createAvisDTO(avis, { notes_decimales: parameters.notes_decimales }));
     }));

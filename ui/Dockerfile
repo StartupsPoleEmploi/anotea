@@ -18,7 +18,7 @@ RUN mkdir $NVM_DIR \
 
 #Download npm dependencies
 COPY package.json package-lock.json /tmp/
-RUN cd /tmp && npm ci && mkdir -p /opt/anotea/ui && mv /tmp/node_modules /opt/anotea/ui/
+RUN cd /tmp && npm ci --omit=dev && mkdir -p /opt/anotea/ui && mv /tmp/node_modules /opt/anotea/ui/
 
 #Build project
 ARG ANOTEA_ENV

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const cli = require('commander');
+const { program: cli } = require('commander');
 const _ = require('lodash');
 const sendActivationCompteEmails = require('./tasks/sendActivationCompteEmails');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
@@ -16,9 +16,9 @@ cli.description('Send new account emails')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
+let { type = 'send', siret, region, responsable = false, limit = 1, delay = 100, slack } = cli.opts();
 
-    let { type = 'send', siret, region, responsable = false, limit = 1, delay = 100 } = cli;
+execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
     logger.info(`Sending activation email to new organismes ${responsable ? "responsables" : "formateurs"}...`);
 
@@ -52,4 +52,4 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
         ;
         throw stats;
     }
-}, { slack: cli.slack });
+}, { slack: slack });

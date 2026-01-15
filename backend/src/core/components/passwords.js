@@ -27,7 +27,7 @@ module.exports = configuration => {
         },
         checkPassword: async (password, hash) => {
             let legacyHash = getSHA256PasswordHashSync(password);
-            return await bcrypt.compare(password, hash) || await bcrypt.compare(legacyHash, hash);
+            return bcrypt.compareSync(password, hash) || bcrypt.compareSync(legacyHash, hash);
         }
     };
 };

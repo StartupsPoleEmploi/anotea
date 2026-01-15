@@ -39,11 +39,14 @@ module.exports = (db, regions, mailer) => {
             };
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            return mailer.createRegionalMailer(region).sendEmail(
+            return mailer.createRegionalMailerV2(region).sendEmail(
                 organisme.courriel,
                 {
-                    subject: 'France Travail vous donne accès aux avis de vos stagiaires',
-                    body: await render(organisme),
+                    codeMessage: 'ANOTEA_ORGANISME_COMPTE_CREE',
+                    usager: false,
+                    organismeToken: organisme.token,
+                    siret: organisme.siret,
+                    dispensateur: (organisme.score && organisme.score.nb_avis && organisme.score.nb_avis > 0) ? 'dispensateur' : 'responsable',
                 },
             )
             .then(onSuccess)

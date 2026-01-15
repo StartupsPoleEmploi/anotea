@@ -9,6 +9,7 @@ const communes = require('./components/communes');
 const createPeconnect = require('./components/peconnect');
 const createEmails = require('./components/emails/emails');
 const createMailer = require('./components/emails/mailer');
+const createAuthMail = require('./components/emails/auth-mail');
 
 module.exports = async (options = {}) => {
 
@@ -16,7 +17,8 @@ module.exports = async (options = {}) => {
     let logger = options.logger || createLogger('backend', configuration);
     let { client, db } = await database(logger, configuration);
     let regions = createRegions();
-    let mailer = options.mailer || createMailer(configuration, regions);
+    let authMail = options.authMail || createAuthMail(configuration);
+    let mailer = options.mailer || createMailer(configuration, regions, authMail);
     let emails = createEmails(db, configuration, regions, mailer);
 
     return Object.assign({}, {

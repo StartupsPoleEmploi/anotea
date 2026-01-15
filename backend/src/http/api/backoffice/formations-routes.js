@@ -1,17 +1,20 @@
 const Joi = require('joi');
 const express = require('express');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
+const { checkSiret } = require('../../utils/validators-utils');
 
 module.exports = ({ db, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
 
+    const searchOrganismeSchema = Joi.object({
+        organisme: checkSiret(),
+    });
+
     router.get('/api/backoffice/formations', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { organisme } = await Joi.validate(req.query, {
-            organisme: Joi.string().min(9).max(15),
-        }, { abortEarly: false });
+        let { organisme } = Joi.attempt(req.query, searchOrganismeSchema, '', { abortEarly: false });
 
         let stream = await db.collection('avis')
         .aggregate([

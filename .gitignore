@@ -8,3 +8,5 @@ docker-compose.local.yml
 .data
 .env/
 public/vendors
+misc/docker/nginx/app/nginx/conf.d/jail.conf
+rebuild.sh

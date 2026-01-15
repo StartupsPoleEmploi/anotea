@@ -2,7 +2,7 @@ const request = require('supertest');
 const moment = require('moment');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/with-server');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const { newAvis, newIntercarif } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
@@ -19,7 +19,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        let avisId = new ObjectID();
+        let avisId = new ObjectId();
 
         await insertAndReconcile(
             [
@@ -197,7 +197,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            '@context': 'http://schema.org',
+            '@context': 'https://schema.org',
             '@type': 'Course',
             'name': 'Développeur web',
             'description': 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
@@ -534,7 +534,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        let avisId = new ObjectID();
+        let avisId = new ObjectId();
         await insertAndReconcile(
             [
                 newIntercarif({

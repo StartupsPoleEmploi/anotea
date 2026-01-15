@@ -27,7 +27,7 @@ export const convertToRatioLine = (stats, type, path1, path2, options = {}) => {
         })
         .reduce((acc, bucket) => {
             //group
-            let selector = moment(bucket.date).startOf(options.groupBy || 'months').format('YYYY-MM-DDTHH:mm:ss.SSS');
+            let selector = moment(bucket.date).add(-1, 'day').startOf(options.groupBy || 'months').format('YYYY-MM-DDTHH:mm:ss.SSS');
             let group = acc.find(v => v.date === selector);
             if (!group) {
                 group = {
@@ -45,7 +45,7 @@ export const convertToRatioLine = (stats, type, path1, path2, options = {}) => {
 
         }, [])
         .filter(b => b[path2] > 0)// Ignore bucket
-        .slice(0, -1)// Drop last bucket
+        .slice(1)// Drop last bucket
         .map(bucket => {
             return {
                 x: bucket.date,

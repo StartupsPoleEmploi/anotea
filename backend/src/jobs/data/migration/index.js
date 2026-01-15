@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 const { execute } = require('../../job-utils');
-const cli = require('commander');
+const { program: cli } = require('commander');
 
 cli.parse(process.argv);
 

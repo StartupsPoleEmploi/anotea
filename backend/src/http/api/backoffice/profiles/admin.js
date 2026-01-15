@@ -15,7 +15,7 @@ module.exports = (db, regions, user) => {
             form: () => {
                 return {
                     ...parent.validators.form(),
-                    codeRegion: Joi.string().valid(regions.findActiveRegions().map(f => f.codeRegion)),
+                    codeRegion: Joi.string().valid(...(regions.findActiveRegions().map(f => f.codeRegion))),
                 };
             },
             filters: () => {

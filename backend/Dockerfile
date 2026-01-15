@@ -1,13 +1,14 @@
-FROM node:12.22.12-stretch
+FROM node:24.12.0-trixie-slim
 
-RUN npm install -g forever
+RUN npm install pm2 -g --verbose
 
-#Install and cache node_modules waiting for npm 6.1.1 to be able to use npm ci instead of npm install
 COPY package.json package-lock.json /tmp/
-RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backend && mv /tmp/node_modules /opt/anotea/backend/
+RUN cd /tmp && npm ci --loglevel verbose && mkdir -p /opt/anotea/backend && mv /tmp/node_modules /opt/anotea/backend/
+
+USER 1000
 
 COPY ./ /opt/anotea/backend
 
 WORKDIR /opt/anotea/backend
 
-CMD ["forever", "index.js"]
+CMD ["pm2-runtime", "index.js"]

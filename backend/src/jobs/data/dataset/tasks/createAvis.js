@@ -1,9 +1,7 @@
 const { batchCursor } = require('../../../job-utils');
 const moment = require('moment');
 const _ = require('lodash');
-const faker = require('faker');
-
-faker.locale = 'fr';
+const { fakerFR: faker } = require('@faker-js/faker');
 
 const buildAvis = (stagiaire, custom = {}) => {
 

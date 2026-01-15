@@ -1,7 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
-const Boom = require('boom');
+const { badRequest } = require('@hapi/boom');
 const { tryAndCatch } = require('../../utils/routes-utils');
+const { tokenSchema, identifiantSchema, changePasswordSchema } = require('../../utils/validators-utils');
 
 module.exports = ({ db, emails, passwords }) => {
 
@@ -10,9 +11,7 @@ module.exports = ({ db, emails, passwords }) => {
 
     router.put('/api/backoffice/askNewPassword', tryAndCatch(async (req, res) => {
 
-        let { identifiant } = await Joi.validate(req.body, {
-            identifiant: Joi.string().required(),
-        }, { abortEarly: false });
+        let { identifiant } = Joi.attempt(req.body, identifiantSchema, '', { abortEarly: false });
 
         let account = await db.collection('accounts').findOne({
             $or: [
@@ -31,9 +30,7 @@ module.exports = ({ db, emails, passwords }) => {
 
     router.get('/api/backoffice/checkIfPasswordTokenExists', async (req, res) => {
         try {
-            let { token } = await Joi.validate(req.query, {
-                token: Joi.string().required(),
-            }, { abortEarly: false });
+            let { token } = Joi.attempt(req.query, tokenSchema, '', { abortEarly: false });
             let result = await db.collection('forgottenPasswordTokens').findOne({ token: token });
 
             if (result) {
@@ -48,14 +45,11 @@ module.exports = ({ db, emails, passwords }) => {
 
     router.put('/api/backoffice/resetPassword', tryAndCatch(async (req, res) => {
 
-        let { password, token } = await Joi.validate(req.body, {
-            password: Joi.string().required(),
-            token: Joi.string().required(),
-        }, { abortEarly: false });
+        let { password, token } = Joi.attempt(req.body, changePasswordSchema, '', { abortEarly: false });
 
         let forgottenPasswordToken = await db.collection('forgottenPasswordTokens').findOne({ token });
         if (!forgottenPasswordToken) {
-            throw Boom.badRequest('Numéro de token invalide');
+            throw badRequest('Numéro de token invalide');
         }
 
         let account = await db.collection('accounts').findOne({ _id: forgottenPasswordToken.id });
@@ -63,7 +57,7 @@ module.exports = ({ db, emails, passwords }) => {
             if (isPasswordStrongEnough(password)) {
                 let passwordHash = await hashPassword(password);
                 await Promise.all([
-                    db.collection('forgottenPasswordTokens').remove({ token }),
+                    db.collection('forgottenPasswordTokens').deleteMany({ token }),
                     db.collection('accounts').updateOne({ _id: account._id }, {
                         $set: {
                             'meta.rehashed': true,
@@ -75,7 +69,7 @@ module.exports = ({ db, emails, passwords }) => {
                 return res.json({});
 
             } else {
-                throw Boom.badRequest(`Le mot de passe n'est pas valide.`);
+                throw badRequest(`Le mot de passe n'est pas valide.`);
             }
         }
 

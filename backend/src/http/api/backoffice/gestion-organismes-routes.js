@@ -1,10 +1,11 @@
-const objectId = require('mongodb').ObjectId;
+const { ObjectId } = require('mongodb');
 const express = require('express');
-const Boom = require('boom');
+const { notFound } = require('@hapi/boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { IdNotFoundError } = require('../../../core/errors');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../utils/routes-utils');
+const { idSchema } = require('../../utils/validators-utils');
 
 module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
@@ -13,30 +14,32 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
 
-    const convertOrganismeToDTO = organisme => {
-        organisme.status = organisme.passwordHash ? 'active' : 'inactive';
-        return _.omit(organisme, ['passwordHash', 'token']);
-    };
+    const gestionOrganismeSchema = Joi.object({
+        status: Joi.string().allow('all', 'active', 'inactive').default('all'),
+        search: Joi.string(),
+            page: Joi.number().min(0).default(0),
+    });
+    const avisSearchSchema = Joi.object({
+        status: Joi.string().allow('all', 'active', 'inactive').default('all'),
+        search: Joi.string(),
+        token: Joi.string().required(),
+    });
+    const courrielSchema = Joi.object({ courriel: Joi.string().email().required() });
 
     const saveEvent = (id, type, source) => {
         db.collection('events').insertOne({ organisationId: id, date: new Date(), type: type, source: source });
     };
 
-    const recupererIdOrganisme = async idNonModifie => {
-        return isNaN(idNonModifie) ? (await objectId(idNonModifie)) : parseInt(idNonModifie);
+    const recupererIdOrganisme = idNonModifie => {
+        return isNaN(idNonModifie) ? (new ObjectId(idNonModifie)) : parseInt(idNonModifie);
     };
 
     router.get('/api/backoffice/moderateur/organismes', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { status, search, page } = await Joi.validate(req.query, {
-            status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
-            search: Joi.string(),
-            page: Joi.number().min(0).default(0),
-        }, { abortEarly: false });
+        let { status, search, page } = Joi.attempt(req.query, gestionOrganismeSchema, '', { abortEarly: false });
 
-        let cursor = db.collection('accounts')
-        .find({
+        const query = {
             profile: 'organisme',
             codeRegion: codeRegion,
             ...(search ? {
@@ -46,21 +49,30 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
                     { 'raison_sociale': new RegExp(search, 'i') }]
             } : {}),
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
-        })
-        //.sort({ updateDate: -1 })
-        .skip((page || 0) * itemsPerPage)
-        .limit(itemsPerPage);
+        };
 
-        let [total, itemsOnThisPage] = await Promise.all([
-            cursor.count(),
-            cursor.count(true),
+        const itemToSkip = (page || 0) * itemsPerPage;
+        let cursor = db.collection('accounts').aggregate([
+            { $match: query },
+            { 
+                $addFields: { 
+                    status: { $cond: { if: { $not: "$passwordHash" }, then: "inactive", else: "active" } }
+                }
+            },
+            { 
+                $project: { 
+                    passwordHash: false, 
+                    token: false,
+                }
+            },
+            { $skip: itemToSkip },
+            { $limit: itemsPerPage }
         ]);
 
-        let stream = cursor.transformStream({
-            transform: o => convertOrganismeToDTO(o),
-        });
+        const total = await db.collection('accounts').countDocuments(query);
+        const itemsOnThisPage = Math.min(total - itemToSkip, itemsPerPage);
 
-        return sendArrayAsJsonStream(stream, res, {
+        return sendArrayAsJsonStream(cursor.stream(), res, {
             arrayPropertyName: 'organismes',
             arrayWrapper: {
                 meta: {
@@ -79,11 +91,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
     router.get('/api/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { status, search } = await Joi.validate(req.query, {
-            status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
-            search: Joi.string(),
-            token: Joi.string().required(),
-        }, { abortEarly: false });
+        let { status, search } = Joi.attempt(req.query, avisSearchSchema, '', { abortEarly: false });
 
         let stream = await db.collection('accounts').find({
             profile: 'organisme',
@@ -95,7 +103,11 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
                     { 'raison_sociale': new RegExp(search, 'i') }]
             } : {}),
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
-        }, { token: 0 }).stream();
+        }, {
+            projection: { 
+                token: false 
+            }
+        }).stream();
 
         let isKairos = organisme => {
             let kairos = organisme.sources && organisme.sources.find(s => s === 'kairos');
@@ -120,12 +132,12 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
                     }
                 },
                 'Email': organisme => organisme.courriel,
-                'Nombre d\'Avis': organisme => (organisme.score.nb_avis ? organisme.score.nb_avis : 0) + (organisme.nbAvisResponsablePasFormateurSiretExact ? organisme.nbAvisResponsablePasFormateurSiretExact : 0),
+                'Nombre d\'Avis': organisme => (organisme?.score?.nb_avis ? organisme.score.nb_avis : 0) + (organisme.nbAvisResponsablePasFormateurSiretExact ? organisme.nbAvisResponsablePasFormateurSiretExact : 0),
                 'Kairos': organisme => isKairos(organisme),
                 'Lieux de formation': organisme => {
                     return organisme.lieux_de_formation.map(l => `${l.adresse.code_postal}/${l.adresse.ville}`).join(',');
                 },
-            }, { encoding: 'UTF-16BE', filename: 'organismes.csv' });
+            }, { encoding: 'utf8', filename: 'organismes.csv' });
         } catch (e) {
             //FIXME we must handle errors
             logger.error('Unable to send CSV file', e);
@@ -135,15 +147,15 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     router.put('/api/backoffice/moderateur/organismes/:id/updateCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        let idNonModifie = (await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false })).id;
+        let idNonModifie = Joi.attempt(req.params, idSchema, '', { abortEarly: false }).id;
                 
-        let bonId = await recupererIdOrganisme(idNonModifie);
+        let bonId = recupererIdOrganisme(idNonModifie);
 
         let organisme = await db.collection('accounts').findOne({
             _id: bonId
         });
         
-        let { courriel } = await Joi.validate(req.body, { courriel: Joi.string().email().required() }, { abortEarly: false });
+        let { courriel } = Joi.attempt(req.body, courrielSchema, '', { abortEarly: false });
 
         let alreadyExists = !!organisme.courriels.find(v => v.courriel === courriel);
 
@@ -157,10 +169,10 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
                     }
                 }),
             },
-            { returnOriginal: false }
+            { returnDocument: "after" }
         );
 
-        if (!result.value) {
+        if (!result) {
             throw new IdNotFoundError(`Avis with identifier ${organisme._id} not found`);
         }
 
@@ -186,7 +198,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
     }));
 
     router.post('/api/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let idNonModifie = (await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false })).id;
+        let idNonModifie = Joi.attempt(req.params, idSchema, '', { abortEarly: false }).id;
             
         let bonId = await recupererIdOrganisme(idNonModifie);
 
@@ -203,7 +215,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             return res.json({ 'status': 'OK' });
 
         } else {
-            throw Boom.notFound('Not found');
+            throw notFound('Not found');
         }
     }));
 

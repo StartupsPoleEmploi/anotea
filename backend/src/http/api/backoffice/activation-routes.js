@@ -1,7 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
-const Boom = require('boom');
+const { badRequest } = require('@hapi/boom');
 const { tryAndCatch } = require('../../utils/routes-utils');
+const { tokenSchema, passwordSchema } = require('../../utils/validators-utils');
 
 module.exports = ({ db, passwords }) => {
 
@@ -9,9 +10,7 @@ module.exports = ({ db, passwords }) => {
     let { hashPassword, isPasswordStrongEnough } = passwords;
 
     router.get('/api/backoffice/activation/:token', tryAndCatch(async (req, res) => {
-        let { token } = await Joi.validate(req.params, {
-            token: Joi.string().required(),
-        }, { abortEarly: false });
+        let { token } = Joi.attempt(req.params, tokenSchema, '', { abortEarly: false });
 
         let account = await db.collection('accounts').findOne({ token: token });
         if (account) {
@@ -21,17 +20,13 @@ module.exports = ({ db, passwords }) => {
                 status: account.passwordHash ? 'active' : 'inactive',
             });
         }
-        throw Boom.badRequest('Numéro de token invalide');
+        throw badRequest('Numéro de token invalide');
     }));
 
     router.post('/api/backoffice/activation/:token', tryAndCatch(async (req, res) => {
-        let { token } = await Joi.validate(req.params, {
-            token: Joi.string().required(),
-        }, { abortEarly: false });
+        let { token } = Joi.attempt(req.params, tokenSchema, '', { abortEarly: false });
 
-        let { password } = await Joi.validate(req.body, {
-            password: Joi.string().required(),
-        }, { abortEarly: false });
+        let { password } = Joi.attempt(req.body, passwordSchema, '', { abortEarly: false });
 
         let account = await db.collection('accounts').findOne({ token });
         if (account) {
@@ -46,10 +41,10 @@ module.exports = ({ db, passwords }) => {
 
                     return res.status(201).json({});
                 }
-                throw Boom.badRequest('Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
+                throw badRequest('Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
             }
         }
-        throw Boom.badRequest('Numéro de token invalide');
+        throw badRequest('Numéro de token invalide');
     }));
 
     return router;

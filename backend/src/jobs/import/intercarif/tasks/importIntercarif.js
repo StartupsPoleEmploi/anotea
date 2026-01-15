@@ -21,7 +21,8 @@ module.exports = async (db, logger, file, options = {}) => {
         ...(options.unpack ? [zlib.createGunzip()] : []),
         new LineStream(),
         new Transform({
-            objectMode: true,
+            readableObjectMode: true,
+            writableObjectMode: true,
             transform: function(chunk, encoding, callback) {
                 try {
                     let line = chunk.toString();

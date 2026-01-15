@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 'use strict';
-const cli = require('commander');
+const { program: cli } = require('commander');
 const { execute } = require('../job-utils');
 const removeOldStagiaires = require('./tasks/removeOldStagiaires');
 
 cli.description('Supprime données inutiles')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
+
+const { slack } = cli.opts();
 
 execute(async ({ db, logger, sendSlackNotification }) => {
 
@@ -29,4 +31,4 @@ execute(async ({ db, logger, sendSlackNotification }) => {
     }
 
     return stats;
-}, { slack: cli.slack });
+}, { slack: slack });

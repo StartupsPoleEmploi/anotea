@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable max-statements-per-line */
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const _ = require('lodash');
 const { promiseAll } = require('../../../job-utils');
 
@@ -131,7 +131,7 @@ module.exports = async (db, logger) => {
                 { upsert: true }
             );
 
-            if (results.result.nModified === 1) {
+            if (results.modifiedCount === 1) {
                 stats.updated++;
             }
 

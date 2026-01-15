@@ -2,12 +2,13 @@ const express = require('express');
 const moment = require('moment');
 const _ = require('lodash');
 const { getDeviceType } = require('./utils/analytics');
-const Boom = require('boom');
+const { badRequest } = require('@hapi/boom');
 const Joi = require('joi');
 const externalLinks = require('../../utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
 const { tryAndCatch } = require('../../utils/routes-utils');
 const { AlreadySentError, BadDataError } = require('../../../core/errors');
+const { tokenSchema } = require('../../utils/validators-utils');
 
 module.exports = ({ db, logger, configuration, regions, communes }) => {
 
@@ -16,9 +17,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const getStagiaireFromToken = async (req, res, next) => {
         try {
-            let { token } = await Joi.validate(req.params, {
-                token: Joi.string().required()
-            }, { abortEarly: false });
+            let { token } = Joi.attempt(req.params, tokenSchema, '', { abortEarly: false });
             db.collection('stagiaires').findOne({ token: token })
             .then(stagiaire => {
                 if (!stagiaire) {
@@ -52,16 +51,20 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         next();
     };
 
-    const validateNotes = body => {
-        const rateRule = Joi.number().integer().min(1).max(5).required();
+    const rateRule = Joi.number().integer().min(1).max(5).required();
+    const notesSchema = Joi.object().keys({
+        accueil: rateRule,
+        contenu_formation: rateRule,
+        equipe_formateurs: rateRule,
+        moyen_materiel: rateRule,
+        accompagnement: rateRule
+    });
+    const sentenceSchema = Joi.object({
+        sentence: Joi.string().required(),
+    });
 
-        const schema = Joi.object().keys({
-            accueil: rateRule,
-            contenu_formation: rateRule,
-            equipe_formateurs: rateRule,
-            moyen_materiel: rateRule,
-            accompagnement: rateRule
-        });
+    const validateNotes = body => {
+
         let notes = {
             accueil: body.avis_accueil,
             contenu_formation: body.avis_contenu_formation,
@@ -70,7 +73,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             accompagnement: body.avis_accompagnement
         };
 
-        return Joi.validate(notes, schema);
+        return notesSchema.validate(notes);
     };
 
     const calculateAverageRate = avis => {
@@ -85,10 +88,10 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const buildAvis = (notes, token, body, stagiaire) => {
         
-        Joi.assert(body.commentaire, {
-            texte: Joi.string().allow(null, ''),
-            titre: Joi.string().allow(null, ''),
-        }, { abortEarly: false });
+        Joi.assert(body.commentaire, Joi.object({
+            texte: Joi.string().allow(null, '').max(200),
+            titre: Joi.string().allow(null, '').max(200),
+        }), { abortEarly: false });
         
         let text = sanitize(_.get(body, 'commentaire.texte', null));
         let title = sanitize(_.get(body, 'commentaire.titre', null));
@@ -153,16 +156,14 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     router.get('/api/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
         try {
-            let { sentence } = await Joi.validate(req.query, {
-                sentence: Joi.string().required(),
-            }, { abortEarly: false });
+            let { sentence } = Joi.attempt(req.query, sentenceSchema, '', { abortEarly: false });
 
             if (await badwords.isGood(sentence)) {
                 return res.json({ isGood: true });
             }
-            throw Boom.badRequest('Mot invalide');
+            throw badRequest('Mot invalide');
         } catch (err) {
-            throw Boom.badRequest('Mot invalide');
+            throw badRequest('Mot invalide');
         }
 
     }));
@@ -191,24 +192,23 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             throw new AlreadySentError();
         }
 
-        let resultNotes = validateNotes(req.body);
-        if (resultNotes.error === null) {
-
-            const avis = buildAvis(resultNotes.value, req.params.token, req.body, req.stagiaire);
-
-            let validation = await validateAvis(avis);
-            if (validation.error === null) {
-                avis.notes.global = calculateAverageRate(avis);
-                await Promise.all([
-                    db.collection('avis').insertOne(avis),
-                    db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
-                ]);
-            } else {
-                throw new BadDataError();
-            }
-        } else {
+        let { error, value: resultNotes } = validateNotes(req.body);
+        if (error) {
             throw new BadDataError();
         }
+
+        const avis = buildAvis(resultNotes, req.params.token, req.body, req.stagiaire);
+
+        let validation = await validateAvis(avis);
+        if (validation.error) {
+            throw new BadDataError();
+        }
+
+        avis.notes.global = calculateAverageRate(avis);
+        await Promise.all([
+            db.collection('avis').insertOne(avis),
+            db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
+        ]);
 
         return res.send({
             stagiaire: { formation: stagiaire.formation, token: stagiaire.token },

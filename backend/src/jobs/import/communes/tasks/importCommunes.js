@@ -1,5 +1,5 @@
 const fs = require('fs');
-const parse = require('csv-parse');
+const { parse } = require('csv-parse');
 const { writeObject, pipeline, ignoreFirstLine } = require('../../../../core/utils/stream-utils');
 
 let getCedexMapping = async file => {
@@ -33,7 +33,7 @@ module.exports = async (db, logger, communesCsvFile, cedexCsvFile) => {
 
     let stats = { total: 0, created: 0, updated: 0, invalid: 0 };
 
-    await db.collection('communes').removeMany({});
+    await db.collection('communes').deleteMany({});
 
     let cedexMapping = await getCedexMapping(cedexCsvFile);
     await pipeline([
@@ -59,10 +59,10 @@ module.exports = async (db, logger, communesCsvFile, cedexCsvFile) => {
                     { upsert: true }
                 );
 
-                if (results.result.nModified === 1) {
-                    stats.updated += results.result.nModified;
-                } else {
-                    stats.created += results.result.n;
+                if (results.modifiedCount === 1) {
+                    stats.updated += results.modifiedCount;
+                } else if (results.upsertedCount === 1) {
+                    stats.created += results.upsertedCount;
                 }
             } catch (e) {
                 stats.invalid++;

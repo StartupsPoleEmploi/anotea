@@ -17,12 +17,11 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         await new Promise(resolve => {
             const timeout = setInterval(() => {
-                fs.exists(datalakeFile, exists => {
-                    if (exists) {
-                        clearInterval(timeout);
-                        resolve();
-                    }
-                });
+                const exists = fs.existsSync(datalakeFile);
+                if (exists) {
+                    clearInterval(timeout);
+                    resolve();
+                }
             }, 10);
         });
 
@@ -45,7 +44,8 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         .get('/api/v1/ping/authenticated')
         .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated' }))
         .set('x-real-ip', '192.0.0.1')
-        .set('referer', 'http://www.la-bonne-formation.fr');
+        .set('referer', 'http://www.la-bonne-formation.fr')
+        .set('User-Agent', 'node-superagent-test/1.0');
 
         let lines = await getFileContent(configuration);
 
