@@ -53,10 +53,10 @@ module.exports = async (db, logger, filters = {}) => {
                 'formation.action.session.id': idSession
             }, {
                 $set: {
-                    'formation.action.session.nbStagiairesFormes': await db.collection('stagiaires').find({
+                    'formation.action.session.nbStagiairesFormes': await db.collection('stagiaires').countDocuments({
                         'formation.action.session.id': idSession,
                         'formation.action.session.periode.fin': { $lte: new Date() },
-                    }).count()
+                    })
                 }
             });
         } catch (err) {
