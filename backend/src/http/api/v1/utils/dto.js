@@ -55,7 +55,7 @@ module.exports = {
             delete dto.meta.import_date;
         }
 
-        if (!options.notes_decimales && dto.avis) {
+        if (dto.avis) {
             dto.avis = dto.avis.map(a => createAvisDTO(a, options));
         }
 

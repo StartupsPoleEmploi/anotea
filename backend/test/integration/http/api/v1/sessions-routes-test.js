@@ -284,7 +284,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ]
         );
 
-        let response = await request(app).get(`/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX`);
+        let response = await request(app).get(`/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX?notes_decimales=true`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis[0].commentaire, undefined);
