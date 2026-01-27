@@ -9,8 +9,6 @@ const renderFile = promisify(ejs.renderFile);
 const fetch = require('node-fetch').default;
 const { badRequest } = require('@hapi/boom');
 
-const htmlToText = require('nodemailer-html-to-text').htmlToText;
-const nodemailer = require('nodemailer');
 
 module.exports = (configuration, regions, authMail) => {
 
@@ -35,26 +33,11 @@ module.exports = (configuration, regions, authMail) => {
         siret: Joi.string(), 
         texteReponse: Joi.string(),
         avisToken: Joi.string(),
-        texteAvis: Joi.string(),
+        texteAvis: Joi.string().allow(''),
         dispensateur: Joi.string(),
         nbUnreadCommentaires: Joi.string(),
     });
 
-    let transporter = nodemailer.createTransport({        name: configuration.smtp.hostname,
-        host: configuration.smtp.host,
-        port: configuration.smtp.port,
-        secure: configuration.smtp.secure,
-        greetingTimeout: configuration.smtp.greetingTimeout,
-        tls: {
-            rejectUnauthorized: false
-        },
-        ...(!configuration.smtp.user ? {} : {
-            auth: {
-                user: configuration.smtp.user,
-                pass: configuration.smtp.password
-            }
-        })
-    });
 
     let getRegionEmail = region => region.contact ? `${region.contact}@francetravail.fr` : configuration.smtp.from;
     let getPublicUrl = path => `${(configuration.app.public_hostname)}${path}`;
@@ -85,22 +68,7 @@ module.exports = (configuration, regions, authMail) => {
         createRegionalMailer: region => {
             return {
                 sendEmail: async (emailAddress, message, options = {}) => {
-
-                    let { subject, body } = Joi.attempt(message, mailV1, '', { abortEarly: false });
-
-                    return transporter.sendMail(_.merge({}, {
-                        to: emailAddress,
-                        subject,
-                        from: `Anotea <${configuration.smtp.from}>`,
-                        replyTo: `Anotea <${getRegionEmail(region)}>`,
-                        list: {
-                            help: getPublicUrl('/faq'),
-                        },
-                        html: body,
-                    }, {
-                        ...options,
-                        ...(process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {}),
-                    }));
+                    throw badRequest(`could not send mail (v1)`);
                 }
             };
         },
@@ -250,6 +218,9 @@ module.exports = (configuration, regions, authMail) => {
                         //the mail has an uuid that can be logged if needed
                         return data.uuid;
                     } else {
+                        const errorText = await response.text();
+                        const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
+                        console.error(`Failed to send mail, Status: ${response.status}, Error response:', ${truncatedError}`);
                         throw badRequest(`could not send mail`);
                     }
                 }
