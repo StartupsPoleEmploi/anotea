@@ -5,7 +5,7 @@ RUN npm install pm2 -g --verbose
 COPY package.json package-lock.json /tmp/
 RUN cd /tmp && npm ci --loglevel verbose && mkdir -p /opt/anotea/backend && mv /tmp/node_modules /opt/anotea/backend/
 
-RUN mkdir -p /data/exports && chown -R node:node /data/exports
+RUN mkdir -p /data/exports && mkdir -p /data/exports/datalake && chown -R node:node /data/exports
 
 USER 1000
 
