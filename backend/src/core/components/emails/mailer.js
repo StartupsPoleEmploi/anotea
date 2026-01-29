@@ -219,7 +219,9 @@ module.exports = (configuration, regions, authMail) => {
                         return data.uuid;
                     } else {
                         const errorText = await response.text();
-                        const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
+                        const truncatedError = errorText ? 
+                           errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText
+                           : '';
                         console.error(`Failed to send mail, Status: ${response.status}, Error response:', ${truncatedError}`);
                         throw badRequest(`could not send mail`);
                     }
