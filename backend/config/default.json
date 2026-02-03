@@ -14,7 +14,7 @@
       "port": 24224
     },
     "datalake": {
-      "path": "../.data/datalake/logs",
+      "path": "/data/exports/datalake",
       "fileNamePrefix": "anotea"
     }
   },
