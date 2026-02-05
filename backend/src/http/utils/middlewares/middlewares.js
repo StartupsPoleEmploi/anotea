@@ -3,7 +3,6 @@ const _ = require('lodash');
 const uuid = require('uuid');
 const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 const { tryAndCatch, getFullUrl } = require('../routes-utils');
-const createDatalakeExporter = require('./createDatalakeExporter');
 const createResponseRecorder = require('./createResponseRecorder');
 const findApplication = require('./findApplication');
 const Joi = require('joi');
@@ -125,7 +124,6 @@ module.exports = (auth, logger, configuration) => {
         },
         logHttpRequests: () => {
 
-            let exporter = createDatalakeExporter(logger, configuration);
             return (req, res, next) => {
 
                 let relativeUrl = (req.baseUrl || '') + (req.url || '');
@@ -173,10 +171,6 @@ module.exports = (auth, logger, configuration) => {
                                 size: recorder.getSize(),
                             },
                         };
-
-                        if (relativeUrl.startsWith('/api/v1/')) {
-                            exporter.export(data);
-                        }
 
                         logger[error ? 'error' : 'info'](data, `Http Request ${error ? 'KO' : 'OK'}`);
 
