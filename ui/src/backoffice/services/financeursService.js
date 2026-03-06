@@ -18,8 +18,8 @@ export const getDispositifs = () => {
         { code: 'CR', libelle: 'Conseil régional' },
         { code: 'ETAT', libelle: 'ETAT' },
         { code: 'FOAD', libelle: 'FOAD' },
-        { code: 'OPCA', libelle: 'OPCA' },
-        { code: 'POEC_OPCA', libelle: 'POEC_OPCA' },
+        { code: 'OPCA', libelle: 'OPCO' },
+        { code: 'POEC_OPCA', libelle: 'POEC_OPCO' },
         { code: 'POEI_MONO', libelle: 'POEI_MONO' },
     ];
 };

@@ -54,6 +54,10 @@ module.exports = ({ db, auth, passwords, regions }) => {
                 nbAvisResponsable: account.nbAvisResponsable,
                 nbAvisResponsablePasFormateur: account.nbAvisResponsablePasFormateur,
             } : {}),
+            ...(profile === 'opco' ? {
+                codeFinanceur: account.codeFinanceur,
+                codeOpco: account.codeOpco,
+            } : {}),
         });
 
         return retourstring;

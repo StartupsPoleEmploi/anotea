@@ -64,7 +64,7 @@ export default class FinanceurForm extends React.Component {
 
     mustShowCodeRegionFilter() {
         let { account } = this.context;
-        return account.profile === 'admin';
+        return account.profile === 'admin' || account.codeFinanceur === 'opco';
     }
 
     isFormSynchronizedWithQuery = () => {

@@ -13,6 +13,7 @@ const stagiaireSchema = Joi.object({
     codeRegion: Joi.string().required(),
     refreshKey: Joi.string().required(),
     dispositifFinancement: Joi.string(),
+    codeOpco: Joi.string().allow(null).allow(''),
     individu: {
         nom: Joi.string().required(),
         prenom: Joi.string().allow('').required(),

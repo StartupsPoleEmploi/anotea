@@ -127,6 +127,7 @@ module.exports = (db, regions) => {
                 codeRegion: region.codeRegion,
                 refreshKey: md5(`${email};${idSession}`),
                 dispositifFinancement: record['c_dispositifformation'],
+                codeOpco: record['dc_cofinanceuropca'],
                 individu: {
                     nom: record['c_nomcorrespondance'],
                     prenom: record['c_prenomcorrespondance'],

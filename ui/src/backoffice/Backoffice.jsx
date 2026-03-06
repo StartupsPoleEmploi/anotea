@@ -113,6 +113,18 @@ class Backoffice extends Component {
                     };
                 },
             },
+            opco: {
+                theme: {
+                    backgroundColor: 'green',
+                    buttonColor: 'green',
+                },
+                components: () => {
+                    return {
+                        header: <Chunk name="header" load={() => (<FinanceurHeaderItems />)} />,
+                        routes: <Chunk name="financeur" load={() => (<FinanceurRoutes router={router} />)} />
+                    };
+                },
+            },
             admin: {
                 theme: {
                     backgroundColor: 'green',

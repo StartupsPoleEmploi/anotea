@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const Joi = require('joi');
 const moment = require('moment');
-const { isOpco, getOpcos } = require('../../../../core/utils/opcos');
+const {getOpcos } = require('../../../../core/utils/opcos');
 const { arrayOf } = require('../../../utils/validators-utils');
 
 module.exports = (db, regions, user) => {
@@ -11,8 +11,9 @@ module.exports = (db, regions, user) => {
         getUser: () => user,
         getShield: () => {
             return {
-                'codeRegion': user.codeRegion,
-                'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
+                // TODO a verifier ça
+                'c_dispositifformation':{'$in' : ['POEC_OPCA', 'OPCA']},
+                'codeOpco': user.codeOpco,
             };
         },
         validators: {
@@ -24,11 +25,8 @@ module.exports = (db, regions, user) => {
                     numeroFormation: Joi.string(),
                     siren: Joi.string().min(0).max(9),
                     siret: Joi.string().min(0).max(14),
-                    codeFinanceur: isOpco(user.codeFinanceur) ?
-                        Joi.string() : Joi.any().forbidden(),
-                    // pas sur du fonctionnement de ceci !
-                    codeOpco: isOpco(user.codeFinanceur) ?
-                        Joi.string().valid(...(getOpcos().map(f => f.code))) : Joi.any().forbidden(),
+                    codeFinanceur: Joi.string().valid(16),
+                    codeOpco: Joi.string().valid(...(getOpcos().map(f => f.code))),
                 };
             },
             filters: () => {
@@ -54,11 +52,10 @@ module.exports = (db, regions, user) => {
             },
             buildStagiaireQuery: async parameters => {
                 let { codeFinanceur, siren, siret, numeroFormation, debut, fin } = parameters;
-                let financeur = isOpco(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
 
                 return {
-                    'codeRegion': user.codeRegion,
-                    'formation.action.organisme_financeurs.code_financeur': financeur,
+                    'c_dispositifformation':{'$in' : ['POEC_OPCA', 'OPCA']},
+                    'codeOpco': user.codeOpco,
                     ...(siret || siren ? { $or: [
                         {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
@@ -71,15 +68,13 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
-                    codeFinanceur, siren, siret, numeroFormation, debut, fin,
+                    siren, siret, numeroFormation, debut, fin,
                     commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
                 } = parameters;
 
-                let financeur = isOpco(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
-
                 return {
-                    'codeRegion': user.codeRegion,
-                    'formation.action.organisme_financeurs.code_financeur': financeur,
+                    'c_dispositifformation':{'$in' : ['POEC_OPCA', 'OPCA']},
+                    'codeOpco': user.codeOpco,
                     ...(siret || siren ? { $or: [
                         {'formation.action.organisme_formateur.siret': new RegExp(`^^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
