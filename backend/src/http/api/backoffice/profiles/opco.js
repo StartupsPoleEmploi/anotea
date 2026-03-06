@@ -25,6 +25,9 @@ module.exports = (db, regions, user) => {
                     siren: Joi.string().min(0).max(9),
                     siret: Joi.string().min(0).max(14),
                     codeFinanceur: isOpco(user.codeFinanceur) ?
+                        Joi.string() : Joi.any().forbidden(),
+                    // pas sur du fonctionnement de ceci !
+                    codeOpco: isOpco(user.codeFinanceur) ?
                         Joi.string().valid(...(getOpcos().map(f => f.code))) : Joi.any().forbidden(),
                 };
             },
