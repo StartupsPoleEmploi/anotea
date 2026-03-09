@@ -12,8 +12,8 @@ module.exports = (db, regions, user) => {
         getShield: () => {
             return {
                 // TODO a verifier ça
-                'c_dispositifformation':{'$in' : ['POEC_OPCA', 'OPCA']},
-                'codeOpco': user.codeOpco,
+                dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
+                codeOpco: user.codeOpco,
             };
         },
         validators: {
@@ -25,7 +25,6 @@ module.exports = (db, regions, user) => {
                     numeroFormation: Joi.string(),
                     siren: Joi.string().min(0).max(9),
                     siret: Joi.string().min(0).max(14),
-                    codeFinanceur: Joi.string().valid(16),
                     codeOpco: Joi.string().valid(...(getOpcos().map(f => f.code))),
                 };
             },
@@ -51,16 +50,16 @@ module.exports = (db, regions, user) => {
                 };
             },
             buildStagiaireQuery: async parameters => {
-                let { codeFinanceur, siren, siret, numeroFormation, debut, fin } = parameters;
+                let { codeRegion, siren, siret, numeroFormation, debut, fin } = parameters;
 
                 return {
-                    'c_dispositifformation':{'$in' : ['POEC_OPCA', 'OPCA']},
-                    'codeOpco': user.codeOpco,
+                    dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
+                    codeOpco: user.codeOpco,
                     ...(siret || siren ? { $or: [
                         {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
                     ]} : {}),
-                    ...(codeFinanceur ? { 'formation.action.organisme_financeurs.code_financeur': codeFinanceur } : {}),
+                    codeRegion: codeRegion || { $exists: true },
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
                     ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {})
@@ -68,17 +67,18 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
-                    siren, siret, numeroFormation, debut, fin,
+                    codeRegion, siren, siret, numeroFormation, debut, fin,
                     commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
                 } = parameters;
 
                 return {
-                    'c_dispositifformation':{'$in' : ['POEC_OPCA', 'OPCA']},
-                    'codeOpco': user.codeOpco,
+                    dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
+                    codeOpco: user.codeOpco,
                     ...(siret || siren ? { $or: [
                         {'formation.action.organisme_formateur.siret': new RegExp(`^^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
                     ]} : {}),
+                    codeRegion: codeRegion || { $exists: true },
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
                     ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),

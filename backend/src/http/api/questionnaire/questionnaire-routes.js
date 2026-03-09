@@ -109,6 +109,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             status: hasCommentaire ? 'none' : 'validated',
             lastStatusUpdate: new Date(),
             dispositifFinancement: stagiaire.dispositifFinancement,
+            codeOpco: stagiaire.codeOpco,
         };
 
         if (hasCommentaire) {

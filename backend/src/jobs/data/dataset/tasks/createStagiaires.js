@@ -15,6 +15,8 @@ const createStagiaire = session => {
         campaign: 'dataset',
         importDate: getDateInThePast(),
         codeRegion: session.region,
+        codeOpco: '40',
+        dispositifFinancement: 'POEC_OPCA',
         individu: {
             nom: faker.person.lastName(),
             prenom: faker.person.firstName(),
