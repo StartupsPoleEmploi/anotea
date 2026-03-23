@@ -12,7 +12,7 @@ const { email } = cli.opts();
 
 execute(async ({ db, exit }) => {
 
-    if (!cli.email) {
+    if (!email) {
         return exit('Invalid arguments');
     }
 
