@@ -25,7 +25,7 @@ execute(async ({ db, exit, passwords }) => {
         courriel: identifiant,
         codeRegion: region,
         codeFinanceur,
-        passwordHash: await passwords.hashPassword(cli.password),
+        passwordHash: await passwords.hashPassword(password),
         meta: {
             rehashed: true
         },
