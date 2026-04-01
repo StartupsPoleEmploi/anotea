@@ -15,6 +15,7 @@ module.exports = (db, regions, user) => {
             return {
                 'codeRegion': user.codeRegion,
                 'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
+                ...(!isPoleEmploi(user.codeFinanceur) ? {} : {dispositifFinancement :{'$nin' : ['OPCA']}}),
             };
         },
         validators: {

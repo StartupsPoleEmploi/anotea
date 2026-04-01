@@ -11,7 +11,6 @@ module.exports = (db, regions, user) => {
         getUser: () => user,
         getShield: () => {
             return {
-                // TODO a verifier ça
                 dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
                 codeOpco: user.codeOpco,
             };
