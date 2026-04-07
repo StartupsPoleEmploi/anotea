@@ -11,6 +11,7 @@ COPY ./ /opt/anotea/ui
 WORKDIR /opt/anotea/ui
 RUN mv /tmp/node_modules ./node_modules && \
     REACT_APP_ANOTEA_ENV=${ANOTEA_ENV} \
+    DISABLE_ESLINT_PLUGIN=true \
     npm run build --verbose -- --verbose
 
 FROM nginx:mainline-alpine-slim
