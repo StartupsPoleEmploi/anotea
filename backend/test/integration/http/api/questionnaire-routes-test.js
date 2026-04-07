@@ -184,6 +184,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             read: false,
             status: 'none',
             dispositifFinancement: 'AIF',
+            codeOpco: '38',
         });
     });
 
@@ -257,6 +258,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             read: false,
             status: 'validated',
             dispositifFinancement: 'AIF',
+            codeOpco: '38',
         });
     });
 

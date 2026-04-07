@@ -2,6 +2,7 @@ const { unauthorized } = require('@hapi/boom');
 const moderateur = require('./moderateur');
 const organisme = require('./organisme');
 const financeur = require('./financeur');
+const opco = require('./opco');
 const admin = require('./admin');
 
 module.exports = (db, regions, user) => {
@@ -14,6 +15,8 @@ module.exports = (db, regions, user) => {
             return financeur(db, regions, user);
         case 'admin':
             return admin(db, regions, user);
+        case 'opco':
+            return opco(db, regions, user);
         default:
             throw unauthorized(`Le profile de l'utilistateur n'est pas valide`);
     }

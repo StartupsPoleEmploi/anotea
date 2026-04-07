@@ -1,36 +1,30 @@
 const _ = require('lodash');
 const Joi = require('joi');
 const moment = require('moment');
-const { isPoleEmploi, getFinanceurs } = require('../../../../core/utils/financeurs');
+const {getOpcos } = require('../../../../core/utils/opcos');
 const { arrayOf } = require('../../../utils/validators-utils');
 
 module.exports = (db, regions, user) => {
 
-    let region = regions.findRegionByCodeRegion(user.codeRegion);
-
     return {
-        type: 'financeur',
+        type: 'opco',
         getUser: () => user,
         getShield: () => {
             return {
-                'codeRegion': user.codeRegion,
-                'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
-                ...(!isPoleEmploi(user.codeFinanceur) ? {} : {dispositifFinancement :{'$nin' : ['OPCA']}}),
+                dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
+                codeOpco: user.codeOpco,
             };
         },
         validators: {
             form: () => {
                 return {
+                    codeRegion: Joi.string().valid(...(regions.findActiveRegions().map(f => f.codeRegion))),
                     debut: Joi.number(),
                     fin: Joi.number(),
                     numeroFormation: Joi.string(),
-                    departement: Joi.string().valid(...(region.departements.map(d => d.code))),
                     siren: Joi.string().min(0).max(9),
                     siret: Joi.string().min(0).max(14),
-                    codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
-                        Joi.string().valid(...(getFinanceurs().map(f => f.code))) : Joi.any().forbidden(),
-                    dispositifFinancement: isPoleEmploi(user.codeFinanceur) ?
-                        Joi.string() : Joi.any().forbidden(),
+                    codeOpco: Joi.string().valid(...(getOpcos().map(f => f.code))),
                 };
             },
             filters: () => {
@@ -55,48 +49,41 @@ module.exports = (db, regions, user) => {
                 };
             },
             buildStagiaireQuery: async parameters => {
-                let { departement, codeFinanceur, siren, siret, numeroFormation, debut, fin, dispositifFinancement } = parameters;
-                let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
+                let { codeRegion, siren, siret, numeroFormation, debut, fin } = parameters;
 
                 return {
-                    'codeRegion': user.codeRegion,
-                    'formation.action.organisme_financeurs.code_financeur': financeur,
+                    dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
+                    codeOpco: user.codeOpco,
                     ...(siret || siren ? { $or: [
                         {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
                     ]} : {}),
-                    ...(codeFinanceur ? { 'formation.action.organisme_financeurs.code_financeur': codeFinanceur } : {}),
-                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
+                    codeRegion: codeRegion || { $exists: true },
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
-                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
-                    ...(dispositifFinancement ? { 'dispositifFinancement': dispositifFinancement } : {}),
+                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {})
                 };
             },
             buildAvisQuery: async parameters => {
                 let {
-                    departement, codeFinanceur, siren, siret, numeroFormation, debut, fin,
-                    commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived'],
-                    dispositifFinancement,
+                    codeRegion, siren, siret, numeroFormation, debut, fin,
+                    commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
                 } = parameters;
 
-                let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
-
                 return {
-                    'codeRegion': user.codeRegion,
-                    'formation.action.organisme_financeurs.code_financeur': financeur,
+                    dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
+                    codeOpco: user.codeOpco,
                     ...(siret || siren ? { $or: [
                         {'formation.action.organisme_formateur.siret': new RegExp(`^^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
                     ]} : {}),
-                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
+                    codeRegion: codeRegion || { $exists: true },
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
                     ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
-                    ...(statuses ? { status: { $in: statuses } } : {}),
-                    ...(dispositifFinancement ? { 'dispositifFinancement': dispositifFinancement } : {}),
+                    ...(statuses ? { status: { $in: statuses } } : {})
                 };
             },
         },

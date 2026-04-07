@@ -34,7 +34,7 @@
   "dependencies": {
     "@faker-js/faker": "10.1.0",
     "@hapi/boom": "10.0.1",
-    "@slack/webhook": "7.0.6",
+    "@slack/webhook": "7.0.8",
     "bcryptjs": "3.0.3",
     "body-parser": "2.2.2",
     "bunyan": "1.8.15",
@@ -48,13 +48,13 @@
     "ejs": "3.1.10",
     "emoji-strip": "1.0.1",
     "express": "5.2.1",
-    "express-rate-limit": "8.2.1",
+    "express-rate-limit": "8.3.2",
     "fluent-logger": "3.4.1",
     "iconv-lite": "0.6.3",
     "isemail": "3.2.0",
     "joi": "18.0.2",
-    "jsonwebtoken": "9.0.2",
-    "lodash": "4.17.23",
+    "jsonwebtoken": "9.0.3",
+    "lodash": "4.18.1",
     "md5": "2.3.0",
     "md5-file": "5.0.0",
     "mjml": "4.17.2",
@@ -74,9 +74,9 @@
   },
   "devDependencies": {
     "mocha": "11.7.5",
-    "nodemon": "3.1.11",
-    "nyc": "17.1.0",
-    "supertest": "7.1.4",
+    "nodemon": "3.1.14",
+    "nyc": "18.0.0",
+    "supertest": "7.2.2",
     "wait-until": "0.0.2"
   },
   "engines": {

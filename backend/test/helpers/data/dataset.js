@@ -18,6 +18,7 @@ module.exports = {
             avisCreated: false,
             refreshKey: '667debb89cf76c83816e5f9dbc7c808e',
             dispositifFinancement: 'AIF',
+            codeOpco: '38',
             individu: {
                 nom: 'Dupont',
                 prenom: 'Henri',

@@ -18,6 +18,7 @@ module.exports = (auth, logger, configuration) => {
         region: Joi.string(),
         codeRegion: Joi.string(),
         codeFinanceur: Joi.string(),
+        codeOpco: Joi.string().allow(null).allow(''),
         siret: Joi.string(),
         raison_sociale: Joi.string(),
         nbAvisSirenFormateur: Joi.number().allow(null),

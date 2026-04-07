@@ -40,11 +40,13 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                         db.collection('stagiaires').updateOne({ refreshKey: stagiaire.refreshKey }, {
                             $set: {
                                 dispositifFinancement: stagiaire.dispositifFinancement,
+                                codeOpco: stagiaire.codeOpco,
                             }
                         }),
                         db.collection('avis').updateOne({ refreshKey: stagiaire.refreshKey }, {
                             $set: {
                                 dispositifFinancement: stagiaire.dispositifFinancement,
+                                codeOpco: stagiaire.codeOpco,
                             }
                         })
                     ]);
