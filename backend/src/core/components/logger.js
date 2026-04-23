@@ -49,7 +49,7 @@ let createStreams = (name, { log }) => {
         case 'json':
             return [jsonStream()];
         case 'fluentbit':
-            return [fluentStream(), jsonStream()];
+            return [jsonStream()];
         default:
             return [defaultStream()];
     }
