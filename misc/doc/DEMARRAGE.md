@@ -115,7 +115,8 @@ map $whitelist $limit {
 }
 EOF
 
-cat >misc/docker/nginx/app/fail2ban/jail.local <<'EOF'
+touch .env/backend.env
+cat >.env/jail.local <<'EOF'
 [DEFAULT]
 bantime  = 3600
 findtime = 600

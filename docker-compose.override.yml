@@ -7,6 +7,8 @@ services:
   nginx:
     volumes:
       - ./.data/nginx:/data:rw
+      - ./.env/jail.local:/etc/fail2ban/jail.local:ro
+      - ./.env/jail.conf:/etc/fail2ban/jail.local:ro
 
   ui:
     build:
@@ -28,6 +30,7 @@ services:
       - ANOTEA_SMTP_PORT=1025
     depends_on:
       - mongodb
+    env_file: ./.env/backend.env
 
   mongodb:
     image: mongo:8-noble

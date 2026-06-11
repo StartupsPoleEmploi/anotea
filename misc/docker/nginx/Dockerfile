@@ -8,7 +8,6 @@ RUN chmod 644 /etc/logrotate.conf
 
 #Nginx
 COPY app/nginx /etc/nginx
-COPY app/fail2ban/jail.local /etc/fail2ban/jail.local
 COPY app/start.sh /opt/nginx/start.sh
 RUN chmod +x /opt/nginx/
 
