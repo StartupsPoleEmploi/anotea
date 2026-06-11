@@ -28,7 +28,6 @@ services:
       - ANOTEA_SMTP_PORT=1025
     depends_on:
       - mongodb
-      - smtp
 
   mongodb:
     image: mongo:8-noble
@@ -39,10 +38,3 @@ services:
       - ./.data/mongodb/db:/data/db
       - ./.data/mongodb/config:/data/configdb
       - ./.data/backups/mongodb:/data/backups
-  smtp:
-    image: mailhog/mailhog
-    container_name: anotea_smtp
-    ports:
-      - 8024:8025
-    environment:
-      - MH_UI_WEB_PATH=mailhog

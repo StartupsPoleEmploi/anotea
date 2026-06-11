@@ -114,6 +114,19 @@ map $whitelist $limit {
 	1 "";
 }
 EOF
+
+cat >misc/docker/nginx/app/fail2ban/jail.local <<'EOF'
+[DEFAULT]
+bantime  = 3600
+findtime = 600
+maxretry = 5
+
+[sshd]
+enabled = false
+
+[sshd-ddos]
+enabled = false
+EOF
 ```
 
 Ensuite, il est possible de reproduire l'environnement de prod via la commande : 
