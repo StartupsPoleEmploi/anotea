@@ -2,7 +2,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const moment = require('moment');
 const path = require('path');
-const mjml = require('mjml');
+const mjml2html = require('mjml');
 const ejs = require('ejs');
 const { promisify } = require('util');
 const renderFile = promisify(ejs.renderFile);
@@ -63,7 +63,7 @@ module.exports = (configuration, regions, authMail) => {
                 templateName,
                 utils: { moment, ...utils },
             });
-            return mjml(mjmlTemplate).html;
+            return mjml2html(mjmlTemplate);
         },
         createRegionalMailer: region => {
             return {
