@@ -8,7 +8,6 @@ services:
     volumes:
       - ./.data/nginx:/data:rw
       - ./.env/jail.local:/etc/fail2ban/jail.local:ro
-      - ./.env/jail.conf:/etc/fail2ban/jail.local:ro
 
   ui:
     build:
