@@ -18,18 +18,18 @@ export default class Avis extends Component {
 
         return (
             <div className="Avis d-flex flex-column align-items-stretch">
-                <p className={`formation sr-only ${highlight === 'formation' ? 'highlight' : ''}`}>
+                <h4 className={`formation sr-only ${highlight === 'formation' ? 'highlight' : ''}`}>
                     Avis sur la formation {avis.formation.intitule} saisi en {moment(fin).format('MMMM YYYY')}
-                </p>
+                </h4>
                 <p className="stagiaire">
                     <Stars note={avis.notes.global} />
                     <span className="par">par</span>&nbsp;
                     <span className="pseudo">un stagiaire</span>
                 </p>
                 {avis.commentaire &&
-                <p className={`titre ${avis.commentaire.titre ? 'd-block' : 'd-none'}`}>
+                <h5 className={`titre ${avis.commentaire.titre ? 'd-block' : 'd-none'}`}>
                     {avis.commentaire.titre}
-                </p>
+                </h5>
                 }
                 {avis.commentaire &&
                 <p className={`texte ${avis.commentaire.texte ? 'd-block' : 'd-none'}`}>
@@ -38,10 +38,10 @@ export default class Avis extends Component {
                 }
                 {avis.reponse &&
                 <div className="reponse">
-                    <p className="reponse-titre d-flex justify-content-start align-items-center mb-1">
+                    <h5 className="reponse-titre d-flex justify-content-start align-items-center mb-1">
                         <i className="far fa-comment-alt mr-1" aria-hidden="true"></i>
                         <span className="text-uppercase">Réponse de l&apos;organisme</span>
-                    </p>
+                    </h5>
                     <p className="reponse-texte">{avis.reponse.texte}</p>
                 </div>
                 }

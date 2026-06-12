@@ -142,7 +142,7 @@ export default class ListeWidget extends Component {
                                 }
 
                                 {pagination.total_pages > 0 &&
-                                <p className="summary">
+                                <p className="summary" aria-live="polite" aria-atomic="true">
                                     <span className="d-none d-sm-block">Page</span>&nbsp;
                                     <span className="sr-only">{pagination.page + 1} sur {pagination.total_pages}</span>
                                     <span aria-hidden="true">{pagination.page + 1}/{pagination.total_pages}</span>
@@ -177,8 +177,8 @@ export default class ListeWidget extends Component {
                         {context.type === 'organisme' &&
                         <div className="line sort d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between">
-                                <span className="pr-3">Trier</span>
-                                <select value={this.state.tri} onChange={e => {
+                                <label className="pr-3" htmlFor="triage">Trier</label>
+                                <select id="triage" value={this.state.tri} onChange={e => {
                                     this.setState({ tri: e.target.value }, () => {
                                         return this.sort();
                                     });
