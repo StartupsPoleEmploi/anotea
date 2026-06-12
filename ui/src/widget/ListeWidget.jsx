@@ -63,7 +63,7 @@ export default class ListeWidget extends Component {
         }
 
         return (
-            <div className="Liste">
+            <div className="Liste" id="liste-avis">
                 <div className="d-flex flex-column">
                     {
                         avis.map(current => {
@@ -194,6 +194,11 @@ export default class ListeWidget extends Component {
                                     aria-current={`${this.state.ordre === 'asc' ? 'true' : 'false'}`}
                                     onClick={() => {
                                         this.setState({ ordre: 'asc' }, () => {
+                                            const el = document.getElementById('liste-avis');
+                                            if (el) {
+                                                el.setAttribute('tabindex', '-1');
+                                                el.focus();
+                                            }
                                             return this.sort();
                                         });
                                     }}
@@ -206,6 +211,11 @@ export default class ListeWidget extends Component {
                                     aria-current={`${this.state.ordre === 'desc' ? 'true' : 'false'}`}
                                     onClick={() => {
                                         this.setState({ ordre: 'desc' }, () => {
+                                            const el = document.getElementById('liste-avis');
+                                            if (el) {
+                                                el.setAttribute('tabindex', '-1');
+                                                el.focus();
+                                            }
                                             return this.sort();
                                         });
                                     }}
