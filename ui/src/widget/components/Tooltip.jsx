@@ -51,13 +51,14 @@ export default class Tooltip extends Component {
                     onBlur={() => this.hide()}
                     tabIndex="0"
                 >
-                    <i className="far fa-question-circle"></i>
+                    <i className="far fa-question-circle" aria-hidden="true"></i>
                 </div>
                 {this.state.show &&
                 <div className="box">
-                    <div className="message">{message}</div>
+                    <p className="message" aria-hidden="true">{message}</p>
                 </div>
                 }
+                <p className="sr-only">{message}</p>
             </div>
         );
     }

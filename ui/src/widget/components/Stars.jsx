@@ -14,16 +14,19 @@ export default class Stars extends React.PureComponent {
         let stars = new Array(5).fill('active', 0, note).fill('empty', note, 5);
 
         return (
-            <span className="Stars">
-                {
-                    stars.map((star, index) => {
-                        return <span
-                            key={index}
-                            className={star === 'active' ? 'fas fa-star active' : 'fas fa-star empty'}
-                        />;
-                    })
-                }
-            </span>
+            <>
+                <span className="Stars">
+                    {
+                        stars.map((star, index) => {
+                            return <span
+                                key={index}
+                                className={star === 'active' ? 'fas fa-star active' : 'fas fa-star empty'}
+                            />;
+                        })
+                    }
+                </span>
+                <span className="sr-only">Note de {note} sur 5</span>
+            </>
         );
     }
 }

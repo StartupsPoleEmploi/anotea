@@ -86,16 +86,16 @@ NoteGauges.propTypes = {
 const NoteGlobale = props => {
     return (
         <div className="NoteGlobale align-self-center" tabIndex="0">
-            <span className="label">Moyenne globale</span>
+            <p><span className="label">Moyenne globale</span></p>
             <div className="moyenne">
-                <div aria-hidden="true" className="note">
+                <p aria-hidden="true" className="note">
                     <span className="value">{props.note.moyenne}</span>/5<Star />
-                </div>
+                </p>
                 <p className="sr-only">{props.note.moyenne} sur 5</p>
             </div>
-            <div className="total">
+            <p className="total">
                 {props.total} notes
-            </div>
+            </p>
 
             <div></div>
         </div>

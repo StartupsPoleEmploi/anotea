@@ -47,9 +47,9 @@ export default class Button extends React.Component {
                 type={this.props.type || 'button'}
                 style={this.props.style || {}}
                 className={`Button ${classes}`}
-                disabled={this.props.disabled}
+                aria-disabled={this.props.disabled}
                 {...(this.props.toggable ? { 'data-toggle': 'dropdown' } : {})}
-                {..._.omit(this.props, ['size', 'color', 'toggable', 'className', 'onClick'])}
+                {..._.omit(this.props, ['size', 'color', 'toggable', 'className', 'onClick', 'disabled'])}
                 onClick={!this.props.onClick ? noop : e => {
                     trackClick(ref.current.textContent);
                     this.props.onClick(e);

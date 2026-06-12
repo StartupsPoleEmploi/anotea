@@ -56,9 +56,9 @@ export default class ListeWidget extends Component {
 
         if (meta.pagination.total_items === 0) {
             return (
-                <div className="Liste empty">
+                <p className="Liste empty">
                     Il n&apos;y a pas de commentaire sur cette formation pour le moment.
-                </div>
+                </p>
             );
         }
 
@@ -85,12 +85,11 @@ export default class ListeWidget extends Component {
         let { pagination } = results.meta;
 
         if (score.nb_avis === 0) {
-            if (context['show-if-0-reviews'] === 'true') {
+            if(context['show-if-0-reviews'] === 'true') {
                 return <SansAvis></SansAvis>;
             } else {
-                return <div></div>;
+                return <div><p className="sr-only">Aucun avis n’a encore été déposé sur cette formation</p></div>;
             }
-              
         }
 
         return (
@@ -113,9 +112,9 @@ export default class ListeWidget extends Component {
                     <div className="col-sm-6">
                         <div className="line d-flex align-items-between flex-wrap justify-content-around flex-sm-nowrap justify-content-sm-between">
                             <div className="pagination d-flex justify-content-between align-items-center my-1 my-sm-0">
-                                <div className="summary">
+                                <h3 className="summary">
                                     {pagination.total_items} commentaires
-                                </div>
+                                </h3>
                             </div>
                             <div className="pagination d-flex justify-content-between align-items-center my-1 my-sm-0">
                                 {pagination.total_items > 1 &&
@@ -124,10 +123,11 @@ export default class ListeWidget extends Component {
                                     className="mr-1 btn"
                                     disabled={pagination.page === 0}
                                     onClick={() => this.page(0)}>
-                                    <div className="first">
-                                        <i className="fas fa-chevron-left"></i>
-                                        <i className="fas fa-chevron-left"></i>
-                                    </div>
+                                    <span className="sr-only">Aller à la première page</span>
+                                    <span className="first">
+                                        <i className="fas fa-chevron-left" aria-hidden="true"></i>
+                                        <i className="fas fa-chevron-left" aria-hidden="true"></i>
+                                    </span>
                                 </Button>
                                 }
                                 {pagination.total_items > 1 &&
@@ -136,7 +136,8 @@ export default class ListeWidget extends Component {
                                     size="medium"
                                     disabled={pagination.page === 0}
                                     onClick={() => this.page(pagination.page - 1)}>
-                                    <i className="fas fa-chevron-left"></i>
+                                    <span className="sr-only">Aller à la page précédente</span>
+                                    <i className="fas fa-chevron-left" aria-hidden="true"></i>
                                 </Button>
                                 }
 
@@ -153,7 +154,8 @@ export default class ListeWidget extends Component {
                                     className="btn"
                                     disabled={pagination.page === pagination.total_pages - 1}
                                     onClick={() => this.page(pagination.page + 1)}>
-                                    <i className="fas fa-chevron-right"></i>
+                                    <span className="sr-only">Aller à la page suivante</span>
+                                    <i className="fas fa-chevron-right" aria-hidden="true"></i>
                                 </Button>
                                 }
                                 {pagination.total_items > 1 &&
@@ -162,10 +164,11 @@ export default class ListeWidget extends Component {
                                     className="ml-1 btn"
                                     disabled={pagination.page === pagination.total_pages - 1}
                                     onClick={() => this.page(pagination.total_pages - 1)}>
-                                    <div className="last">
-                                        <i className="fas fa-chevron-right"></i>
-                                        <i className="fas fa-chevron-right"></i>
-                                    </div>
+                                    <span className="sr-only">Aller à la dernière page</span>
+                                    <span className="last">
+                                        <i className="fas fa-chevron-right" aria-hidden="true"></i>
+                                        <i className="fas fa-chevron-right" aria-hidden="true"></i>
+                                    </span>
                                 </Button>
                                 }
                             </div>
@@ -193,7 +196,7 @@ export default class ListeWidget extends Component {
                                         });
                                     }}
                                 >
-                                    <i className="fas fa-arrow-up"></i>
+                                    <i className="fas fa-arrow-up" aria-hidden="true"></i>
                                     <span className="d-none d-md-block">Croissant</span>
                                 </button>
                                 <button
@@ -204,7 +207,7 @@ export default class ListeWidget extends Component {
                                         });
                                     }}
                                 >
-                                    <i className="fas fa-arrow-down"></i>
+                                    <i className="fas fa-arrow-down" aria-hidden="true"></i>
                                     <span className="d-none d-md-block">Décroissant</span>
                                 </button>
                             </div>

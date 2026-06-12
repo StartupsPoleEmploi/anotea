@@ -9,11 +9,11 @@ export class NonNote extends Component {
         return (
             <div className="NonNote d-flex justify-content-center mb-3">
                 <div className="d-flex flex-column text-center">
-                    <div>
+                    <p>
                         <span className="note">Non noté</span>
                         <span className="star fas fa-star"></span>
-                    </div>
-                    <div className="message">Aucun avis n’a encore été déposé sur cette formation</div>
+                    </p>
+                    <p className="message">Aucun avis n’a encore été déposé sur cette formation</p>
                 </div>
             </div>
         );

@@ -17,40 +17,40 @@ export default class Notes extends Component {
         return (
             <div className="Notes d-flex flex-column">
                 <div className="d-flex align-content-center with-tooltip">
-                    <div className="name pr-2">Accueil</div>
+                    <h3 className="name pr-2">Accueil</h3>
                     <Tooltip message="Réunions d'information collective et entretiens à l'entrée en formation." />
-                    <div className="star ml-auto">
+                    <p className="star ml-auto">
                         <Stars note={notes.accueil} />
-                    </div>
+                    </p>
                 </div>
 
                 <div className="d-flex align-content-center with-tooltip">
-                    <div className="name">Contenu</div>
+                    <h3 className="name">Contenu</h3>
                     <Tooltip message="Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique." />
-                    <div className="star ml-auto">
+                    <p className="star ml-auto">
                         <Stars note={notes.contenu_formation} />
-                    </div>
+                    </p>
                 </div>
                 <div className="d-flex align-content-center with-tooltip">
-                    <div className="name">Formateurs</div>
+                    <h3 className="name">Formateurs</h3>
                     <Tooltip message="Prise en compte du besoin des stagiaires." />
-                    <div className="star ml-auto">
+                    <p className="star ml-auto">
                         <Stars note={notes.equipe_formateurs} />
-                    </div>
+                    </p>
                 </div>
                 <div className="d-flex align-content-center with-tooltip">
-                    <div className="name">Matériels</div>
+                    <h3 className="name">Matériels</h3>
                     <Tooltip message="Salles de cours, documentation, plateaux techniques, équipement informatique." />
-                    <div className="star ml-auto">
+                    <p className="star ml-auto">
                         <Stars note={notes.moyen_materiel} />
-                    </div>
+                    </p>
                 </div>
                 <div className="d-flex align-content-center with-tooltip">
-                    <div className="name">Accompagnement</div>
+                    <h3 className="name">Accompagnement</h3>
                     <Tooltip message="Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises." />
-                    <div className="star ml-auto">
+                    <p className="star ml-auto">
                         <Stars note={notes.accompagnement} />
-                    </div>
+                    </p>
                 </div>
             </div>
         );

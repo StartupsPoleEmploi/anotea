@@ -43,9 +43,9 @@ export default class CarrouselWidget extends Component {
 
         if (pagination.total_items === 0) {
             return (
-                <div className="carrousel empty d-flex justify-content-center">
+                <p className="carrousel empty d-flex justify-content-center">
                     Il n&apos;y a pas de commentaire sur cette formation pour le moment.
-                </div>
+                </p>
             );
         }
 
@@ -54,7 +54,7 @@ export default class CarrouselWidget extends Component {
                 <div className="d-flex flex-column">
 
                     <div className="summary">
-                        <span>{pagination.total_items} commentaires</span>
+                        <h3>{pagination.total_items} commentaires</h3>
                     </div>
 
                     {pagination.total_items > 1 &&
