@@ -191,6 +191,7 @@ export default class ListeWidget extends Component {
                             <div className="d-flex justify-content-between">
                                 <button
                                     className={`mr-3 ${this.state.ordre === 'asc' ? 'active' : ''} btn`}
+                                    aria-current={`${this.state.ordre === 'asc' ? 'true' : 'false'}`}
                                     onClick={() => {
                                         this.setState({ ordre: 'asc' }, () => {
                                             return this.sort();
@@ -201,7 +202,8 @@ export default class ListeWidget extends Component {
                                     <span className="d-none d-md-block">Croissant</span>
                                 </button>
                                 <button
-                                    className={`${this.state.ordre === 'asc' ? 'active' : ''} btn`}
+                                    className={`${this.state.ordre === 'desc' ? 'active' : ''} btn`}
+                                    aria-current={`${this.state.ordre === 'desc' ? 'true' : 'false'}`}
                                     onClick={() => {
                                         this.setState({ ordre: 'desc' }, () => {
                                             return this.sort();
