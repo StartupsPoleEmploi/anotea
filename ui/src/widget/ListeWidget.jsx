@@ -142,10 +142,11 @@ export default class ListeWidget extends Component {
                                 }
 
                                 {pagination.total_pages > 0 &&
-                                <div className="summary">
-                                    <span className="d-none d-sm-block">Page</span>
-                                    {pagination.page + 1}/{pagination.total_pages}
-                                </div>
+                                <p className="summary">
+                                    <span className="d-none d-sm-block">Page</span>&nbsp;
+                                    <span className="sr-only">{pagination.page + 1} sur {pagination.total_pages}</span>
+                                    <span aria-hidden="true">{pagination.page + 1}/{pagination.total_pages}</span>
+                                </p>
                                 }
 
                                 {pagination.total_items > 1 &&
