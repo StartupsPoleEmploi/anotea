@@ -57,12 +57,7 @@ module.exports = (db, regions, user) => {
                 let { departement, codeFinanceur, siren, siret, numeroFormation, debut, fin, dispositifFinancement } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
-
-                const financeurFT = isPoleEmploi(user.codeFinanceur) && user.profile !== 'admin';
-                if (dispositifFinancement === "OPCA" && financeurFT)
-                    dispositifFinancement = undefined;
-                if (!dispositifFinancement && financeurFT)
-                    dispositifFinancement = {dispositifFinancement :{'$nin' : ['OPCA']}};
+                dispositifFinancement = exclureFinancementOpcoPourFinanceurFT(user, dispositifFinancement);
 
                 return {
                     'codeRegion': user.codeRegion,
@@ -87,12 +82,7 @@ module.exports = (db, regions, user) => {
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
-
-                const financeurFT = isPoleEmploi(user.codeFinanceur) && user.profile !== 'admin';
-                if (dispositifFinancement === "OPCA" && financeurFT)
-                    dispositifFinancement = "nothing";
-                if (!dispositifFinancement && financeurFT)
-                    dispositifFinancement = {'$nin' : ['OPCA']};
+                dispositifFinancement = exclureFinancementOpcoPourFinanceurFT(user, dispositifFinancement);
 
                 return {
                     'codeRegion': user.codeRegion,
@@ -114,3 +104,12 @@ module.exports = (db, regions, user) => {
         },
     };
 };
+
+function exclureFinancementOpcoPourFinanceurFT(user, dispositifFinancement) {
+    const financeurFT = isPoleEmploi(user.codeFinanceur) && user.profile !== 'admin';
+    if (dispositifFinancement === "OPCA" && financeurFT)
+        return "nothing";
+    if (!dispositifFinancement && financeurFT)
+        return {'$nin' : ['OPCA']};
+    return dispositifFinancement;
+}
