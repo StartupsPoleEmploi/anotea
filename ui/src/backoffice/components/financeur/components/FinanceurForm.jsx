@@ -229,7 +229,7 @@ export default class FinanceurForm extends React.Component {
                                     value={this.state.dispositifFinancement}
                                     options={store.dispositifs}
                                     optionKey="code"
-                                    optionLabel="code"
+                                    optionLabel="libelle"
                                     onChange={(option) => this.setState({ dispositifFinancement: option ? option.code : null })}
                                 />
                             </div>
