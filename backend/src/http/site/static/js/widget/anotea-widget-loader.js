@@ -29,8 +29,8 @@ function getWidgetIframe(attributes) {
     iframe.className = 'anotea-widget-iframe';
     iframe.style.width = '1px';
     iframe.style.minWidth = '100%';
-    iframe.scrolling = 'no';
-    iframe.frameBorder = '0';
+    iframe.style.overflow = 'hidden';
+    iframe.style.border = 'none';
     iframe.src = getAnoteaUrl(path, attributes.env);
     iframe.title = "Avis d'anciens stagiaires";
 
