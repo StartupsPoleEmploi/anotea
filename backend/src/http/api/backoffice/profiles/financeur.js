@@ -15,7 +15,6 @@ module.exports = (db, regions, user) => {
             return {
                 'codeRegion': user.codeRegion,
                 'formation.action.organisme_financeurs.code_financeur': user.codeFinanceur,
-                ...(!isPoleEmploi(user.codeFinanceur) ? {} : {dispositifFinancement :{'$nin' : ['OPCA']}}),
             };
         },
         validators: {
@@ -56,7 +55,14 @@ module.exports = (db, regions, user) => {
             },
             buildStagiaireQuery: async parameters => {
                 let { departement, codeFinanceur, siren, siret, numeroFormation, debut, fin, dispositifFinancement } = parameters;
+
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
+
+                const financeurFT = isPoleEmploi(user.codeFinanceur) && user.profile !== 'admin';
+                if (dispositifFinancement === "OPCA" && financeurFT)
+                    dispositifFinancement = undefined;
+                if (!dispositifFinancement && financeurFT)
+                    dispositifFinancement = {dispositifFinancement :{'$nin' : ['OPCA']}};
 
                 return {
                     'codeRegion': user.codeRegion,
@@ -81,6 +87,12 @@ module.exports = (db, regions, user) => {
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
+
+                const financeurFT = isPoleEmploi(user.codeFinanceur) && user.profile !== 'admin';
+                if (dispositifFinancement === "OPCA" && financeurFT)
+                    dispositifFinancement = "nothing";
+                if (!dispositifFinancement && financeurFT)
+                    dispositifFinancement = {'$nin' : ['OPCA']};
 
                 return {
                     'codeRegion': user.codeRegion,
