@@ -281,8 +281,8 @@ module.exports = (auth, logger, configuration) => {
                     if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
                     return ipKeyGenerator(req.ip);
                 },
-                windowMs: 1000 * 60, // 1 minute
-                limit: 5, //
+                windowMs: 1000 * 60 * 10, // 10 minute
+                limit: 50, //
                 delayMs: 0, // disabled
                 handler: function(req, res) {
                     if (this.legacyHeaders) {
