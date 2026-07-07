@@ -9,7 +9,7 @@ module.exports = ({ db, emails, passwords }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let { hashPassword, isPasswordStrongEnough } = passwords;
 
-    router.put('/api/backoffice/askNewPassword', tryAndCatch(async (req, res) => {
+    router.put('/api/backoffice/password/askNewPassword', tryAndCatch(async (req, res) => {
 
         let { identifiant } = Joi.attempt(req.body, identifiantSchema, '', { abortEarly: false });
 
@@ -28,7 +28,7 @@ module.exports = ({ db, emails, passwords }) => {
         return res.json({ 'message': 'Si votre identifiant est correct, vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.' });
     }));
 
-    router.get('/api/backoffice/checkIfPasswordTokenExists', async (req, res) => {
+    router.get('/api/backoffice/password/checkIfPasswordTokenExists', async (req, res) => {
         try {
             let { token } = Joi.attempt(req.query, tokenSchema, '', { abortEarly: false });
             let result = await db.collection('forgottenPasswordTokens').findOne({ token: token });
@@ -43,7 +43,7 @@ module.exports = ({ db, emails, passwords }) => {
         }
     });
 
-    router.put('/api/backoffice/resetPassword', tryAndCatch(async (req, res) => {
+    router.put('/api/backoffice/password/resetPassword', tryAndCatch(async (req, res) => {
 
         let { password, token } = Joi.attempt(req.body, changePasswordSchema, '', { abortEarly: false });
 

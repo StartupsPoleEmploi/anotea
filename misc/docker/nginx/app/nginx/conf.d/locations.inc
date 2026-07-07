@@ -1,4 +1,4 @@
- location ~ ^/(admin|backoffice|questionnaire|widget|stats)(.*)$ {
+location ~ ^/(admin|backoffice|questionnaire|widget|stats)(.*)$ {
 
     limit_conn conn_limit_per_ip 100;
     limit_req zone=req_limit_per_ip burst=100 nodelay;
@@ -13,6 +13,7 @@
     proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header    X-Forwarded-Host $server_name;
 }
+
 
 location / {
 
