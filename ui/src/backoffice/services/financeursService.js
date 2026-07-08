@@ -20,6 +20,6 @@ export const getDispositifs = () => {
         { code: 'FOAD', libelle: 'FOAD' },
         { code: 'OPCA', libelle: 'OPCO' },
         { code: 'POEC_OPCA', libelle: 'POEC_OPCO' },
-        { code: 'POEI_MONO', libelle: 'POEI_MONO' },
+        { code: 'POEI_MONO', libelle: 'POEI' },
     ];
 };
