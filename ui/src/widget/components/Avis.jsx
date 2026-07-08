@@ -22,7 +22,7 @@ export default class Avis extends Component {
                     Avis sur la formation {avis.formation.intitule} saisi en {moment(fin).format('MMMM YYYY')}
                 </h4>
                 <p className="stagiaire">
-                    <Stars note={avis.notes.global} />
+                    <Stars note={avis.notes.global} />&nbsp;
                     <span className="par">par</span>&nbsp;
                     <span className="pseudo">un stagiaire</span>
                 </p>

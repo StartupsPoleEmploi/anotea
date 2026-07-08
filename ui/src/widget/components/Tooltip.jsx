@@ -52,13 +52,13 @@ export default class Tooltip extends Component {
                     tabIndex="0"
                 >
                     <i className="far fa-question-circle" aria-hidden="true"></i>
+                    <p className="sr-only">{message}</p>
                 </div>
                 {this.state.show &&
                 <div className="box">
                     <p className="message" aria-hidden="true">{message}</p>
                 </div>
                 }
-                <p className="sr-only">{message}</p>
             </div>
         );
     }
