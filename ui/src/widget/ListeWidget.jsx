@@ -191,7 +191,7 @@ export default class ListeWidget extends Component {
                             <div className="d-flex justify-content-between">
                                 <button
                                     className={`mr-3 ${this.state.ordre === 'asc' ? 'active' : ''} btn`}
-                                    aria-current={`${this.state.ordre === 'asc' ? 'true' : 'false'}`}
+                                    aria-pressed={`${this.state.ordre === 'asc' ? 'true' : 'false'}`}
                                     onClick={() => {
                                         this.setState({ ordre: 'asc' }, () => {
                                             const el = document.getElementById('liste-avis');
@@ -208,7 +208,7 @@ export default class ListeWidget extends Component {
                                 </button>
                                 <button
                                     className={`${this.state.ordre === 'desc' ? 'active' : ''} btn`}
-                                    aria-current={`${this.state.ordre === 'desc' ? 'true' : 'false'}`}
+                                    aria-pressed={`${this.state.ordre === 'desc' ? 'true' : 'false'}`}
                                     onClick={() => {
                                         this.setState({ ordre: 'desc' }, () => {
                                             const el = document.getElementById('liste-avis');
