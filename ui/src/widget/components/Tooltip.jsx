@@ -59,7 +59,7 @@ export default class Tooltip extends Component {
 
         return (
             <div className="Tooltip">
-                <div role="tooltip"
+                <div
                     className="icon"
                     onMouseEnter={() => this.show()}
                     onMouseLeave={() => this.hide()}
@@ -72,7 +72,7 @@ export default class Tooltip extends Component {
                     <p className="sr-only">{message}</p>
                 </div>
                 {(this.state.show || this.state.showOnTooltip) &&
-                <div className="box"
+                <div className="box" role="tooltip"
                     onMouseEnter={() => this.showOnTooltip()}
                     onMouseLeave={() => this.hideOnTooltip()}
                     id={id}>
