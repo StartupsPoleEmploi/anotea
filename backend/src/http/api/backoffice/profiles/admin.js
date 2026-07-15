@@ -35,14 +35,6 @@ module.exports = (db, regions, user) => {
                     commentReport: 0,
                 };
             },
-            buildStagiaireQuery: async parameters => {
-                let { codeFinanceur, codeRegion } = parameters;
-                return {
-                    ...await parent.queries.buildStagiaireQuery(parameters),
-                    'codeRegion': codeRegion || { $exists: true },
-                    'formation.action.organisme_financeurs.code_financeur': codeFinanceur || { $exists: true },
-                };
-            },
             buildAvisQuery: async parameters => {
                 let { codeFinanceur, codeRegion } = parameters;
                 return {

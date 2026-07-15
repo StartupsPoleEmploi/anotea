@@ -48,22 +48,6 @@ module.exports = (db, regions, user) => {
                     commentReport: 0,
                 };
             },
-            buildStagiaireQuery: async parameters => {
-                let { codeRegion, siren, siret, numeroFormation, debut, fin } = parameters;
-
-                return {
-                    dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
-                    codeOpco: user.codeOpco,
-                    ...(siret || siren ? { $or: [
-                        {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
-                        {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
-                    ]} : {}),
-                    codeRegion: codeRegion || { $exists: true },
-                    ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
-                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
-                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {})
-                };
-            },
             buildAvisQuery: async parameters => {
                 let {
                     codeRegion, siren, siret, numeroFormation, debut, fin,
@@ -74,13 +58,15 @@ module.exports = (db, regions, user) => {
                     dispositifFinancement:{'$in' : ['POEC_OPCA', 'OPCA']},
                     codeOpco: user.codeOpco,
                     ...(siret || siren ? { $or: [
-                        {'formation.action.organisme_formateur.siret': new RegExp(`^^${siret || siren}`)},
+                        {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
                     ]} : {}),
                     codeRegion: codeRegion || { $exists: true },
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
-                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
-                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
+                    ...(debut || fin ? { 'formation.action.session.periode.fin': {
+                        ...(debut ? { $gte: moment(debut).toDate() } : {}),
+                        ...(fin ? { $lte: moment(fin).toDate() } : {}),
+                    }} : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {})

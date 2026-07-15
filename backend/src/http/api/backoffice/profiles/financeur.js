@@ -53,27 +53,6 @@ module.exports = (db, regions, user) => {
                     commentReport: 0,
                 };
             },
-            buildStagiaireQuery: async parameters => {
-                let { departement, codeFinanceur, siren, siret, numeroFormation, debut, fin, dispositifFinancement } = parameters;
-
-                let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
-                dispositifFinancement = exclureFinancementOpcoPourFinanceurFT(user, dispositifFinancement);
-
-                return {
-                    'codeRegion': user.codeRegion,
-                    'formation.action.organisme_financeurs.code_financeur': financeur,
-                    ...(siret || siren ? { $or: [
-                        {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
-                        {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
-                    ]} : {}),
-                    ...(codeFinanceur ? { 'formation.action.organisme_financeurs.code_financeur': codeFinanceur } : {}),
-                    ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
-                    ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
-                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
-                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
-                    ...(dispositifFinancement ? { 'dispositifFinancement': dispositifFinancement } : {}),
-                };
-            },
             buildAvisQuery: async parameters => {
                 let {
                     departement, codeFinanceur, siren, siret, numeroFormation, debut, fin,
@@ -94,9 +73,9 @@ module.exports = (db, regions, user) => {
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
                     ...(debut || fin ? { 'formation.action.session.periode.fin': {
-                            ...(debut ? { $gte: moment(debut).toDate() } : {}),
-                            ...(fin ? { $lte: moment(fin).toDate() } : {}),
-                        }} : {}),
+                        ...(debut ? { $gte: moment(debut).toDate() } : {}),
+                        ...(fin ? { $lte: moment(fin).toDate() } : {}),
+                    }} : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
