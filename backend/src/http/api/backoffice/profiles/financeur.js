@@ -53,6 +53,9 @@ module.exports = (db, regions, user) => {
                     commentReport: 0,
                 };
             },
+            buildStagiaireQuery: async parameters => {
+                throw new Error('buildStagiaireQuery ne doit pas être utilisé')
+            },
             buildAvisQuery: async parameters => {
                 let {
                     departement, codeFinanceur, siren, siret, numeroFormation, debut, fin,
