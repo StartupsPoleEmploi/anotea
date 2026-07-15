@@ -88,13 +88,15 @@ module.exports = (db, regions, user) => {
                     'codeRegion': user.codeRegion,
                     'formation.action.organisme_financeurs.code_financeur': financeur,
                     ...(siret || siren ? { $or: [
-                        {'formation.action.organisme_formateur.siret': new RegExp(`^^${siret || siren}`)},
+                        {'formation.action.organisme_formateur.siret': new RegExp(`^${siret || siren}`)},
                         {'formation.action.organisme_responsable.siret': new RegExp(`^${siret || siren}`)},
                     ]} : {}),
                     ...(departement ? { 'formation.action.lieu_de_formation.code_postal': new RegExp(`^${departement}`) } : {}),
                     ...(numeroFormation ? { 'formation.numero': numeroFormation } : {}),
-                    ...(debut ? { 'formation.action.session.periode.debut': { $gte: moment(debut).toDate() } } : {}),
-                    ...(fin ? { 'formation.action.session.periode.fin': { $lte: moment(fin).toDate() } } : {}),
+                    ...(debut || fin ? { 'formation.action.session.periode.fin': {
+                            ...(debut ? { $gte: moment(debut).toDate() } : {}),
+                            ...(fin ? { $lte: moment(fin).toDate() } : {}),
+                        }} : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { commentaire: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
