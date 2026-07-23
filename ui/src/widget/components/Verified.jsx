@@ -18,10 +18,12 @@ export default class Verified extends Component {
             <div className={`Verified text-center ${className || ''}`}>
                 <img
                     className="logo"
-                    src={logoRF} />
+                    src={logoRF} 
+                    alt="République Française" />
                 <img
                     className="logo logo-anotea"
-                    src={logoAnotea} />
+                    src={logoAnotea} 
+                    alt="Anotea - France Travail" />
             </div>
         );
     }

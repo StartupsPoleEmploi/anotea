@@ -54,6 +54,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                                 "individu": stagiaire.individu,
                                 "formation.action.organisme_responsable": stagiaire.formation.action.organisme_responsable,
                                 "dispositifFinancement": stagiaire.dispositifFinancement,
+                                "codeOpco": stagiaire.codeOpco,
                             }
                         }
                     );
@@ -66,6 +67,7 @@ module.exports = async (db, logger, file, handler, filters = {}, options = {}) =
                             $set: {
                                 "individu": stagiaire.individu,
                                 "dispositifFinancement": stagiaire.dispositifFinancement,
+                                "codeOpco": stagiaire.codeOpco,
                             }
                         }
                     );

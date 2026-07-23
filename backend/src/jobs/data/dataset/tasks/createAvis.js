@@ -12,6 +12,7 @@ const buildAvis = (stagiaire, custom = {}) => {
         campaign: 'dataset',
         read: false,
         codeRegion: stagiaire.codeRegion,
+        codeOpco: stagiaire.codeOpco,
         formation: stagiaire.formation,
         notes: {
             accueil: 3,

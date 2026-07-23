@@ -4,7 +4,9 @@ mkdir -p /data/log
 touch /data/log/error.log
 touch /data/log/access.log
 
+rm -f /var/run/nginx.pid
+
 nginx && \
     (fail2ban-client reload || echo "reload not needed" && rm -f /var/run/fail2ban/fail2ban.sock) && \
-    service fail2ban start && \
+    fail2ban-server -b && \
     tail -f /data/log/*.log

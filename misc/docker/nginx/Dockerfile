@@ -1,8 +1,6 @@
-FROM nginx:mainline
+FROM nginx:mainline-alpine-slim
 
-RUN apt-get update \
-    && apt-get install -y logrotate \
-    && apt-get -y install fail2ban iptables
+RUN apk add --no-cache logrotate fail2ban iptables bash
 
 #Logrotate
 COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
@@ -11,6 +9,6 @@ RUN chmod 644 /etc/logrotate.conf
 #Nginx
 COPY app/nginx /etc/nginx
 COPY app/start.sh /opt/nginx/start.sh
-RUN chmod +x /opt/nginx/start.sh
-    
+RUN chmod +x /opt/nginx/
+
 CMD ["/opt/nginx/start.sh"]

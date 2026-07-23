@@ -12,7 +12,7 @@ const financeurs = [
     { code: '13', label: `Etat - Autre` },
     { code: '14', label: `Fonds Européens - Autre` },
     { code: '15', label: `Collectivité territoriale - Autre` },
-    { code: '16', label: `OPCA` },
+    { code: '16', label: `OPCO` },
     { code: '17', label: `OPACIF` },
 ];
 

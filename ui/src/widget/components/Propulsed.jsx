@@ -5,7 +5,7 @@ import './Propulsed.scss';
 export default function Propulsed() {
     return (
         <div className="Propulsed">
-            <img className="logo pl-1" src={logoPE} alt="propulsé par France Travail"/>
+            <img className="logo pl-1" src={logoPE} alt="France Travail"/>
         </div>
     );
 }

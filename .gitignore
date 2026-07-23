@@ -9,4 +9,5 @@ docker-compose.local.yml
 .env/
 public/vendors
 misc/docker/nginx/app/nginx/conf.d/jail.conf
+misc/docker/nginx/app/fail2ban/jail.local
 rebuild.sh

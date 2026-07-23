@@ -18,33 +18,36 @@ export default class Avis extends Component {
 
         return (
             <div className="Avis d-flex flex-column align-items-stretch">
-                <div className="stagiaire">
-                    <Stars note={avis.notes.global} />
-                    <span className="par">par</span>
+                <h4 className={`formation sr-only ${highlight === 'formation' ? 'highlight' : ''}`}>
+                    Avis sur la formation {avis.formation.intitule} saisi en {moment(fin).format('MMMM YYYY')}
+                </h4>
+                <p className="stagiaire">
+                    <Stars note={avis.notes.global} />&nbsp;
+                    <span className="par">par</span>&nbsp;
                     <span className="pseudo">un stagiaire</span>
-                </div>
+                </p>
                 {avis.commentaire &&
-                <div className={`titre ${avis.commentaire.titre ? 'd-block' : 'd-none'}`}>
+                <h5 className={`titre ${avis.commentaire.titre ? 'd-block' : 'd-none'}`}>
                     {avis.commentaire.titre}
-                </div>
+                </h5>
                 }
                 {avis.commentaire &&
-                <div className={`texte ${avis.commentaire.texte ? 'd-block' : 'd-none'}`}>
+                <p className={`texte ${avis.commentaire.texte ? 'd-block' : 'd-none'}`}>
                     {avis.commentaire.texte}
-                </div>
+                </p>
                 }
                 {avis.reponse &&
                 <div className="reponse">
-                    <div className="reponse-titre d-flex justify-content-start align-items-center mb-1">
-                        <i className="far fa-comment-alt mr-1"></i>
-                        <div className="text-uppercase">Réponse de l&apos;organisme</div>
-                    </div>
-                    <div className="reponse-texte">{avis.reponse.texte}</div>
+                    <h5 className="reponse-titre d-flex justify-content-start align-items-center mb-1">
+                        <i className="far fa-comment-alt mr-1" aria-hidden="true"></i>
+                        <span className="text-uppercase">Réponse de l&apos;organisme</span>
+                    </h5>
+                    <p className="reponse-texte">{avis.reponse.texte}</p>
                 </div>
                 }
-                <div className={`formation ${highlight === 'formation' ? 'highlight' : ''}`}>
+                <p className={`formation ${highlight === 'formation' ? 'highlight' : ''}`} aria-hidden="true">
                     {avis.formation.intitule} - {moment(fin).format('MM/YYYY')}
-                </div>
+                </p>
             </div>
         );
     }

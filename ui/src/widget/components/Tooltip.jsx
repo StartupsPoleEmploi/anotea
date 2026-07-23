@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Tooltip.scss';
+import _uniqueId from 'lodash/uniqueId';
 
 export default class Tooltip extends Component {
 
     constructor(props){
         super(props);
         this.escFunction = this.escFunction.bind(this);
+        this.id = _uniqueId("tooltip-");
     }
 
     static propTypes = {
@@ -15,6 +17,7 @@ export default class Tooltip extends Component {
 
     state = {
         show: false,
+        showOnTooltip: false,
     };
 
     show = () => {
@@ -22,7 +25,19 @@ export default class Tooltip extends Component {
     };
 
     hide = () => {
-        return this.setState({ show: false });
+        return setTimeout(() => {
+            this.setState({ show: false });
+        }, 300);
+    };
+
+    showOnTooltip = () => {
+        return this.setState({ showOnTooltip: true });
+    };
+
+    hideOnTooltip = () => {
+        return setTimeout(() => {
+            this.setState({ showOnTooltip: false });
+        }, 300);
     };
 
     escFunction(event){
@@ -38,6 +53,7 @@ export default class Tooltip extends Component {
     }
 
     render() {
+        const id = this.id;
 
         let { message } = this.props;
 
@@ -50,12 +66,17 @@ export default class Tooltip extends Component {
                     onFocus={() => this.show()}
                     onBlur={() => this.hide()}
                     tabIndex="0"
+                    aria-describedby={id}
                 >
-                    <i className="far fa-question-circle"></i>
+                    <i className="far fa-question-circle" aria-hidden="true"></i>
+                    <p className="sr-only">{message}</p>
                 </div>
-                {this.state.show &&
-                <div className="box">
-                    <div className="message">{message}</div>
+                {(this.state.show || this.state.showOnTooltip) &&
+                <div className="box" role="tooltip"
+                    onMouseEnter={() => this.showOnTooltip()}
+                    onMouseLeave={() => this.hideOnTooltip()}
+                    id={id}>
+                    <p className="message" aria-hidden="true">{message}</p>
                 </div>
                 }
             </div>

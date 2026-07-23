@@ -18,6 +18,7 @@ module.exports = (auth, logger, configuration) => {
         region: Joi.string(),
         codeRegion: Joi.string(),
         codeFinanceur: Joi.string(),
+        codeOpco: Joi.string().allow(null).allow(''),
         siret: Joi.string(),
         raison_sociale: Joi.string(),
         nbAvisSirenFormateur: Joi.number().allow(null),
@@ -204,17 +205,114 @@ module.exports = (auth, logger, configuration) => {
                 next();
             }
         },
-        addRateLimit: () => rateLimit({
+        addRateLimitPublic: () => rateLimit({
             keyGenerator: req => {
                 if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
                 return ipKeyGenerator(req.ip);
             },
-            windowMs: 1 * 60 * 1000, // 1 minute
-            max: 1000, // 400 requests per minutes
+            windowMs: 1000 * 60, // 1 minute
+            limit: 1000, // 400 requests per minutes
             delayMs: 0, // disabled
             handler: function(req, res) {
-                if (this.headers) {
-                    res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
+                if (this.legacyHeaders) {
+                    res.setHeader('Retry-After', Math.ceil(this.windowMs / this.limit));
+                }
+
+                res.format({
+                    html: () => {
+                        res.status(this.statusCode).end(this.message);
+                    },
+                    json: () => {
+                        res.status(this.statusCode).json({ message: this.message });
+                    }
+                });
+            }
+        }),
+        addRateLimitBackoffice: () => rateLimit({
+            keyGenerator: req => {
+                if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
+                return ipKeyGenerator(req.ip);
+            },
+            windowMs: 1000 * 60, // 1 minute
+            limit: 200, // 60 requests per minutes
+            delayMs: 0, // disabled
+            handler: function(req, res) {
+                if (this.legacyHeaders) {
+                    res.setHeader('Retry-After', Math.ceil(this.windowMs / this.limitv));
+                }
+
+                res.format({
+                    html: () => {
+                        res.status(this.statusCode).end(this.message);
+                    },
+                    json: () => {
+                        res.status(this.statusCode).json({ message: this.message });
+                    }
+                });
+            }
+        }),
+        addRateLimitLogin: () => {
+            const failLimiter = rateLimit({
+                keyGenerator: req => {
+                    if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
+                    return ipKeyGenerator(req.ip);
+                },
+                windowMs: 1000 * 60 * 60 * 24, // 1 day
+                limit: 40, //
+                delayMs: 0, // disabled
+                skipSuccessfulRequests: true,
+                handler: function(req, res) {
+                    if (this.legacyHeaders) {
+                        res.setHeader('Retry-After', Math.ceil(this.windowMs));
+                    }
+
+                    res.format({
+                        html: () => {
+                            res.status(this.statusCode).end(this.message);
+                        },
+                        json: () => {
+                            res.status(this.statusCode).json({ message: this.message });
+                        }
+                    });
+                }
+            });
+            const successLimiter = rateLimit({
+                keyGenerator: req => {
+                    if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
+                    return ipKeyGenerator(req.ip);
+                },
+                windowMs: 1000 * 60 * 10, // 10 minute
+                limit: 50, //
+                delayMs: 0, // disabled
+                handler: function(req, res) {
+                    if (this.legacyHeaders) {
+                        res.setHeader('Retry-After', Math.ceil(this.windowMs));
+                    }
+
+                    res.format({
+                        html: () => {
+                            res.status(this.statusCode).end(this.message);
+                        },
+                        json: () => {
+                            res.status(this.statusCode).json({ message: this.message });
+                        }
+                    });
+                }
+            });
+
+            return [failLimiter, successLimiter];
+        },
+        addRateLimitLoginStrict: () => rateLimit({
+            keyGenerator: req => {
+                if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
+                return ipKeyGenerator(req.ip);
+            },
+            windowMs: 1000 * 60 * 60 * 24, // 1 day
+            limit: 40, //
+            delayMs: 0, // disabled
+            handler: function(req, res) {
+                if (this.legacyHeaders) {
+                    res.setHeader('Retry-After', Math.ceil(this.windowMs));
                 }
 
                 res.format({

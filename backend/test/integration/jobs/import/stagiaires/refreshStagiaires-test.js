@@ -36,6 +36,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             mailSent: false,
             codeRegion: '11',
             refreshKey: 'e75a9fb65e99ca2cbbeaa40164284744',
+            codeOpco: '40',
             dispositifFinancement: 'BEN',
             individu: {
                 nom: 'MARTIN',

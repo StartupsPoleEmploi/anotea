@@ -64,7 +64,7 @@ module.exports = ({ emails, middlewares }) => {
         const templateNameReformule = previewResponsable ? 'activationCompteEmail' : templateName;
         let message = emails.getEmailMessageByTemplateName(templateNameReformule);
         let preview = getPreviewData({ user: req.user, previewResponsableParam: previewResponsable });
-        let html = await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis);
+        let html = (await message.render(preview[type === 'organismes' ? 'organisme' : 'stagiaire'], preview.avis)).html;
 
         return sendHTML(res, html);
     }));

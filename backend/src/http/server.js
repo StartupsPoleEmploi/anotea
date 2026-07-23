@@ -37,19 +37,18 @@ module.exports = (components, options = {}) => {
     app.set('views', path.join(__dirname, 'site', 'pages'));
 
     //Api
-    app.use('/api', middlewares.addRateLimit());
+    app.use('/api/v1', middlewares.addRateLimitPublic());
     app.use(require('./api/v1/ping-routes')(httpComponents));
     app.use(require('./api/v1/avis-routes')(httpComponents));
     app.use(require('./api/v1/formations-routes')(httpComponents));
     app.use(require('./api/v1/actions-routes')(httpComponents));
     app.use(require('./api/v1/sessions-routes')(httpComponents));
     app.use(require('./api/v1/organismes-formateurs-routes')(httpComponents));
-    app.use(require('./api/backoffice/regions-routes')(httpComponents));
+    app.use('/api/kairos', middlewares.addRateLimitBackoffice());
     app.use(require('./api/kairos/kairos-routes')(httpComponents));
-    app.use(require('./api/backoffice/login-routes')(httpComponents));
-    app.use(require('./api/backoffice/password-routes')(httpComponents));
+    app.use('/api/backoffice', middlewares.addRateLimitBackoffice());
+    app.use(require('./api/backoffice/regions-routes')(httpComponents));
     app.use(require('./api/backoffice/activation-routes')(httpComponents));
-    app.use(require('./api/backoffice/me-routes')(httpComponents));
     app.use(require('./api/backoffice/avis-routes')(httpComponents));
     app.use(require('./api/backoffice/stagiaires-routes')(httpComponents));
     app.use(require('./api/backoffice/formations-routes')(httpComponents));
@@ -59,7 +58,17 @@ module.exports = (components, options = {}) => {
     app.use(require('./api/backoffice/stats-routes')(httpComponents));
     app.use(require('./api/backoffice/gestion-organismes-routes')(httpComponents));
     app.use(require('./api/backoffice/emails-preview-routes')(httpComponents));
+    app.use('/api/questionnaire', middlewares.addRateLimitBackoffice());
     app.use(require('./api/questionnaire/questionnaire-routes')(httpComponents));
+
+    app.use('/api/backoffice/login', middlewares.addRateLimitLogin());
+    app.use(require('./api/backoffice/login-routes')(httpComponents));
+    app.use('/api/backoffice/password', middlewares.addRateLimitLogin());
+    app.use('/api/backoffice/password/askNewPassword', middlewares.addRateLimitLoginStrict());
+    app.use(require('./api/backoffice/password-routes')(httpComponents));
+    app.use('/api/backoffice/me', middlewares.addRateLimitLogin());
+    app.use(require('./api/backoffice/me-routes')(httpComponents));
+
     if (options.swagger) {
         app.use(require('./api/v1/swagger-routes')(httpComponents));
     }

@@ -16,7 +16,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         ]);
 
         let response = await request(app)
-        .put('/api/backoffice/askNewPassword')
+        .put('/api/backoffice/password/askNewPassword')
         .send({ identifiant: '6080274100045' });
 
         assert.strictEqual(response.statusCode, 200);
@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
 
         let response = await request(app)
-        .put('/api/backoffice/askNewPassword')
+        .put('/api/backoffice/password/askNewPassword')
         .send({ identifiant: 'INVALID' });
 
         assert.strictEqual(response.statusCode, 200);
@@ -58,7 +58,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/checkIfPasswordTokenExists?token=${token}`);
+        .get(`/api/backoffice/password/checkIfPasswordTokenExists?token=${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -82,7 +82,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .put(`/api/backoffice/resetPassword`)
+        .put(`/api/backoffice/password/resetPassword`)
         .send({
             token,
             password: 'Aze1234!',
@@ -91,7 +91,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         //Token should be remove
         response = await request(app)
-        .get(`/api/backoffice/checkIfPasswordTokenExists?token=${token}`);
+        .get(`/api/backoffice/password/checkIfPasswordTokenExists?token=${token}`);
         assert.strictEqual(response.statusCode, 404);
         assert.deepStrictEqual(response.body, { error: 'Not found' });
 
@@ -126,7 +126,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .put(`/api/backoffice/resetPassword`)
+        .put(`/api/backoffice/password/resetPassword`)
         .send({
             token,
             password: 'INVALID'

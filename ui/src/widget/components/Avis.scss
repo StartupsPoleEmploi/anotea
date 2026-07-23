@@ -10,11 +10,6 @@
     background-color: $color-grey-5;
 
     .par {
-      opacity: 0.6;
-      padding-left: 0.5rem;
-    }
-
-    .pseudo {
       padding-left: 0.5rem;
     }
   }
@@ -23,6 +18,9 @@
     padding: 0.25rem 1rem;
     font-weight: $font-weight-bold;
     background-color: $color-grey-5;
+    font-size: inherit;
+    margin: 0;
+    font-family: inherit;
   }
 
   .texte {
