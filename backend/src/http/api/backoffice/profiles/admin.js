@@ -36,12 +36,7 @@ module.exports = (db, regions, user) => {
                 };
             },
             buildStagiaireQuery: async parameters => {
-                let { codeFinanceur, codeRegion } = parameters;
-                return {
-                    ...await parent.queries.buildStagiaireQuery(parameters),
-                    'codeRegion': codeRegion || { $exists: true },
-                    'formation.action.organisme_financeurs.code_financeur': codeFinanceur || { $exists: true },
-                };
+                throw new Error('buildStagiaireQuery ne doit pas être utilisé')
             },
             buildAvisQuery: async parameters => {
                 let { codeFinanceur, codeRegion } = parameters;
