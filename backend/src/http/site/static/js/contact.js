@@ -2,8 +2,8 @@ $(document).ready(function() {
 
     $.get('/api/backoffice/regions', function(data) {
         let html = '';
-        for (var i = 0; i < data.length; i++) {
-            var region = data[i];
+        for (let i = 0; i < data.length; i++) {
+            const region = data[i];
             html += '<option value="' + region.email + '">' + region.nom + '</option>';
         }
 
