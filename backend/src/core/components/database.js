@@ -1,19 +1,22 @@
 const { MongoClient: mongo } = require('mongodb');
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const connectToMongoDB = async (logger, configuration) => {
-    const retry = (delay, maxRetries) => {
+    const retry = async (delay, maxRetries, attempt = 0) => {
         try {
-            return mongo.connect(configuration.mongodb.uri);
+            return await mongo.connect(configuration.mongodb.uri);
         } catch (err) {
-            if (retries > maxRetries) {
-                reject(err);
+            if (attempt >= maxRetries) {
+                throw err;
             }
             logger.error(`Failed to connect to MongoDB - retrying in ${delay} sec`, err.message);
-            retries++;
-            setTimeout(() => retry(1000, 120), delay);
+            await wait(delay);
+            return retry(delay, maxRetries, attempt + 1);
         }
-    }
-    return retry(1000, 120); //wait for 2 minutes
+    };
+
+    return retry(1000, 120); // attend jusqu'à 2 minutes
 };
 
 module.exports = async (logger, configuration) => {
