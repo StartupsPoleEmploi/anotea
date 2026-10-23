@@ -8,9 +8,9 @@ let round = value => Number(Math.round(value + 'e1') + 'e-1');
 const CommentairesPies = ({ stats }) => {
 
     let colors = ['#6cc3d5 ', '#ffa78e ', '#78c2ad '];
-    let totalComMod = stats.nbCommentairesValidated+stats.nbCommentairesRejected+stats.nbCommentairesReported+stats.nbCommentairesArchived;
+    let totalComMod = stats.nbCommentairesValidated+stats.nbCommentairesRejected+stats.nbCommentairesReported;
     let totalComVal = stats.nbCommentairesPositifs + stats.nbCommentairesNegatifs;
-    let totalComRej = stats.nbCommentairesNonConcernes + stats.nbCommentaires + stats.nbCommentairesInjures;
+    let totalComRej = stats.nbCommentairesNonConcernes + stats.nbCommentairesAlertes + stats.nbCommentairesInjures;
 
     return (
         <div className="CommentairesPies">
@@ -18,7 +18,7 @@ const CommentairesPies = ({ stats }) => {
             <div className="box d-flex flex-wrap flex-row" style={{justifyContent: "center"}}>
                 <div className="chart first" >
                     <div className="title">Modération des commentaires</div>
-                    <div className="description">{stats.nbCommentaires} commentaires au total</div>
+                    <div className="description">{totalComMod} commentaires au total</div>
                     <Pie colors={colors} data={[
                         ...(stats.nbCommentairesValidated !== 0 ?
                             [{ id:`${stats.nbCommentairesValidated} validés (${round((stats.nbCommentairesValidated / totalComMod) * 100)}%)`,value: stats.nbCommentairesValidated,label: 'commentaires'}] : []),
@@ -26,8 +26,6 @@ const CommentairesPies = ({ stats }) => {
                             [{ id: `${stats.nbCommentairesRejected} rejetés (${round((stats.nbCommentairesRejected / totalComMod) * 100)}%)`, value: stats.nbCommentairesRejected, label: 'commentaires' }] : []),
                         ...(stats.nbCommentairesReported !== 0 ?
                             [{ id: `${stats.nbCommentairesReported} signalés (${round((stats.nbCommentairesReported / totalComMod) * 100)}%)`, value: stats.nbCommentairesReported, label: 'commentaires' }] : []),
-                        ...(stats.nbCommentairesArchived !== 0 ?
-                            [{ id: `${stats.nbCommentairesArchived} archivés (${round((stats.nbCommentairesArchived / totalComMod) * 100)}%)`, value: stats.nbCommentairesArchived, label: 'commentaires' }] : []),
                     ]}>
                     </Pie>
                 </div>
